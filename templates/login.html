@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+{% block konten %}
+
+<style>
+:root {
+    --login-primary: #007ae6;
+    --login-primary-2: #00c6ff;
+    --login-dark: #0f172a;
+    --login-text: #334155;
+    --login-muted: #64748b;
+    --login-border: #e2e8f0;
+    --login-soft: #f8fafc;
+    --login-green: #16a34a;
+    --login-red: #ef4444;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(0, 122, 230, 0.10), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0, 198, 255, 0.12), transparent 32%),
+        #f6f8fc;
+}
+
+.login-page {
+    width: 100%;
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 1.2rem 1rem 5rem;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.login-shell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at top left, rgba(0, 122, 230, 0.14), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0, 198, 255, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(0, 122, 230, 0.10);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    animation: loginFade 0.45s ease;
+}
+
+@keyframes loginFade {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.login-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    padding: 1.45rem 1.2rem;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,0.38), transparent 34%),
+        linear-gradient(135deg, var(--login-primary), var(--login-primary-2));
+    box-shadow: 0 16px 34px rgba(0, 122, 230, 0.28);
+    margin-bottom: 1rem;
+}
+
+.login-hero::before {
+    content: "";
+    position: absolute;
+    right: -58px;
+    top: -58px;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+}
+
+.login-hero::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: -45px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    border: 18px solid rgba(255,255,255,0.10);
+}
+
+.login-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.login-icon {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 1rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.20);
+    border: 1px solid rgba(255,255,255,0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.85rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
+.login-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.65rem;
+    margin-bottom: 0.6rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.login-hero h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.55rem;
+    line-height: 1.18;
+    font-weight: 950;
+    letter-spacing: -0.035em;
+}
+
+.login-hero p {
+    margin: 0.45rem auto 0;
+    max-width: 320px;
+    color: rgba(255,255,255,0.92);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.login-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 1.2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.login-alert {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.login-alert.success {
+    background: #ecfdf5;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.login-alert.error,
+.login-alert.danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.login-alert.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.login-form-group {
+    margin-bottom: 1rem;
+}
+
+.login-form-group label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--login-dark);
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.login-input-box {
+    position: relative;
+}
+
+.login-input-box .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.login-input {
+    width: 100%;
+    min-height: 56px;
+    border-radius: 18px;
+    border: 2px solid var(--login-border);
+    background: #ffffff;
+    color: var(--login-dark);
+    font-size: 0.95rem;
+    font-weight: 750;
+    box-sizing: border-box;
+    outline: none;
+    padding: 0 1rem 0 2.85rem;
+    transition: 0.22s ease;
+}
+
+.login-input.password {
+    padding-right: 3rem;
+}
+
+.login-input::placeholder {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.login-input:focus {
+    border-color: var(--login-primary);
+    box-shadow: 0 0 0 5px rgba(0, 122, 230, 0.12);
+}
+
+.login-toggle-pass {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 13px;
+    background: #f8fafc;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.login-toggle-pass:hover {
+    background: #eff6ff;
+    color: var(--login-primary);
+}
+
+.login-help {
+    margin-top: 0.45rem;
+    color: var(--login-muted);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.login-option-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0 1.2rem;
+    font-size: 0.84rem;
+}
+
+.login-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    cursor: pointer;
+    font-weight: 750;
+}
+
+.login-check input {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--login-primary);
+}
+
+.login-forgot {
+    color: var(--login-primary);
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.login-forgot:hover {
+    text-decoration: underline;
+}
+
+.login-submit {
+    width: 100%;
+    min-height: 56px;
+    border-radius: 18px;
+    border: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--login-primary), var(--login-primary-2));
+    font-size: 1rem;
+    font-weight: 950;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(0, 122, 230, 0.28);
+    transition: 0.22s ease;
+}
+
+.login-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(0, 122, 230, 0.34);
+}
+
+.login-submit:active {
+    transform: scale(0.99);
+}
+
+.login-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-security {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.login-security i {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 13px;
+    background: #ecfdf5;
+    color: var(--login-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-security strong {
+    display: block;
+    color: var(--login-dark);
+    font-size: 0.82rem;
+    font-weight: 950;
+}
+
+.login-security span {
+    display: block;
+    margin-top: 0.12rem;
+    color: var(--login-muted);
+    font-size: 0.74rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.login-register {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 22px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    text-align: center;
+    color: var(--login-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+}
+
+.login-register a {
+    color: var(--login-primary);
+    font-weight: 950;
+    text-decoration: none;
+}
+
+.login-register a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 430px) {
+    .login-page {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .login-shell {
+        padding: 0.75rem;
+        border-radius: 26px;
+    }
+
+    .login-hero {
+        padding: 1.15rem;
+        border-radius: 24px;
+    }
+
+    .login-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 21px;
+        font-size: 1.55rem;
+    }
+
+    .login-hero h2 {
+        font-size: 1.32rem;
+    }
+
+    .login-card {
+        padding: 1rem;
+        border-radius: 24px;
+    }
+
+    .login-option-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+</style>
+
+<div class="login-page">
+    <div class="login-shell">
+
+        <div class="login-hero">
+            <div class="login-hero-content">
+                <div class="login-icon">
+                    <i class="fa-solid fa-user-lock"></i>
+                </div>
+
+                <div class="login-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Login Aman
+                </div>
+
+                <h2>Masuk ke Akun</h2>
+                <p>Gunakan nomor HP atau email untuk mengakses semua layanan PulsaUltra.</p>
+            </div>
+        </div>
+
+        <div class="login-card">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for kategori, pesan in messages %}
+                        <div class="login-alert {{ kategori }}">
+                            {{ pesan }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}" id="loginForm" autocomplete="on">
+                {% if csrf_token is defined %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% endif %}
+
+                <div class="login-form-group">
+                    <label for="identitas">Nomor HP / Email</label>
+                    <div class="login-input-box">
+                        <i class="fa-solid fa-user input-icon"></i>
+                        <input
+                            type="text"
+                            id="identitas"
+                            name="identitas"
+                            class="login-input"
+                            placeholder="08123456789 atau email@anda.com"
+                            value="{{ request.form.get('identitas', '') if request is defined else '' }}"
+                            autocomplete="username"
+                            required
+                            autofocus
+                        >
+                    </div>
+                    <div class="login-help">Masukkan nomor HP aktif atau email yang terdaftar.</div>
+                </div>
+
+                <div class="login-form-group">
+                    <label for="kata_sandi">Kata Sandi</label>
+                    <div class="login-input-box">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input
+                            type="password"
+                            id="kata_sandi"
+                            name="kata_sandi"
+                            class="login-input password"
+                            placeholder="Masukkan kata sandi Anda"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button type="button" class="login-toggle-pass" id="togglePassword" aria-label="Tampilkan kata sandi">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="login-help">Jangan bagikan kata sandi kepada siapa pun.</div>
+                </div>
+
+                <div class="login-option-row">
+                    <label class="login-check">
+                        <input type="checkbox" name="ingat_saya">
+                        Ingat Saya
+                    </label>
+
+                    <a href="#" class="login-forgot">Lupa Kata Sandi?</a>
+                </div>
+
+                <button type="submit" class="login-submit" id="loginButton">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="login-security">
+                <i class="fa-solid fa-lock"></i>
+                <div>
+                    <strong>Keamanan Akun</strong>
+                    <span>Pastikan Anda login dari perangkat pribadi dan tidak membagikan data akun kepada orang lain.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-register">
+            Belum punya akun?
+            <a href="{{ url_for('daftar') }}">Buat Akun Baru</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const passwordInput = document.getElementById('kata_sandi');
+    const togglePassword = document.getElementById('togglePassword');
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+
+    if (togglePassword && passwordInput) {
+        togglePassword.addEventListener('click', function () {
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            togglePassword.innerHTML = isPassword
+                ? '<i class="fa-solid fa-eye-slash"></i>'
+                : '<i class="fa-solid fa-eye"></i>';
+        });
+    }
+
+    if (loginForm && loginButton) {
+        loginForm.addEventListener('submit', function () {
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Login...';
+        });
+    }
+})();
+</script>
+
+{% endblock %}

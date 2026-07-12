@@ -1,0 +1,1424 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_data = {
+    'DATA_TSEL_1GB_HARIAN': 'Telkomsel Data 1GB 1 Hari',
+    'DATA_TSEL_3GB_5HARI': 'Telkomsel Data 3GB 5 Hari',
+    'DATA_TSEL_7GB_7HARI': 'Telkomsel Data 7GB 7 Hari',
+    'DATA_TSEL_15GB_BULANAN': 'Telkomsel Data 15GB 30 Hari',
+    'DATA_TSEL_UNLIMITED': 'Telkomsel Unlimited 30 Hari',
+    'DATA_TSEL_COMBO': 'Telkomsel Combo Internet + Telp',
+
+    'DATA_ISAT_1GB_HARIAN': 'Indosat Data 1GB 1 Hari',
+    'DATA_ISAT_4GB_5HARI': 'Indosat Data 4GB 5 Hari',
+    'DATA_ISAT_8GB_7HARI': 'Indosat Data 8GB 7 Hari',
+    'DATA_ISAT_20GB_BULANAN': 'Indosat Data 20GB 30 Hari',
+    'DATA_ISAT_UNLIMITED': 'Indosat Unlimited Apps',
+    'DATA_ISAT_SOSMED': 'Indosat Sosmed 10GB',
+
+    'DATA_XL_1GB_HARIAN': 'XL Data 1GB 1 Hari',
+    'DATA_XL_3GB_5HARI': 'XL Data 3GB 5 Hari',
+    'DATA_XL_6GB_7HARI': 'XL Data 6GB 7 Hari',
+    'DATA_XL_20GB_BULANAN': 'XL Data 20GB 30 Hari',
+    'DATA_XL_UNLIMITED': 'XL Unlimited Turbo',
+    'DATA_XL_COMBO': 'XL Combo Internet + Telp',
+
+    'DATA_AXIS_1GB_HARIAN': 'AXIS Data 1GB 1 Hari',
+    'DATA_AXIS_5GB_7HARI': 'AXIS Data 5GB 7 Hari',
+    'DATA_AXIS_16GB_BULANAN': 'AXIS Data 16GB 30 Hari',
+    'DATA_AXIS_UNLIMITED': 'AXIS Unlimited Apps',
+
+    'DATA_TRI_2GB_HARIAN': 'Tri Data 2GB 1 Hari',
+    'DATA_TRI_8GB_7HARI': 'Tri Data 8GB 7 Hari',
+    'DATA_TRI_30GB_BULANAN': 'Tri Data 30GB 30 Hari',
+    'DATA_TRI_UNLIMITED': 'Tri Unlimited YouTube',
+
+    'DATA_SMART_1GB_HARIAN': 'Smartfren Data 1GB 1 Hari',
+    'DATA_SMART_6GB_7HARI': 'Smartfren Data 6GB 7 Hari',
+    'DATA_SMART_25GB_BULANAN': 'Smartfren Data 25GB 30 Hari',
+    'DATA_SMART_UNLIMITED': 'Smartfren Unlimited 30 Hari'
+} %}
+
+{% set fallback_harga_data = {
+    'DATA_TSEL_1GB_HARIAN': 15000,
+    'DATA_TSEL_3GB_5HARI': 30000,
+    'DATA_TSEL_7GB_7HARI': 52000,
+    'DATA_TSEL_15GB_BULANAN': 112000,
+    'DATA_TSEL_UNLIMITED': 145000,
+    'DATA_TSEL_COMBO': 88000,
+
+    'DATA_ISAT_1GB_HARIAN': 10000,
+    'DATA_ISAT_4GB_5HARI': 27000,
+    'DATA_ISAT_8GB_7HARI': 42000,
+    'DATA_ISAT_20GB_BULANAN': 115000,
+    'DATA_ISAT_UNLIMITED': 82000,
+    'DATA_ISAT_SOSMED': 45000,
+
+    'DATA_XL_1GB_HARIAN': 11000,
+    'DATA_XL_3GB_5HARI': 26000,
+    'DATA_XL_6GB_7HARI': 38000,
+    'DATA_XL_20GB_BULANAN': 105000,
+    'DATA_XL_UNLIMITED': 125000,
+    'DATA_XL_COMBO': 95000,
+
+    'DATA_AXIS_1GB_HARIAN': 8000,
+    'DATA_AXIS_5GB_7HARI': 31000,
+    'DATA_AXIS_16GB_BULANAN': 82000,
+    'DATA_AXIS_UNLIMITED': 78000,
+
+    'DATA_TRI_2GB_HARIAN': 12000,
+    'DATA_TRI_8GB_7HARI': 34000,
+    'DATA_TRI_30GB_BULANAN': 108000,
+    'DATA_TRI_UNLIMITED': 88000,
+
+    'DATA_SMART_1GB_HARIAN': 9000,
+    'DATA_SMART_6GB_7HARI': 36000,
+    'DATA_SMART_25GB_BULANAN': 105000,
+    'DATA_SMART_UNLIMITED': 95000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_data %}
+{% set harga_final = harga_map if harga_map else fallback_harga_data %}
+
+<style>
+body{
+    background:
+        radial-gradient(circle at top left,rgba(79,70,229,.13),transparent 35%),
+        radial-gradient(circle at bottom right,rgba(124,58,237,.13),transparent 35%),
+        #f6f8fc;
+}
+
+.data-page{
+    width:100%;
+    max-width:600px;
+    margin:0 auto;
+    padding:1rem 1rem 5rem;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:#334155;
+}
+
+.data-shell{
+    border-radius:30px;
+    padding:.9rem;
+    background:
+        radial-gradient(circle at top left,rgba(79,70,229,.15),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(124,58,237,.12),transparent 34%),
+        linear-gradient(180deg,#fff,#f8fafc);
+    border:1px solid rgba(79,70,229,.14);
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.data-alert{
+    margin-bottom:1rem;
+    padding:.9rem 1rem;
+    border-radius:16px;
+    text-align:center;
+    font-weight:800;
+    font-size:.9rem;
+    line-height:1.45;
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #e0e7ff;
+}
+
+.data-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.data-alert.error,
+.data-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.data-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.data-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:1rem;
+}
+
+.back-menu,
+.status-pill{
+    min-height:40px;
+    padding:0 .8rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.38rem;
+    font-size:.76rem;
+    font-weight:950;
+    text-decoration:none;
+}
+
+.back-menu{
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#4f46e5;
+    box-shadow:0 8px 18px rgba(15,23,42,.05);
+}
+
+.status-pill{
+    background:#eef2ff;
+    color:#4338ca;
+}
+
+.data-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:26px;
+    padding:1.25rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.40),transparent 34%),
+        linear-gradient(135deg,#4f46e5 0%,#6d28d9 52%,#7c3aed 100%);
+    box-shadow:0 16px 34px rgba(79,70,229,.28);
+    margin-bottom:1rem;
+}
+
+.data-hero:before{
+    content:"";
+    position:absolute;
+    right:-58px;
+    top:-58px;
+    width:165px;
+    height:165px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+}
+
+.data-hero:after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-45px;
+    width:115px;
+    height:115px;
+    border-radius:50%;
+    border:18px solid rgba(255,255,255,.10);
+}
+
+.data-hero-content{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+}
+
+.data-hero-icon{
+    width:60px;
+    height:60px;
+    flex:0 0 60px;
+    border-radius:21px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.45rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 12px 24px rgba(15,23,42,.14);
+}
+
+.data-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    padding:.28rem .62rem;
+    margin-bottom:.45rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.72rem;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.data-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.35rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.035em;
+}
+
+.data-hero p{
+    margin:.38rem 0 0;
+    color:rgba(255,255,255,.92);
+    font-size:.84rem;
+    line-height:1.5;
+    font-weight:500;
+}
+
+.data-step-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+    margin-top:1rem;
+}
+
+.data-step{
+    padding:.68rem .45rem;
+    border-radius:16px;
+    text-align:center;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);
+}
+
+.data-step strong{
+    display:block;
+    color:#fff;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.data-step span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.84);
+    font-size:.66rem;
+}
+
+.data-card{
+    background:#fff;
+    border-radius:24px;
+    padding:1rem;
+    border:1px solid #f1f5f9;
+    box-shadow:0 12px 28px rgba(15,23,42,.06);
+    margin-bottom:1rem;
+}
+
+.section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    margin-bottom:.9rem;
+}
+
+.section-head h3{
+    margin:0;
+    color:#0f172a;
+    font-size:1rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.section-head p{
+    margin:.25rem 0 0;
+    color:#64748b;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:600;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.4rem .62rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4f46e5;
+    font-size:.7rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:1rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#94a3b8;
+    font-size:1rem;
+    pointer-events:none;
+    z-index:2;
+}
+
+.input-control{
+    width:100%;
+    min-height:58px;
+    border-radius:18px;
+    border:2px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:1rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 1rem 0 2.85rem;
+    letter-spacing:.02em;
+    transition:.22s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:600;
+}
+
+.input-control:focus{
+    border-color:#4f46e5;
+    box-shadow:0 0 0 5px rgba(79,70,229,.12);
+}
+
+.input-help{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.75rem;
+    line-height:1.4;
+    font-weight:600;
+}
+
+.operator-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.8rem;
+    border-radius:16px;
+    background:#eef2ff;
+    border:1px solid #c7d2fe;
+    color:#3730a3;
+    font-size:.82rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.data-quick{
+    display:flex;
+    gap:.5rem;
+    flex-wrap:wrap;
+    margin-top:.7rem;
+}
+
+.data-quick button{
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.5rem .72rem;
+    font-size:.74rem;
+    font-weight:850;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.data-quick button:hover{
+    background:#f9fafb;
+    border-color:#cbd5e1;
+}
+
+.operator-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.5rem;
+}
+
+.operator-card{
+    min-height:70px;
+    border:1px solid #e2e8f0;
+    border-radius:15px;
+    padding:.48rem .3rem;
+    text-align:center;
+    background:#fff;
+    cursor:pointer;
+    transition:.2s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.operator-card:hover{
+    border-color:#c4b5fd;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(15,23,42,.06);
+}
+
+.operator-card.active{
+    border:2px solid #4f46e5;
+    background:#eef2ff;
+    box-shadow:0 10px 22px rgba(79,70,229,.12);
+}
+
+.operator-logo{
+    width:31px;
+    height:31px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.3rem;
+    line-height:1;
+}
+
+.operator-name{
+    font-size:.62rem;
+    font-weight:850;
+    color:#0f172a;
+    line-height:1.15;
+}
+
+.operator-empty,
+.package-empty{
+    grid-column:1 / -1;
+    padding:1rem;
+    text-align:center;
+    color:#64748b;
+    border:1px dashed #e2e8f0;
+    border-radius:16px;
+    font-size:.85rem;
+    line-height:1.5;
+    font-weight:700;
+    background:#f8fafc;
+}
+
+.package-filter{
+    display:flex;
+    gap:.5rem;
+    overflow-x:auto;
+    padding-bottom:.25rem;
+    margin-bottom:.85rem;
+    scrollbar-width:none;
+}
+
+.package-filter::-webkit-scrollbar{
+    display:none;
+}
+
+.filter-btn{
+    flex:0 0 auto;
+    border:1px solid #e0e7ff;
+    background:#fff;
+    color:#4f46e5;
+    border-radius:999px;
+    padding:.55rem .75rem;
+    font-size:.74rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active{
+    background:#4f46e5;
+    color:#fff;
+    border-color:#4f46e5;
+    box-shadow:0 8px 18px rgba(79,70,229,.18);
+}
+
+.package-note{
+    margin-bottom:.85rem;
+    padding:.8rem;
+    border-radius:16px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.8rem;
+    line-height:1.5;
+    font-weight:700;
+}
+
+.package-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.75rem;
+}
+
+.package-card{
+    position:relative;
+    overflow:hidden;
+    min-height:128px;
+    border:2px solid #edf2f7;
+    border-radius:20px;
+    background:#fff;
+    padding:.85rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.22s ease;
+}
+
+.package-card:hover{
+    transform:translateY(-3px);
+    border-color:#c4b5fd;
+    box-shadow:0 14px 26px rgba(15,23,42,.08);
+}
+
+.package-card.active{
+    border-color:#4f46e5;
+    background:#eef2ff;
+    box-shadow:0 14px 28px rgba(79,70,229,.14);
+}
+
+.package-card:before{
+    content:"";
+    position:absolute;
+    right:-36px;
+    top:-36px;
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:rgba(79,70,229,.07);
+}
+
+.package-label{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    padding:.22rem .48rem;
+    margin-bottom:.5rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4f46e5;
+    font-size:.64rem;
+    font-weight:950;
+    text-transform:uppercase;
+}
+
+.package-name{
+    position:relative;
+    z-index:2;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.28;
+    font-weight:950;
+    margin-bottom:.35rem;
+}
+
+.package-desc{
+    position:relative;
+    z-index:2;
+    color:#64748b;
+    font-size:.74rem;
+    line-height:1.35;
+    font-weight:650;
+    margin-bottom:.4rem;
+}
+
+.package-price{
+    position:relative;
+    z-index:2;
+    color:#10b981;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-box{
+    display:none;
+    margin-top:1rem;
+    padding:1rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(79,70,229,.10),transparent 32%),
+        #fff;
+    border:1px solid #ddd6fe;
+    box-shadow:0 12px 24px rgba(79,70,229,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    margin-bottom:.75rem;
+    color:#0f172a;
+    font-size:.95rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.65rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.8rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.84rem;
+    line-height:1.35;
+    text-align:right;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.75rem;
+    padding:.9rem;
+    border-radius:18px;
+    background:linear-gradient(135deg,#0f172a,#4c1d95);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.78rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.2rem;
+    color:#fff;
+    font-size:1.18rem;
+    font-weight:950;
+}
+
+.btn-submit{
+    width:100%;
+    min-height:58px;
+    margin-top:1rem;
+    border:none;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    font-size:1rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 28px rgba(79,70,229,.28);
+    transition:.22s ease;
+}
+
+.btn-submit:hover{
+    transform:translateY(-2px);
+    box-shadow:0 17px 34px rgba(79,70,229,.34);
+}
+
+.note{
+    margin-top:1rem;
+    padding:.95rem;
+    border-radius:20px;
+    background:#f0fdf4;
+    border:1px solid #bbf7d0;
+    border-left:5px solid #16a34a;
+    color:#166534;
+    font-size:.8rem;
+    line-height:1.55;
+    font-weight:650;
+}
+
+.note strong{
+    color:#14532d;
+}
+
+@media(max-width:480px){
+    .data-page{
+        padding-left:.75rem;
+        padding-right:.75rem;
+    }
+
+    .data-shell{
+        padding:.7rem;
+        border-radius:26px;
+    }
+
+    .data-topbar{
+        gap:.5rem;
+    }
+
+    .back-menu,
+    .status-pill{
+        min-height:38px;
+        padding:0 .7rem;
+        font-size:.72rem;
+    }
+
+    .data-hero{
+        padding:1.1rem;
+        border-radius:24px;
+    }
+
+    .data-hero-content{
+        align-items:flex-start;
+    }
+
+    .data-hero-icon{
+        width:54px;
+        height:54px;
+        flex-basis:54px;
+        border-radius:18px;
+        font-size:1.25rem;
+    }
+
+    .data-hero h2{
+        font-size:1.16rem;
+    }
+
+    .data-step-row{
+        grid-template-columns:1fr;
+    }
+
+    .section-head{
+        flex-direction:column;
+        gap:.45rem;
+    }
+
+    .operator-grid{
+        grid-template-columns:repeat(4,1fr);
+        gap:.4rem;
+    }
+
+    .operator-card{
+        min-height:62px;
+        border-radius:13px;
+        padding:.4rem .2rem;
+    }
+
+    .operator-logo{
+        width:28px;
+        height:28px;
+        border-radius:10px;
+        font-size:.62rem;
+        margin-bottom:.25rem;
+    }
+
+    .operator-name{
+        font-size:.58rem;
+    }
+
+    .package-grid{
+        grid-template-columns:1fr;
+    }
+
+    .summary-row{
+        flex-direction:column;
+        gap:.25rem;
+    }
+
+    .summary-row b{
+        text-align:left;
+    }
+
+    .summary-total{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+
+@media(max-width:340px){
+    .operator-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+</style>
+
+<div class="data-page">
+    <div class="data-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="data-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="data-topbar">
+            <a href="{{ url_for('dashboard') }}" class="back-menu">
+                <i class="fa-solid fa-chevron-left"></i>
+                Home
+            </a>
+
+            <div class="status-pill">
+                <i class="fa-solid fa-wifi"></i>
+                Paket Data
+            </div>
+        </div>
+
+        <div class="data-hero">
+            <div class="data-hero-content">
+                <div class="data-hero-icon">
+                    <i class="fa-solid fa-wifi"></i>
+                </div>
+
+                <div>
+                    <div class="data-badge">
+                        <i class="fa-solid fa-bolt"></i>
+                        Paket Data Internet
+                    </div>
+                    <h2>Pilih Paket Data Lebih Mudah</h2>
+                    <p>Masukkan nomor, pilih operator, filter jenis paket, lalu lanjutkan pembayaran.</p>
+                </div>
+            </div>
+
+            <div class="data-step-row">
+                <div class="data-step">
+                    <strong>1. Nomor</strong>
+                    <span>Input HP</span>
+                </div>
+                <div class="data-step">
+                    <strong>2. Operator</strong>
+                    <span>Provider</span>
+                </div>
+                <div class="data-step">
+                    <strong>3. Paket</strong>
+                    <span>Bayar</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('data') }}" id="dataForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="kode_produk" id="kode_produk">
+            <input type="hidden" name="operator" id="operatorValue">
+
+            <div class="data-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Nomor Tujuan</h3>
+                        <p>Masukkan nomor HP yang ingin diisi paket data.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="tel"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="08xxxxxxxxxx"
+                        value="{{ request.form.get('nomor_tujuan', '') if request is defined else '' }}"
+                        inputmode="numeric"
+                        minlength="10"
+                        maxlength="14"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Contoh: 08123456789</span>
+                    <span id="charCount">0/14</span>
+                </div>
+
+                <div class="data-quick">
+                    <button type="button" data-id="081234567890">Telkomsel</button>
+                    <button type="button" data-id="085712345678">Indosat</button>
+                    <button type="button" data-id="087812345678">XL</button>
+                    <button type="button" data-id="089612345678">Tri</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="operator-info" id="operatorInfo"></div>
+            </div>
+
+            <div class="data-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Operator Tersedia</h3>
+                        <p>Pilih operator manual kalau deteksi otomatis belum cocok.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="operator-grid" id="operatorGrid">
+                    <div class="operator-empty">
+                        Operator akan tampil otomatis sesuai produk yang tersedia.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Jenis Paket</h3>
+                        <p>Filter paket berdasarkan masa aktif dan kebutuhan.</p>
+                    </div>
+                    <span class="section-pill">Filter</span>
+                </div>
+
+                <div class="package-filter">
+                    <button type="button" class="filter-btn active" data-filter="ALL">Semua</button>
+                    <button type="button" class="filter-btn" data-filter="HARIAN">1 Hari</button>
+                    <button type="button" class="filter-btn" data-filter="5HARI">5 Hari</button>
+                    <button type="button" class="filter-btn" data-filter="MINGGUAN">7 Hari</button>
+                    <button type="button" class="filter-btn" data-filter="BULANAN">Bulanan</button>
+                    <button type="button" class="filter-btn" data-filter="UNLIMITED">Unlimited</button>
+                    <button type="button" class="filter-btn" data-filter="SOSMED">Sosmed</button>
+                    <button type="button" class="filter-btn" data-filter="COMBO">Combo</button>
+                </div>
+
+                <div class="package-note">
+                    <strong>Info:</strong> Paket yang tampil mengikuti operator dan filter yang dipilih.
+                </div>
+
+                <div class="package-grid" id="packageGrid">
+                    <div class="package-empty">
+                        Pilih operator terlebih dahulu untuk melihat paket internet.
+                    </div>
+                </div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Detail Transaksi
+                    </div>
+
+                    <div class="summary-row">
+                        <span>No. Tujuan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Operator</span>
+                        <b id="sumOperator">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Paket Data</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                {% if produk_final %}
+                <button type="submit" class="btn-submit" id="btnBayar">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Lanjutkan Pembayaran
+                </button>
+                {% endif %}
+
+                <div class="note">
+                    💡 <strong>Info Layanan:</strong> Paket data biasanya diproses otomatis. Pastikan nomor tujuan sudah benar sebelum lanjut.
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div id="dataProduk" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        {% set kode_upper = kode|upper %}
+        {% set nama_upper = nama|upper %}
+
+        {% if 'TELKOMSEL' in nama_upper or 'TSEL' in kode_upper or 'TLK' in kode_upper %}
+            {% set op = 'TSEL' %}
+        {% elif 'INDOSAT' in nama_upper or 'ISAT' in kode_upper or 'IM3' in kode_upper %}
+            {% set op = 'ISAT' %}
+        {% elif 'AXIS' in nama_upper or 'AXIS' in kode_upper %}
+            {% set op = 'AXIS' %}
+        {% elif 'XL' in nama_upper or 'XL' in kode_upper %}
+            {% set op = 'XL' %}
+        {% elif 'TRI' in nama_upper or 'THREE' in kode_upper or 'TRI' in kode_upper %}
+            {% set op = 'TRI' %}
+        {% elif 'SMARTFREN' in nama_upper or 'SMART' in kode_upper %}
+            {% set op = 'SMART' %}
+        {% elif 'BY.U' in nama_upper or 'BYU' in kode_upper %}
+            {% set op = 'BYU' %}
+        {% elif 'LIVE' in nama_upper or 'LIVEON' in kode_upper %}
+            {% set op = 'LIVEON' %}
+        {% elif 'CERIA' in nama_upper or 'CERIA' in kode_upper %}
+            {% set op = 'CERIA' %}
+        {% else %}
+            {% set op = 'LAINNYA' %}
+        {% endif %}
+
+        {% if 'UNLIMITED' in kode_upper or 'UNLIMITED' in nama_upper %}
+            {% set tipe = 'UNLIMITED' %}
+        {% elif 'SOSMED' in kode_upper or 'SOSMED' in nama_upper or 'SOCIAL' in nama_upper %}
+            {% set tipe = 'SOSMED' %}
+        {% elif 'COMBO' in kode_upper or 'COMBO' in nama_upper %}
+            {% set tipe = 'COMBO' %}
+        {% elif '5HARI' in kode_upper or '5 HARI' in nama_upper or '5D' in kode_upper %}
+            {% set tipe = '5HARI' %}
+        {% elif '7HARI' in kode_upper or '7 HARI' in nama_upper or 'MINGGU' in nama_upper or '7D' in kode_upper %}
+            {% set tipe = 'MINGGUAN' %}
+        {% elif 'BULAN' in nama_upper or '30HARI' in kode_upper or '30 HARI' in nama_upper or '30D' in kode_upper %}
+            {% set tipe = 'BULANAN' %}
+        {% elif 'HARIAN' in kode_upper or 'HARIAN' in nama_upper or '1HARI' in kode_upper or '1 HARI' in nama_upper or '1D' in kode_upper %}
+            {% set tipe = 'HARIAN' %}
+        {% else %}
+            {% set tipe = 'BULANAN' %}
+        {% endif %}
+
+        <span
+            data-kode="{{ kode }}"
+            data-operator="{{ op }}"
+            data-tipe="{{ tipe }}"
+            data-nama="{{ nama }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const operatorValue=document.getElementById('operatorValue');
+    const kodeProduk=document.getElementById('kode_produk');
+    const operatorInfo=document.getElementById('operatorInfo');
+    const packageGrid=document.getElementById('packageGrid');
+    const summaryBox=document.getElementById('summaryBox');
+    const operatorGrid=document.getElementById('operatorGrid');
+    const form=document.getElementById('dataForm');
+    const btnBayar=document.getElementById('btnBayar');
+
+    let activeOperator='';
+    let activeFilter='ALL';
+
+    const operatorMeta={
+        TSEL:{nama:'Telkomsel',logo:'T',bg:'#fef2f2',color:'#dc2626'},
+        ISAT:{nama:'Indosat',logo:'IM3',bg:'#fffbeb',color:'#d97706'},
+        XL:{nama:'XL',logo:'XL',bg:'#eff6ff',color:'#2563eb'},
+        AXIS:{nama:'AXIS',logo:'AX',bg:'#fae8ff',color:'#a21caf'},
+        TRI:{nama:'Tri',logo:'3',bg:'#f1f5f9',color:'#0f172a'},
+        SMART:{nama:'Smartfren',logo:'SF',bg:'#fff1f2',color:'#e11d48'},
+        BYU:{nama:'by.U',logo:'byU',bg:'#ecfeff',color:'#0891b2'},
+        LIVEON:{nama:'Live.On',logo:'LV',bg:'#f5f3ff',color:'#6d28d9'},
+        CERIA:{nama:'Ceria',logo:'CR',bg:'#ecfccb',color:'#4d7c0f'},
+        LAINNYA:{nama:'Lainnya',logo:'OP',bg:'#f8fafc',color:'#334155'}
+    };
+
+    const operatorOrder=['TSEL','ISAT','XL','AXIS','TRI','SMART','BYU','LIVEON','CERIA','LAINNYA'];
+
+    const prefixMap=[
+        {prefix:['0851'],op:'BYU'},
+        {prefix:['0809'],op:'LIVEON'},
+        {prefix:['0828'],op:'CERIA'},
+        {prefix:['0811','0812','0813','0821','0822','0823','0852','0853'],op:'TSEL'},
+        {prefix:['0814','0815','0816','0855','0856','0857','0858'],op:'ISAT'},
+        {prefix:['0817','0818','0819','0859','0877','0878'],op:'XL'},
+        {prefix:['0831','0832','0833','0838'],op:'AXIS'},
+        {prefix:['0895','0896','0897','0898','0899'],op:'TRI'},
+        {prefix:['0881','0882','0883','0884','0885','0886','0887','0888','0889'],op:'SMART'}
+    ];
+
+    const products=Array.from(document.querySelectorAll('#dataProduk span'));
+
+    const operatorAvailable=new Set(
+        products
+            .map(function(item){return item.dataset.operator;})
+            .filter(Boolean)
+    );
+
+    function cleanNumber(value){
+        value=(value||'').replace(/[^0-9]/g,'');
+        if(value.startsWith('62')){
+            value='0'+value.slice(2);
+        }
+        return value;
+    }
+
+    function detectOperator(number){
+        const nomor=cleanNumber(number);
+        if(nomor.length<4) return '';
+
+        const four=nomor.slice(0,4);
+        const five=nomor.slice(0,5);
+
+        for(const item of prefixMap){
+            if(item.prefix.includes(five) && operatorAvailable.has(item.op)){
+                return item.op;
+            }
+        }
+
+        for(const item of prefixMap){
+            if(item.prefix.includes(four) && operatorAvailable.has(item.op)){
+                return item.op;
+            }
+        }
+
+        return '';
+    }
+
+    function getMeta(op){
+        return operatorMeta[op]||operatorMeta.LAINNYA;
+    }
+
+    function renderOperators(){
+        operatorGrid.innerHTML='';
+
+        const finalOps=[];
+
+        operatorOrder.forEach(function(op){
+            if(operatorAvailable.has(op)){
+                finalOps.push(op);
+            }
+        });
+
+        operatorAvailable.forEach(function(op){
+            if(!finalOps.includes(op)){
+                finalOps.push(op);
+            }
+        });
+
+        if(!finalOps.length){
+            operatorGrid.innerHTML='<div class="operator-empty">Produk paket data belum tersedia.</div>';
+            return;
+        }
+
+        finalOps.forEach(function(op){
+            const meta=getMeta(op);
+            const card=document.createElement('button');
+            card.type='button';
+            card.className='operator-card';
+            card.dataset.operator=op;
+
+            card.innerHTML=
+                '<div class="operator-logo" style="background:'+meta.bg+';color:'+meta.color+';">'+meta.logo+'</div>'+
+                '<div class="operator-name">'+meta.nama+'</div>';
+
+            card.addEventListener('click',function(){
+                setOperator(op,false);
+            });
+
+            operatorGrid.appendChild(card);
+        });
+    }
+
+    function setOperator(op,auto){
+        if(!op || !operatorAvailable.has(op)){
+            return;
+        }
+
+        activeOperator=op;
+        operatorValue.value=op;
+        kodeProduk.value='';
+
+        document.querySelectorAll('.operator-card').forEach(function(card){
+            card.classList.toggle('active',card.dataset.operator===op);
+        });
+
+        const meta=getMeta(op);
+
+        operatorInfo.style.display='block';
+        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terdeteksi: ':'Operator dipilih: ')+'<strong>'+meta.nama+'</strong>';
+
+        renderPackages();
+        updateSummary();
+    }
+
+    function setFilter(filter){
+        activeFilter=filter;
+
+        document.querySelectorAll('.filter-btn').forEach(function(btn){
+            btn.classList.toggle('active',btn.dataset.filter===filter);
+        });
+
+        renderPackages();
+    }
+
+    function filterLabel(tipe){
+        const labels={
+            ALL:'Semua',
+            HARIAN:'1 Hari',
+            '5HARI':'5 Hari',
+            MINGGUAN:'7 Hari',
+            BULANAN:'Bulanan',
+            UNLIMITED:'Unlimited',
+            SOSMED:'Sosmed',
+            COMBO:'Combo'
+        };
+
+        return labels[tipe]||'Paket';
+    }
+
+    function renderPackages(){
+        packageGrid.innerHTML='';
+        kodeProduk.value='';
+
+        if(!activeOperator){
+            packageGrid.innerHTML='<div class="package-empty">Pilih operator terlebih dahulu untuk melihat paket internet.</div>';
+            updateSummary();
+            return;
+        }
+
+        let list=products.filter(function(item){
+            return item.dataset.operator===activeOperator;
+        });
+
+        if(activeFilter!=='ALL'){
+            list=list.filter(function(item){
+                return item.dataset.tipe===activeFilter;
+            });
+        }
+
+        if(!list.length){
+            packageGrid.innerHTML='<div class="package-empty">Paket untuk filter ini belum tersedia pada operator yang dipilih.</div>';
+            updateSummary();
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('button');
+            card.type='button';
+            card.className='package-card';
+            card.dataset.kode=item.dataset.kode;
+            card.dataset.nama=item.dataset.nama;
+            card.dataset.harga=item.dataset.harga;
+
+            card.innerHTML=
+                '<div class="package-label">'+filterLabel(item.dataset.tipe)+'</div>'+
+                '<div class="package-name">'+item.dataset.nama+'</div>'+
+                '<div class="package-desc">Klik untuk memilih paket data ini</div>'+
+                '<div class="package-price">'+item.dataset.harga+'</div>';
+
+            card.addEventListener('click',function(){
+                document.querySelectorAll('.package-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                kodeProduk.value=item.dataset.kode;
+
+                updateSummary({
+                    nama:item.dataset.nama,
+                    harga:item.dataset.harga
+                });
+            });
+
+            packageGrid.appendChild(card);
+        });
+    }
+
+    function updateSummary(selected){
+        selected=selected||{};
+
+        const nomor=cleanNumber(nomorInput.value);
+        const activePackage=document.querySelector('.package-card.active');
+        const op=operatorValue.value;
+        const meta=getMeta(op);
+
+        document.getElementById('sumNomor').textContent=nomor||'-';
+        document.getElementById('sumOperator').textContent=op?meta.nama:'-';
+        document.getElementById('sumProduk').textContent=selected.nama||(activePackage?activePackage.dataset.nama:'-');
+        document.getElementById('sumHarga').textContent=selected.harga||(activePackage?activePackage.dataset.harga:'Rp 0');
+
+        summaryBox.style.display=nomor&&op&&activePackage?'block':'none';
+    }
+
+    if(nomorInput){
+        nomorInput.addEventListener('input',function(){
+            let nomor=cleanNumber(nomorInput.value);
+
+            if(nomor.length>14){
+                nomor=nomor.slice(0,14);
+            }
+
+            nomorInput.value=nomor;
+            charCount.textContent=nomor.length+'/14';
+
+            const op=detectOperator(nomor);
+
+            if(op){
+                setOperator(op,true);
+            }else if(nomor.length>=4){
+                operatorInfo.style.display='block';
+                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terdeteksi. Silakan pilih manual.';
+                updateSummary();
+            }else{
+                operatorInfo.style.display='none';
+                updateSummary();
+            }
+        });
+    }
+
+    document.querySelectorAll('.data-quick button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id')||'';
+            }
+
+            nomorInput.focus();
+            nomorInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            setFilter(btn.dataset.filter);
+        });
+    });
+
+    if(form){
+        form.addEventListener('submit',function(e){
+            const nomor=cleanNumber(nomorInput.value);
+            const op=operatorValue.value;
+            const produk=kodeProduk.value;
+
+            if(!nomor || nomor.length<10){
+                e.preventDefault();
+                alert('Masukkan nomor HP yang valid minimal 10 digit.');
+                nomorInput.focus();
+                return;
+            }
+
+            if(!op){
+                e.preventDefault();
+                alert('Silakan pilih operator terlebih dahulu.');
+                return;
+            }
+
+            if(!produk){
+                e.preventDefault();
+                alert('Silakan pilih paket data terlebih dahulu.');
+                return;
+            }
+
+            btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Paket Data...';
+            btnBayar.style.opacity='0.75';
+            btnBayar.style.pointerEvents='none';
+        });
+    }
+
+    renderOperators();
+
+    if(nomorInput && nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

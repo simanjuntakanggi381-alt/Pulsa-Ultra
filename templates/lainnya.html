@@ -1,0 +1,1446 @@
+{% extends "base.html" %}
+{% block konten %}
+
+<style>
+:root{
+  --eh-dark:#0f172a;
+  --eh-dark2:#111827;
+  --eh-text:#334155;
+  --eh-muted:#64748b;
+  --eh-line:#e2e8f0;
+  --eh-soft:#f8fafc;
+  --eh-card:#ffffff;
+
+  --eh-blue:#2563eb;
+  --eh-sky:#0ea5e9;
+  --eh-cyan:#06b6d4;
+  --eh-indigo:#4f46e5;
+  --eh-purple:#7c3aed;
+  --eh-green:#16a34a;
+  --eh-emerald:#10b981;
+  --eh-orange:#f59e0b;
+  --eh-pink:#ec4899;
+  --eh-red:#ef4444;
+
+  --eh-shadow:0 24px 65px rgba(15,23,42,.11);
+  --eh-soft-shadow:0 14px 34px rgba(15,23,42,.065);
+}
+
+.banner-slider,
+.banner-wrapper,
+.hero-banner,
+.banner-indicators{
+  display:none !important;
+}
+
+body{
+  background:
+    radial-gradient(circle at top left,rgba(37,99,235,.14),transparent 34%),
+    radial-gradient(circle at top right,rgba(6,182,212,.10),transparent 34%),
+    radial-gradient(circle at bottom left,rgba(124,58,237,.08),transparent 34%),
+    linear-gradient(180deg,#f8fbff 0%,#eef2ff 46%,#ffffff 100%);
+}
+
+.explore-page{
+  width:100%;
+  max-width:720px;
+  margin:0 auto;
+  padding:1rem .75rem 7rem;
+  box-sizing:border-box;
+  font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+  color:var(--eh-text);
+}
+
+.explore-shell{
+  position:relative;
+  overflow:hidden;
+  border-radius:38px;
+  padding:1rem;
+  background:
+    radial-gradient(circle at top left,rgba(37,99,235,.10),transparent 34%),
+    radial-gradient(circle at bottom right,rgba(6,182,212,.08),transparent 36%),
+    linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  border:1px solid rgba(37,99,235,.14);
+  box-shadow:var(--eh-shadow);
+}
+
+.explore-alert{
+  margin-bottom:.85rem;
+  padding:.9rem 1rem;
+  border-radius:18px;
+  text-align:center;
+  font-weight:850;
+  font-size:.86rem;
+  line-height:1.45;
+  background:#eef2ff;
+  color:#4338ca;
+  border:1px solid #c7d2fe;
+}
+
+.explore-alert.success{
+  background:#ecfdf5;
+  color:#166534;
+  border-color:#bbf7d0;
+}
+
+.explore-alert.error,
+.explore-alert.danger{
+  background:#fef2f2;
+  color:#991b1b;
+  border-color:#fecaca;
+}
+
+.explore-alert.warning{
+  background:#fffbeb;
+  color:#92400e;
+  border-color:#fde68a;
+}
+
+.explore-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  margin-bottom:.85rem;
+}
+
+.explore-back,
+.explore-top-pill{
+  min-height:40px;
+  padding:0 .78rem;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.42rem;
+  text-decoration:none;
+  font-size:.72rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.explore-back{
+  background:#fff;
+  border:1px solid var(--eh-line);
+  color:var(--eh-blue);
+  box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.explore-top-pill{
+  background:#eef2ff;
+  color:#4338ca;
+  border:1px solid #c7d2fe;
+}
+
+.explore-hero{
+  position:relative;
+  overflow:hidden;
+  border-radius:34px;
+  padding:1.1rem;
+  color:#ffffff;
+  background:
+    radial-gradient(circle at 16% 0%,rgba(255,255,255,.28),transparent 34%),
+    radial-gradient(circle at 92% 10%,rgba(6,182,212,.22),transparent 30%),
+    linear-gradient(135deg,#020617 0%,#0f172a 42%,#2563eb 100%);
+  box-shadow:0 22px 50px rgba(15,23,42,.22);
+}
+
+.explore-hero::before{
+  content:"";
+  position:absolute;
+  width:190px;
+  height:190px;
+  right:-70px;
+  top:-76px;
+  border-radius:50%;
+  background:rgba(255,255,255,.10);
+}
+
+.explore-hero::after{
+  content:"";
+  position:absolute;
+  right:18px;
+  bottom:-48px;
+  width:118px;
+  height:118px;
+  border-radius:50%;
+  border:15px solid rgba(255,255,255,.10);
+}
+
+.explore-hero-main{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1fr 112px;
+  gap:1rem;
+  align-items:center;
+}
+
+.explore-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.36rem;
+  padding:.34rem .68rem;
+  margin-bottom:.58rem;
+  border-radius:999px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  font-size:.66rem;
+  font-weight:950;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.explore-badge i{
+  color:#22c55e;
+  font-size:.46rem;
+  filter:drop-shadow(0 0 6px rgba(34,197,94,.85));
+}
+
+.explore-hero h2{
+  margin:0;
+  color:#fff;
+  font-size:1.42rem;
+  line-height:1.12;
+  font-weight:950;
+  letter-spacing:-.04em;
+}
+
+.explore-hero p{
+  margin:.45rem 0 0;
+  color:rgba(255,255,255,.84);
+  font-size:.8rem;
+  line-height:1.52;
+  font-weight:650;
+}
+
+.explore-visual{
+  position:relative;
+  width:108px;
+  height:108px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.explore-visual::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:32px;
+  background:rgba(255,255,255,.09);
+  transform:rotate(10deg);
+  border:1px solid rgba(255,255,255,.12);
+}
+
+.explore-visual::after{
+  content:"";
+  position:absolute;
+  inset:16px;
+  border-radius:24px;
+  background:rgba(255,255,255,.08);
+  transform:rotate(-12deg);
+}
+
+.explore-visual-icon{
+  position:relative;
+  z-index:3;
+  width:70px;
+  height:70px;
+  border-radius:25px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.24);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:1.48rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 18px 34px rgba(15,23,42,.28);
+  backdrop-filter:blur(10px);
+}
+
+.explore-hero-stats{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.55rem;
+  margin-top:.9rem;
+}
+
+.explore-stat{
+  padding:.66rem .45rem;
+  border-radius:17px;
+  text-align:center;
+  background:rgba(255,255,255,.11);
+  border:1px solid rgba(255,255,255,.13);
+}
+
+.explore-stat strong{
+  display:block;
+  color:#fff;
+  font-size:.77rem;
+  font-weight:950;
+}
+
+.explore-stat span{
+  display:block;
+  margin-top:.1rem;
+  color:rgba(255,255,255,.70);
+  font-size:.6rem;
+  font-weight:750;
+}
+
+.explore-search-panel{
+  margin-top:.85rem;
+  padding:.9rem;
+  border-radius:28px;
+  background:#ffffff;
+  border:1px solid #eef2f7;
+  box-shadow:var(--eh-soft-shadow);
+}
+
+.explore-search-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.75rem;
+  margin-bottom:.7rem;
+}
+
+.explore-search-head strong{
+  display:block;
+  color:#0f172a;
+  font-size:.9rem;
+  font-weight:950;
+}
+
+.explore-search-head span{
+  display:block;
+  margin-top:.12rem;
+  color:#64748b;
+  font-size:.7rem;
+  line-height:1.4;
+  font-weight:650;
+}
+
+.explore-search-chip{
+  flex:0 0 auto;
+  padding:.34rem .55rem;
+  border-radius:999px;
+  background:#eff6ff;
+  color:#1d4ed8;
+  font-size:.62rem;
+  font-weight:950;
+}
+
+.explore-search{
+  position:relative;
+}
+
+.explore-search i{
+  position:absolute;
+  left:.9rem;
+  top:50%;
+  transform:translateY(-50%);
+  color:#64748b;
+  font-size:.9rem;
+}
+
+.explore-search input{
+  width:100%;
+  min-height:54px;
+  border-radius:19px;
+  border:1.8px solid #dbeafe;
+  background:#f8fafc;
+  color:#0f172a;
+  font-size:.88rem;
+  font-weight:850;
+  padding:0 .9rem 0 2.55rem;
+  outline:none;
+  transition:.2s ease;
+}
+
+.explore-search input:focus{
+  border-color:#2563eb;
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(37,99,235,.11);
+}
+
+.explore-tabs{
+  display:flex;
+  gap:.45rem;
+  overflow-x:auto;
+  padding:.72rem 0 .05rem;
+  scrollbar-width:none;
+}
+
+.explore-tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.explore-tabs button{
+  flex:0 0 auto;
+  min-height:38px;
+  padding:0 .72rem;
+  border-radius:999px;
+  border:1px solid #dbeafe;
+  background:#fff;
+  color:#1d4ed8;
+  font-size:.68rem;
+  font-weight:950;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.explore-tabs button.active{
+  background:#0f172a;
+  color:#fff;
+  border-color:#0f172a;
+  box-shadow:0 10px 20px rgba(15,23,42,.15);
+}
+
+.explore-focus{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:.68rem;
+  margin-top:.85rem;
+}
+
+.focus-card{
+  position:relative;
+  overflow:hidden;
+  min-height:132px;
+  padding:.92rem;
+  border-radius:26px;
+  text-decoration:none;
+  color:inherit;
+  background:#fff;
+  border:1px solid #eef2f7;
+  box-shadow:var(--eh-soft-shadow);
+  transition:.2s ease;
+}
+
+.focus-card:hover{
+  transform:translateY(-2px);
+  border-color:#bfdbfe;
+}
+
+.focus-card::before{
+  content:"";
+  position:absolute;
+  width:105px;
+  height:105px;
+  right:-38px;
+  top:-38px;
+  border-radius:50%;
+  background:var(--soft);
+}
+
+.focus-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.6rem;
+}
+
+.focus-icon{
+  width:46px;
+  height:46px;
+  border-radius:17px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  background:var(--grad);
+  box-shadow:0 10px 20px rgba(15,23,42,.12);
+}
+
+.focus-tag{
+  padding:.26rem .46rem;
+  border-radius:999px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#475569;
+  font-size:.56rem;
+  font-weight:950;
+}
+
+.focus-card strong{
+  position:relative;
+  z-index:2;
+  display:block;
+  margin-top:.65rem;
+  color:#0f172a;
+  font-size:.84rem;
+  line-height:1.24;
+  font-weight:950;
+}
+
+.focus-card span{
+  position:relative;
+  z-index:2;
+  display:block;
+  margin-top:.16rem;
+  color:#64748b;
+  font-size:.66rem;
+  line-height:1.34;
+  font-weight:650;
+}
+
+.explore-section-title{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.85rem;
+  margin:1rem 0 .72rem;
+}
+
+.explore-section-title h3{
+  margin:0;
+  color:#0f172a;
+  font-size:1rem;
+  line-height:1.24;
+  font-weight:950;
+  letter-spacing:-.025em;
+}
+
+.explore-section-title p{
+  margin:.2rem 0 0;
+  color:#64748b;
+  font-size:.74rem;
+  line-height:1.42;
+  font-weight:650;
+}
+
+.explore-section-pill{
+  flex:0 0 auto;
+  padding:.36rem .6rem;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#4338ca;
+  font-size:.64rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.explore-list{
+  display:grid;
+  gap:.78rem;
+}
+
+.explore-group{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  padding:.92rem;
+  background:#fff;
+  border:1px solid #eef2f7;
+  box-shadow:var(--eh-soft-shadow);
+}
+
+.explore-group::before{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-82px;
+  top:-84px;
+  border-radius:50%;
+  background:var(--soft,rgba(37,99,235,.07));
+}
+
+.group-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:.8rem;
+  margin-bottom:.78rem;
+}
+
+.group-left{
+  display:flex;
+  align-items:flex-start;
+  gap:.75rem;
+  min-width:0;
+}
+
+.group-icon{
+  width:50px;
+  height:50px;
+  flex:0 0 50px;
+  border-radius:19px;
+  background:var(--grad);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.08rem;
+  box-shadow:0 12px 24px var(--shadow,rgba(37,99,235,.16));
+}
+
+.group-head h4{
+  margin:0;
+  color:#0f172a;
+  font-size:.96rem;
+  line-height:1.25;
+  font-weight:950;
+}
+
+.group-head p{
+  margin:.18rem 0 0;
+  color:#64748b;
+  font-size:.7rem;
+  line-height:1.38;
+  font-weight:650;
+}
+
+.group-badge{
+  flex:0 0 auto;
+  padding:.31rem .52rem;
+  border-radius:999px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#475569;
+  font-size:.58rem;
+  font-weight:950;
+}
+
+.service-stack{
+  position:relative;
+  z-index:2;
+  display:grid;
+  gap:.55rem;
+}
+
+.service-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  padding:.74rem;
+  border-radius:20px;
+  background:#f8fafc;
+  border:1px solid #edf2f7;
+  text-decoration:none;
+  color:inherit;
+  transition:.2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.service-row:hover{
+  transform:translateY(-2px);
+  background:#fff;
+  border-color:#bfdbfe;
+  box-shadow:0 12px 24px rgba(15,23,42,.07);
+}
+
+.service-left{
+  display:flex;
+  align-items:center;
+  gap:.68rem;
+  min-width:0;
+}
+
+.service-icon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:.95rem;
+  background:var(--grad);
+  box-shadow:0 10px 20px var(--icon-shadow,rgba(37,99,235,.17));
+}
+
+.service-text{
+  min-width:0;
+}
+
+.service-text strong{
+  display:block;
+  color:#0f172a;
+  font-size:.78rem;
+  line-height:1.2;
+  font-weight:950;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.service-text span{
+  display:block;
+  margin-top:.1rem;
+  color:#64748b;
+  font-size:.64rem;
+  line-height:1.3;
+  font-weight:650;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.service-right{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+  flex:0 0 auto;
+}
+
+.service-status{
+  padding:.25rem .45rem;
+  border-radius:999px;
+  background:#ecfdf5;
+  color:#047857;
+  font-size:.56rem;
+  font-weight:950;
+}
+
+.service-arrow{
+  width:30px;
+  height:30px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0f172a;
+  color:#fff;
+  font-size:.7rem;
+}
+
+.explore-empty{
+  display:none;
+  margin-top:.9rem;
+  padding:1rem;
+  border-radius:22px;
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  color:#92400e;
+  text-align:center;
+  font-size:.78rem;
+  line-height:1.45;
+  font-weight:800;
+}
+
+.explore-status-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.62rem;
+  margin-top:.9rem;
+}
+
+.explore-status{
+  padding:.82rem .55rem;
+  border-radius:22px;
+  background:#fff;
+  border:1px solid #eef2f7;
+  box-shadow:var(--eh-soft-shadow);
+  text-align:center;
+}
+
+.explore-status i{
+  width:38px;
+  height:38px;
+  margin:0 auto .45rem;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.explore-status strong{
+  display:block;
+  color:#0f172a;
+  font-size:.78rem;
+  font-weight:950;
+}
+
+.explore-status span{
+  display:block;
+  margin-top:.1rem;
+  color:#64748b;
+  font-size:.62rem;
+  font-weight:750;
+}
+
+.explore-note{
+  margin-top:.9rem;
+  padding:.92rem;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at top left,rgba(37,99,235,.07),transparent 34%),
+    #ffffff;
+  border:1px solid #e0e7ff;
+  color:#334155;
+  font-size:.76rem;
+  line-height:1.55;
+  font-weight:700;
+  box-shadow:var(--eh-soft-shadow);
+}
+
+.explore-note strong{
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+  color:#0f172a;
+  font-size:.84rem;
+  font-weight:950;
+  margin-bottom:.25rem;
+}
+
+@media(max-width:620px){
+  .explore-page{
+    max-width:100%;
+    padding:.9rem .55rem 7rem;
+  }
+
+  .explore-shell{
+    padding:.68rem;
+    border-radius:30px;
+  }
+
+  .explore-topbar{
+    align-items:flex-start;
+  }
+
+  .explore-back,
+  .explore-top-pill{
+    min-height:38px;
+    padding:0 .65rem;
+    font-size:.66rem;
+  }
+
+  .explore-hero{
+    padding:1rem;
+    border-radius:28px;
+  }
+
+  .explore-hero-main{
+    grid-template-columns:1fr;
+  }
+
+  .explore-visual{
+    position:absolute;
+    right:8px;
+    bottom:6px;
+    width:84px;
+    height:84px;
+    opacity:.86;
+  }
+
+  .explore-visual-icon{
+    width:54px;
+    height:54px;
+    border-radius:20px;
+    font-size:1.2rem;
+  }
+
+  .explore-hero h2{
+    font-size:1.18rem;
+    max-width:260px;
+  }
+
+  .explore-hero p{
+    font-size:.76rem;
+    max-width:285px;
+  }
+
+  .explore-hero-stats,
+  .explore-focus,
+  .explore-status-grid{
+    grid-template-columns:1fr;
+  }
+
+  .explore-search-head,
+  .explore-section-title,
+  .group-head{
+    flex-direction:column;
+    gap:.42rem;
+  }
+
+  .service-row{
+    padding:.68rem;
+  }
+
+  .service-status{
+    display:none;
+  }
+}
+</style>
+
+<div class="explore-page">
+  <div class="explore-shell">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for kategori, pesan in messages %}
+          <div class="explore-alert {{ kategori }}">{{ pesan }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="explore-topbar">
+      <a href="{{ url_for('dashboard') }}" class="explore-back">
+        <i class="fa-solid fa-chevron-left"></i>
+        Dashboard
+      </a>
+
+      <div class="explore-top-pill">
+        <i class="fa-solid fa-compass"></i>
+        Explore Hub
+      </div>
+    </div>
+
+    <div class="explore-hero">
+      <div class="explore-hero-main">
+        <div>
+          <div class="explore-badge">
+            <i class="fa-solid fa-circle"></i>
+            Menu Layanan
+          </div>
+
+          <h2>Mau transaksi apa hari ini?</h2>
+          <p>Pilih kebutuhan kamu, lalu buka layanan yang sesuai. Semua kategori dibuat lebih jelas agar pengguna tidak bingung.</p>
+        </div>
+
+        <div class="explore-visual">
+          <div class="explore-visual-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="explore-hero-stats">
+        <div class="explore-stat">
+          <strong>16+</strong>
+          <span>Layanan</span>
+        </div>
+
+        <div class="explore-stat">
+          <strong>4 Zona</strong>
+          <span>Kategori</span>
+        </div>
+
+        <div class="explore-stat">
+          <strong>24 Jam</strong>
+          <span>Akses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="explore-search-panel">
+      <div class="explore-search-head">
+        <div>
+          <strong>Cari layanan cepat</strong>
+          <span>Ketik nama layanan atau pilih kategori di bawah.</span>
+        </div>
+
+        <div class="explore-search-chip">
+          Smart Explore
+        </div>
+      </div>
+
+      <div class="explore-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="serviceSearch" placeholder="Cari BPJS, PDAM, Internet, Game, PLN...">
+      </div>
+
+      <div class="explore-tabs">
+        <button type="button" class="active" data-filter="all">Semua</button>
+        <button type="button" data-filter="tagihan">Rumah & Tagihan</button>
+        <button type="button" data-filter="operator">Kartu & Operator</button>
+        <button type="button" data-filter="hiburan">Digital & Hiburan</button>
+        <button type="button" data-filter="keuangan">Keuangan</button>
+      </div>
+    </div>
+
+    <div class="explore-focus">
+      <a href="{{ url_for('bpjs') }}" class="focus-card" style="--grad:linear-gradient(135deg,#16a34a,#059669);--soft:rgba(22,163,74,.09);">
+        <div class="focus-top">
+          <div class="focus-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+          <div class="focus-tag">Bulanan</div>
+        </div>
+        <strong>Tagihan Rumah</strong>
+        <span>BPJS, PDAM, internet, PLN pasca, gas, dan PBB.</span>
+      </a>
+
+      <a href="{{ url_for('internet') }}" class="focus-card" style="--grad:linear-gradient(135deg,#2563eb,#06b6d4);--soft:rgba(37,99,235,.09);">
+        <div class="focus-top">
+          <div class="focus-icon">
+            <i class="fa-solid fa-house-signal"></i>
+          </div>
+          <div class="focus-tag">Rumah</div>
+        </div>
+        <strong>Internet & TV</strong>
+        <span>Buka layanan internet rumah dan TV kabel.</span>
+      </a>
+
+      <a href="{{ url_for('game') }}" class="focus-card" style="--grad:linear-gradient(135deg,#7c3aed,#ec4899);--soft:rgba(124,58,237,.09);">
+        <div class="focus-top">
+          <div class="focus-icon">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <div class="focus-tag">Digital</div>
+        </div>
+        <strong>Game & Voucher</strong>
+        <span>Top up game, voucher digital, dan tiket.</span>
+      </a>
+
+      <a href="{{ url_for('masa_aktif') }}" class="focus-card" style="--grad:linear-gradient(135deg,#f59e0b,#06b6d4);--soft:rgba(245,158,11,.10);">
+        <div class="focus-top">
+          <div class="focus-icon">
+            <i class="fa-solid fa-signal"></i>
+          </div>
+          <div class="focus-tag">Operator</div>
+        </div>
+        <strong>Kartu & Operator</strong>
+        <span>Masa aktif, paket telp, dan aktivasi perdana.</span>
+      </a>
+    </div>
+
+    <div class="explore-section-title">
+      <div>
+        <h3>Pilih Berdasarkan Kebutuhan</h3>
+        <p>Layanan dipisah per kategori supaya lebih enak dilihat dan mudah dipilih.</p>
+      </div>
+
+      <span class="explore-section-pill">Explore Board</span>
+    </div>
+
+    <div class="explore-list">
+
+      <div class="explore-group service-zone" data-zone="tagihan" style="--grad:linear-gradient(135deg,#2563eb,#06b6d4);--soft:rgba(37,99,235,.08);--shadow:rgba(37,99,235,.18);">
+        <div class="group-head">
+          <div class="group-left">
+            <div class="group-icon">
+              <i class="fa-solid fa-house-signal"></i>
+            </div>
+            <div>
+              <h4>Rumah & Tagihan</h4>
+              <p>Pembayaran rutin untuk kebutuhan rumah dan tagihan bulanan.</p>
+            </div>
+          </div>
+          <div class="group-badge">7 layanan</div>
+        </div>
+
+        <div class="service-stack">
+          <a href="{{ url_for('pdam') }}" class="service-row" data-category="tagihan" data-keywords="pdam air tagihan pembayaran">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#0288d1,#00b0ff);--icon-shadow:rgba(0,176,255,.22);">
+                <i class="fa-solid fa-droplet"></i>
+              </div>
+              <div class="service-text">
+                <strong>PDAM</strong>
+                <span>Cek dan bayar tagihan air.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('bpjs') }}" class="service-row" data-category="tagihan" data-keywords="bpjs kesehatan iuran tagihan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#16a34a,#059669);--icon-shadow:rgba(22,163,74,.22);">
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+              <div class="service-text">
+                <strong>BPJS Kesehatan</strong>
+                <span>Bayar iuran BPJS rutin.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('internet') }}" class="service-row" data-category="tagihan" data-keywords="internet wifi indihome biznet tagihan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#4f46e5,#06b6d4);--icon-shadow:rgba(79,70,229,.22);">
+                <i class="fa-solid fa-router"></i>
+              </div>
+              <div class="service-text">
+                <strong>Internet Rumah</strong>
+                <span>Cek dan bayar tagihan internet.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('tv') }}" class="service-row" data-category="tagihan hiburan" data-keywords="tv kabel streaming tagihan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#ff5252,#ff1744);--icon-shadow:rgba(255,23,68,.22);">
+                <i class="fa-solid fa-tv"></i>
+              </div>
+              <div class="service-text">
+                <strong>TV Kabel</strong>
+                <span>Layanan TV kabel dan hiburan rumah.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('pln_pasca') }}" class="service-row" data-category="tagihan" data-keywords="pln pasca listrik tagihan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#e11d48,#9f1239);--icon-shadow:rgba(225,29,72,.22);">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div class="service-text">
+                <strong>PLN Pascabayar</strong>
+                <span>Cek dan bayar tagihan listrik.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('gas') }}" class="service-row" data-category="tagihan" data-keywords="gas pgn rumah bisnis">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#ff6d00,#ff3d00);--icon-shadow:rgba(255,61,0,.22);">
+                <i class="fa-solid fa-fire-flame-simple"></i>
+              </div>
+              <div class="service-text">
+                <strong>Gas</strong>
+                <span>Bayar layanan gas rumah atau bisnis.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('pbb') }}" class="service-row" data-category="tagihan" data-keywords="pbb pajak bumi bangunan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#0ea5e9,#0369a1);--icon-shadow:rgba(14,165,233,.22);">
+                <i class="fa-solid fa-building-columns"></i>
+              </div>
+              <div class="service-text">
+                <strong>PBB</strong>
+                <span>Pembayaran pajak bumi dan bangunan.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="explore-group service-zone" data-zone="operator" style="--grad:linear-gradient(135deg,#f59e0b,#06b6d4);--soft:rgba(245,158,11,.09);--shadow:rgba(245,158,11,.18);">
+        <div class="group-head">
+          <div class="group-left">
+            <div class="group-icon">
+              <i class="fa-solid fa-signal"></i>
+            </div>
+            <div>
+              <h4>Kartu & Operator</h4>
+              <p>Layanan tambahan untuk kartu SIM, telepon, dan aktivasi.</p>
+            </div>
+          </div>
+          <div class="group-badge">3 layanan</div>
+        </div>
+
+        <div class="service-stack">
+          <a href="{{ url_for('masa_aktif') }}" class="service-row" data-category="operator" data-keywords="masa aktif kartu sim perpanjang">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#ff9100,#ff6d00);--icon-shadow:rgba(255,109,0,.22);">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+              </div>
+              <div class="service-text">
+                <strong>Masa Aktif</strong>
+                <span>Perpanjang masa aktif kartu.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('paket_telp') }}" class="service-row" data-category="operator" data-keywords="paket telp telepon menit operator">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#00b4db,#0083b0);--icon-shadow:rgba(0,131,176,.22);">
+                <i class="fa-solid fa-phone-volume"></i>
+              </div>
+              <div class="service-text">
+                <strong>Paket Telepon</strong>
+                <span>Paket menit telepon operator.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('aktivasi') }}" class="service-row" data-category="operator" data-keywords="aktivasi perdana kartu sim">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#f50057,#ff4081);--icon-shadow:rgba(245,0,87,.22);">
+                <i class="fa-solid fa-sim-card"></i>
+              </div>
+              <div class="service-text">
+                <strong>Aktivasi Perdana</strong>
+                <span>Aktivasi kartu dan layanan SIM.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="explore-group service-zone" data-zone="hiburan" style="--grad:linear-gradient(135deg,#7c3aed,#ec4899);--soft:rgba(124,58,237,.09);--shadow:rgba(124,58,237,.18);">
+        <div class="group-head">
+          <div class="group-left">
+            <div class="group-icon">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h4>Digital & Hiburan</h4>
+              <p>Untuk game, voucher, hiburan digital, dan perjalanan.</p>
+            </div>
+          </div>
+          <div class="group-badge">3 layanan</div>
+        </div>
+
+        <div class="service-stack">
+          <a href="{{ url_for('game') }}" class="service-row" data-category="hiburan" data-keywords="game topup voucher mobile legends free fire pubg">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#7c4dff,#2979ff);--icon-shadow:rgba(41,121,255,.22);">
+                <i class="fa-solid fa-gamepad"></i>
+              </div>
+              <div class="service-text">
+                <strong>Top Up Game</strong>
+                <span>Voucher dan saldo game populer.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('voucher') }}" class="service-row" data-category="hiburan" data-keywords="voucher digital hiburan belanja">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#eab308,#ca8a04);--icon-shadow:rgba(234,179,8,.22);">
+                <i class="fa-solid fa-ticket"></i>
+              </div>
+              <div class="service-text">
+                <strong>Voucher Digital</strong>
+                <span>Voucher hiburan dan kebutuhan digital.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('tiket') }}" class="service-row" data-category="hiburan" data-keywords="tiket pesawat travel perjalanan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#6366f1,#4338ca);--icon-shadow:rgba(99,102,241,.22);">
+                <i class="fa-solid fa-plane"></i>
+              </div>
+              <div class="service-text">
+                <strong>Tiket</strong>
+                <span>Layanan tiket dan perjalanan.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="explore-group service-zone" data-zone="keuangan" style="--grad:linear-gradient(135deg,#10b981,#f59e0b);--soft:rgba(16,185,129,.09);--shadow:rgba(16,185,129,.18);">
+        <div class="group-head">
+          <div class="group-left">
+            <div class="group-icon">
+              <i class="fa-solid fa-building-shield"></i>
+            </div>
+            <div>
+              <h4>Keuangan & Sosial</h4>
+              <p>Untuk cicilan, proteksi, zakat, dan kebutuhan sosial.</p>
+            </div>
+          </div>
+          <div class="group-badge">3 layanan</div>
+        </div>
+
+        <div class="service-stack">
+          <a href="{{ url_for('angsuran') }}" class="service-row" data-category="keuangan" data-keywords="angsuran cicilan kredit finance">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#ec4899,#be185d);--icon-shadow:rgba(236,72,153,.22);">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+              <div class="service-text">
+                <strong>Angsuran</strong>
+                <span>Bayar cicilan dan finance.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('asuransi') }}" class="service-row" data-category="keuangan" data-keywords="asuransi proteksi tagihan">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#10b981,#047857);--icon-shadow:rgba(16,185,129,.22);">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div class="service-text">
+                <strong>Asuransi</strong>
+                <span>Pembayaran tagihan asuransi.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+
+          <a href="{{ url_for('zakat') }}" class="service-row" data-category="keuangan" data-keywords="zakat donasi infaq sedekah sosial">
+            <div class="service-left">
+              <div class="service-icon" style="--grad:linear-gradient(135deg,#84cc16,#4d7c0f);--icon-shadow:rgba(132,204,22,.22);">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+              </div>
+              <div class="service-text">
+                <strong>Zakat & Donasi</strong>
+                <span>Pembayaran zakat, infaq, dan donasi.</span>
+              </div>
+            </div>
+            <div class="service-right">
+              <span class="service-status">Aktif</span>
+              <div class="service-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="explore-empty" id="emptyResult">
+      Layanan tidak ditemukan. Coba cari BPJS, PDAM, game, internet, PLN, voucher, angsuran, atau zakat.
+    </div>
+
+    <div class="explore-status-grid">
+      <div class="explore-status">
+        <i class="fa-solid fa-circle-check" style="background:#ecfdf5;color:#059669;"></i>
+        <strong>Aktif</strong>
+        <span>Status layanan</span>
+      </div>
+
+      <div class="explore-status">
+        <i class="fa-solid fa-clock" style="background:#eef2ff;color:#4f46e5;"></i>
+        <strong>24 Jam</strong>
+        <span>Akses menu</span>
+      </div>
+
+      <div class="explore-status">
+        <i class="fa-solid fa-shield-halved" style="background:#fff7ed;color:#ea580c;"></i>
+        <strong>Aman</strong>
+        <span>Alur transaksi</span>
+      </div>
+    </div>
+
+    <div class="explore-note">
+      <strong>
+        <i class="fa-solid fa-shield-halved"></i>
+        Catatan Aman
+      </strong>
+      Pilih layanan sesuai kebutuhan. Setiap menu akan membuka halaman khusus agar nomor, ID pelanggan, dan pilihan produk lebih mudah dicek sebelum transaksi.
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const input = document.getElementById('serviceSearch');
+  const buttons = document.querySelectorAll('.explore-tabs button');
+  const rows = document.querySelectorAll('.service-row');
+  const zones = document.querySelectorAll('.service-zone');
+  const empty = document.getElementById('emptyResult');
+
+  let activeFilter = 'all';
+
+  function applyFilter(){
+    const query = (input ? input.value : '').toLowerCase().trim();
+    let totalVisible = 0;
+
+    rows.forEach(function(row){
+      const text = (row.innerText || row.textContent || '').toLowerCase();
+      const keywords = (row.getAttribute('data-keywords') || '').toLowerCase();
+      const category = (row.getAttribute('data-category') || '').toLowerCase();
+
+      const matchSearch = !query || text.includes(query) || keywords.includes(query);
+      const matchFilter = activeFilter === 'all' || category.includes(activeFilter);
+
+      if(matchSearch && matchFilter){
+        row.style.display = '';
+        totalVisible++;
+      }else{
+        row.style.display = 'none';
+      }
+    });
+
+    zones.forEach(function(zone){
+      const visibleRows = zone.querySelectorAll('.service-row:not([style*="display: none"])');
+      zone.style.display = visibleRows.length ? '' : 'none';
+    });
+
+    if(empty){
+      empty.style.display = totalVisible ? 'none' : 'block';
+    }
+  }
+
+  if(input){
+    input.addEventListener('input', applyFilter);
+  }
+
+  buttons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      activeFilter = btn.getAttribute('data-filter') || 'all';
+
+      buttons.forEach(function(el){
+        el.classList.remove('active');
+      });
+
+      btn.classList.add('active');
+      applyFilter();
+    });
+  });
+
+  applyFilter();
+})();
+</script>
+
+{% endblock %}

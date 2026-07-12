@@ -1,0 +1,927 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set nama_lengkap = pengguna.nama_lengkap if pengguna is defined and pengguna.nama_lengkap is defined and pengguna.nama_lengkap else 'Pengguna SenjaData' %}
+{% set nomor_hp = pengguna.nomor_hp if pengguna is defined and pengguna.nomor_hp is defined and pengguna.nomor_hp else '-' %}
+{% set email_user = pengguna.email if pengguna is defined and pengguna.email is defined and pengguna.email else '-' %}
+{% set saldo_user = pengguna.saldo if pengguna is defined and pengguna.saldo is defined else 0 %}
+{% set huruf_awal = nama_lengkap[:1]|upper %}
+
+<style>
+:root{
+    --pv-blue:#2563eb;
+    --pv-sky:#0ea5e9;
+    --pv-cyan:#06b6d4;
+    --pv-indigo:#4f46e5;
+    --pv-purple:#7c3aed;
+    --pv-green:#16a34a;
+    --pv-orange:#f59e0b;
+    --pv-red:#ef4444;
+    --pv-dark:#0f172a;
+    --pv-text:#334155;
+    --pv-muted:#64748b;
+    --pv-border:#e2e8f0;
+    --pv-soft:#f8fafc;
+    --pv-shadow:0 20px 50px rgba(15,23,42,.10);
+    --pv-soft-shadow:0 10px 28px rgba(15,23,42,.065);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.15),transparent 34%),
+        radial-gradient(circle at top right,rgba(124,58,237,.11),transparent 34%),
+        radial-gradient(circle at bottom,rgba(6,182,212,.10),transparent 38%),
+        linear-gradient(180deg,#f8fbff 0%,#eef2ff 46%,#ffffff 100%);
+}
+
+.profile-vault-page{
+    width:100%;
+    max-width:520px;
+    margin:0 auto;
+    padding:.85rem .7rem 5.5rem;
+    box-sizing:border-box;
+    color:var(--pv-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.profile-vault-shell{
+    border-radius:32px;
+    padding:.75rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.10),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(124,58,237,.08),transparent 34%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(37,99,235,.14);
+    box-shadow:var(--pv-shadow);
+    overflow:hidden;
+}
+
+.profile-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.profile-back,
+.profile-badge-top{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.profile-back{
+    background:#fff;
+    border:1px solid var(--pv-border);
+    color:#2563eb;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.profile-badge-top{
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #c7d2fe;
+}
+
+.profile-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        radial-gradient(circle at 92% 8%,rgba(6,182,212,.28),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#2563eb 52%,#7c3aed 100%);
+    box-shadow:0 18px 38px rgba(37,99,235,.25);
+}
+
+.profile-hero::before{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-46px;
+    top:-48px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.profile-hero::after{
+    content:"";
+    position:absolute;
+    width:90px;
+    height:90px;
+    right:18px;
+    bottom:-40px;
+    border-radius:50%;
+    border:13px solid rgba(255,255,255,.10);
+}
+
+.profile-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.8rem;
+}
+
+.profile-avatar{
+    width:62px;
+    height:62px;
+    flex:0 0 62px;
+    border-radius:23px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.24);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.55rem;
+    font-weight:950;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 12px 24px rgba(15,23,42,.15);
+}
+
+.profile-hero-info{
+    min-width:0;
+}
+
+.profile-live{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.profile-live i{
+    color:#22c55e;
+    font-size:.46rem;
+    filter:drop-shadow(0 0 6px rgba(34,197,94,.85));
+}
+
+.profile-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.12rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+    word-break:break-word;
+}
+
+.profile-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.86);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.profile-status-grid{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.85rem;
+}
+
+.profile-status{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.profile-status strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.profile-status span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.76);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.balance-vault{
+    position:relative;
+    overflow:hidden;
+    margin-top:.8rem;
+    border-radius:27px;
+    padding:1rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 90% 0%,rgba(250,204,21,.25),transparent 30%),
+        radial-gradient(circle at 0% 100%,rgba(6,182,212,.18),transparent 32%),
+        linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+    box-shadow:0 18px 38px rgba(15,23,42,.18);
+}
+
+.balance-vault::before{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    right:-62px;
+    top:-64px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+}
+
+.balance-vault-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:flex-start;
+}
+
+.balance-label{
+    color:rgba(255,255,255,.72);
+    font-size:.68rem;
+    font-weight:950;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:.35rem;
+}
+
+.balance-value{
+    color:#fff;
+    font-size:1.65rem;
+    line-height:1.08;
+    font-weight:950;
+    letter-spacing:-.045em;
+    word-break:break-word;
+}
+
+.balance-note{
+    margin-top:.35rem;
+    color:rgba(255,255,255,.76);
+    font-size:.7rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.balance-icon{
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    border-radius:18px;
+    background:rgba(250,204,21,.18);
+    color:#facc15;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    border:1px solid rgba(250,204,21,.22);
+}
+
+.balance-actions{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.6rem;
+    margin-top:.85rem;
+}
+
+.balance-btn{
+    min-height:44px;
+    border-radius:16px;
+    text-decoration:none;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.42rem;
+    font-size:.78rem;
+    font-weight:950;
+    transition:.2s ease;
+}
+
+.balance-btn.primary{
+    background:#fff;
+    color:#1e40af;
+}
+
+.balance-btn.secondary{
+    background:rgba(255,255,255,.13);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.18);
+}
+
+.balance-btn:hover{
+    transform:translateY(-1px);
+}
+
+.profile-section{
+    margin-top:.85rem;
+    background:#fff;
+    border-radius:26px;
+    padding:.9rem;
+    border:1px solid #eef2f7;
+    box-shadow:var(--pv-soft-shadow);
+}
+
+.section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.75rem;
+}
+
+.section-head h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.section-head p{
+    margin:.18rem 0 0;
+    color:var(--pv-muted);
+    font-size:.72rem;
+    line-height:1.42;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.64rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.info-list{
+    display:grid;
+    gap:.62rem;
+}
+
+.info-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:.75rem;
+    padding:.78rem;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.info-left{
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+    color:var(--pv-muted);
+    font-size:.78rem;
+    font-weight:850;
+}
+
+.info-left i{
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+    border-radius:14px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#eff6ff;
+    color:#2563eb;
+}
+
+.info-right{
+    color:#0f172a;
+    font-size:.8rem;
+    line-height:1.35;
+    font-weight:950;
+    text-align:right;
+    word-break:break-word;
+}
+
+.quick-menu{
+    display:grid;
+    gap:.65rem;
+}
+
+.menu-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    text-decoration:none;
+    color:#0f172a;
+    background:#fff;
+    border:1px solid #edf2f7;
+    border-radius:20px;
+    padding:.82rem;
+    transition:.22s ease;
+}
+
+.menu-link:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 26px rgba(15,23,42,.075);
+    border-color:#bfdbfe;
+}
+
+.menu-left{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    min-width:0;
+}
+
+.menu-icon{
+    width:44px;
+    height:44px;
+    flex:0 0 44px;
+    border-radius:16px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:1rem;
+}
+
+.menu-icon.green{
+    background:#ecfdf5;
+    color:#059669;
+}
+
+.menu-icon.orange{
+    background:#fff7ed;
+    color:#ea580c;
+}
+
+.menu-icon.purple{
+    background:#f5f3ff;
+    color:#7c3aed;
+}
+
+.menu-text{
+    min-width:0;
+}
+
+.menu-text b{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    line-height:1.25;
+    font-weight:950;
+    margin-bottom:.12rem;
+}
+
+.menu-text span{
+    display:block;
+    color:var(--pv-muted);
+    font-size:.72rem;
+    line-height:1.35;
+    font-weight:650;
+}
+
+.menu-arrow{
+    color:#94a3b8;
+    flex:0 0 auto;
+}
+
+.security-grid{
+    display:grid;
+    gap:.65rem;
+}
+
+.security-item{
+    display:flex;
+    align-items:flex-start;
+    gap:.7rem;
+    padding:.78rem;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.security-icon{
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+    border-radius:14px;
+    background:#ecfdf5;
+    color:#16a34a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.security-item strong{
+    display:block;
+    color:#0f172a;
+    font-size:.82rem;
+    font-weight:950;
+}
+
+.security-item span{
+    display:block;
+    margin-top:.12rem;
+    color:var(--pv-muted);
+    font-size:.72rem;
+    line-height:1.38;
+    font-weight:650;
+}
+
+.footer-action{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.7rem;
+    margin-top:.85rem;
+}
+
+.footer-action a{
+    min-height:50px;
+    border-radius:18px;
+    text-align:center;
+    text-decoration:none;
+    font-size:.82rem;
+    font-weight:950;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.42rem;
+    transition:.22s ease;
+}
+
+.btn-back{
+    background:#fff;
+    color:#334155;
+    border:1px solid #dbe4ee;
+}
+
+.btn-back:hover{
+    background:#f8fafc;
+    transform:translateY(-2px);
+}
+
+.btn-logout{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+    color:#fff;
+    box-shadow:0 12px 24px rgba(239,68,68,.20);
+}
+
+.btn-logout:hover{
+    transform:translateY(-2px);
+}
+
+@media(max-width:500px){
+    .profile-vault-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .profile-vault-shell{
+        padding:.65rem;
+        border-radius:26px;
+    }
+
+    .profile-hero{
+        padding:.9rem;
+        border-radius:24px;
+    }
+
+    .profile-avatar{
+        width:56px;
+        height:56px;
+        flex-basis:56px;
+        border-radius:20px;
+        font-size:1.3rem;
+    }
+
+    .profile-hero h2{
+        font-size:1rem;
+    }
+
+    .profile-status-grid,
+    .balance-actions,
+    .footer-action{
+        grid-template-columns:1fr;
+    }
+
+    .balance-value{
+        font-size:1.35rem;
+    }
+
+    .section-head{
+        flex-direction:column;
+        gap:.42rem;
+    }
+
+    .info-item{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:.45rem;
+    }
+
+    .info-right{
+        text-align:left;
+        padding-left:3rem;
+    }
+}
+</style>
+
+<div class="profile-vault-page">
+    <div class="profile-vault-shell">
+
+        <div class="profile-topbar">
+            <a href="{{ url_for('dashboard') }}" class="profile-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Dashboard
+            </a>
+
+            <div class="profile-badge-top">
+                <i class="fa-solid fa-user-shield"></i>
+                Profil
+            </div>
+        </div>
+
+        <div class="profile-hero">
+            <div class="profile-hero-main">
+                <div class="profile-avatar">
+                    {{ huruf_awal }}
+                </div>
+
+                <div class="profile-hero-info">
+                    <div class="profile-live">
+                        <i class="fa-solid fa-circle"></i>
+                        Akun Aktif
+                    </div>
+
+                    <h2>{{ nama_lengkap }}</h2>
+                    <p>Kelola saldo, data akun, dan aktivitas transaksi dari satu halaman profil yang rapi.</p>
+                </div>
+            </div>
+
+            <div class="profile-status-grid">
+                <div class="profile-status">
+                    <strong>Aktif</strong>
+                    <span>Status</span>
+                </div>
+
+                <div class="profile-status">
+                    <strong>24 Jam</strong>
+                    <span>Layanan</span>
+                </div>
+
+                <div class="profile-status">
+                    <strong>Aman</strong>
+                    <span>Akun</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="balance-vault">
+            <div class="balance-vault-main">
+                <div>
+                    <div class="balance-label">Total Saldo</div>
+
+                    <div class="balance-value" id="saldoValue"
+                         data-saldo="{% if format_uang is defined %}{{ format_uang(saldo_user) }}{% else %}Rp {{ '{:,.0f}'.format(saldo_user|int)|replace(',', '.') }}{% endif %}">
+                        {% if format_uang is defined %}
+                            {{ format_uang(saldo_user) }}
+                        {% else %}
+                            Rp {{ "{:,.0f}".format(saldo_user|int)|replace(",", ".") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="balance-note">
+                        Saldo dipakai untuk pulsa, paket data, e-wallet, listrik, dan pembayaran tagihan.
+                    </div>
+                </div>
+
+                <div class="balance-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+
+            <div class="balance-actions">
+                <a href="{{ url_for('topup_saldo') }}" class="balance-btn primary">
+                    <i class="fa-solid fa-plus"></i>
+                    Isi Saldo
+                </a>
+
+                <button type="button" class="balance-btn secondary" id="toggleSaldo">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    Sembunyikan
+                </button>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head">
+                <div>
+                    <h3>Informasi Akun</h3>
+                    <p>Data utama akun pengguna SenjaData.</p>
+                </div>
+                <span class="section-pill">Akun</span>
+            </div>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-left">
+                        <i class="fa-solid fa-user"></i>
+                        Nama
+                    </div>
+                    <div class="info-right">{{ nama_lengkap }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-left">
+                        <i class="fa-solid fa-phone"></i>
+                        Nomor HP
+                    </div>
+                    <div class="info-right">{{ nomor_hp }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-left">
+                        <i class="fa-solid fa-envelope"></i>
+                        Email
+                    </div>
+                    <div class="info-right">{{ email_user }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head">
+                <div>
+                    <h3>Aksi Cepat</h3>
+                    <p>Semua menu dibuat memakai route yang sudah ada agar tidak error.</p>
+                </div>
+                <span class="section-pill">Menu</span>
+            </div>
+
+            <div class="quick-menu">
+                <a href="{{ url_for('topup_saldo') }}" class="menu-link">
+                    <div class="menu-left">
+                        <div class="menu-icon green">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="menu-text">
+                            <b>Isi Ulang Saldo</b>
+                            <span>Tambah saldo akun untuk transaksi</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                </a>
+
+                <a href="{{ url_for('riwayat') }}" class="menu-link">
+                    <div class="menu-left">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div class="menu-text">
+                            <b>Riwayat Transaksi</b>
+                            <span>Lihat semua transaksi dari dashboard</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                </a>
+
+                <a href="{{ url_for('riwayat') }}" class="menu-link">
+                    <div class="menu-left">
+                        <div class="menu-icon orange">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <div class="menu-text">
+                            <b>Aktivitas Transaksi</b>
+                            <span>Cek status transaksi terbaru</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                </a>
+
+                <a href="{{ url_for('produk') }}" class="menu-link">
+                    <div class="menu-left">
+                        <div class="menu-icon purple">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="menu-text">
+                            <b>Daftar Produk</b>
+                            <span>Buka semua produk digital tersedia</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right menu-arrow"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head">
+                <div>
+                    <h3>Keamanan Akun</h3>
+                    <p>Catatan penting agar akun tetap aman digunakan.</p>
+                </div>
+                <span class="section-pill">Aman</span>
+            </div>
+
+            <div class="security-grid">
+                <div class="security-item">
+                    <div class="security-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <strong>Jaga Data Login</strong>
+                        <span>Jangan bagikan data akun, sandi, kode OTP, atau detail transaksi kepada siapa pun.</span>
+                    </div>
+                </div>
+
+                <div class="security-item">
+                    <div class="security-icon">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <strong>Cek Riwayat Transaksi</strong>
+                        <span>Pastikan setiap transaksi yang muncul sesuai dengan aktivitas akun kamu.</span>
+                    </div>
+                </div>
+
+                <div class="security-item">
+                    <div class="security-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div>
+                        <strong>Pastikan Nomor Aktif</strong>
+                        <span>Nomor aktif membantu proses informasi dan pengecekan transaksi.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-action">
+            <a href="{{ url_for('dashboard') }}" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('logout') }}"
+               class="btn-logout"
+               onclick="return confirm('Yakin ingin keluar dari akun?')">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function(){
+    const saldoValue = document.getElementById('saldoValue');
+    const toggleSaldo = document.getElementById('toggleSaldo');
+    let hidden = false;
+
+    if(saldoValue && toggleSaldo){
+        toggleSaldo.addEventListener('click', function(){
+            hidden = !hidden;
+
+            if(hidden){
+                saldoValue.textContent = 'Rp •••••••';
+                toggleSaldo.innerHTML = '<i class="fa-solid fa-eye"></i> Tampilkan';
+            }else{
+                saldoValue.textContent = saldoValue.getAttribute('data-saldo') || 'Rp 0';
+                toggleSaldo.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Sembunyikan';
+            }
+        });
+    }
+})();
+</script>
+
+{% endblock %}

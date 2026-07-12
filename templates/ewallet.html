@@ -1,0 +1,1392 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+<style>
+:root{
+    --ew-primary:#059669;
+    --ew-primary-2:#10b981;
+    --ew-primary-3:#14b8a6;
+    --ew-dark:#0f172a;
+    --ew-text:#334155;
+    --ew-muted:#64748b;
+    --ew-border:#e2e8f0;
+    --ew-soft:#f8fafc;
+    --ew-card:#ffffff;
+    --ew-green:#10b981;
+    --ew-blue:#2563eb;
+    --ew-purple:#7c3aed;
+    --ew-orange:#f59e0b;
+    --ew-red:#ef4444;
+    --ew-shadow:0 22px 55px rgba(15,23,42,.10);
+    --ew-shadow-soft:0 14px 34px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(16,185,129,.15),transparent 34%),
+        radial-gradient(circle at top right,rgba(20,184,166,.10),transparent 32%),
+        radial-gradient(circle at bottom left,rgba(37,99,235,.08),transparent 34%),
+        linear-gradient(180deg,#f8fafc 0%,#ecfdf5 44%,#f8fafc 100%);
+}
+
+.ew-page{
+    width:100%;
+    max-width:640px;
+    margin:0 auto;
+    padding:1rem 1rem 5rem;
+    box-sizing:border-box;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--ew-text);
+}
+
+.ew-shell{
+    border-radius:34px;
+    padding:.9rem;
+    background:
+        radial-gradient(circle at top left,rgba(16,185,129,.16),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(5,150,105,.12),transparent 36%),
+        linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+    border:1px solid rgba(16,185,129,.13);
+    box-shadow:var(--ew-shadow);
+    overflow:hidden;
+}
+
+.ew-alert{
+    margin-bottom:1rem;
+    padding:.9rem 1rem;
+    border-radius:18px;
+    text-align:center;
+    font-weight:850;
+    font-size:.9rem;
+    line-height:1.45;
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #bbf7d0;
+}
+
+.ew-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.ew-alert.error,
+.ew-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.ew-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.ew-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:1rem;
+}
+
+.ew-back,
+.ew-top-pill{
+    min-height:40px;
+    padding:0 .78rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.4rem;
+    font-size:.74rem;
+    font-weight:950;
+    text-decoration:none;
+}
+
+.ew-back{
+    background:#fff;
+    border:1px solid var(--ew-border);
+    color:#047857;
+    box-shadow:0 10px 22px rgba(15,23,42,.06);
+}
+
+.ew-top-pill{
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #bbf7d0;
+}
+
+.ew-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:30px;
+    padding:1.22rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.38),transparent 34%),
+        radial-gradient(circle at 95% 80%,rgba(255,255,255,.16),transparent 32%),
+        linear-gradient(135deg,#064e3b 0%,#059669 46%,#14b8a6 100%);
+    box-shadow:0 20px 45px rgba(16,185,129,.28);
+    margin-bottom:1rem;
+}
+
+.ew-hero:before{
+    content:"";
+    position:absolute;
+    right:-65px;
+    top:-65px;
+    width:185px;
+    height:185px;
+    border-radius:50%;
+    background:rgba(255,255,255,.14);
+}
+
+.ew-hero:after{
+    content:"";
+    position:absolute;
+    right:22px;
+    bottom:-50px;
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    border:20px solid rgba(255,255,255,.10);
+}
+
+.ew-hero-content{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+}
+
+.ew-hero-icon{
+    width:64px;
+    height:64px;
+    flex:0 0 64px;
+    border-radius:24px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.55rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.25),
+        0 12px 24px rgba(15,23,42,.15);
+}
+
+.ew-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.36rem;
+    padding:.32rem .7rem;
+    margin-bottom:.55rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.72rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.ew-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.42rem;
+    line-height:1.13;
+    font-weight:950;
+    letter-spacing:-.04em;
+}
+
+.ew-hero p{
+    margin:.42rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.85rem;
+    line-height:1.55;
+    font-weight:600;
+}
+
+.ew-hero-tags{
+    position:relative;
+    z-index:2;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.45rem;
+    margin-top:.9rem;
+}
+
+.ew-hero-tags span{
+    padding:.38rem .65rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.ew-step-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.58rem;
+    margin-top:1rem;
+}
+
+.ew-step{
+    padding:.7rem .45rem;
+    border-radius:17px;
+    text-align:center;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);
+}
+
+.ew-step strong{
+    display:block;
+    color:#fff;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.ew-step span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.82);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.ew-card{
+    background:#fff;
+    border-radius:26px;
+    padding:1rem;
+    border:1px solid #f1f5f9;
+    box-shadow:var(--ew-shadow-soft);
+    margin-bottom:1rem;
+}
+
+.section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    margin-bottom:.9rem;
+}
+
+.section-head h3{
+    margin:0;
+    color:var(--ew-dark);
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.section-head p{
+    margin:.25rem 0 0;
+    color:var(--ew-muted);
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.42rem .65rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.7rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:1rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#94a3b8;
+    font-size:1rem;
+    pointer-events:none;
+    z-index:2;
+}
+
+.input-control{
+    width:100%;
+    min-height:58px;
+    border-radius:18px;
+    border:2px solid var(--ew-border);
+    background:#fff;
+    color:var(--ew-dark);
+    font-size:1rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 1rem 0 2.85rem;
+    letter-spacing:.02em;
+    transition:.22s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:600;
+}
+
+.input-control:focus{
+    border-color:var(--ew-primary);
+    box-shadow:0 0 0 5px rgba(16,185,129,.12);
+}
+
+.input-help{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    margin-top:.45rem;
+    color:var(--ew-muted);
+    font-size:.75rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.ew-quick{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    margin-top:.7rem;
+}
+
+.ew-quick button{
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.5rem .72rem;
+    font-size:.74rem;
+    font-weight:850;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.ew-quick button:hover{
+    background:#f9fafb;
+    border-color:#cbd5e1;
+}
+
+.wallet-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.8rem;
+    border-radius:16px;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    color:#047857;
+    font-size:.82rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.wallet-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.55rem;
+}
+
+.wallet-card{
+    min-height:78px;
+    border:1px solid var(--ew-border);
+    border-radius:17px;
+    padding:.55rem .3rem;
+    text-align:center;
+    background:#fff;
+    cursor:pointer;
+    transition:.2s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.wallet-card:hover{
+    border-color:#86efac;
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(15,23,42,.06);
+}
+
+.wallet-card.active{
+    border:2px solid var(--ew-primary);
+    background:#ecfdf5;
+    box-shadow:0 10px 22px rgba(16,185,129,.12);
+}
+
+.wallet-logo{
+    width:34px;
+    height:34px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.58rem;
+    font-weight:950;
+    margin-bottom:.32rem;
+    line-height:1;
+}
+
+.wallet-name{
+    font-size:.58rem;
+    font-weight:850;
+    color:var(--ew-dark);
+    line-height:1.15;
+}
+
+.nominal-filter{
+    display:flex;
+    gap:.5rem;
+    overflow-x:auto;
+    padding-bottom:.25rem;
+    margin-bottom:.85rem;
+    scrollbar-width:none;
+}
+
+.nominal-filter::-webkit-scrollbar{
+    display:none;
+}
+
+.filter-btn{
+    flex:0 0 auto;
+    border:1px solid #bbf7d0;
+    background:#fff;
+    color:#047857;
+    border-radius:999px;
+    padding:.52rem .72rem;
+    font-size:.72rem;
+    font-weight:950;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.filter-btn.active,
+.filter-btn:hover{
+    background:#059669;
+    color:#fff;
+    border-color:#059669;
+    box-shadow:0 8px 18px rgba(5,150,105,.18);
+}
+
+.nominal-note{
+    margin-bottom:.85rem;
+    padding:.8rem;
+    border-radius:17px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.8rem;
+    line-height:1.5;
+    font-weight:700;
+}
+
+.nominal-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+}
+
+.nominal-empty{
+    grid-column:1 / -1;
+    padding:1rem;
+    text-align:center;
+    color:var(--ew-muted);
+    border:1px dashed var(--ew-border);
+    border-radius:17px;
+    font-size:.82rem;
+    line-height:1.5;
+    font-weight:700;
+    background:#f8fafc;
+}
+
+.nominal-card{
+    position:relative;
+    overflow:hidden;
+    min-height:86px;
+    border:1.5px solid #edf2f7;
+    border-radius:17px;
+    background:#fff;
+    padding:.65rem .55rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.nominal-card:hover{
+    transform:translateY(-2px);
+    border-color:#86efac;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.nominal-card.active{
+    border-color:var(--ew-primary);
+    background:#ecfdf5;
+    box-shadow:0 12px 24px rgba(16,185,129,.13);
+}
+
+.nominal-card:before{
+    content:"";
+    position:absolute;
+    right:-32px;
+    top:-32px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    background:rgba(16,185,129,.08);
+}
+
+.nominal-label{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    padding:.18rem .4rem;
+    margin-bottom:.35rem;
+    border-radius:999px;
+    background:#d1fae5;
+    color:#047857;
+    font-size:.56rem;
+    font-weight:950;
+    text-transform:uppercase;
+}
+
+.nominal-name{
+    position:relative;
+    z-index:2;
+    color:var(--ew-dark);
+    font-size:.82rem;
+    line-height:1.18;
+    font-weight:950;
+    margin-bottom:.25rem;
+}
+
+.nominal-desc{
+    display:none;
+}
+
+.nominal-price{
+    position:relative;
+    z-index:2;
+    color:var(--ew-green);
+    font-size:.74rem;
+    font-weight:900;
+}
+
+.summary-box{
+    display:none;
+    margin-top:1rem;
+    padding:1rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(16,185,129,.10),transparent 32%),
+        #fff;
+    border:1px solid #bbf7d0;
+    box-shadow:0 12px 24px rgba(16,185,129,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    margin-bottom:.75rem;
+    color:var(--ew-dark);
+    font-size:.95rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.65rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:var(--ew-muted);
+    font-size:.8rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:var(--ew-dark);
+    font-size:.84rem;
+    line-height:1.35;
+    text-align:right;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.75rem;
+    padding:.9rem;
+    border-radius:18px;
+    background:linear-gradient(135deg,#064e3b,#059669);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.78rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.2rem;
+    color:#fff;
+    font-size:1.18rem;
+    font-weight:950;
+}
+
+.btn-submit{
+    width:100%;
+    min-height:58px;
+    margin-top:1rem;
+    border:none;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#059669,#10b981);
+    font-size:1rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 28px rgba(16,185,129,.28);
+    transition:.22s ease;
+}
+
+.btn-submit:hover{
+    transform:translateY(-2px);
+    box-shadow:0 17px 34px rgba(16,185,129,.34);
+}
+
+.note{
+    margin-top:1rem;
+    padding:.95rem;
+    border-radius:20px;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    border-left:5px solid #10b981;
+    color:#166534;
+    font-size:.8rem;
+    line-height:1.55;
+    font-weight:650;
+}
+
+.note strong{
+    color:#14532d;
+}
+
+@media(max-width:480px){
+    .ew-page{
+        padding-left:.75rem;
+        padding-right:.75rem;
+    }
+
+    .ew-shell{
+        padding:.7rem;
+        border-radius:28px;
+    }
+
+    .ew-topbar{
+        gap:.5rem;
+    }
+
+    .ew-back,
+    .ew-top-pill{
+        min-height:38px;
+        padding:0 .68rem;
+        font-size:.7rem;
+    }
+
+    .ew-hero{
+        padding:1.08rem;
+        border-radius:25px;
+    }
+
+    .ew-hero-content{
+        align-items:flex-start;
+    }
+
+    .ew-hero-icon{
+        width:55px;
+        height:55px;
+        flex-basis:55px;
+        border-radius:19px;
+        font-size:1.25rem;
+    }
+
+    .ew-hero h2{
+        font-size:1.18rem;
+    }
+
+    .ew-step-row{
+        grid-template-columns:1fr;
+    }
+
+    .section-head{
+        flex-direction:column;
+        gap:.45rem;
+    }
+
+    .wallet-grid{
+        grid-template-columns:repeat(4,1fr);
+        gap:.42rem;
+    }
+
+    .wallet-card{
+        min-height:66px;
+        border-radius:14px;
+        padding:.4rem .2rem;
+    }
+
+    .wallet-logo{
+        width:28px;
+        height:28px;
+        border-radius:10px;
+        font-size:.5rem;
+        margin-bottom:.25rem;
+    }
+
+    .wallet-name{
+        font-size:.53rem;
+    }
+
+    .nominal-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:.45rem;
+    }
+
+    .nominal-card{
+        min-height:76px;
+        padding:.55rem .45rem;
+        border-radius:14px;
+    }
+
+    .nominal-label{
+        font-size:.5rem;
+        padding:.16rem .34rem;
+    }
+
+    .nominal-name{
+        font-size:.74rem;
+    }
+
+    .nominal-price{
+        font-size:.68rem;
+    }
+
+    .summary-row{
+        flex-direction:column;
+        gap:.25rem;
+    }
+
+    .summary-row b{
+        text-align:left;
+    }
+
+    .summary-total{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+
+@media(max-width:340px){
+    .wallet-grid,
+    .nominal-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+</style>
+
+<div class="ew-page">
+    <div class="ew-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="ew-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="ew-topbar">
+            <a href="{{ url_for('dashboard') }}" class="ew-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Home
+            </a>
+
+            <div class="ew-top-pill">
+                <i class="fa-solid fa-wallet"></i>
+                E-Wallet
+            </div>
+        </div>
+
+        <div class="ew-hero">
+            <div class="ew-hero-content">
+                <div class="ew-hero-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div>
+                    <div class="ew-badge">
+                        <i class="fa-solid fa-bolt"></i>
+                        Top Up Premium
+                    </div>
+                    <h2>Isi Saldo E-Wallet Cepat & Aman</h2>
+                    <p>Pilih jenis dompet digital, pilih nominal saldo, lalu lanjutkan pembayaran dengan detail yang jelas.</p>
+                </div>
+            </div>
+
+            <div class="ew-hero-tags">
+                <span>DANA</span>
+                <span>OVO</span>
+                <span>GoPay</span>
+                <span>LinkAja</span>
+                <span>ShopeePay</span>
+            </div>
+
+            <div class="ew-step-row">
+                <div class="ew-step">
+                    <strong>1. Nomor</strong>
+                    <span>Input akun</span>
+                </div>
+                <div class="ew-step">
+                    <strong>2. Wallet</strong>
+                    <span>Pilih jenis</span>
+                </div>
+                <div class="ew-step">
+                    <strong>3. Nominal</strong>
+                    <span>Bayar</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('ewallet') }}" id="ewalletForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="kode_produk" id="kode_produk">
+            <input type="hidden" name="jenis_ewallet" id="walletValue">
+
+            <div class="ew-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Nomor Tujuan / Akun</h3>
+                        <p>Masukkan nomor HP atau akun e-wallet yang akan diisi saldo.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="tel"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 081234567890"
+                        value="{{ request.form.get('nomor_tujuan', '') if request is defined else '' }}"
+                        inputmode="numeric"
+                        minlength="10"
+                        maxlength="14"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan nomor aktif yang terdaftar.</span>
+                    <span id="charCount">0/14</span>
+                </div>
+
+                <div class="ew-quick">
+                    <button type="button" data-number="081234567890">Isi Contoh</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="wallet-info" id="walletInfo"></div>
+            </div>
+
+            <div class="ew-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Jenis E-Wallet</h3>
+                        <p>Pilih layanan dompet digital yang ingin diisi saldo.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="wallet-grid">
+                    <button type="button" class="wallet-card" data-wallet="DANA">
+                        <div class="wallet-logo" style="background:#eff6ff;color:#2563eb;">DANA</div>
+                        <div class="wallet-name">DANA</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="GOPAY">
+                        <div class="wallet-logo" style="background:#e0f2fe;color:#0284c7;">GP</div>
+                        <div class="wallet-name">GoPay</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="OVO">
+                        <div class="wallet-logo" style="background:#faf5ff;color:#7c3aed;">OVO</div>
+                        <div class="wallet-name">OVO</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="LINKAJA">
+                        <div class="wallet-logo" style="background:#fef2f2;color:#ef4444;">LA</div>
+                        <div class="wallet-name">LinkAja</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="SHOPEEPAY">
+                        <div class="wallet-logo" style="background:#fff7ed;color:#ea580c;">SP</div>
+                        <div class="wallet-name">ShopeePay</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="QRIS">
+                        <div class="wallet-logo" style="background:#f1f5f9;color:#0f172a;">QR</div>
+                        <div class="wallet-name">QRIS</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="MAXIM">
+                        <div class="wallet-logo" style="background:#fefce8;color:#ca8a04;">MX</div>
+                        <div class="wallet-name">Maxim</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="GRAB">
+                        <div class="wallet-logo" style="background:#ecfdf5;color:#059669;">GR</div>
+                        <div class="wallet-name">Grab</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="SAKUKU">
+                        <div class="wallet-logo" style="background:#eff6ff;color:#1d4ed8;">SK</div>
+                        <div class="wallet-name">Sakuku</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="ASTRAPAY">
+                        <div class="wallet-logo" style="background:#fef2f2;color:#b91c1c;">AP</div>
+                        <div class="wallet-name">AstraPay</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="ISAKU">
+                        <div class="wallet-logo" style="background:#eef2ff;color:#4f46e5;">IS</div>
+                        <div class="wallet-name">i.Saku</div>
+                    </button>
+
+                    <button type="button" class="wallet-card" data-wallet="DOKU">
+                        <div class="wallet-logo" style="background:#ecfeff;color:#0891b2;">DK</div>
+                        <div class="wallet-name">DOKU</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ew-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Nominal Saldo</h3>
+                        <p>Nominal saldo dibuat padat, banyak pilihan, dan mudah dibaca.</p>
+                    </div>
+                    <span class="section-pill">Step 3</span>
+                </div>
+
+                <div class="nominal-filter">
+                    <button type="button" class="filter-btn active" data-filter="ALL">Semua</button>
+                    <button type="button" class="filter-btn" data-filter="KECIL">Kecil</button>
+                    <button type="button" class="filter-btn" data-filter="SEDANG">Sedang</button>
+                    <button type="button" class="filter-btn" data-filter="BESAR">Besar</button>
+                </div>
+
+                <div class="nominal-note">
+                    <strong>Info:</strong> Pastikan nomor tujuan dan nominal saldo sudah benar sebelum lanjut pembayaran.
+                </div>
+
+                <div class="nominal-grid" id="nominalGrid">
+                    <div class="nominal-empty">
+                        Pilih jenis e-wallet terlebih dahulu untuk melihat nominal saldo.
+                    </div>
+                </div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Detail Top Up
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Tujuan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>E-Wallet</span>
+                        <b id="sumWallet">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nominal Saldo</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btnBayar">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Isi Saldo Sekarang
+                </button>
+
+                <div class="note">
+                    💡 <strong>Info Layanan:</strong> Saldo biasanya diproses otomatis. Periksa kembali nomor tujuan sebelum melanjutkan.
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div id="dataProduk" style="display:none;">
+    {% for kode, nama in produk_list.items() %}
+        {% set harga_produk = harga_map.get(kode, 0) %}
+        {% set kode_upper = kode|upper %}
+
+        {% if 'SHOPEE' in kode_upper or 'SPAY' in kode_upper %}
+            {% set tipe_wallet = 'SHOPEEPAY' %}
+        {% elif 'GOPAY' in kode_upper or 'GO_PAY' in kode_upper %}
+            {% set tipe_wallet = 'GOPAY' %}
+        {% elif 'LINKAJA' in kode_upper or 'LINK_AJA' in kode_upper %}
+            {% set tipe_wallet = 'LINKAJA' %}
+        {% elif 'ASTRA' in kode_upper %}
+            {% set tipe_wallet = 'ASTRAPAY' %}
+        {% else %}
+            {% set tipe_wallet = kode_upper.split('_')[0] %}
+        {% endif %}
+
+        <span
+            data-kode="{{ kode }}"
+            data-jenis="{{ tipe_wallet }}"
+            data-nama="{{ nama }}"
+            data-harga-teks="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const walletValue=document.getElementById('walletValue');
+    const kodeProduk=document.getElementById('kode_produk');
+    const walletInfo=document.getElementById('walletInfo');
+    const nominalGrid=document.getElementById('nominalGrid');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('ewalletForm');
+    const btnBayar=document.getElementById('btnBayar');
+
+    let activeWallet='';
+    let activeFilter='ALL';
+
+    const walletMeta={
+        DANA:'DANA',
+        GOPAY:'GoPay',
+        OVO:'OVO',
+        LINKAJA:'LinkAja',
+        SHOPEEPAY:'ShopeePay',
+        QRIS:'QRIS',
+        MAXIM:'Maxim',
+        GRAB:'Grab',
+        SAKUKU:'Sakuku',
+        ASTRAPAY:'AstraPay',
+        ISAKU:'i.Saku',
+        DOKU:'DOKU'
+    };
+
+    const defaultNominal={
+        DANA:['5rb','10rb','15rb','20rb','25rb','30rb','50rb','75rb','100rb','150rb','200rb','300rb','500rb','1jt'],
+        GOPAY:['5rb','10rb','15rb','20rb','25rb','50rb','75rb','100rb','150rb','200rb','250rb','500rb','1jt'],
+        OVO:['10rb','15rb','20rb','25rb','50rb','75rb','100rb','150rb','200rb','300rb','500rb'],
+        LINKAJA:['10rb','15rb','20rb','25rb','50rb','75rb','100rb','150rb','250rb','500rb'],
+        SHOPEEPAY:['10rb','15rb','20rb','25rb','50rb','75rb','100rb','150rb','200rb','500rb'],
+        QRIS:['10rb','25rb','50rb','75rb','100rb','200rb','250rb','500rb'],
+        MAXIM:['10rb','25rb','50rb','75rb','100rb','200rb'],
+        GRAB:['10rb','25rb','50rb','75rb','100rb','200rb'],
+        SAKUKU:['10rb','25rb','50rb','100rb','200rb'],
+        ASTRAPAY:['10rb','25rb','50rb','100rb','200rb'],
+        ISAKU:['10rb','25rb','50rb','100rb','200rb'],
+        DOKU:['10rb','25rb','50rb','100rb','200rb']
+    };
+
+    function nominalToNumber(text){
+        text=String(text).toLowerCase().replace(/\s+/g,'');
+
+        if(text.includes('jt')){
+            return parseInt(text.replace('jt','') || '1',10)*1000000;
+        }
+
+        if(text.includes('rb')){
+            return parseInt(text.replace('rb',''),10)*1000;
+        }
+
+        return parseInt(text.replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function formatRupiah(num){
+        return 'Rp '+String(num).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function cleanNumber(value){
+        value=(value||'').replace(/[^0-9]/g,'');
+        if(value.startsWith('62')){
+            value='0'+value.slice(2);
+        }
+        return value;
+    }
+
+    function filterGroup(nominalNumber){
+        if(nominalNumber <= 30000) return 'KECIL';
+        if(nominalNumber <= 100000) return 'SEDANG';
+        return 'BESAR';
+    }
+
+    function getBackendProducts(wallet){
+        return Array.from(document.querySelectorAll('#dataProduk span'))
+            .filter(function(el){
+                return el.dataset.jenis===wallet;
+            })
+            .map(function(el){
+                const hargaTeks=el.dataset.hargaTeks || 'Rp 0';
+                const angka=parseInt(hargaTeks.replace(/[^0-9]/g,''),10) || 0;
+
+                return {
+                    kode:el.dataset.kode,
+                    nama:el.dataset.nama,
+                    harga:hargaTeks,
+                    group:filterGroup(angka)
+                };
+            });
+    }
+
+    function getDefaultProducts(wallet){
+        const list=defaultNominal[wallet] || [];
+
+        return list.map(function(label){
+            const nominal=nominalToNumber(label);
+            const admin=nominal <= 30000 ? 1000 : (nominal <= 100000 ? 1500 : 2500);
+            const total=nominal+admin;
+
+            return {
+                kode:wallet+'_'+nominal,
+                nama:walletMeta[wallet]+' '+label,
+                harga:formatRupiah(total),
+                group:filterGroup(nominal)
+            };
+        });
+    }
+
+    function getProductList(wallet){
+        const backend=getBackendProducts(wallet);
+
+        if(backend.length){
+            return backend;
+        }
+
+        return getDefaultProducts(wallet);
+    }
+
+    function setWallet(wallet){
+        if(!wallet || !walletMeta[wallet]) return;
+
+        activeWallet=wallet;
+        walletValue.value=wallet;
+        kodeProduk.value='';
+
+        document.querySelectorAll('.wallet-card').forEach(function(card){
+            card.classList.toggle('active',card.dataset.wallet===wallet);
+        });
+
+        walletInfo.style.display='block';
+        walletInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> E-Wallet dipilih: <strong>'+walletMeta[wallet]+'</strong>';
+
+        renderNominal();
+        updateSummary();
+    }
+
+    function setFilter(filter){
+        activeFilter=filter;
+
+        document.querySelectorAll('.filter-btn').forEach(function(btn){
+            btn.classList.toggle('active',btn.dataset.filter===filter);
+        });
+
+        renderNominal();
+    }
+
+    function renderNominal(){
+        nominalGrid.innerHTML='';
+        kodeProduk.value='';
+
+        if(!activeWallet){
+            nominalGrid.innerHTML='<div class="nominal-empty">Pilih jenis e-wallet terlebih dahulu untuk melihat nominal saldo.</div>';
+            updateSummary();
+            return;
+        }
+
+        let list=getProductList(activeWallet);
+
+        if(activeFilter !== 'ALL'){
+            list=list.filter(function(item){
+                return item.group===activeFilter;
+            });
+        }
+
+        if(!list.length){
+            nominalGrid.innerHTML='<div class="nominal-empty">Nominal pada filter ini belum tersedia.</div>';
+            updateSummary();
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('button');
+            card.type='button';
+            card.className='nominal-card';
+            card.dataset.kode=item.kode;
+            card.dataset.nama=item.nama;
+            card.dataset.harga=item.harga;
+
+            card.innerHTML=
+                '<div class="nominal-label">Top Up</div>'+
+                '<div class="nominal-name">'+item.nama+'</div>'+
+                '<div class="nominal-price">'+item.harga+'</div>';
+
+            card.addEventListener('click',function(){
+                document.querySelectorAll('.nominal-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                kodeProduk.value=item.kode;
+
+                updateSummary({
+                    nama:item.nama,
+                    harga:item.harga
+                });
+            });
+
+            nominalGrid.appendChild(card);
+        });
+    }
+
+    function updateSummary(selected){
+        selected=selected || {};
+
+        const nomor=cleanNumber(nomorInput.value);
+        const wallet=walletValue.value;
+        const activeNominal=document.querySelector('.nominal-card.active');
+
+        document.getElementById('sumNomor').textContent=nomor || '-';
+        document.getElementById('sumWallet').textContent=wallet ? walletMeta[wallet] : '-';
+        document.getElementById('sumProduk').textContent=selected.nama || (activeNominal ? activeNominal.dataset.nama : '-');
+        document.getElementById('sumHarga').textContent=selected.harga || (activeNominal ? activeNominal.dataset.harga : 'Rp 0');
+
+        summaryBox.style.display=nomor && wallet && activeNominal ? 'block' : 'none';
+    }
+
+    document.querySelectorAll('.wallet-card').forEach(function(card){
+        card.addEventListener('click',function(){
+            setWallet(card.dataset.wallet);
+        });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            setFilter(btn.dataset.filter);
+        });
+    });
+
+    document.querySelectorAll('.ew-quick button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-number') || '';
+            }
+
+            nomorInput.focus();
+            nomorInput.dispatchEvent(new Event('input'));
+        });
+    });
+
+    nomorInput.addEventListener('input',function(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length > 14){
+            nomor=nomor.slice(0,14);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/14';
+
+        updateSummary();
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+        const wallet=walletValue.value;
+        const produk=kodeProduk.value;
+
+        if(!nomor || nomor.length < 10){
+            e.preventDefault();
+            alert('Masukkan nomor tujuan e-wallet yang valid minimal 10 digit.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!wallet){
+            e.preventDefault();
+            alert('Silakan pilih jenis e-wallet terlebih dahulu.');
+            return;
+        }
+
+        if(!produk){
+            e.preventDefault();
+            alert('Silakan pilih nominal saldo terlebih dahulu.');
+            return;
+        }
+
+        btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Top Up...';
+        btnBayar.style.opacity='0.75';
+        btnBayar.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

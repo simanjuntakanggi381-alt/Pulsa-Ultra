@@ -1,0 +1,2232 @@
+{% extends "base.html" %}
+{% block konten %}
+
+<style>
+:root{
+    --king-blue:#2563eb;
+    --king-indigo:#4f46e5;
+    --king-purple:#7c3aed;
+    --king-cyan:#06b6d4;
+    --king-green:#10b981;
+    --king-orange:#f59e0b;
+    --king-dark:#0f172a;
+    --king-text:#334155;
+    --king-muted:#64748b;
+    --king-border:#e2e8f0;
+    --king-soft:#f8fafc;
+    --king-shadow:0 24px 65px rgba(15,23,42,.12);
+    --king-shadow-soft:0 14px 34px rgba(15,23,42,.075);
+}
+
+.banner-slider,
+.banner-wrapper,
+.hero-banner,
+.banner-indicators{
+    display:none !important;
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.18),transparent 34%),
+        radial-gradient(circle at top right,rgba(124,58,237,.16),transparent 33%),
+        radial-gradient(circle at bottom left,rgba(6,182,212,.10),transparent 32%),
+        linear-gradient(180deg,#f8fafc 0%,#eef2ff 45%,#f8fafc 100%);
+}
+
+.king-page{
+    width:100%;
+    max-width:720px;
+    margin:0 auto;
+    padding:1rem 1rem 5rem;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--king-text);
+}
+
+.king-shell{
+    position:relative;
+    overflow:hidden;
+    border-radius:38px;
+    padding:1rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(124,58,237,.14),transparent 36%),
+        linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+    border:1px solid rgba(37,99,235,.14);
+    box-shadow:var(--king-shadow);
+}
+
+.king-alert{
+    margin-bottom:1rem;
+    padding:.9rem 1rem;
+    border-radius:18px;
+    text-align:center;
+    font-weight:850;
+    font-size:.9rem;
+    line-height:1.45;
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #e0e7ff;
+}
+
+.king-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.king-alert.error,
+.king-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.king-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.king-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:1rem;
+}
+
+.king-brand{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    min-width:0;
+}
+
+.king-logo{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
+    border-radius:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.18rem;
+    background:
+        radial-gradient(circle at 25% 10%,rgba(255,255,255,.48),transparent 34%),
+        linear-gradient(135deg,#2563eb,#7c3aed);
+    box-shadow:0 14px 28px rgba(37,99,235,.26);
+}
+
+.king-brand-text{
+    min-width:0;
+}
+
+.king-brand-text strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:1rem;
+    font-weight:950;
+    line-height:1.12;
+}
+
+.king-brand-text span{
+    display:block;
+    margin-top:.14rem;
+    color:var(--king-muted);
+    font-size:.72rem;
+    font-weight:750;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.king-profile-btn{
+    min-height:42px;
+    padding:0 .8rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid var(--king-border);
+    color:var(--king-text);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.42rem;
+    text-decoration:none;
+    font-size:.74rem;
+    font-weight:900;
+    box-shadow:0 10px 22px rgba(15,23,42,.06);
+    white-space:nowrap;
+}
+
+.king-slider-wrap{
+    margin:0 0 1rem;
+}
+
+.king-slider{
+    position:relative;
+    width:100%;
+    min-height:305px;
+    overflow:hidden;
+    border-radius:32px;
+    background:#0f172a;
+    box-shadow:
+        0 22px 55px rgba(15,23,42,.18),
+        inset 0 1px 0 rgba(255,255,255,.16);
+}
+
+.king-slide{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    pointer-events:none;
+    transform:scale(.985) translateX(18px);
+    transition:opacity .55s ease,transform .55s ease;
+    padding:1.2rem;
+    overflow:hidden;
+    color:#fff;
+    display:grid;
+    grid-template-columns:1fr 135px;
+    gap:1rem;
+    align-items:center;
+}
+
+.king-slide.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:scale(1) translateX(0);
+}
+
+.king-slide[data-theme="pulsa"]{
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        linear-gradient(135deg,#2563eb 0%,#0284c7 48%,#06b6d4 100%);
+}
+
+.king-slide[data-theme="ewallet"]{
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        linear-gradient(135deg,#059669 0%,#10b981 48%,#14b8a6 100%);
+}
+
+.king-slide[data-theme="data"]{
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        linear-gradient(135deg,#4f46e5 0%,#7c3aed 50%,#9333ea 100%);
+}
+
+.king-slide[data-theme="tagihan"]{
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        linear-gradient(135deg,#f59e0b 0%,#ea580c 48%,#2563eb 100%);
+}
+
+.king-orb{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,.16);
+    pointer-events:none;
+}
+
+.king-orb.one{
+    width:190px;
+    height:190px;
+    right:-68px;
+    bottom:-58px;
+}
+
+.king-orb.two{
+    width:105px;
+    height:105px;
+    right:118px;
+    top:28px;
+    background:rgba(255,255,255,.09);
+}
+
+.king-slide-content{
+    position:relative;
+    z-index:3;
+    min-width:0;
+}
+
+.king-slide-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.38rem;
+    padding:.36rem .72rem;
+    margin-bottom:.58rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.22);
+    color:#fff;
+    font-size:.7rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    backdrop-filter:blur(8px);
+}
+
+.king-slide h2{
+    margin:0;
+    color:#fff;
+    font-size:1.44rem;
+    line-height:1.1;
+    font-weight:950;
+    letter-spacing:-.045em;
+    text-shadow:0 2px 12px rgba(15,23,42,.18);
+}
+
+.king-slide p{
+    max-width:410px;
+    margin:.45rem 0 0;
+    color:rgba(255,255,255,.92);
+    font-size:.83rem;
+    line-height:1.55;
+    font-weight:600;
+}
+
+.king-tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.45rem;
+    margin-top:.8rem;
+}
+
+.king-tags span{
+    padding:.38rem .62rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.68rem;
+    font-weight:950;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+}
+
+.king-slide-cta{
+    width:max-content;
+    min-height:42px;
+    margin-top:.9rem;
+    padding:0 .85rem;
+    border-radius:15px;
+    background:#fff;
+    color:#0f172a;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    text-decoration:none;
+    font-size:.78rem;
+    font-weight:950;
+    box-shadow:0 13px 26px rgba(15,23,42,.16);
+    transition:.22s ease;
+}
+
+.king-slide-cta:hover{
+    transform:translateY(-2px);
+}
+
+.king-slide-visual{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.king-icon-card{
+    width:112px;
+    height:112px;
+    border-radius:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:3.1rem;
+    color:rgba(255,255,255,.92);
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.26);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 20px 35px rgba(15,23,42,.18);
+    backdrop-filter:blur(8px);
+    animation:kingFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes kingFloat{
+    0%,100%{transform:translateY(0) rotate(-4deg);}
+    50%{transform:translateY(-8px) rotate(3deg);}
+}
+
+.king-slider-control{
+    position:absolute;
+    left:50%;
+    bottom:16px;
+    z-index:10;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    padding:.35rem .5rem;
+    border-radius:999px;
+    background:rgba(15,23,42,.14);
+    backdrop-filter:blur(8px);
+}
+
+.king-dot{
+    width:8px;
+    height:8px;
+    border-radius:999px;
+    border:0;
+    padding:0;
+    background:rgba(255,255,255,.50);
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.king-dot.active{
+    width:26px;
+    background:#fff;
+    box-shadow:0 0 12px rgba(255,255,255,.65);
+}
+
+.king-progress{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:8px;
+    height:3px;
+    border-radius:999px;
+    overflow:hidden;
+    background:rgba(255,255,255,.18);
+    z-index:9;
+}
+
+.king-progress span{
+    display:block;
+    width:0%;
+    height:100%;
+    border-radius:999px;
+    background:rgba(255,255,255,.88);
+}
+
+.king-mini-dashboard{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:.75rem;
+    margin-bottom:1rem;
+}
+
+.king-balance-card{
+    position:relative;
+    overflow:hidden;
+    padding:1rem;
+    border-radius:26px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.28),transparent 34%),
+        linear-gradient(135deg,#0f172a,#2563eb 55%,#7c3aed);
+    box-shadow:0 18px 38px rgba(37,99,235,.20);
+}
+
+.king-balance-card:after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-45px;
+    bottom:-45px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.king-balance-card span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.76rem;
+    font-weight:850;
+}
+
+.king-balance-card strong{
+    display:block;
+    margin-top:.25rem;
+    color:#fff;
+    font-size:1.45rem;
+    line-height:1.08;
+    font-weight:950;
+    letter-spacing:-.04em;
+}
+
+.king-balance-actions{
+    display:flex;
+    gap:.55rem;
+    margin-top:.8rem;
+    position:relative;
+    z-index:2;
+}
+
+.king-balance-actions a{
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:14px;
+    background:#fff;
+    color:#2563eb;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.king-info-card{
+    padding:1rem;
+    border-radius:26px;
+    background:#fff;
+    border:1px solid #eef2f7;
+    box-shadow:var(--king-shadow-soft);
+}
+
+.king-info-card strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.92rem;
+    font-weight:950;
+}
+
+.king-info-card span{
+    display:block;
+    margin-top:.25rem;
+    color:var(--king-muted);
+    font-size:.74rem;
+    line-height:1.42;
+    font-weight:650;
+}
+
+.king-info-chip{
+    margin-top:.75rem;
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    padding:.38rem .62rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.king-stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.72rem;
+    margin-bottom:1rem;
+}
+
+.king-stat{
+    background:#fff;
+    border:1px solid #eef2f7;
+    border-radius:23px;
+    padding:.92rem .72rem;
+    box-shadow:var(--king-shadow-soft);
+    text-align:center;
+}
+
+.king-stat-icon{
+    width:39px;
+    height:39px;
+    margin:0 auto .55rem;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.98rem;
+}
+
+.king-stat strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.9rem;
+    line-height:1.2;
+    font-weight:950;
+}
+
+.king-stat span{
+    display:block;
+    margin-top:.18rem;
+    color:var(--king-muted);
+    font-size:.68rem;
+    font-weight:750;
+}
+
+.king-section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    margin:1.05rem 0 .75rem;
+}
+
+.king-section-head h2{
+    margin:0;
+    color:var(--king-dark);
+    font-size:1.08rem;
+    line-height:1.24;
+    font-weight:950;
+    letter-spacing:-.025em;
+}
+
+.king-section-head p{
+    margin:.24rem 0 0;
+    color:var(--king-muted);
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.king-pill{
+    flex:0 0 auto;
+    padding:.42rem .68rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4f46e5;
+    font-size:.7rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.king-service-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.78rem;
+}
+
+.king-service-card{
+    position:relative;
+    overflow:hidden;
+    min-height:142px;
+    padding:1rem;
+    border-radius:25px;
+    background:#fff;
+    border:1px solid #eef2f7;
+    box-shadow:var(--king-shadow-soft);
+    color:inherit;
+    text-decoration:none;
+    transition:.22s ease;
+}
+
+.king-service-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 20px 38px rgba(15,23,42,.10);
+    border-color:#dbeafe;
+}
+
+.king-service-card:before{
+    content:"";
+    position:absolute;
+    right:-38px;
+    top:-38px;
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    background:rgba(37,99,235,.06);
+}
+
+.king-service-icon{
+    position:relative;
+    z-index:2;
+    width:50px;
+    height:50px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.14rem;
+    margin-bottom:.76rem;
+}
+
+.king-service-card strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    color:var(--king-dark);
+    font-size:.96rem;
+    line-height:1.22;
+    font-weight:950;
+}
+
+.king-service-card span{
+    position:relative;
+    z-index:2;
+    display:block;
+    margin-top:.3rem;
+    color:var(--king-muted);
+    font-size:.72rem;
+    line-height:1.38;
+    font-weight:650;
+}
+
+.king-service-arrow{
+    position:absolute;
+    right:.85rem;
+    bottom:.85rem;
+    width:33px;
+    height:33px;
+    border-radius:12px;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.king-wide-card{
+    margin-top:.8rem;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:1rem;
+    align-items:center;
+    padding:1rem;
+    border-radius:25px;
+    background:radial-gradient(circle at top left,rgba(16,185,129,.10),transparent 36%),#fff;
+    border:1px solid #dcfce7;
+    box-shadow:var(--king-shadow-soft);
+    text-decoration:none;
+    color:inherit;
+}
+
+.king-wide-card strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.98rem;
+    font-weight:950;
+}
+
+.king-wide-card span{
+    display:block;
+    margin-top:.25rem;
+    color:var(--king-muted);
+    font-size:.76rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.king-wide-icon{
+    width:48px;
+    height:48px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.king-panel{
+    margin-top:1rem;
+    padding:1rem;
+    border-radius:27px;
+    background:#fff;
+    border:1px solid #eef2f7;
+    box-shadow:var(--king-shadow-soft);
+}
+
+.king-guide-grid,
+.king-recent-list,
+.king-faq-list{
+    display:grid;
+    gap:.72rem;
+}
+
+.king-guide-item{
+    display:flex;
+    gap:.75rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.king-guide-num{
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg,var(--king-blue),var(--king-purple));
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.king-guide-item strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.king-guide-item span{
+    display:block;
+    margin-top:.16rem;
+    color:var(--king-muted);
+    font-size:.76rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.king-benefit-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.72rem;
+}
+
+.king-benefit{
+    padding:.9rem;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.king-benefit i{
+    width:36px;
+    height:36px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:.65rem;
+}
+
+.king-benefit strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.85rem;
+    font-weight:950;
+}
+
+.king-benefit span{
+    display:block;
+    margin-top:.2rem;
+    color:var(--king-muted);
+    font-size:.73rem;
+    line-height:1.42;
+    font-weight:650;
+}
+
+.king-product-row{
+    display:grid;
+    gap:.65rem;
+}
+
+.king-product-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.8rem;
+    padding:.86rem;
+    border-radius:19px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+    color:inherit;
+    text-decoration:none;
+    transition:.2s ease;
+}
+
+.king-product-item:hover{
+    background:#eef2ff;
+    transform:translateY(-2px);
+}
+
+.king-product-left{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    min-width:0;
+}
+
+.king-product-left i{
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.king-product-left strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.king-product-left span{
+    display:block;
+    margin-top:.12rem;
+    color:var(--king-muted);
+    font-size:.73rem;
+    line-height:1.35;
+    font-weight:650;
+}
+
+.king-recent-item{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.king-recent-icon{
+    width:39px;
+    height:39px;
+    flex:0 0 39px;
+    border-radius:15px;
+    background:#eef2ff;
+    color:#4f46e5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.king-recent-main{
+    min-width:0;
+    flex:1;
+}
+
+.king-recent-main strong{
+    display:block;
+    color:var(--king-dark);
+    font-size:.82rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.king-recent-main span{
+    display:block;
+    margin-top:.14rem;
+    color:var(--king-muted);
+    font-size:.72rem;
+    font-weight:650;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.king-recent-status{
+    flex:0 0 auto;
+    padding:.33rem .56rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#166534;
+    font-size:.66rem;
+    font-weight:950;
+}
+
+.king-empty{
+    padding:1rem;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px dashed #cbd5e1;
+    text-align:center;
+    color:var(--king-muted);
+    font-size:.82rem;
+    line-height:1.5;
+    font-weight:700;
+}
+
+.king-review-grid{
+    display:grid;
+    gap:.72rem;
+}
+
+.king-review{
+    padding:.95rem;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.king-stars{
+    color:#f59e0b;
+    font-size:.85rem;
+    letter-spacing:.08em;
+    margin-bottom:.45rem;
+}
+
+.king-review p{
+    margin:0;
+    color:var(--king-text);
+    font-size:.82rem;
+    line-height:1.55;
+    font-weight:650;
+}
+
+.king-review b{
+    display:block;
+    margin-top:.55rem;
+    color:var(--king-dark);
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.king-faq{
+    border-radius:19px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+    overflow:hidden;
+}
+
+.king-faq summary{
+    list-style:none;
+    cursor:pointer;
+    padding:.9rem;
+    color:var(--king-dark);
+    font-size:.84rem;
+    font-weight:950;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+}
+
+.king-faq summary::-webkit-details-marker{
+    display:none;
+}
+
+.king-faq summary:after{
+    content:"+";
+    width:26px;
+    height:26px;
+    flex:0 0 26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:#fff;
+    color:#4f46e5;
+    border:1px solid #e2e8f0;
+    font-weight:950;
+}
+
+.king-faq[open] summary:after{
+    content:"−";
+}
+
+.king-faq p{
+    margin:0;
+    padding:0 .9rem .9rem;
+    color:var(--king-muted);
+    font-size:.78rem;
+    line-height:1.55;
+    font-weight:650;
+}
+
+.king-warning{
+    margin-top:1rem;
+    padding:1rem;
+    border-radius:24px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    border-left:5px solid #f59e0b;
+    color:#92400e;
+    font-size:.82rem;
+    line-height:1.58;
+    font-weight:650;
+}
+
+.king-warning strong{
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    margin-bottom:.25rem;
+    color:#78350f;
+    font-size:.88rem;
+    font-weight:950;
+}
+
+.king-bottom-cta{
+    margin-top:1rem;
+    padding:1.15rem;
+    border-radius:29px;
+    color:#fff;
+    background:
+        radial-gradient(circle at top left,rgba(255,255,255,.25),transparent 32%),
+        linear-gradient(135deg,#0f172a,#1e293b);
+    box-shadow:0 18px 38px rgba(15,23,42,.20);
+}
+
+.king-bottom-cta h3{
+    margin:0;
+    color:#fff;
+    font-size:1.1rem;
+    font-weight:950;
+}
+
+.king-bottom-cta p{
+    margin:.35rem 0 .92rem;
+    color:rgba(255,255,255,.82);
+    font-size:.84rem;
+    line-height:1.55;
+}
+
+.king-bottom-cta a{
+    width:100%;
+    min-height:49px;
+    border-radius:17px;
+    background:#fff;
+    color:#111827;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    text-decoration:none;
+    font-size:.88rem;
+    font-weight:950;
+}
+
+/* =========================================================
+   CHAT KAMI PREMIUM
+========================================================= */
+
+.king-support-lux{
+    position:relative;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.12),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(16,185,129,.10),transparent 34%),
+        #ffffff;
+}
+
+.king-support-lux::before{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    right:-62px;
+    top:-62px;
+    border-radius:50%;
+    background:rgba(37,99,235,.08);
+}
+
+.king-chat-hero{
+    position:relative;
+    z-index:2;
+    overflow:hidden;
+    padding:1rem;
+    border-radius:24px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.25),transparent 32%),
+        linear-gradient(135deg,#0f172a,#2563eb 52%,#10b981);
+    box-shadow:0 18px 38px rgba(37,99,235,.20);
+    margin-bottom:.8rem;
+}
+
+.king-chat-hero-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.8rem;
+}
+
+.king-chat-hero h3{
+    margin:0;
+    color:#fff;
+    font-size:1.05rem;
+    line-height:1.22;
+    font-weight:950;
+    letter-spacing:-.025em;
+}
+
+.king-chat-hero p{
+    margin:.35rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.78rem;
+    line-height:1.5;
+    font-weight:650;
+}
+
+.king-chat-avatar{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
+    border-radius:19px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.22);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.25rem;
+    color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.king-chat-status{
+    display:inline-flex;
+    align-items:center;
+    gap:.36rem;
+    margin-top:.75rem;
+    padding:.38rem .62rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.king-chat-status i{
+    font-size:.48rem;
+    color:#22c55e;
+    filter:drop-shadow(0 0 6px rgba(34,197,94,.85));
+}
+
+.king-chat-actions{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1.25fr .75fr;
+    gap:.7rem;
+    margin-top:.8rem;
+}
+
+.king-chat-main-btn{
+    min-height:58px;
+    border-radius:20px;
+    background:linear-gradient(135deg,#25d366,#16a34a);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    text-decoration:none;
+    font-size:.88rem;
+    font-weight:950;
+    box-shadow:0 14px 28px rgba(22,163,74,.24);
+}
+
+.king-chat-main-btn i{
+    font-size:1.15rem;
+}
+
+.king-chat-copy-btn{
+    min-height:58px;
+    border:0;
+    border-radius:20px;
+    background:#f8fafc;
+    color:#0f172a;
+    border:1px solid #e2e8f0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    font-size:.78rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 10px 22px rgba(15,23,42,.055);
+}
+
+.king-chat-mini-grid{
+    position:relative;
+    z-index:2;
+    display:grid;
+    gap:.65rem;
+    margin-top:.75rem;
+}
+
+.king-chat-mini{
+    display:flex;
+    align-items:center;
+    gap:.72rem;
+    padding:.82rem;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+}
+
+.king-chat-mini i{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    font-size:1rem;
+}
+
+.king-chat-mini strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.king-chat-mini span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.35;
+    font-weight:650;
+}
+
+.king-chat-float{
+    position:fixed;
+    right:max(8px, calc((100vw - 720px) / 2 + 6px));
+    bottom:92px;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:.55rem;
+}
+
+.king-chat-float-card{
+    display:none;
+    width:255px;
+    padding:.85rem;
+    border-radius:24px;
+    background:rgba(255,255,255,.96);
+    border:1px solid rgba(226,232,240,.9);
+    box-shadow:0 22px 55px rgba(15,23,42,.20);
+    backdrop-filter:blur(14px);
+}
+
+.king-chat-float.open .king-chat-float-card{
+    display:block;
+    animation:chatPop .22s ease both;
+}
+
+@keyframes chatPop{
+    from{opacity:0;transform:translateY(8px) scale(.97);}
+    to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+.king-chat-float-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.king-chat-float-card span{
+    display:block;
+    margin-top:.22rem;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.king-chat-float-card a{
+    width:100%;
+    min-height:42px;
+    margin-top:.7rem;
+    border-radius:15px;
+    background:linear-gradient(135deg,#25d366,#16a34a);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.42rem;
+    text-decoration:none;
+    font-size:.78rem;
+    font-weight:950;
+}
+
+.king-chat-float-btn{
+    min-width:58px;
+    min-height:58px;
+    border:0;
+    border-radius:999px;
+    padding:0 .95rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 25% 10%,rgba(255,255,255,.30),transparent 32%),
+        linear-gradient(135deg,#25d366,#2563eb);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    font-size:.84rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 18px 36px rgba(37,99,235,.26);
+}
+
+.king-chat-float-btn i{
+    font-size:1.15rem;
+}
+
+.king-chat-pulse{
+    position:absolute;
+    right:4px;
+    top:4px;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:#22c55e;
+    border:2px solid #fff;
+    box-shadow:0 0 0 6px rgba(34,197,94,.18);
+}
+
+@media(max-width:560px){
+    .king-page{
+        padding-left:.75rem;
+        padding-right:.75rem;
+    }
+
+    .king-shell{
+        padding:.75rem;
+        border-radius:30px;
+    }
+
+    .king-topbar{
+        align-items:flex-start;
+    }
+
+    .king-profile-btn{
+        min-height:38px;
+        padding:0 .65rem;
+        font-size:.7rem;
+    }
+
+    .king-brand-text strong{
+        font-size:.92rem;
+    }
+
+    .king-brand-text span{
+        font-size:.68rem;
+    }
+
+    .king-slider{
+        min-height:315px;
+        border-radius:28px;
+    }
+
+    .king-slide{
+        grid-template-columns:1fr;
+        align-items:flex-start;
+        padding:1.1rem;
+    }
+
+    .king-slide h2{
+        font-size:1.25rem;
+    }
+
+    .king-slide p{
+        font-size:.8rem;
+    }
+
+    .king-slide-visual{
+        position:absolute;
+        right:18px;
+        bottom:34px;
+        height:auto;
+        opacity:.88;
+    }
+
+    .king-icon-card{
+        width:88px;
+        height:88px;
+        border-radius:28px;
+        font-size:2.35rem;
+    }
+
+    .king-tags{
+        max-width:260px;
+    }
+
+    .king-mini-dashboard,
+    .king-stat-grid,
+    .king-benefit-grid{
+        grid-template-columns:1fr;
+    }
+
+    .king-section-head{
+        flex-direction:column;
+        gap:.45rem;
+    }
+
+    .king-service-grid{
+        grid-template-columns:1fr;
+    }
+
+    .king-product-item,
+    .king-wide-card{
+        align-items:flex-start;
+    }
+
+    .king-chat-actions{
+        grid-template-columns:1fr;
+    }
+
+    .king-chat-float{
+        right:8px;
+        bottom:86px;
+    }
+
+    .king-chat-float-card{
+        width:238px;
+    }
+
+    .king-chat-float-btn{
+        padding:0 .82rem;
+    }
+}
+</style>
+
+<div class="king-page">
+    <div class="king-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="king-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="king-topbar">
+            <div class="king-brand">
+                <div class="king-logo">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <div class="king-brand-text">
+                    <strong>SenjaData</strong>
+                    <span>Dashboard transaksi digital premium</span>
+                </div>
+            </div>
+
+            <a href="{{ url_for('profil') }}" class="king-profile-btn">
+                <i class="fa-solid fa-user"></i>
+                {{ nama_pengguna|default('Akun', true) }}
+            </a>
+        </div>
+
+        <div class="king-slider-wrap">
+            <div class="king-slider" id="kingSlider">
+
+                <div class="king-slide active" data-theme="pulsa">
+                    <div class="king-orb one"></div>
+                    <div class="king-orb two"></div>
+
+                    <div class="king-slide-content">
+                        <div class="king-slide-badge">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                            Proses Cepat
+                        </div>
+                        <h2>Isi Pulsa Lebih Mudah</h2>
+                        <p>Beli pulsa Telkomsel, Indosat, XL, AXIS, Tri, dan Smartfren. Pilih nominal dengan tampilan card yang rapi dan mudah dipahami.</p>
+
+                        <div class="king-tags">
+                            <span>Telkomsel</span>
+                            <span>Indosat</span>
+                            <span>XL</span>
+                            <span>Tri</span>
+                        </div>
+
+                        <a href="{{ url_for('pulsa') }}" class="king-slide-cta">
+                            Beli Pulsa
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="king-slide-visual">
+                        <div class="king-icon-card">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="king-slide" data-theme="ewallet">
+                    <div class="king-orb one"></div>
+                    <div class="king-orb two"></div>
+
+                    <div class="king-slide-content">
+                        <div class="king-slide-badge">
+                            <i class="fa-solid fa-wallet"></i>
+                            Layanan Favorit
+                        </div>
+                        <h2>Top Up E-Wallet Premium</h2>
+                        <p>Isi saldo DANA, OVO, GoPay, ShopeePay, dan LinkAja dengan tampilan jelas, alur mudah, dan cocok untuk kebutuhan transaksi harian.</p>
+
+                        <div class="king-tags">
+                            <span>DANA</span>
+                            <span>OVO</span>
+                            <span>GoPay</span>
+                            <span>LinkAja</span>
+                        </div>
+
+                        <a href="{{ url_for('ewallet') }}" class="king-slide-cta">
+                            Top Up Sekarang
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="king-slide-visual">
+                        <div class="king-icon-card">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="king-slide" data-theme="data">
+                    <div class="king-orb one"></div>
+                    <div class="king-orb two"></div>
+
+                    <div class="king-slide-content">
+                        <div class="king-slide-badge">
+                            <i class="fa-solid fa-wifi"></i>
+                            Internet Harian
+                        </div>
+                        <h2>Paket Data Lengkap</h2>
+                        <p>Pilih paket harian, mingguan, bulanan, unlimited, sosmed, dan combo. Pengguna tinggal pilih operator dan paket yang dibutuhkan.</p>
+
+                        <div class="king-tags">
+                            <span>Harian</span>
+                            <span>Bulanan</span>
+                            <span>Unlimited</span>
+                            <span>Combo</span>
+                        </div>
+
+                        <a href="{{ url_for('data') }}" class="king-slide-cta">
+                            Pilih Paket
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="king-slide-visual">
+                        <div class="king-icon-card">
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="king-slide" data-theme="tagihan">
+                    <div class="king-orb one"></div>
+                    <div class="king-orb two"></div>
+
+                    <div class="king-slide-content">
+                        <div class="king-slide-badge">
+                            <i class="fa-solid fa-receipt"></i>
+                            Tagihan Rumah
+                        </div>
+                        <h2>Bayar Tagihan Lebih Rapi</h2>
+                        <p>Bayar PLN, PDAM, BPJS, internet, TV kabel, PBB, asuransi, gas, dan angsuran dengan penjelasan yang mudah dimengerti pengguna baru.</p>
+
+                        <div class="king-tags">
+                            <span>PLN</span>
+                            <span>PDAM</span>
+                            <span>BPJS</span>
+                            <span>Internet</span>
+                        </div>
+
+                        <a href="{{ url_for('lainnya') }}" class="king-slide-cta">
+                            Buka Tagihan
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="king-slide-visual">
+                        <div class="king-icon-card">
+                            <i class="fa-solid fa-file-invoice-dollar"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="king-slider-control">
+                    <button type="button" class="king-dot active" data-index="0"></button>
+                    <button type="button" class="king-dot" data-index="1"></button>
+                    <button type="button" class="king-dot" data-index="2"></button>
+                    <button type="button" class="king-dot" data-index="3"></button>
+                </div>
+
+                <div class="king-progress">
+                    <span id="kingProgress"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="king-mini-dashboard">
+            <div class="king-balance-card">
+                <span>Saldo Aktif Kamu</span>
+                <strong>{{ saldo|default('Rp 0', true) }}</strong>
+
+                <div class="king-balance-actions">
+                    <a href="{{ url_for('topup_saldo') }}">
+                        <i class="fa-solid fa-plus"></i>
+                        Top Up
+                    </a>
+                    <a href="{{ url_for('produk') }}">
+                        <i class="fa-solid fa-layer-group"></i>
+                        Produk
+                    </a>
+                </div>
+            </div>
+
+            <div class="king-info-card">
+                <strong>Selamat datang, {{ nama_pengguna|default('Pengguna', true) }} 👋</strong>
+                <span>Semua kebutuhan digital bisa dikelola dari satu dashboard yang rapi, cepat, dan mudah dipahami.</span>
+                <div class="king-info-chip">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Aman & Praktis
+                </div>
+            </div>
+        </div>
+
+        <div class="king-stat-grid">
+            <div class="king-stat">
+                <div class="king-stat-icon" style="background:#ecfdf5;color:#059669;">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <strong>{{ jumlah_transaksi|default(0, true) }}</strong>
+                <span>Transaksi sukses</span>
+            </div>
+
+            <div class="king-stat">
+                <div class="king-stat-icon" style="background:#eef2ff;color:#4f46e5;">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <strong>{{ total_laba|default('Rp 0', true) }}</strong>
+                <span>Total laba</span>
+            </div>
+
+            <div class="king-stat">
+                <div class="king-stat-icon" style="background:#fff7ed;color:#ea580c;">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <strong>Instan</strong>
+                <span>Proses cepat</span>
+            </div>
+        </div>
+
+        <div class="king-section-head">
+            <div>
+                <h2>Layanan Utama</h2>
+                <p>Pilih layanan paling sering digunakan untuk transaksi harian.</p>
+            </div>
+            <span class="king-pill">Favorit</span>
+        </div>
+
+        <div class="king-service-grid">
+            <a href="{{ url_for('pulsa') }}" class="king-service-card">
+                <div class="king-service-icon" style="background:#e6f2ff;color:#007ae6;">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <strong>Pulsa Reguler</strong>
+                <span>Isi pulsa semua operator dengan pilihan nominal yang jelas.</span>
+                <div class="king-service-arrow" style="background:linear-gradient(135deg,#007ae6,#2563eb);">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{{ url_for('data') }}" class="king-service-card">
+                <div class="king-service-icon" style="background:#eef2ff;color:#4f46e5;">
+                    <i class="fa-solid fa-wifi"></i>
+                </div>
+                <strong>Paket Data</strong>
+                <span>Internet harian, mingguan, bulanan, unlimited, dan combo.</span>
+                <div class="king-service-arrow" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{{ url_for('ewallet') }}" class="king-service-card">
+                <div class="king-service-icon" style="background:#ecfdf5;color:#059669;">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <strong>Top Up E-Wallet</strong>
+                <span>Isi saldo DANA, OVO, GoPay, ShopeePay, dan LinkAja.</span>
+                <div class="king-service-arrow" style="background:linear-gradient(135deg,#059669,#10b981);">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="{{ url_for('listrik') }}" class="king-service-card">
+                <div class="king-service-icon" style="background:#fefce8;color:#ca8a04;">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <strong>Token Listrik</strong>
+                <span>Beli token PLN prabayar dengan proses cepat.</span>
+                <div class="king-service-arrow" style="background:linear-gradient(135deg,#f59e0b,#ca8a04);">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <a href="{{ url_for('lainnya') }}" class="king-wide-card">
+            <div>
+                <strong>Layanan Tambahan Lebih Lengkap</strong>
+                <span>PDAM, BPJS, TV kabel, game, masa aktif, paket telp, gas, angsuran, PBB, asuransi, voucher, zakat, PLN pasca, dan tiket.</span>
+            </div>
+            <div class="king-wide-icon">
+                <i class="fa-solid fa-border-all"></i>
+            </div>
+        </a>
+
+        <div class="king-panel">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Penjelasan Singkat Aplikasi</h2>
+                    <p>Pengguna baru bisa langsung paham fungsi aplikasi sebelum mulai transaksi.</p>
+                </div>
+            </div>
+
+            <div class="king-guide-grid">
+                <div class="king-guide-item">
+                    <div class="king-guide-num">1</div>
+                    <div>
+                        <strong>Pilih layanan yang dibutuhkan</strong>
+                        <span>Pilih pulsa, data, e-wallet, listrik, atau layanan tambahan dari dashboard.</span>
+                    </div>
+                </div>
+
+                <div class="king-guide-item">
+                    <div class="king-guide-num">2</div>
+                    <div>
+                        <strong>Masukkan nomor atau ID pelanggan</strong>
+                        <span>Isi nomor HP, ID pelanggan, nomor meter, atau identitas sesuai layanan.</span>
+                    </div>
+                </div>
+
+                <div class="king-guide-item">
+                    <div class="king-guide-num">3</div>
+                    <div>
+                        <strong>Pilih produk dan cek detail</strong>
+                        <span>Pastikan nominal, provider, dan layanan sudah benar sebelum lanjut bayar.</span>
+                    </div>
+                </div>
+
+                <div class="king-guide-item">
+                    <div class="king-guide-num">4</div>
+                    <div>
+                        <strong>Bayar dan pantau riwayat</strong>
+                        <span>Setelah transaksi diproses, pengguna bisa mengecek status di riwayat.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="king-panel">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Kenapa Dashboard Ini Nyaman Dipakai?</h2>
+                    <p>Tampilan dibuat besar, jelas, dan rapi agar pengguna tidak bingung.</p>
+                </div>
+                <span class="king-pill">Premium</span>
+            </div>
+
+            <div class="king-benefit-grid">
+                <div class="king-benefit">
+                    <i class="fa-solid fa-eye" style="background:#eef2ff;color:#4f46e5;"></i>
+                    <strong>Mudah Dilihat</strong>
+                    <span>Menu dibuat besar dan mudah diklik dari layar HP.</span>
+                </div>
+
+                <div class="king-benefit">
+                    <i class="fa-solid fa-route" style="background:#ecfdf5;color:#059669;"></i>
+                    <strong>Alur Jelas</strong>
+                    <span>Pilih layanan, isi data, pilih produk, lalu bayar.</span>
+                </div>
+
+                <div class="king-benefit">
+                    <i class="fa-solid fa-shield-halved" style="background:#fff7ed;color:#ea580c;"></i>
+                    <strong>Lebih Aman</strong>
+                    <span>Ada catatan dan ringkasan agar data bisa dicek ulang.</span>
+                </div>
+
+                <div class="king-benefit">
+                    <i class="fa-solid fa-layer-group" style="background:#f5f3ff;color:#7c3aed;"></i>
+                    <strong>Layanan Lengkap</strong>
+                    <span>Dari produk operator sampai pembayaran tagihan.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="king-panel">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Produk Populer</h2>
+                    <p>Shortcut cepat untuk produk yang sering digunakan pengguna.</p>
+                </div>
+                <span class="king-pill">Produk</span>
+            </div>
+
+            <div class="king-product-row">
+                <a href="{{ url_for('pulsa') }}" class="king-product-item">
+                    <div class="king-product-left">
+                        <i class="fa-solid fa-mobile-screen-button" style="background:#e6f2ff;color:#007ae6;"></i>
+                        <div>
+                            <strong>Pulsa Semua Operator</strong>
+                            <span>Telkomsel, Indosat, XL, AXIS, Tri, Smartfren.</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i>
+                </a>
+
+                <a href="{{ url_for('data') }}" class="king-product-item">
+                    <div class="king-product-left">
+                        <i class="fa-solid fa-wifi" style="background:#eef2ff;color:#4f46e5;"></i>
+                        <div>
+                            <strong>Paket Data Internet</strong>
+                            <span>Paket harian, bulanan, unlimited, sosmed, combo.</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i>
+                </a>
+
+                <a href="{{ url_for('ewallet') }}" class="king-product-item">
+                    <div class="king-product-left">
+                        <i class="fa-solid fa-wallet" style="background:#ecfdf5;color:#059669;"></i>
+                        <div>
+                            <strong>Saldo E-Wallet</strong>
+                            <span>Top up saldo dompet digital populer.</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i>
+                </a>
+
+                <a href="{{ url_for('lainnya') }}" class="king-product-item">
+                    <div class="king-product-left">
+                        <i class="fa-solid fa-receipt" style="background:#fff7ed;color:#ea580c;"></i>
+                        <div>
+                            <strong>Tagihan & Pembayaran</strong>
+                            <span>PDAM, BPJS, internet, TV, PLN pasca, dan lainnya.</span>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="king-panel">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Transaksi Terbaru</h2>
+                    <p>Aktivitas terbaru tampil di sini agar pengguna mudah memantau status.</p>
+                </div>
+                <span class="king-pill">Live</span>
+            </div>
+
+            <div class="king-recent-list">
+                {% if transaksi_terakhir %}
+                    {% for trx in transaksi_terakhir %}
+                    <div class="king-recent-item">
+                        <div class="king-recent-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+
+                        <div class="king-recent-main">
+                            <strong>{{ trx.nama_produk|default(trx.kode_produk|default('Produk Digital', true), true) }}</strong>
+                            <span>
+                                {{ trx.nomor_tujuan|default('-', true) }}
+                                {% if trx.waktu %}
+                                    • {{ trx.waktu.strftime('%d/%m/%Y %H:%M') }}
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="king-recent-status">
+                            {{ trx.status|default('Berhasil', true) }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="king-empty">
+                        Belum ada transaksi terbaru. Mulai transaksi pertama dari layanan favorit kamu.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="king-panel king-support-lux">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Bantuan Chat Kami</h2>
+                    <p>Fitur bantuan dibuat lebih jelas, mewah, dan mudah dijangkau pengguna dari halaman utama.</p>
+                </div>
+                <span class="king-pill">Online</span>
+            </div>
+
+            <div class="king-chat-hero">
+                <div class="king-chat-hero-top">
+                    <div>
+                        <h3>Butuh bantuan transaksi?</h3>
+                        <p>Tim bantuan siap membantu pengecekan transaksi, saldo, produk, dan kendala pembayaran.</p>
+                    </div>
+
+                    <div class="king-chat-avatar">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                </div>
+
+                <div class="king-chat-status">
+                    <i class="fa-solid fa-circle"></i>
+                    Bantuan tersedia 24 jam
+                </div>
+            </div>
+
+            <div class="king-chat-actions">
+                <a
+                    href="https://wa.me/6283153214390?text=Halo%20SenjaData%2C%20saya%20butuh%20bantuan%20transaksi."
+                    target="_blank"
+                    rel="noopener"
+                    class="king-chat-main-btn"
+                >
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Chat WhatsApp
+                </a>
+
+                <button type="button" class="king-chat-copy-btn" id="copyWaBtn" data-copy="083153214390">
+                    <i class="fa-solid fa-copy"></i>
+                    Salin
+                </button>
+            </div>
+
+            <div class="king-chat-mini-grid">
+                <div class="king-chat-mini">
+                    <i class="fa-brands fa-whatsapp" style="color:#25d366;"></i>
+                    <div>
+                        <strong>WhatsApp Bantuan</strong>
+                        <span>0831-5321-4390</span>
+                    </div>
+                </div>
+
+                <div class="king-chat-mini">
+                    <i class="fa-solid fa-envelope" style="color:#2563eb;"></i>
+                    <div>
+                        <strong>Email Layanan</strong>
+                        <span>layanan@SenjaData.id</span>
+                    </div>
+                </div>
+
+                <div class="king-chat-mini">
+                    <i class="fa-solid fa-clock" style="color:#7c3aed;"></i>
+                    <div>
+                        <strong>Jam Bantuan</strong>
+                        <span>Aktif 24 jam setiap hari untuk kebutuhan transaksi digital.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="king-panel">
+            <div class="king-section-head" style="margin-top:0;">
+                <div>
+                    <h2>Pertanyaan yang Sering Ditanyakan</h2>
+                    <p>FAQ ini membantu pengguna baru lebih cepat paham.</p>
+                </div>
+                <span class="king-pill">FAQ</span>
+            </div>
+
+            <div class="king-faq-list">
+                <details class="king-faq" open>
+                    <summary>Apa fungsi utama SenjaData?</summary>
+                    <p>SenjaData membantu transaksi digital harian seperti beli pulsa, paket data, top up e-wallet, token listrik, dan pembayaran tagihan.</p>
+                </details>
+
+                <details class="king-faq">
+                    <summary>Bagaimana cara mulai transaksi?</summary>
+                    <p>Pilih layanan dari dashboard, masukkan nomor tujuan atau ID pelanggan, pilih produk, lalu lanjutkan pembayaran.</p>
+                </details>
+
+                <details class="king-faq">
+                    <summary>Kenapa harus cek nomor sebelum bayar?</summary>
+                    <p>Karena transaksi yang sudah diproses biasanya tidak bisa dibatalkan. Pastikan data benar sebelum lanjut.</p>
+                </details>
+
+                <details class="king-faq">
+                    <summary>Di mana melihat riwayat transaksi?</summary>
+                    <p>Riwayat transaksi bisa dilihat melalui menu Riwayat untuk mengecek status pembelian dan pembayaran.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="king-warning">
+            <strong>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Catatan Penting
+            </strong>
+            Pastikan nomor tujuan, ID pelanggan, nominal, jenis produk, dan layanan yang dipilih sudah benar sebelum mengonfirmasi pembayaran.
+        </div>
+
+        <div class="king-bottom-cta">
+            <h3>Siap mulai transaksi sekarang?</h3>
+            <p>Pilih produk digital favorit, cek detail transaksi, lalu lanjutkan pembayaran dengan alur yang lebih mudah dipahami.</p>
+            <a href="{{ url_for('produk') }}">
+                <i class="fa-solid fa-layer-group"></i>
+                Lihat Semua Produk
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="king-chat-float" id="kingChatFloat">
+    <div class="king-chat-float-card">
+        <strong>Chat bantuan cepat</strong>
+        <span>Klik tombol di bawah untuk langsung terhubung ke WhatsApp bantuan SenjaData.</span>
+        <a
+            href="https://wa.me/6283153214390?text=Halo%20SenjaData%2C%20saya%20butuh%20bantuan%20transaksi."
+            target="_blank"
+            rel="noopener"
+        >
+            <i class="fa-brands fa-whatsapp"></i>
+            Mulai Chat
+        </a>
+    </div>
+
+    <button type="button" class="king-chat-float-btn" id="kingChatBtn">
+        <span class="king-chat-pulse"></span>
+        <i class="fa-solid fa-headset"></i>
+        Chat Kami
+    </button>
+</div>
+
+<script>
+(function(){
+    const slider=document.getElementById('kingSlider');
+    if(!slider) return;
+
+    const slides=Array.from(slider.querySelectorAll('.king-slide'));
+    const dots=Array.from(slider.querySelectorAll('.king-dot'));
+    const progress=document.getElementById('kingProgress');
+
+    let active=0;
+    let duration=4300;
+    let timer=null;
+    let progressTimer=null;
+    let startTime=Date.now();
+
+    function showSlide(index){
+        active=index;
+
+        slides.forEach(function(slide,i){
+            slide.classList.toggle('active',i===active);
+        });
+
+        dots.forEach(function(dot,i){
+            dot.classList.toggle('active',i===active);
+        });
+
+        startProgress();
+    }
+
+    function nextSlide(){
+        showSlide((active+1)%slides.length);
+    }
+
+    function startAuto(){
+        stopAuto();
+        timer=setInterval(nextSlide,duration);
+        startProgress();
+    }
+
+    function stopAuto(){
+        if(timer) clearInterval(timer);
+        if(progressTimer) clearInterval(progressTimer);
+    }
+
+    function startProgress(){
+        if(progressTimer) clearInterval(progressTimer);
+        startTime=Date.now();
+
+        if(progress){
+            progress.style.width='0%';
+        }
+
+        progressTimer=setInterval(function(){
+            const diff=Date.now()-startTime;
+            const percent=Math.min((diff/duration)*100,100);
+
+            if(progress){
+                progress.style.width=percent+'%';
+            }
+
+            if(percent>=100){
+                clearInterval(progressTimer);
+            }
+        },40);
+    }
+
+    dots.forEach(function(dot){
+        dot.addEventListener('click',function(){
+            const index=parseInt(dot.dataset.index,10);
+            showSlide(index);
+            startAuto();
+        });
+    });
+
+    let startX=0;
+
+    slider.addEventListener('touchstart',function(e){
+        startX=e.touches[0].clientX;
+    },{passive:true});
+
+    slider.addEventListener('touchend',function(e){
+        const endX=e.changedTouches[0].clientX;
+        const diff=endX-startX;
+
+        if(Math.abs(diff)>45){
+            if(diff<0){
+                nextSlide();
+            }else{
+                showSlide((active-1+slides.length)%slides.length);
+            }
+
+            startAuto();
+        }
+    });
+
+    slider.addEventListener('mouseenter',stopAuto);
+    slider.addEventListener('mouseleave',startAuto);
+
+    showSlide(0);
+    startAuto();
+})();
+</script>
+
+<script>
+(function(){
+    const floatBox=document.getElementById('kingChatFloat');
+    const chatBtn=document.getElementById('kingChatBtn');
+    const copyBtn=document.getElementById('copyWaBtn');
+
+    if(chatBtn && floatBox){
+        chatBtn.addEventListener('click',function(){
+            floatBox.classList.toggle('open');
+        });
+    }
+
+    if(copyBtn){
+        copyBtn.addEventListener('click',function(){
+            const value=copyBtn.getAttribute('data-copy') || '083153214390';
+
+            if(navigator.clipboard){
+                navigator.clipboard.writeText(value).then(function(){
+                    copyBtn.innerHTML='<i class="fa-solid fa-check"></i> Tersalin';
+                    setTimeout(function(){
+                        copyBtn.innerHTML='<i class="fa-solid fa-copy"></i> Salin';
+                    },1600);
+                });
+            }else{
+                alert('Nomor bantuan: '+value);
+            }
+        });
+    }
+})();
+</script>
+
+{% endblock %}

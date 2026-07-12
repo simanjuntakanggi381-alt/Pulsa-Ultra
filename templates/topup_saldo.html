@@ -1,0 +1,963 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set saldo_user = pengguna.saldo if pengguna is defined and pengguna.saldo is defined else 0 %}
+
+<style>
+:root{
+    --tp-blue:#2563eb;
+    --tp-cyan:#06b6d4;
+    --tp-sky:#0ea5e9;
+    --tp-indigo:#4f46e5;
+    --tp-purple:#7c3aed;
+    --tp-green:#16a34a;
+    --tp-emerald:#10b981;
+    --tp-orange:#f59e0b;
+    --tp-red:#ef4444;
+    --tp-dark:#0f172a;
+    --tp-text:#334155;
+    --tp-muted:#64748b;
+    --tp-border:#e2e8f0;
+    --tp-soft:#f8fafc;
+    --tp-shadow:0 22px 55px rgba(15,23,42,.11);
+    --tp-soft-shadow:0 12px 28px rgba(15,23,42,.065);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(16,185,129,.11),transparent 34%),
+        radial-gradient(circle at bottom,rgba(6,182,212,.10),transparent 38%),
+        linear-gradient(180deg,#f8fbff 0%,#eef2ff 46%,#ffffff 100%);
+}
+
+.topup-page{
+    width:100%;
+    max-width:530px;
+    margin:0 auto;
+    padding:.85rem .6rem 5.6rem;
+    box-sizing:border-box;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--tp-text);
+}
+
+.topup-shell{
+    overflow:hidden;
+    border-radius:34px;
+    padding:.75rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.10),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(16,185,129,.08),transparent 34%),
+        linear-gradient(180deg,#fff,#f8fafc);
+    border:1px solid rgba(37,99,235,.14);
+    box-shadow:var(--tp-shadow);
+}
+
+.topup-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.topup-back,
+.topup-top-pill{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.topup-back{
+    background:#fff;
+    border:1px solid var(--tp-border);
+    color:#2563eb;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.topup-top-pill{
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #bbf7d0;
+}
+
+.topup-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:30px;
+    padding:1rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.32),transparent 34%),
+        radial-gradient(circle at 92% 8%,rgba(16,185,129,.28),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#2563eb 48%,#10b981 100%);
+    box-shadow:0 18px 38px rgba(37,99,235,.25);
+}
+
+.topup-hero::before{
+    content:"";
+    position:absolute;
+    width:140px;
+    height:140px;
+    right:-56px;
+    top:-58px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.topup-hero::after{
+    content:"";
+    position:absolute;
+    width:95px;
+    height:95px;
+    right:20px;
+    bottom:-42px;
+    border-radius:50%;
+    border:14px solid rgba(255,255,255,.10);
+}
+
+.topup-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.82rem;
+}
+
+.topup-hero-icon{
+    width:60px;
+    height:60px;
+    flex:0 0 60px;
+    border-radius:23px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.24);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.35rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 12px 24px rgba(15,23,42,.15);
+}
+
+.topup-live{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.topup-live i{
+    color:#22c55e;
+    font-size:.46rem;
+    filter:drop-shadow(0 0 6px rgba(34,197,94,.85));
+}
+
+.topup-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.12rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.topup-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.86);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.topup-stats{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.85rem;
+}
+
+.topup-stat{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.topup-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.topup-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.76);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.saldo-card{
+    position:relative;
+    overflow:hidden;
+    margin-top:.85rem;
+    border-radius:28px;
+    padding:1rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 90% 0%,rgba(250,204,21,.25),transparent 30%),
+        radial-gradient(circle at 0% 100%,rgba(6,182,212,.18),transparent 32%),
+        linear-gradient(135deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+    box-shadow:0 18px 38px rgba(15,23,42,.18);
+}
+
+.saldo-card::before{
+    content:"";
+    position:absolute;
+    width:150px;
+    height:150px;
+    right:-62px;
+    top:-64px;
+    background:rgba(255,255,255,.08);
+    border-radius:50%;
+}
+
+.saldo-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:flex-start;
+}
+
+.saldo-label{
+    color:rgba(255,255,255,.72);
+    font-size:.68rem;
+    font-weight:950;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:.35rem;
+}
+
+.saldo-value{
+    color:#fff;
+    font-size:1.58rem;
+    line-height:1.08;
+    font-weight:950;
+    letter-spacing:-.045em;
+    word-break:break-word;
+}
+
+.saldo-note{
+    margin-top:.35rem;
+    color:rgba(255,255,255,.76);
+    font-size:.7rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.saldo-icon{
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    border-radius:18px;
+    background:rgba(250,204,21,.18);
+    color:#facc15;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    border:1px solid rgba(250,204,21,.22);
+}
+
+.panel-card{
+    margin-top:.85rem;
+    background:#fff;
+    border-radius:28px;
+    padding:.9rem;
+    border:1px solid #eef2f7;
+    box-shadow:var(--tp-soft-shadow);
+}
+
+.section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.75rem;
+}
+
+.section-head h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.96rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.section-head p{
+    margin:.18rem 0 0;
+    color:var(--tp-muted);
+    font-size:.72rem;
+    line-height:1.42;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.64rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.nominal-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.65rem;
+}
+
+.nominal-btn{
+    position:relative;
+    overflow:hidden;
+    min-height:80px;
+    border-radius:22px;
+    border:1.5px solid #e2e8f0;
+    background:
+        radial-gradient(circle at top right,rgba(37,99,235,.06),transparent 35%),
+        #f8fafc;
+    color:#0f172a;
+    text-align:left;
+    padding:.75rem;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.nominal-btn::before{
+    content:"";
+    position:absolute;
+    width:70px;
+    height:70px;
+    right:-28px;
+    top:-28px;
+    border-radius:50%;
+    background:rgba(37,99,235,.07);
+}
+
+.nominal-btn strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    color:#0f172a;
+    font-size:.95rem;
+    font-weight:950;
+}
+
+.nominal-btn span{
+    position:relative;
+    z-index:2;
+    display:block;
+    margin-top:.14rem;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.nominal-btn.active{
+    background:#eff6ff;
+    border-color:#2563eb;
+    box-shadow:0 10px 22px rgba(37,99,235,.12);
+}
+
+.nominal-btn.active strong{
+    color:#1d4ed8;
+}
+
+.custom-input{
+    position:relative;
+    margin-top:.75rem;
+}
+
+.custom-input i{
+    position:absolute;
+    left:.92rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+}
+
+.custom-input input{
+    width:100%;
+    min-height:58px;
+    border-radius:20px;
+    border:1.8px solid #dbeafe;
+    background:#fff;
+    color:#0f172a;
+    font-size:1rem;
+    font-weight:850;
+    padding:0 .95rem 0 2.6rem;
+    outline:none;
+    transition:.2s ease;
+}
+
+.custom-input input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.11);
+}
+
+.method-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.65rem;
+}
+
+.method-card{
+    position:relative;
+    overflow:hidden;
+    min-height:92px;
+    border-radius:22px;
+    border:1.5px solid #e2e8f0;
+    background:#fff;
+    padding:.75rem;
+    text-align:left;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.method-card::before{
+    content:"";
+    position:absolute;
+    width:82px;
+    height:82px;
+    right:-32px;
+    top:-32px;
+    border-radius:50%;
+    background:var(--soft);
+}
+
+.method-card.active{
+    border-color:var(--main);
+    background:#f8fafc;
+    box-shadow:0 10px 22px rgba(15,23,42,.075);
+}
+
+.method-icon{
+    position:relative;
+    z-index:2;
+    width:38px;
+    height:38px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:var(--grad);
+    margin-bottom:.45rem;
+}
+
+.method-card strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    color:#0f172a;
+    font-size:.82rem;
+    font-weight:950;
+}
+
+.method-card span{
+    position:relative;
+    z-index:2;
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.35;
+    font-weight:650;
+}
+
+.receipt-card{
+    display:none;
+    margin-top:.85rem;
+    border-radius:26px;
+    padding:.9rem;
+    background:
+        radial-gradient(circle at top right,rgba(37,99,235,.08),transparent 32%),
+        #fff;
+    border:1px solid #dbeafe;
+    box-shadow:var(--tp-soft-shadow);
+}
+
+.receipt-title{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+    margin-bottom:.65rem;
+}
+
+.receipt-row{
+    display:flex;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:.55rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.receipt-row span{
+    color:#64748b;
+    font-size:.73rem;
+    font-weight:750;
+}
+
+.receipt-row b{
+    color:#0f172a;
+    font-size:.78rem;
+    text-align:right;
+    font-weight:950;
+}
+
+.receipt-total{
+    margin-top:.7rem;
+    padding:.85rem;
+    border-radius:19px;
+    color:#fff;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:.75rem;
+}
+
+.receipt-total span{
+    display:block;
+    color:rgba(255,255,255,.76);
+    font-size:.72rem;
+    font-weight:750;
+}
+
+.receipt-total b{
+    display:block;
+    margin-top:.12rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.info-box{
+    margin-top:.85rem;
+    padding:.85rem;
+    border-radius:20px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.76rem;
+    line-height:1.5;
+    font-weight:700;
+}
+
+.submit-topup{
+    width:100%;
+    min-height:60px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:21px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.22),transparent 28%),
+        linear-gradient(135deg,#2563eb,#06b6d4);
+    font-size:.95rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 14px 28px rgba(37,99,235,.24);
+}
+
+@media(max-width:430px){
+    .topup-page{
+        padding-left:.45rem;
+        padding-right:.45rem;
+    }
+
+    .topup-shell{
+        padding:.62rem;
+        border-radius:27px;
+    }
+
+    .topup-hero{
+        border-radius:25px;
+        padding:.9rem;
+    }
+
+    .topup-hero-icon{
+        width:54px;
+        height:54px;
+        flex-basis:54px;
+        border-radius:20px;
+    }
+
+    .topup-hero h2{
+        font-size:1rem;
+    }
+
+    .topup-stats,
+    .nominal-grid,
+    .method-grid{
+        grid-template-columns:1fr;
+    }
+
+    .section-head{
+        flex-direction:column;
+        gap:.42rem;
+    }
+}
+</style>
+
+<div class="topup-page">
+    <div class="topup-shell">
+
+        <div class="topup-topbar">
+            <a href="{{ url_for('dashboard') }}" class="topup-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Dashboard
+            </a>
+
+            <div class="topup-top-pill">
+                <i class="fa-solid fa-wallet"></i>
+                Isi Saldo
+            </div>
+        </div>
+
+        <div class="topup-hero">
+            <div class="topup-hero-main">
+                <div class="topup-hero-icon">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+
+                <div>
+                    <div class="topup-live">
+                        <i class="fa-solid fa-circle"></i>
+                        Saldo Vault
+                    </div>
+
+                    <h2>Top Up Saldo Lebih Premium</h2>
+                    <p>Pilih nominal, tentukan metode pembayaran, lalu saldo masuk ke akun setelah diproses.</p>
+                </div>
+            </div>
+
+            <div class="topup-stats">
+                <div class="topup-stat">
+                    <strong>Min 10K</strong>
+                    <span>Top Up</span>
+                </div>
+
+                <div class="topup-stat">
+                    <strong>Instan</strong>
+                    <span>Proses</span>
+                </div>
+
+                <div class="topup-stat">
+                    <strong>Aman</strong>
+                    <span>Saldo</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="saldo-card">
+            <div class="saldo-main">
+                <div>
+                    <div class="saldo-label">Saldo Saat Ini</div>
+                    <div class="saldo-value">
+                        {% if format_uang is defined %}
+                            {{ format_uang(saldo_user) }}
+                        {% else %}
+                            Rp {{ "{:,.0f}".format(saldo_user|int)|replace(",", ".") }}
+                        {% endif %}
+                    </div>
+                    <div class="saldo-note">
+                        Saldo dapat dipakai untuk pulsa, data, e-wallet, token listrik, dan pembayaran tagihan.
+                    </div>
+                </div>
+
+                <div class="saldo-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('topup_saldo') }}" id="topupForm">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="metode" id="metodeInput">
+
+            <div class="panel-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Nominal Top Up</h3>
+                        <p>Pilih nominal cepat atau masukkan nominal manual.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="nominal-grid">
+                    <button type="button" class="nominal-btn" data-nominal="10000">
+                        <strong>Rp 10.000</strong>
+                        <span>Top up ringan</span>
+                    </button>
+
+                    <button type="button" class="nominal-btn" data-nominal="25000">
+                        <strong>Rp 25.000</strong>
+                        <span>Untuk transaksi harian</span>
+                    </button>
+
+                    <button type="button" class="nominal-btn" data-nominal="50000">
+                        <strong>Rp 50.000</strong>
+                        <span>Paling pas</span>
+                    </button>
+
+                    <button type="button" class="nominal-btn" data-nominal="100000">
+                        <strong>Rp 100.000</strong>
+                        <span>Rekomendasi</span>
+                    </button>
+
+                    <button type="button" class="nominal-btn" data-nominal="250000">
+                        <strong>Rp 250.000</strong>
+                        <span>Saldo besar</span>
+                    </button>
+
+                    <button type="button" class="nominal-btn" data-nominal="500000">
+                        <strong>Rp 500.000</strong>
+                        <span>Untuk banyak transaksi</span>
+                    </button>
+                </div>
+
+                <div class="custom-input">
+                    <i class="fa-solid fa-rupiah-sign"></i>
+                    <input
+                        type="number"
+                        name="nominal"
+                        id="nominalInput"
+                        placeholder="Atau isi nominal manual"
+                        min="10000"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Metode Pembayaran</h3>
+                        <p>Pilih metode yang ingin digunakan untuk isi saldo.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="method-grid">
+                    <button type="button" class="method-card" data-metode="QRIS" style="--grad:linear-gradient(135deg,#0f172a,#2563eb);--main:#2563eb;--soft:rgba(37,99,235,.08);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <strong>QRIS</strong>
+                        <span>Scan pembayaran cepat</span>
+                    </button>
+
+                    <button type="button" class="method-card" data-metode="DANA" style="--grad:linear-gradient(135deg,#0ea5e9,#2563eb);--main:#0ea5e9;--soft:rgba(14,165,233,.10);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <strong>DANA</strong>
+                        <span>Bayar dari saldo DANA</span>
+                    </button>
+
+                    <button type="button" class="method-card" data-metode="OVO" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--main:#7c3aed;--soft:rgba(124,58,237,.10);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-circle-nodes"></i>
+                        </div>
+                        <strong>OVO</strong>
+                        <span>Pembayaran e-wallet</span>
+                    </button>
+
+                    <button type="button" class="method-card" data-metode="GOPAY" style="--grad:linear-gradient(135deg,#10b981,#059669);--main:#10b981;--soft:rgba(16,185,129,.10);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <strong>GoPay</strong>
+                        <span>Bayar melalui GoPay</span>
+                    </button>
+
+                    <button type="button" class="method-card" data-metode="BANK" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--main:#f59e0b;--soft:rgba(245,158,11,.12);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <strong>Transfer Bank</strong>
+                        <span>Transfer manual bank</span>
+                    </button>
+
+                    <button type="button" class="method-card" data-metode="SHOPEEPAY" style="--grad:linear-gradient(135deg,#fb923c,#f97316);--main:#fb923c;--soft:rgba(249,115,22,.12);">
+                        <div class="method-icon">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+                        <strong>ShopeePay</strong>
+                        <span>Bayar lewat ShopeePay</span>
+                    </button>
+                </div>
+
+                <div class="receipt-card" id="receiptCard">
+                    <div class="receipt-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Isi Saldo
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Nominal</span>
+                        <b id="sumNominal">Rp 0</b>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Metode</span>
+                        <b id="sumMetode">-</b>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span>Status</span>
+                        <b>Siap Diproses</b>
+                    </div>
+
+                    <div class="receipt-total">
+                        <div>
+                            <span>Total Top Up</span>
+                            <b id="sumTotal">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Catatan:</strong> Pastikan nominal dan metode sudah benar sebelum diproses. Saldo akan masuk sesuai sistem top up yang digunakan.
+                </div>
+
+                <button type="submit" class="submit-topup" id="btnTopup">
+                    <i class="fa-solid fa-circle-check"></i>
+                    Proses Isi Saldo
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+(function(){
+    const nominalInput = document.getElementById('nominalInput');
+    const nominalBtns = document.querySelectorAll('.nominal-btn');
+    const methodCards = document.querySelectorAll('.method-card');
+    const metodeInput = document.getElementById('metodeInput');
+    const receiptCard = document.getElementById('receiptCard');
+    const sumNominal = document.getElementById('sumNominal');
+    const sumMetode = document.getElementById('sumMetode');
+    const sumTotal = document.getElementById('sumTotal');
+    const form = document.getElementById('topupForm');
+    const btn = document.getElementById('btnTopup');
+
+    function rupiah(num){
+        return 'Rp ' + String(Math.max(0, parseInt(num || 0, 10))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function updateReceipt(){
+        const nominal = parseInt(nominalInput.value || '0', 10);
+        const metode = metodeInput.value || '';
+
+        if(nominal >= 10000 || metode){
+            receiptCard.style.display = 'block';
+        }
+
+        sumNominal.textContent = nominal ? rupiah(nominal) : 'Rp 0';
+        sumTotal.textContent = nominal ? rupiah(nominal) : 'Rp 0';
+        sumMetode.textContent = metode || '-';
+    }
+
+    nominalBtns.forEach(function(button){
+        button.addEventListener('click', function(){
+            nominalBtns.forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            button.classList.add('active');
+            nominalInput.value = button.getAttribute('data-nominal');
+            updateReceipt();
+        });
+    });
+
+    methodCards.forEach(function(card){
+        card.addEventListener('click', function(){
+            methodCards.forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            card.classList.add('active');
+            metodeInput.value = card.getAttribute('data-metode') || '';
+            updateReceipt();
+        });
+    });
+
+    nominalInput.addEventListener('input', function(){
+        nominalBtns.forEach(function(el){
+            el.classList.remove('active');
+        });
+
+        updateReceipt();
+    });
+
+    form.addEventListener('submit', function(e){
+        const nominal = parseInt(nominalInput.value || '0', 10);
+        const metode = metodeInput.value || '';
+
+        if(!nominal || nominal < 10000){
+            e.preventDefault();
+            alert('Minimal isi saldo Rp 10.000');
+            nominalInput.focus();
+            return;
+        }
+
+        if(!metode){
+            e.preventDefault();
+            alert('Pilih metode pembayaran terlebih dahulu.');
+            return;
+        }
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses Top Up...';
+        btn.style.opacity = '.75';
+        btn.style.pointerEvents = 'none';
+    });
+})();
+</script>
+
+{% endblock %}

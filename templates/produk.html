@@ -1,0 +1,995 @@
+{% extends "base.html" %}
+{% block konten %}
+
+<style>
+:root{
+    --pc-blue:#2563eb;
+    --pc-cyan:#06b6d4;
+    --pc-sky:#0ea5e9;
+    --pc-indigo:#4f46e5;
+    --pc-purple:#7c3aed;
+    --pc-green:#16a34a;
+    --pc-emerald:#10b981;
+    --pc-orange:#f59e0b;
+    --pc-red:#ef4444;
+    --pc-pink:#ec4899;
+    --pc-dark:#0f172a;
+    --pc-text:#334155;
+    --pc-muted:#64748b;
+    --pc-border:#e2e8f0;
+    --pc-soft:#f8fafc;
+    --pc-shadow:0 22px 55px rgba(15,23,42,.11);
+    --pc-soft-shadow:0 12px 28px rgba(15,23,42,.065);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(124,58,237,.12),transparent 34%),
+        radial-gradient(circle at bottom,rgba(6,182,212,.10),transparent 38%),
+        linear-gradient(180deg,#f8fbff 0%,#eef2ff 46%,#ffffff 100%);
+}
+
+.catalog-page{
+    width:100%;
+    max-width:530px;
+    margin:0 auto;
+    padding:.85rem .6rem 5.6rem;
+    box-sizing:border-box;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--pc-text);
+}
+
+.catalog-shell{
+    overflow:hidden;
+    border-radius:34px;
+    padding:.75rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.10),transparent 34%),
+        radial-gradient(circle at bottom right,rgba(124,58,237,.08),transparent 34%),
+        linear-gradient(180deg,#fff,#f8fafc);
+    border:1px solid rgba(37,99,235,.14);
+    box-shadow:var(--pc-shadow);
+}
+
+.catalog-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.catalog-back,
+.catalog-top-pill{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.catalog-back{
+    background:#fff;
+    border:1px solid var(--pc-border);
+    color:#2563eb;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.catalog-top-pill{
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #c7d2fe;
+}
+
+.catalog-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:30px;
+    padding:1rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.32),transparent 34%),
+        radial-gradient(circle at 92% 8%,rgba(6,182,212,.30),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#2563eb 48%,#7c3aed 100%);
+    box-shadow:0 18px 38px rgba(37,99,235,.25);
+}
+
+.catalog-hero::before{
+    content:"";
+    position:absolute;
+    width:140px;
+    height:140px;
+    right:-56px;
+    top:-58px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.catalog-hero::after{
+    content:"";
+    position:absolute;
+    width:95px;
+    height:95px;
+    right:20px;
+    bottom:-42px;
+    border-radius:50%;
+    border:14px solid rgba(255,255,255,.10);
+}
+
+.catalog-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.82rem;
+}
+
+.catalog-hero-icon{
+    width:60px;
+    height:60px;
+    flex:0 0 60px;
+    border-radius:23px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.24);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.35rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 12px 24px rgba(15,23,42,.15);
+}
+
+.catalog-live{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.catalog-live i{
+    color:#22c55e;
+    font-size:.46rem;
+    filter:drop-shadow(0 0 6px rgba(34,197,94,.85));
+}
+
+.catalog-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.12rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.catalog-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.86);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.catalog-stats{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.85rem;
+}
+
+.catalog-stat{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.catalog-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.catalog-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.76);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.catalog-search-card{
+    margin-top:.85rem;
+    padding:.85rem;
+    border-radius:26px;
+    background:#fff;
+    border:1px solid #eef2f7;
+    box-shadow:var(--pc-soft-shadow);
+}
+
+.catalog-search{
+    position:relative;
+}
+
+.catalog-search i{
+    position:absolute;
+    left:.9rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    font-size:.9rem;
+}
+
+.catalog-search input{
+    width:100%;
+    min-height:54px;
+    border-radius:19px;
+    border:1.8px solid #dbeafe;
+    background:#f8fafc;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:850;
+    padding:0 .9rem 0 2.55rem;
+    outline:none;
+    transition:.2s ease;
+}
+
+.catalog-search input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.11);
+    background:#fff;
+}
+
+.catalog-filter{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.72rem 0 .05rem;
+    scrollbar-width:none;
+}
+
+.catalog-filter::-webkit-scrollbar{
+    display:none;
+}
+
+.catalog-filter button{
+    flex:0 0 auto;
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    border:1px solid #dbeafe;
+    background:#fff;
+    color:#1d4ed8;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.catalog-filter button.active{
+    background:#2563eb;
+    color:#fff;
+    border-color:#2563eb;
+    box-shadow:0 10px 20px rgba(37,99,235,.16);
+}
+
+.catalog-section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.75rem;
+    margin:1rem 0 .72rem;
+}
+
+.catalog-section-head h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.96rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.catalog-section-head p{
+    margin:.18rem 0 0;
+    color:var(--pc-muted);
+    font-size:.72rem;
+    line-height:1.42;
+    font-weight:650;
+}
+
+.catalog-section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.64rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.65rem;
+}
+
+.feature-card{
+    position:relative;
+    overflow:hidden;
+    min-height:170px;
+    padding:.92rem;
+    border-radius:26px;
+    color:inherit;
+    text-decoration:none;
+    background:#fff;
+    border:1px solid #edf2f7;
+    box-shadow:var(--pc-soft-shadow);
+    transition:.22s ease;
+}
+
+.feature-card:hover{
+    transform:translateY(-3px);
+    border-color:#bfdbfe;
+    box-shadow:0 16px 34px rgba(15,23,42,.09);
+}
+
+.feature-card::before{
+    content:"";
+    position:absolute;
+    right:-38px;
+    top:-38px;
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    background:var(--orb,rgba(37,99,235,.06));
+}
+
+.feature-icon{
+    position:relative;
+    z-index:2;
+    width:50px;
+    height:50px;
+    border-radius:19px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1.12rem;
+    margin-bottom:.72rem;
+    background:var(--grad);
+    box-shadow:0 10px 20px rgba(15,23,42,.12);
+}
+
+.feature-card strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    color:#0f172a;
+    font-size:.92rem;
+    line-height:1.22;
+    font-weight:950;
+}
+
+.feature-card span{
+    position:relative;
+    z-index:2;
+    display:block;
+    margin-top:.25rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.38;
+    font-weight:650;
+}
+
+.feature-meta{
+    position:absolute;
+    left:.92rem;
+    right:.92rem;
+    bottom:.82rem;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:.5rem;
+}
+
+.feature-label{
+    padding:.26rem .48rem;
+    border-radius:999px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.58rem;
+    font-weight:950;
+}
+
+.feature-arrow{
+    width:30px;
+    height:30px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#0f172a;
+    color:#fff;
+    font-size:.75rem;
+}
+
+.catalog-list{
+    display:grid;
+    gap:.62rem;
+}
+
+.catalog-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:.78rem;
+    border-radius:21px;
+    background:#fff;
+    border:1px solid #edf2f7;
+    color:inherit;
+    text-decoration:none;
+    box-shadow:0 8px 20px rgba(15,23,42,.045);
+    transition:.2s ease;
+}
+
+.catalog-item:hover{
+    transform:translateY(-2px);
+    background:#f8fafc;
+    border-color:#bfdbfe;
+}
+
+.catalog-left{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    min-width:0;
+}
+
+.catalog-icon{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:.95rem;
+    background:var(--grad);
+}
+
+.catalog-text{
+    min-width:0;
+}
+
+.catalog-text strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    line-height:1.25;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.catalog-text span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.35;
+    font-weight:650;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.catalog-right{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    flex:0 0 auto;
+}
+
+.status-chip{
+    padding:.26rem .48rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.58rem;
+    font-weight:950;
+}
+
+.empty-result{
+    display:none;
+    padding:1rem;
+    border-radius:20px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.82rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+@media(max-width:500px){
+    .catalog-page{
+        padding-left:.45rem;
+        padding-right:.45rem;
+    }
+
+    .catalog-shell{
+        padding:.62rem;
+        border-radius:27px;
+    }
+
+    .catalog-hero{
+        padding:.9rem;
+        border-radius:25px;
+    }
+
+    .catalog-hero-icon{
+        width:54px;
+        height:54px;
+        flex-basis:54px;
+        border-radius:20px;
+    }
+
+    .catalog-hero h2{
+        font-size:1rem;
+    }
+
+    .catalog-stats,
+    .feature-grid{
+        grid-template-columns:1fr;
+    }
+
+    .catalog-section-head{
+        flex-direction:column;
+        gap:.42rem;
+    }
+}
+</style>
+
+<div class="catalog-page">
+    <div class="catalog-shell">
+
+        <div class="catalog-topbar">
+            <a href="{{ url_for('dashboard') }}" class="catalog-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Dashboard
+            </a>
+
+            <div class="catalog-top-pill">
+                <i class="fa-solid fa-store"></i>
+                Produk
+            </div>
+        </div>
+
+        <div class="catalog-hero">
+            <div class="catalog-hero-main">
+                <div class="catalog-hero-icon">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                </div>
+
+                <div>
+                    <div class="catalog-live">
+                        <i class="fa-solid fa-circle"></i>
+                        Product Center
+                    </div>
+
+                    <h2>Katalog Produk Digital Premium</h2>
+                    <p>Semua layanan dibuat lebih rapi, mudah dicari, dan nyaman dipilih dari satu halaman.</p>
+                </div>
+            </div>
+
+            <div class="catalog-stats">
+                <div class="catalog-stat">
+                    <strong>Lengkap</strong>
+                    <span>Produk</span>
+                </div>
+
+                <div class="catalog-stat">
+                    <strong>Aktif</strong>
+                    <span>Status</span>
+                </div>
+
+                <div class="catalog-stat">
+                    <strong>24 Jam</strong>
+                    <span>Layanan</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="catalog-search-card">
+            <div class="catalog-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="productSearch" placeholder="Cari produk: pulsa, data, PLN, BPJS, game...">
+            </div>
+
+            <div class="catalog-filter">
+                <button type="button" class="active" data-filter="all">Semua</button>
+                <button type="button" data-filter="favorit">Favorit</button>
+                <button type="button" data-filter="operator">Operator</button>
+                <button type="button" data-filter="tagihan">Tagihan</button>
+                <button type="button" data-filter="hiburan">Hiburan</button>
+                <button type="button" data-filter="lainnya">Lainnya</button>
+            </div>
+        </div>
+
+        <div class="catalog-section-head">
+            <div>
+                <h3>Produk Unggulan</h3>
+                <p>Shortcut cepat untuk layanan yang paling sering digunakan.</p>
+            </div>
+            <span class="catalog-section-pill">Favorit</span>
+        </div>
+
+        <div class="feature-grid">
+            <a href="{{ url_for('pulsa') }}" class="feature-card product-item" data-category="favorit operator" data-keywords="pulsa telkomsel indosat xl axis tri smartfren" style="--grad:linear-gradient(135deg,#2563eb,#06b6d4);--orb:rgba(37,99,235,.08);">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <strong>Pulsa Reguler</strong>
+                <span>Isi pulsa semua operator dengan pilihan nominal lengkap.</span>
+                <div class="feature-meta">
+                    <div class="feature-label">Operator</div>
+                    <div class="feature-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </div>
+            </a>
+
+            <a href="{{ url_for('data') }}" class="feature-card product-item" data-category="favorit operator" data-keywords="paket data internet kuota unlimited harian bulanan" style="--grad:linear-gradient(135deg,#4f46e5,#7c3aed);--orb:rgba(124,58,237,.08);">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-wifi"></i>
+                </div>
+                <strong>Paket Data</strong>
+                <span>Internet harian, bulanan, unlimited, sosmed, dan combo.</span>
+                <div class="feature-meta">
+                    <div class="feature-label">Internet</div>
+                    <div class="feature-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </div>
+            </a>
+
+            <a href="{{ url_for('ewallet') }}" class="feature-card product-item" data-category="favorit operator" data-keywords="ewallet dana ovo gopay shopeepay linkaja" style="--grad:linear-gradient(135deg,#10b981,#059669);--orb:rgba(16,185,129,.08);">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <strong>E-Wallet</strong>
+                <span>Top up DANA, OVO, GoPay, ShopeePay, dan LinkAja.</span>
+                <div class="feature-meta">
+                    <div class="feature-label">Saldo</div>
+                    <div class="feature-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </div>
+            </a>
+
+            <a href="{{ url_for('listrik') }}" class="feature-card product-item" data-category="favorit tagihan" data-keywords="pln listrik token prabayar" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--orb:rgba(245,158,11,.10);">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <strong>Token Listrik</strong>
+                <span>Beli token PLN prabayar dengan proses mudah.</span>
+                <div class="feature-meta">
+                    <div class="feature-label">PLN</div>
+                    <div class="feature-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                </div>
+            </a>
+        </div>
+
+        <div class="catalog-section-head">
+            <div>
+                <h3>Semua Produk</h3>
+                <p>Daftar lengkap layanan aktif di aplikasi SenjaData.</p>
+            </div>
+            <span class="catalog-section-pill">All</span>
+        </div>
+
+        <div class="catalog-list" id="productList">
+
+            <a href="{{ url_for('pulsa') }}" class="catalog-item product-item" data-category="operator favorit" data-keywords="pulsa reguler nomor hp operator" style="--grad:linear-gradient(135deg,#2563eb,#06b6d4);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <div class="catalog-text">
+                        <strong>Pulsa Reguler</strong>
+                        <span>Isi pulsa semua operator</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('data') }}" class="catalog-item product-item" data-category="operator favorit" data-keywords="paket data internet kuota operator" style="--grad:linear-gradient(135deg,#4f46e5,#7c3aed);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-wifi"></i></div>
+                    <div class="catalog-text">
+                        <strong>Paket Data</strong>
+                        <span>Kuota internet harian sampai bulanan</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('ewallet') }}" class="catalog-item product-item" data-category="operator favorit" data-keywords="ewallet dana ovo gopay shopeepay linkaja saldo" style="--grad:linear-gradient(135deg,#10b981,#059669);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="catalog-text">
+                        <strong>Top Up E-Wallet</strong>
+                        <span>DANA, OVO, GoPay, ShopeePay</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('listrik') }}" class="catalog-item product-item" data-category="tagihan favorit" data-keywords="listrik pln token prabayar" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="catalog-text">
+                        <strong>Token Listrik</strong>
+                        <span>PLN prabayar dan token listrik</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('game') }}" class="catalog-item product-item" data-category="hiburan" data-keywords="game voucher topup ml ff pubg genshin valorant" style="--grad:linear-gradient(135deg,#9333ea,#ec4899);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-gamepad"></i></div>
+                    <div class="catalog-text">
+                        <strong>Top Up Game</strong>
+                        <span>Voucher dan saldo game populer</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('internet') }}" class="catalog-item product-item" data-category="tagihan" data-keywords="internet wifi tagihan indihome biznet myrepublic" style="--grad:linear-gradient(135deg,#4f46e5,#06b6d4);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-router"></i></div>
+                    <div class="catalog-text">
+                        <strong>Internet Rumah</strong>
+                        <span>Cek dan bayar tagihan internet</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('tv') }}" class="catalog-item product-item" data-category="hiburan tagihan" data-keywords="tv kabel streaming indihome first media transvision" style="--grad:linear-gradient(135deg,#0f172a,#2563eb);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-tv"></i></div>
+                    <div class="catalog-text">
+                        <strong>TV Kabel</strong>
+                        <span>Bayar dan cek layanan TV</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('pdam') }}" class="catalog-item product-item" data-category="tagihan" data-keywords="pdam air tagihan pembayaran" style="--grad:linear-gradient(135deg,#0ea5e9,#0284c7);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-droplet"></i></div>
+                    <div class="catalog-text">
+                        <strong>PDAM</strong>
+                        <span>Cek dan bayar tagihan air</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('bpjs') }}" class="catalog-item product-item" data-category="tagihan" data-keywords="bpjs kesehatan tagihan iuran" style="--grad:linear-gradient(135deg,#16a34a,#059669);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <div class="catalog-text">
+                        <strong>BPJS</strong>
+                        <span>Bayar iuran BPJS kesehatan</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('masa_aktif') }}" class="catalog-item product-item" data-category="operator" data-keywords="masa aktif kartu sim perpanjang" style="--grad:linear-gradient(135deg,#22c55e,#14b8a6);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div class="catalog-text">
+                        <strong>Masa Aktif</strong>
+                        <span>Perpanjang masa aktif kartu</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('paket_telp') }}" class="catalog-item product-item" data-category="operator" data-keywords="paket telp telepon menit operator" style="--grad:linear-gradient(135deg,#00b4db,#0083b0);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="catalog-text">
+                        <strong>Paket Telepon</strong>
+                        <span>Paket menit telepon operator</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('aktivasi') }}" class="catalog-item product-item" data-category="operator" data-keywords="aktivasi perdana kartu sim" style="--grad:linear-gradient(135deg,#f50057,#ff4081);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-sim-card"></i></div>
+                    <div class="catalog-text">
+                        <strong>Aktivasi Perdana</strong>
+                        <span>Aktivasi kartu dan layanan SIM</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('gas') }}" class="catalog-item product-item" data-category="tagihan lainnya" data-keywords="gas pgn rumah bisnis token" style="--grad:linear-gradient(135deg,#ff6d00,#ff3d00);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-fire-flame-simple"></i></div>
+                    <div class="catalog-text">
+                        <strong>Gas</strong>
+                        <span>Bayar atau isi layanan gas</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('angsuran') }}" class="catalog-item product-item" data-category="tagihan lainnya" data-keywords="angsuran cicilan kredit finance" style="--grad:linear-gradient(135deg,#64748b,#334155);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <div class="catalog-text">
+                        <strong>Angsuran</strong>
+                        <span>Bayar cicilan dan finance</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('pbb') }}" class="catalog-item product-item" data-category="tagihan lainnya" data-keywords="pbb pajak bumi bangunan" style="--grad:linear-gradient(135deg,#15803d,#65a30d);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <div class="catalog-text">
+                        <strong>PBB</strong>
+                        <span>Pajak bumi dan bangunan</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('asuransi') }}" class="catalog-item product-item" data-category="tagihan lainnya" data-keywords="asuransi proteksi tagihan" style="--grad:linear-gradient(135deg,#0891b2,#0e7490);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="catalog-text">
+                        <strong>Asuransi</strong>
+                        <span>Bayar tagihan asuransi</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('voucher') }}" class="catalog-item product-item" data-category="hiburan lainnya" data-keywords="voucher belanja digital hiburan" style="--grad:linear-gradient(135deg,#db2777,#9333ea);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-ticket"></i></div>
+                    <div class="catalog-text">
+                        <strong>Voucher</strong>
+                        <span>Voucher digital dan hiburan</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('zakat') }}" class="catalog-item product-item" data-category="lainnya" data-keywords="zakat donasi sedekah" style="--grad:linear-gradient(135deg,#059669,#16a34a);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                    <div class="catalog-text">
+                        <strong>Zakat</strong>
+                        <span>Pembayaran zakat dan donasi</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('pln_pasca') }}" class="catalog-item product-item" data-category="tagihan" data-keywords="pln pasca bayar listrik tagihan" style="--grad:linear-gradient(135deg,#facc15,#f59e0b);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="catalog-text">
+                        <strong>PLN Pascabayar</strong>
+                        <span>Cek dan bayar tagihan listrik</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <a href="{{ url_for('tiket') }}" class="catalog-item product-item" data-category="hiburan lainnya" data-keywords="tiket pesawat travel perjalanan" style="--grad:linear-gradient(135deg,#0ea5e9,#2563eb);">
+                <div class="catalog-left">
+                    <div class="catalog-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                    <div class="catalog-text">
+                        <strong>Tiket</strong>
+                        <span>Pemesanan tiket dan perjalanan</span>
+                    </div>
+                </div>
+                <div class="catalog-right"><div class="status-chip">Aktif</div><i class="fa-solid fa-chevron-right" style="color:#94a3b8;"></i></div>
+            </a>
+
+            <div class="empty-result" id="emptyResult">
+                Produk tidak ditemukan. Coba kata kunci lain seperti pulsa, data, PLN, BPJS, game, atau internet.
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function(){
+    const searchInput = document.getElementById('productSearch');
+    const filterBtns = document.querySelectorAll('.catalog-filter button');
+    const items = document.querySelectorAll('.product-item');
+    const emptyResult = document.getElementById('emptyResult');
+
+    let activeFilter = 'all';
+
+    function applyFilter(){
+        const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+        let visibleCount = 0;
+
+        items.forEach(function(item){
+            const text = (item.innerText || item.textContent || '').toLowerCase();
+            const keywords = (item.getAttribute('data-keywords') || '').toLowerCase();
+            const category = (item.getAttribute('data-category') || '').toLowerCase();
+
+            const matchQuery = !query || text.includes(query) || keywords.includes(query);
+            const matchFilter = activeFilter === 'all' || category.includes(activeFilter);
+
+            if(matchQuery && matchFilter){
+                item.style.display = '';
+                visibleCount++;
+            }else{
+                item.style.display = 'none';
+            }
+        });
+
+        if(emptyResult){
+            emptyResult.style.display = visibleCount ? 'none' : 'block';
+        }
+    }
+
+    if(searchInput){
+        searchInput.addEventListener('input', applyFilter);
+    }
+
+    filterBtns.forEach(function(btn){
+        btn.addEventListener('click', function(){
+            activeFilter = btn.getAttribute('data-filter') || 'all';
+
+            filterBtns.forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            applyFilter();
+        });
+    });
+
+    applyFilter();
+})();
+</script>
+
+{% endblock %}

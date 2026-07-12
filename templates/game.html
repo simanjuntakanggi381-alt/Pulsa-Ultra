@@ -1,0 +1,1815 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_game = {
+    'GAME_ML_86': 'Mobile Legends 86 Diamond',
+    'GAME_ML_172': 'Mobile Legends 172 Diamond',
+    'GAME_ML_257': 'Mobile Legends 257 Diamond',
+    'GAME_ML_344': 'Mobile Legends 344 Diamond',
+    'GAME_ML_WEEKLY': 'Mobile Legends Weekly Diamond Pass',
+
+    'GAME_FF_70': 'Free Fire 70 Diamond',
+    'GAME_FF_140': 'Free Fire 140 Diamond',
+    'GAME_FF_355': 'Free Fire 355 Diamond',
+    'GAME_FF_720': 'Free Fire 720 Diamond',
+    'GAME_FF_MEMBER': 'Free Fire Membership Mingguan',
+
+    'GAME_PUBG_60': 'PUBG Mobile 60 UC',
+    'GAME_PUBG_325': 'PUBG Mobile 325 UC',
+    'GAME_PUBG_660': 'PUBG Mobile 660 UC',
+    'GAME_PUBG_1800': 'PUBG Mobile 1800 UC',
+
+    'GAME_GENSHIN_60': 'Genshin Impact 60 Genesis Crystal',
+    'GAME_GENSHIN_330': 'Genshin Impact 330 Genesis Crystal',
+    'GAME_GENSHIN_1090': 'Genshin Impact 1090 Genesis Crystal',
+    'GAME_GENSHIN_WELKIN': 'Genshin Blessing Welkin Moon',
+
+    'GAME_ROBLOX_80': 'Roblox 80 Robux',
+    'GAME_ROBLOX_400': 'Roblox 400 Robux',
+    'GAME_ROBLOX_800': 'Roblox 800 Robux',
+
+    'GAME_VALORANT_125': 'Valorant 125 Points',
+    'GAME_VALORANT_420': 'Valorant 420 Points',
+    'GAME_VALORANT_700': 'Valorant 700 Points',
+    'GAME_VALORANT_1375': 'Valorant 1375 Points'
+} %}
+
+{% set fallback_harga_game = {
+    'GAME_ML_86': 22000,
+    'GAME_ML_172': 43000,
+    'GAME_ML_257': 64000,
+    'GAME_ML_344': 85000,
+    'GAME_ML_WEEKLY': 29000,
+
+    'GAME_FF_70': 10000,
+    'GAME_FF_140': 20000,
+    'GAME_FF_355': 50000,
+    'GAME_FF_720': 95000,
+    'GAME_FF_MEMBER': 32000,
+
+    'GAME_PUBG_60': 15000,
+    'GAME_PUBG_325': 72000,
+    'GAME_PUBG_660': 145000,
+    'GAME_PUBG_1800': 360000,
+
+    'GAME_GENSHIN_60': 15000,
+    'GAME_GENSHIN_330': 75000,
+    'GAME_GENSHIN_1090': 235000,
+    'GAME_GENSHIN_WELKIN': 79000,
+
+    'GAME_ROBLOX_80': 16000,
+    'GAME_ROBLOX_400': 75000,
+    'GAME_ROBLOX_800': 145000,
+
+    'GAME_VALORANT_125': 18000,
+    'GAME_VALORANT_420': 55000,
+    'GAME_VALORANT_700': 85000,
+    'GAME_VALORANT_1375': 165000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_game %}
+{% set harga_final = harga_map if harga_map else fallback_harga_game %}
+
+<style>
+:root{
+    --nx-purple:#7c3aed;
+    --nx-purple2:#4f46e5;
+    --nx-blue:#2563eb;
+    --nx-cyan:#06b6d4;
+    --nx-sky:#0ea5e9;
+    --nx-green:#16a34a;
+    --nx-orange:#f59e0b;
+    --nx-red:#ef4444;
+    --nx-dark:#0f172a;
+    --nx-text:#334155;
+    --nx-muted:#64748b;
+    --nx-border:#e2e8f0;
+    --nx-soft:#f8fafc;
+    --nx-shadow:0 18px 42px rgba(15,23,42,.10);
+    --nx-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(124,58,237,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(6,182,212,.14),transparent 34%),
+        radial-gradient(circle at bottom,rgba(37,99,235,.10),transparent 42%),
+        linear-gradient(180deg,#f8fafc 0%,#eef2ff 42%,#ffffff 100%);
+}
+
+.nexus-page{
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+    padding:.8rem .7rem 5rem;
+    box-sizing:border-box;
+    color:var(--nx-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.nexus-shell{
+    border-radius:30px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(124,58,237,.10),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(6,182,212,.10),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(124,58,237,.14);
+    box-shadow:var(--nx-shadow);
+    overflow:hidden;
+}
+
+.nexus-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #c7d2fe;
+}
+
+.nexus-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.nexus-alert.error,
+.nexus-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.nexus-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.nexus-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.nexus-back,
+.nexus-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.nexus-back{
+    background:#fff;
+    border:1px solid var(--nx-border);
+    color:#4f46e5;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.nexus-chip{
+    background:#eef2ff;
+    color:#4f46e5;
+    border:1px solid #c7d2fe;
+}
+
+.nexus-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:26px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(6,182,212,.28),transparent 28%),
+        linear-gradient(135deg,#111827 0%,#7c3aed 54%,#2563eb 100%);
+    box-shadow:0 16px 32px rgba(79,70,229,.24);
+}
+
+.nexus-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.nexus-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.09);
+}
+
+.nexus-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.nexus-hero-icon{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
+    border-radius:18px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.14rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.nexus-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.nexus-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.07rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.nexus-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-game-menu{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:.38rem;
+    margin-top:.74rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.hero-game-menu::-webkit-scrollbar{
+    display:none;
+}
+
+.hero-game-menu button{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border-radius:999px;
+    padding:.35rem .58rem;
+    font-size:.62rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.nexus-card{
+    border-radius:25px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #ddd6fe;
+    box-shadow:var(--nx-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4f46e5;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.game-strip{
+    display:flex;
+    gap:.55rem;
+    overflow-x:auto;
+    padding:.15rem 0 .35rem;
+    scrollbar-width:none;
+}
+
+.game-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.game-tile{
+    flex:0 0 126px;
+    min-height:116px;
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid #edf2f7;
+    border-radius:20px;
+    background:
+        radial-gradient(circle at top right,rgba(124,58,237,.10),transparent 34%),
+        #fff;
+    padding:.8rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.game-tile:hover{
+    transform:translateY(-2px);
+    border-color:#c4b5fd;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.game-tile.active{
+    border-color:#7c3aed;
+    background:#eef2ff;
+    box-shadow:0 12px 24px rgba(124,58,237,.12);
+}
+
+.game-logo{
+    width:40px;
+    height:40px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.game-tile strong{
+    display:block;
+    color:#0f172a;
+    font-size:.8rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.game-tile span{
+    display:block;
+    margin-top:.2rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.account-grid{
+    display:grid;
+    grid-template-columns:1fr .78fr;
+    gap:.55rem;
+    margin-top:.75rem;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:55px;
+    border-radius:16px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#7c3aed;
+    box-shadow:0 0 0 4px rgba(124,58,237,.10);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.scan-panel{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.42rem;
+    margin-top:.8rem;
+    padding:.65rem;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.scan-box{
+    min-height:46px;
+    border-radius:15px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.scan-box strong{
+    color:#0f172a;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.scan-box span{
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.game-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#eef2ff;
+    border:1px solid #c7d2fe;
+    color:#3730a3;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.search-btn{
+    width:100%;
+    min-height:56px;
+    border:0;
+    border-radius:18px;
+    margin-top:.82rem;
+    color:#fff;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    font-size:.92rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(79,70,229,.24);
+    transition:.2s ease;
+}
+
+.search-btn:hover{
+    transform:translateY(-1px);
+}
+
+.compact-game{
+    display:none;
+    position:sticky;
+    top:.5rem;
+    z-index:20;
+    margin-bottom:.75rem;
+    padding:.75rem;
+    border-radius:21px;
+    background:rgba(255,255,255,.94);
+    border:1px solid #ddd6fe;
+    box-shadow:0 14px 30px rgba(15,23,42,.12);
+    backdrop-filter:blur(10px);
+}
+
+.compact-game.show{
+    display:block;
+}
+
+.compact-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+}
+
+.compact-inner strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.compact-inner span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:750;
+}
+
+.compact-edit{
+    flex:0 0 auto;
+    border:0;
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4f46e5;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.nexus-dashboard{
+    display:none;
+}
+
+.nexus-dashboard.show{
+    display:block;
+}
+
+.player-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(6,182,212,.22),transparent 30%),
+        linear-gradient(135deg,#1e3a8a,#7c3aed 48%,#2563eb);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(124,58,237,.18);
+}
+
+.player-main{
+    padding:.95rem;
+}
+
+.player-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.player-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.player-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.player-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.stat-box{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.stat-box strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.stat-box span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.category-wrap{
+    margin-bottom:.75rem;
+}
+
+.category-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.category-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.category-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.category-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.category-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.category-chip{
+    flex:0 0 auto;
+    border:1px solid #c7d2fe;
+    background:#fff;
+    color:#4f46e5;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.category-chip.active{
+    background:#4f46e5;
+    color:#fff;
+    border-color:#4f46e5;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#7c3aed,#2563eb 58%,#06b6d4);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(79,70,229,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#4f46e5;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.product-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.product-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.product-card:hover{
+    transform:translateY(-2px);
+    border-color:#c4b5fd;
+}
+
+.product-card.active{
+    border-color:#7c3aed;
+    background:#eef2ff;
+    box-shadow:0 0 0 1px #7c3aed,0 14px 28px rgba(124,58,237,.10);
+}
+
+.product-main{
+    padding:.9rem;
+}
+
+.product-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.product-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.product-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#111827,#7c3aed);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(124,58,237,.14);
+}
+
+.product-name{
+    min-width:0;
+}
+
+.product-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.product-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.product-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.product-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.product-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#4f46e5;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-product{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.product-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.product-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #c7d2fe;
+    box-shadow:0 12px 24px rgba(124,58,237,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#111827,#4f46e5);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#7c3aed,#2563eb);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(79,70,229,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:420px){
+    .nexus-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .nexus-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .game-tile{
+        flex-basis:114px;
+    }
+
+    .account-grid{
+        grid-template-columns:1fr;
+    }
+
+    .scan-panel{
+        grid-template-columns:1fr;
+    }
+
+    .product-detail{
+        grid-template-columns:1fr;
+    }
+
+    .product-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-product{
+        width:100%;
+    }
+}
+</style>
+
+<div class="nexus-page">
+    <div class="nexus-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="nexus-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="nexus-topbar">
+            <a href="{{ url_for('lainnya') }}" class="nexus-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="nexus-chip">
+                <i class="fa-solid fa-gamepad"></i>
+                Game Nexus
+            </div>
+        </div>
+
+        <div class="nexus-hero" id="heroBox">
+            <div class="nexus-hero-main">
+                <div class="nexus-hero-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+
+                <div>
+                    <div class="nexus-badge">
+                        <i class="fa-solid fa-microchip"></i>
+                        Game Nexus Lab
+                    </div>
+                    <h2>Top Up Game Canggih & Premium</h2>
+                    <p>Scan akun game, lihat produk rekomendasi, lalu pilih item top up dengan dashboard gaming modern.</p>
+                </div>
+            </div>
+
+            <div class="hero-game-menu">
+                <button type="button" data-game="ML">Mobile Legends</button>
+                <button type="button" data-game="FF">Free Fire</button>
+                <button type="button" data-game="PUBG">PUBG</button>
+                <button type="button" data-game="GENSHIN">Genshin</button>
+                <button type="button" data-game="ROBLOX">Roblox</button>
+                <button type="button" data-game="VALORANT">Valorant</button>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('game') }}" id="gameForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="game">
+            <input type="hidden" name="nomor_tujuan" id="nomor_tujuan">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="nexus-card" id="searchCard">
+                <div class="section-title">
+                    <div>
+                        <h3>Pilih Game</h3>
+                        <p>Pilih game yang ingin di-scan untuk top up.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="game-strip">
+                    <button type="button" class="game-tile" data-game="ML">
+                        <div class="game-logo">ML</div>
+                        <strong>Mobile Legends</strong>
+                        <span>Diamond & Weekly</span>
+                    </button>
+
+                    <button type="button" class="game-tile" data-game="FF">
+                        <div class="game-logo">FF</div>
+                        <strong>Free Fire</strong>
+                        <span>Diamond & Member</span>
+                    </button>
+
+                    <button type="button" class="game-tile" data-game="PUBG">
+                        <div class="game-logo">PG</div>
+                        <strong>PUBG Mobile</strong>
+                        <span>UC & Pack</span>
+                    </button>
+
+                    <button type="button" class="game-tile" data-game="GENSHIN">
+                        <div class="game-logo">GI</div>
+                        <strong>Genshin</strong>
+                        <span>Crystal & Welkin</span>
+                    </button>
+
+                    <button type="button" class="game-tile" data-game="ROBLOX">
+                        <div class="game-logo">RB</div>
+                        <strong>Roblox</strong>
+                        <span>Robux</span>
+                    </button>
+
+                    <button type="button" class="game-tile" data-game="VALORANT">
+                        <div class="game-logo">VL</div>
+                        <strong>Valorant</strong>
+                        <span>Points</span>
+                    </button>
+                </div>
+
+                <div style="margin-top:1rem;">
+                    <div class="section-title">
+                        <div>
+                            <h3>Scan Akun Game</h3>
+                            <p>Masukkan User ID dan Server jika diperlukan.</p>
+                        </div>
+                        <span class="section-pill">Step 2</span>
+                    </div>
+
+                    <div class="account-grid">
+                        <div class="input-box">
+                            <input type="text" id="user_id" class="input-control" placeholder="User ID / Player ID" required>
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <div class="input-box">
+                            <input type="text" id="server_id" class="input-control" placeholder="Server">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-help">
+                        <span id="helpText">Contoh ML: User ID 123456789 dan Server 1234.</span>
+                    </div>
+
+                    <div class="quick-row">
+                        <button type="button" data-id="123456789" data-server="1234">Contoh ML</button>
+                        <button type="button" data-id="9988776655" data-server="">Contoh FF</button>
+                        <button type="button" data-clear="1">Hapus</button>
+                    </div>
+
+                    <div class="scan-panel">
+                        <div class="scan-box">
+                            <strong>ID Check</strong>
+                            <span>Validasi akun</span>
+                        </div>
+                        <div class="scan-box">
+                            <strong>Fast Route</strong>
+                            <span>1-5 menit</span>
+                        </div>
+                        <div class="scan-box">
+                            <strong>Secure</strong>
+                            <span>Auto proses</span>
+                        </div>
+                    </div>
+
+                    <div class="game-info" id="gameInfo"></div>
+                </div>
+
+                <button type="button" class="search-btn" id="searchBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Scan & Cari Produk
+                </button>
+            </div>
+
+            <div class="compact-game" id="compactGame">
+                <div class="compact-inner">
+                    <div>
+                        <strong id="compactTitle">-</strong>
+                        <span id="compactInfo">-</span>
+                    </div>
+                    <button type="button" class="compact-edit" id="editBtn">Ubah</button>
+                </div>
+            </div>
+
+            <div class="nexus-dashboard" id="nexusDashboard">
+                <div class="player-card">
+                    <div class="player-main">
+                        <div class="player-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            ACCOUNT SCANNED
+                        </div>
+                        <h3 id="playerTitle">Game Nexus Dashboard</h3>
+                        <p id="playerSubtitle">Produk rekomendasi akan tampil sesuai game dan akun yang kamu masukkan.</p>
+                    </div>
+
+                    <div class="player-stats">
+                        <div class="stat-box">
+                            <strong id="statItem">Item</strong>
+                            <span>Tersedia</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong>1-5</strong>
+                            <span>Menit</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong>Auto</strong>
+                            <span>Proses</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-wrap">
+                    <div class="category-title">
+                        <div>
+                            <strong>Kategori produk</strong>
+                            <span>Geser untuk filter top up</span>
+                        </div>
+                    </div>
+
+                    <div class="category-strip">
+                        <button type="button" class="category-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="category-chip" data-filter="cheap">Hemat</button>
+                        <button type="button" class="category-chip" data-filter="popular">Populer</button>
+                        <button type="button" class="category-chip" data-filter="premium">Premium</button>
+                        <button type="button" class="category-chip" data-filter="member">Membership</button>
+                        <button type="button" class="category-chip" data-filter="besar">Big Pack</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Smart Top Up Recommendation</strong>
+                        <span>Produk diurutkan otomatis berdasarkan kategori game dan kebutuhan akun.</span>
+                    </div>
+                    <div class="promo-badge">NEXUS</div>
+                </div>
+
+                <div class="product-list" id="productList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Top Up
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Game</span>
+                        <b id="sumGame">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>User ID</span>
+                        <b id="sumUser">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Produk</span>
+                        <b id="sumProduct">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumPrice">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Lanjutkan Pembayaran
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProduk" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        {% set kode_upper = kode|upper %}
+
+        {% if kode_upper.startswith('GAME_ML_') or kode_upper.startswith('ML_') %}
+            {% set tipe_game = 'ML' %}
+        {% elif kode_upper.startswith('GAME_FF_') or kode_upper.startswith('FF_') %}
+            {% set tipe_game = 'FF' %}
+        {% elif kode_upper.startswith('GAME_PUBG_') or kode_upper.startswith('PUBG_') %}
+            {% set tipe_game = 'PUBG' %}
+        {% elif kode_upper.startswith('GAME_GENSHIN_') or kode_upper.startswith('GENSHIN_') %}
+            {% set tipe_game = 'GENSHIN' %}
+        {% elif kode_upper.startswith('GAME_ROBLOX_') or kode_upper.startswith('ROBLOX_') %}
+            {% set tipe_game = 'ROBLOX' %}
+        {% elif kode_upper.startswith('GAME_VALORANT_') or kode_upper.startswith('VALORANT_') %}
+            {% set tipe_game = 'VALORANT' %}
+        {% else %}
+            {% set tipe_game = 'LAINNYA' %}
+        {% endif %}
+
+        <span
+            data-kode="{{ kode }}"
+            data-game="{{ tipe_game }}"
+            data-nama="{{ nama }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const heroBox=document.getElementById('heroBox');
+    const searchCard=document.getElementById('searchCard');
+    const compactGame=document.getElementById('compactGame');
+    const compactTitle=document.getElementById('compactTitle');
+    const compactInfo=document.getElementById('compactInfo');
+    const editBtn=document.getElementById('editBtn');
+    const userInput=document.getElementById('user_id');
+    const serverInput=document.getElementById('server_id');
+    const nomorTujuan=document.getElementById('nomor_tujuan');
+    const kodeProduk=document.getElementById('kode_produk');
+    const gameInfo=document.getElementById('gameInfo');
+    const helpText=document.getElementById('helpText');
+    const searchBtn=document.getElementById('searchBtn');
+    const nexusDashboard=document.getElementById('nexusDashboard');
+    const playerTitle=document.getElementById('playerTitle');
+    const playerSubtitle=document.getElementById('playerSubtitle');
+    const statItem=document.getElementById('statItem');
+    const productList=document.getElementById('productList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('gameForm');
+    const submitBtn=document.getElementById('submitBtn');
+
+    let activeGame='';
+    let activeFilter='recommended';
+    let selectedProduct=null;
+
+    const gameNames={
+        ML:'Mobile Legends',
+        FF:'Free Fire',
+        PUBG:'PUBG Mobile',
+        GENSHIN:'Genshin Impact',
+        ROBLOX:'Roblox',
+        VALORANT:'Valorant'
+    };
+
+    const gameHelp={
+        ML:'Contoh Mobile Legends: User ID 123456789 dan Server 1234.',
+        FF:'Contoh Free Fire: isi Player ID saja, server boleh kosong.',
+        PUBG:'Contoh PUBG Mobile: isi Character ID / Player ID.',
+        GENSHIN:'Contoh Genshin: isi UID dan server bila diperlukan.',
+        ROBLOX:'Contoh Roblox: isi username atau user ID Roblox.',
+        VALORANT:'Contoh Valorant: isi Riot ID / username akun.'
+    };
+
+    function clean(value){
+        return (value || '').replace(/\s{2,}/g,' ').trim();
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function updateNomorTujuan(){
+        const user=clean(userInput.value);
+        const server=clean(serverInput.value);
+        nomorTujuan.value=server ? user+' | Server: '+server : user;
+    }
+
+    function setGame(game){
+        activeGame=game;
+        selectedProduct=null;
+        kodeProduk.value='';
+
+        document.querySelectorAll('.game-tile').forEach(function(card){
+            card.classList.toggle('active',card.dataset.game===game);
+        });
+
+        gameInfo.style.display='block';
+        gameInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Game dipilih: <strong>'+(gameNames[game]||game)+'</strong>';
+
+        helpText.textContent=gameHelp[game] || 'Masukkan User ID game dengan benar.';
+
+        if(nexusDashboard.classList.contains('show')){
+            renderProducts();
+        }
+    }
+
+    function productType(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+
+        if(text.includes('weekly') || text.includes('member') || text.includes('welkin') || text.includes('pass')){
+            return 'member';
+        }
+
+        if(text.includes('1800') || text.includes('1375') || text.includes('1090') || text.includes('800') || text.includes('720')){
+            return 'besar';
+        }
+
+        if(text.includes('344') || text.includes('660') || text.includes('700') || text.includes('400') || text.includes('355')){
+            return 'premium';
+        }
+
+        if(text.includes('86') || text.includes('70') || text.includes('60') || text.includes('125') || text.includes('80')){
+            return 'cheap';
+        }
+
+        return 'popular';
+    }
+
+    function getProducts(){
+        if(!activeGame) return [];
+
+        return Array.from(document.querySelectorAll('#dataProduk span'))
+            .filter(function(item){
+                return item.dataset.game===activeGame;
+            })
+            .map(function(item){
+                const type=productType(item.dataset.nama,item.dataset.kode);
+
+                return {
+                    kode:item.dataset.kode,
+                    game:item.dataset.game,
+                    nama:item.dataset.nama,
+                    harga:item.dataset.harga,
+                    angka:parseMoney(item.dataset.harga),
+                    type:type
+                };
+            });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                const order={member:0,popular:1,premium:2,cheap:3,besar:4};
+                return (order[a.type]||9)-(order[b.type]||9) || a.angka-b.angka;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){return a.angka-b.angka;});
+        }
+
+        if(activeFilter==='popular'){
+            return list.filter(function(item){return item.type==='popular';});
+        }
+
+        if(activeFilter==='premium'){
+            return list.filter(function(item){return item.type==='premium';});
+        }
+
+        if(activeFilter==='member'){
+            return list.filter(function(item){return item.type==='member';});
+        }
+
+        if(activeFilter==='besar'){
+            return list.filter(function(item){return item.type==='besar';});
+        }
+
+        return list;
+    }
+
+    function validateSearch(){
+        updateNomorTujuan();
+
+        if(!activeGame){
+            alert('Silakan pilih game terlebih dahulu.');
+            return false;
+        }
+
+        if(!clean(userInput.value)){
+            alert('Masukkan User ID game terlebih dahulu.');
+            userInput.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function renderProducts(){
+        productList.innerHTML='';
+        selectedProduct=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        let list=applyFilter(getProducts());
+
+        playerTitle.textContent='Nexus '+(gameNames[activeGame]||activeGame);
+        playerSubtitle.textContent='Akun '+nomorTujuan.value+' berhasil discan. Pilih produk top up yang sesuai.';
+        compactTitle.textContent=gameNames[activeGame]||activeGame;
+        compactInfo.textContent='ID '+nomorTujuan.value;
+
+        if(statItem){
+            statItem.textContent=list.length+' Item';
+        }
+
+        if(!list.length){
+            productList.innerHTML='<div class="empty-state">Produk pada kategori ini belum tersedia. Coba pilih kategori lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='product-card';
+
+            card.innerHTML=
+                '<div class="product-main">'+
+                    '<div class="product-top">'+
+                        '<div class="product-left">'+
+                            '<div class="product-logo">'+activeGame.slice(0,2)+'</div>'+
+                            '<div class="product-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+gameNames[activeGame]+' · '+item.type+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="product-tag">'+(item.type==='member'?'Member':item.type==='cheap'?'Hemat':item.type==='besar'?'Big Pack':item.type==='premium'?'Premium':'Populer')+'</div>'+
+                    '</div>'+
+
+                    '<div class="product-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Item</span>'+
+                            '<strong>'+item.nama+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Estimasi</span>'+
+                            '<strong>1-5 menit</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="product-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.harga+'</strong>'+
+                            '<small>Masuk otomatis ke akun</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-product">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="product-benefits">'+
+                    '<span><i class="fa-solid fa-bolt"></i> Instan</span>'+
+                    '<span><i class="fa-solid fa-shield-halved"></i> Aman</span>'+
+                    '<span><i class="fa-solid fa-microchip"></i> Nexus scan</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-product').addEventListener('click',function(){
+                document.querySelectorAll('.product-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedProduct=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            productList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedProduct){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumGame').textContent=gameNames[activeGame]||activeGame;
+        document.getElementById('sumUser').textContent=nomorTujuan.value||'-';
+        document.getElementById('sumProduct').textContent=selectedProduct.nama;
+        document.getElementById('sumPrice').textContent=selectedProduct.harga;
+
+        summaryBox.style.display='block';
+    }
+
+    function enterDashboard(){
+        heroBox.classList.add('hidden');
+        searchCard.classList.add('hidden');
+        compactGame.classList.add('show');
+        nexusDashboard.classList.add('show');
+
+        renderProducts();
+
+        setTimeout(function(){
+            nexusDashboard.scrollIntoView({behavior:'smooth',block:'start'});
+        },120);
+    }
+
+    document.querySelectorAll('.game-tile').forEach(function(card){
+        card.addEventListener('click',function(){
+            setGame(card.dataset.game);
+        });
+    });
+
+    document.querySelectorAll('.hero-game-menu button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            const game=btn.dataset.game;
+            const card=document.querySelector('.game-tile[data-game="'+game+'"]');
+
+            if(card){
+                card.click();
+                card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+            }
+        });
+    });
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                userInput.value='';
+                serverInput.value='';
+            }else{
+                userInput.value=btn.getAttribute('data-id')||'';
+                serverInput.value=btn.getAttribute('data-server')||'';
+            }
+
+            updateNomorTujuan();
+
+            if(nexusDashboard.classList.contains('show')){
+                renderProducts();
+            }
+        });
+    });
+
+    userInput.addEventListener('input',function(){
+        updateNomorTujuan();
+
+        if(nexusDashboard.classList.contains('show')){
+            renderProducts();
+        }
+    });
+
+    serverInput.addEventListener('input',function(){
+        updateNomorTujuan();
+
+        if(nexusDashboard.classList.contains('show')){
+            renderProducts();
+        }
+    });
+
+    document.querySelectorAll('.category-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.category-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderProducts();
+        });
+    });
+
+    searchBtn.addEventListener('click',function(){
+        if(!validateSearch()) return;
+        enterDashboard();
+    });
+
+    editBtn.addEventListener('click',function(){
+        heroBox.classList.remove('hidden');
+        searchCard.classList.remove('hidden');
+        compactGame.classList.remove('show');
+
+        setTimeout(function(){
+            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
+        },100);
+    });
+
+    form.addEventListener('submit',function(e){
+        updateNomorTujuan();
+
+        if(!activeGame){
+            e.preventDefault();
+            alert('Silakan pilih game terlebih dahulu.');
+            return;
+        }
+
+        if(!clean(userInput.value)){
+            e.preventDefault();
+            alert('Masukkan User ID game terlebih dahulu.');
+            userInput.focus();
+            return;
+        }
+
+        if(!selectedProduct || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih produk top up terlebih dahulu.');
+            return;
+        }
+
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Top Up...';
+        submitBtn.style.opacity='0.75';
+        submitBtn.style.pointerEvents='none';
+    });
+})();
+</script>
+
+{% endblock %}

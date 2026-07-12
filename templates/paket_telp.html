@@ -1,0 +1,1685 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+{% set hasil = hasil_cek|default(None, true) %}
+
+{% set fallback_produk_telp = {
+    'TELP_TSEL_25': 'Telkomsel Telp 25 Menit',
+    'TELP_TSEL_50': 'Telkomsel Telp 50 Menit',
+    'TELP_TSEL_100': 'Telkomsel Telp 100 Menit',
+    'TELP_TSEL_200': 'Telkomsel Telp 200 Menit',
+    'TELP_TSEL_500': 'Telkomsel Telp 500 Menit',
+
+    'TELP_ISAT_25': 'Indosat Telp 25 Menit',
+    'TELP_ISAT_50': 'Indosat Telp 50 Menit',
+    'TELP_ISAT_100': 'Indosat Telp 100 Menit',
+    'TELP_ISAT_200': 'Indosat Telp 200 Menit',
+
+    'TELP_XL_25': 'XL Telp 25 Menit',
+    'TELP_XL_50': 'XL Telp 50 Menit',
+    'TELP_XL_100': 'XL Telp 100 Menit',
+    'TELP_XL_200': 'XL Telp 200 Menit',
+
+    'TELP_AXIS_50': 'AXIS Telp 50 Menit',
+    'TELP_AXIS_100': 'AXIS Telp 100 Menit',
+    'TELP_AXIS_200': 'AXIS Telp 200 Menit',
+
+    'TELP_TRI_50': 'Tri Telp 50 Menit',
+    'TELP_TRI_100': 'Tri Telp 100 Menit',
+    'TELP_TRI_200': 'Tri Telp 200 Menit',
+
+    'PAKET_TELP_TSEL_100': 'Telkomsel Paket Telp 100 Menit',
+    'PAKET_TELP_ISAT_100': 'Indosat Paket Telp 100 Menit'
+} %}
+
+{% set fallback_harga_telp = {
+    'TELP_TSEL_25': 9000,
+    'TELP_TSEL_50': 15000,
+    'TELP_TSEL_100': 25000,
+    'TELP_TSEL_200': 45000,
+    'TELP_TSEL_500': 85000,
+
+    'TELP_ISAT_25': 8000,
+    'TELP_ISAT_50': 12000,
+    'TELP_ISAT_100': 22000,
+    'TELP_ISAT_200': 40000,
+
+    'TELP_XL_25': 8500,
+    'TELP_XL_50': 13000,
+    'TELP_XL_100': 22000,
+    'TELP_XL_200': 42000,
+
+    'TELP_AXIS_50': 11000,
+    'TELP_AXIS_100': 18000,
+    'TELP_AXIS_200': 35000,
+
+    'TELP_TRI_50': 11000,
+    'TELP_TRI_100': 18000,
+    'TELP_TRI_200': 35000,
+
+    'PAKET_TELP_TSEL_100': 25000,
+    'PAKET_TELP_ISAT_100': 22000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_telp %}
+{% set harga_final = harga_map if harga_map else fallback_harga_telp %}
+
+<style>
+:root{
+    --vc-main:#00b4db;
+    --vc-main2:#0083b0;
+    --vc-cyan:#06b6d4;
+    --vc-blue:#2563eb;
+    --vc-green:#16a34a;
+    --vc-dark:#0f172a;
+    --vc-text:#334155;
+    --vc-muted:#64748b;
+    --vc-border:#e2e8f0;
+    --vc-soft:#f8fafc;
+    --vc-shadow:0 18px 42px rgba(15,23,42,.10);
+    --vc-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(0,180,219,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(37,99,235,.12),transparent 34%),
+        radial-gradient(circle at bottom,rgba(6,182,212,.10),transparent 42%),
+        linear-gradient(180deg,#f7fdff 0%,#f0f9ff 46%,#ffffff 100%);
+}
+
+.voice-page{
+    width:100%;
+    max-width:490px;
+    margin:0 auto;
+    padding:.8rem .7rem 5.5rem;
+    box-sizing:border-box;
+    color:var(--vc-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.voice-shell{
+    border-radius:32px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(0,180,219,.10),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(37,99,235,.08),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(0,180,219,.14);
+    box-shadow:var(--vc-shadow);
+    overflow:hidden;
+}
+
+.voice-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#f0f9ff;
+    color:#075985;
+    border:1px solid #bae6fd;
+}
+
+.voice-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.voice-alert.error,
+.voice-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.voice-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.voice-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.voice-back,
+.voice-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.voice-back{
+    background:#fff;
+    border:1px solid var(--vc-border);
+    color:#0284c7;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.voice-chip{
+    background:#f0f9ff;
+    color:#0369a1;
+    border:1px solid #bae6fd;
+}
+
+.voice-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(37,99,235,.22),transparent 28%),
+        linear-gradient(135deg,#0f172a 0%,#00b4db 52%,#2563eb 100%);
+    box-shadow:0 16px 32px rgba(0,131,176,.25);
+}
+
+.voice-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.13);
+}
+
+.voice-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.voice-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.voice-hero-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:19px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.16rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.voice-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.voice-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.1rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.voice-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-mini-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.8rem;
+}
+
+.hero-mini{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.13);
+    text-align:center;
+}
+
+.hero-mini strong{
+    display:block;
+    color:#fff;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.hero-mini span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.panel-card{
+    border-radius:26px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #bae6fd;
+    box-shadow:var(--vc-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#f0f9ff;
+    color:#0369a1;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.phone-box{
+    position:relative;
+    padding:.78rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(0,180,219,.10),transparent 30%),
+        #f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:56px;
+    border-radius:17px;
+    border:1.8px solid #bae6fd;
+    background:#fff;
+    color:#0f172a;
+    font-size:.94rem;
+    font-weight:950;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+    letter-spacing:.02em;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#00b4db;
+    box-shadow:0 0 0 4px rgba(0,180,219,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.live-call-card{
+    margin-top:.72rem;
+    overflow:hidden;
+    border-radius:23px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 30%),
+        linear-gradient(135deg,#0f172a,#00b4db 55%,#2563eb);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 26px rgba(0,131,176,.16);
+}
+
+.live-call-head{
+    padding:.82rem;
+    display:flex;
+    justify-content:space-between;
+    gap:.7rem;
+    align-items:flex-start;
+}
+
+.live-call-head strong{
+    display:block;
+    color:#fff;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.live-call-head span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.call-icon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1rem;
+}
+
+.live-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:0 .82rem .82rem;
+}
+
+.live-stat{
+    padding:.56rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.11);
+    text-align:center;
+}
+
+.live-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.live-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.telp-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#f0f9ff;
+    border:1px solid #bae6fd;
+    color:#075985;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.telp-error{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#9a3412;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.package-area{
+    display:none;
+}
+
+.package-area.show{
+    display:block;
+}
+
+.dashboard-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(37,99,235,.22),transparent 30%),
+        linear-gradient(135deg,#0f172a,#00b4db 55%,#2563eb);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(0,131,176,.18);
+}
+
+.dashboard-main{
+    padding:.95rem;
+}
+
+.dashboard-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.dashboard-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.dashboard-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.dashboard-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.dash-stat{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.dash-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.dash-stat span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.mode-wrap{
+    margin-bottom:.75rem;
+}
+
+.mode-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.mode-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.mode-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.mode-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.mode-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.mode-chip{
+    flex:0 0 auto;
+    border:1px solid #bae6fd;
+    background:#fff;
+    color:#0369a1;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.mode-chip.active{
+    background:#00b4db;
+    color:#fff;
+    border-color:#00b4db;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#00b4db,#2563eb 58%,#06b6d4);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(0,131,176,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#0369a1;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.package-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.package-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.package-card:hover{
+    transform:translateY(-2px);
+    border-color:#67e8f9;
+}
+
+.package-card.active{
+    border-color:#00b4db;
+    background:#f0f9ff;
+    box-shadow:0 0 0 1px #00b4db,0 14px 28px rgba(0,131,176,.10);
+}
+
+.package-main{
+    padding:.9rem;
+}
+
+.package-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.package-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.package-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#0f172a,#00b4db);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(0,131,176,.14);
+}
+
+.package-name{
+    min-width:0;
+}
+
+.package-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.package-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.package-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.package-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.package-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#0369a1;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-package{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#00b4db,#2563eb);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.package-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.package-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #bae6fd;
+    box-shadow:0 12px 24px rgba(0,131,176,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#0f172a,#0083b0);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#00b4db,#0083b0);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(0,131,176,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+@media(max-width:420px){
+    .voice-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .voice-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .hero-mini-row,
+    .package-detail{
+        grid-template-columns:1fr;
+    }
+
+    .package-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-package{
+        width:100%;
+    }
+}
+</style>
+
+<div class="voice-page">
+    <div class="voice-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="voice-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="voice-topbar">
+            <a href="{{ url_for('lainnya') }}" class="voice-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="voice-chip">
+                <i class="fa-solid fa-phone-volume"></i>
+                Paket Telp
+            </div>
+        </div>
+
+        <div class="voice-hero">
+            <div class="voice-hero-main">
+                <div class="voice-hero-icon">
+                    <i class="fa-solid fa-phone-volume"></i>
+                </div>
+
+                <div>
+                    <div class="voice-badge">
+                        <i class="fa-solid fa-headset"></i>
+                        Voice Connect Hub
+                    </div>
+                    <h2>Paket Telepon Lebih Rapi & Modern</h2>
+                    <p>Masukkan nomor, operator terbaca otomatis, lalu pilih paket menit telepon sesuai kebutuhan.</p>
+                </div>
+            </div>
+
+            <div class="hero-mini-row">
+                <div class="hero-mini">
+                    <strong>Auto</strong>
+                    <span>Operator</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Menit</strong>
+                    <span>Jelas</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Fast</strong>
+                    <span>Proses</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('paket_telp') }}" id="telpForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="paket_telp">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="panel-card">
+                <div class="section-title">
+                    <div>
+                        <h3>Nomor Tujuan</h3>
+                        <p>Ketik nomor HP. Paket telepon akan muncul sesuai operator yang terbaca.</p>
+                    </div>
+                    <span class="section-pill">Auto</span>
+                </div>
+
+                <div class="phone-box">
+                    <div class="input-box">
+                        <input
+                            type="tel"
+                            id="nomor_tujuan"
+                            name="nomor_tujuan"
+                            class="input-control"
+                            placeholder="Contoh: 081234567890"
+                            value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                            inputmode="numeric"
+                            minlength="9"
+                            maxlength="15"
+                            required
+                            autofocus
+                        >
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+
+                    <div class="input-help">
+                        <span>Bisa diawali 08 atau 62.</span>
+                        <span id="charCount">0/15</span>
+                    </div>
+
+                    <div class="quick-row">
+                        <button type="button" data-id="081234567890">Telkomsel</button>
+                        <button type="button" data-id="085712345678">Indosat</button>
+                        <button type="button" data-id="087812345678">XL</button>
+                        <button type="button" data-id="089612345678">Tri</button>
+                        <button type="button" data-clear="1">Hapus</button>
+                    </div>
+
+                    <div class="live-call-card">
+                        <div class="live-call-head">
+                            <div>
+                                <strong id="callTitle">Nomor Belum Dibaca</strong>
+                                <span id="callSubtitle">Masukkan nomor untuk melihat paket telepon.</span>
+                            </div>
+
+                            <div class="call-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                        </div>
+
+                        <div class="live-stats">
+                            <div class="live-stat">
+                                <strong id="callOperator">-</strong>
+                                <span>Operator</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="callStatus">Idle</strong>
+                                <span>Status</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="callTotal">0</strong>
+                                <span>Paket</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="telp-info" id="telpInfo"></div>
+                <div class="telp-error" id="telpError"></div>
+            </div>
+
+            <div class="package-area" id="packageArea">
+                <div class="dashboard-card">
+                    <div class="dashboard-main">
+                        <div class="dashboard-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            NOMOR SIAP
+                        </div>
+                        <h3 id="dashboardTitle">Voice Package Panel</h3>
+                        <p id="dashboardSubtitle">Pilih paket telepon sesuai kebutuhan bicara.</p>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="dash-stat">
+                            <strong id="dashOperator">-</strong>
+                            <span>Operator</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashTotal">0</strong>
+                            <span>Paket</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong>Auto</strong>
+                            <span>Proses</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-wrap">
+                    <div class="mode-title">
+                        <div>
+                            <strong>Pilih kebutuhan telepon</strong>
+                            <span>Geser untuk menyesuaikan menit</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-strip">
+                        <button type="button" class="mode-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="mode-chip" data-filter="short">Singkat</button>
+                        <button type="button" class="mode-chip" data-filter="daily">Harian</button>
+                        <button type="button" class="mode-chip" data-filter="long">Banyak Menit</button>
+                        <button type="button" class="mode-chip" data-filter="cheap">Termurah</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Paket Telepon Lebih Mudah Dipilih</strong>
+                        <span>Paket disusun otomatis berdasarkan operator dan jumlah menit.</span>
+                    </div>
+                    <div class="promo-badge">VOICE</div>
+                </div>
+
+                <div class="package-list" id="packageList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Paket Telepon
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor HP</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Operator</span>
+                        <b id="sumOperator">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Paket</span>
+                        <b id="sumPaket">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Estimasi Menit</span>
+                        <b id="sumMenit">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Harga</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    {% if produk_final %}
+                    <button type="submit" class="submit-btn" id="btnCek">
+                        <i class="fa-solid fa-phone-volume"></i>
+                        Beli Paket Telepon
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProdukTelp" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        {% set kode_upper = kode|upper %}
+        {% set nama_upper = nama|upper %}
+
+        {% if 'TSEL' in kode_upper or 'TELKOMSEL' in nama_upper %}
+            {% set operator = 'TSEL' %}
+        {% elif 'ISAT' in kode_upper or 'INDOSAT' in nama_upper %}
+            {% set operator = 'ISAT' %}
+        {% elif 'AXIS' in kode_upper or 'AXIS' in nama_upper %}
+            {% set operator = 'AXIS' %}
+        {% elif 'XL' in kode_upper or 'XL' in nama_upper %}
+            {% set operator = 'XL' %}
+        {% elif 'TRI' in kode_upper or 'TRI' in nama_upper %}
+            {% set operator = 'TRI' %}
+        {% else %}
+            {% set operator = 'LAINNYA' %}
+        {% endif %}
+
+        <span
+            data-kode="{{ kode }}"
+            data-operator="{{ operator }}"
+            data-nama="{{ nama|e }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const kodeProduk=document.getElementById('kode_produk');
+    const telpInfo=document.getElementById('telpInfo');
+    const telpError=document.getElementById('telpError');
+    const packageArea=document.getElementById('packageArea');
+    const packageList=document.getElementById('packageList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('telpForm');
+    const btnCek=document.getElementById('btnCek');
+
+    const callTitle=document.getElementById('callTitle');
+    const callSubtitle=document.getElementById('callSubtitle');
+    const callOperator=document.getElementById('callOperator');
+    const callStatus=document.getElementById('callStatus');
+    const callTotal=document.getElementById('callTotal');
+
+    const dashboardTitle=document.getElementById('dashboardTitle');
+    const dashboardSubtitle=document.getElementById('dashboardSubtitle');
+    const dashOperator=document.getElementById('dashOperator');
+    const dashTotal=document.getElementById('dashTotal');
+
+    let activeOperator='';
+    let activeFilter='recommended';
+    let selectedPackage=null;
+
+    const operatorNames={
+        TSEL:'Telkomsel',
+        ISAT:'Indosat',
+        XL:'XL',
+        AXIS:'AXIS',
+        TRI:'Tri',
+        LAINNYA:'Operator Lain'
+    };
+
+    const prefixRules=[
+        {prefix:['0811','0812','0813','0821','0822','0823','0852','0853'],op:'TSEL'},
+        {prefix:['0814','0815','0816','0855','0856','0857','0858'],op:'ISAT'},
+        {prefix:['0817','0818','0819','0859','0877','0878'],op:'XL'},
+        {prefix:['0831','0832','0833','0838'],op:'AXIS'},
+        {prefix:['0895','0896','0897','0898','0899'],op:'TRI'}
+    ];
+
+    const dataProduk=Array.from(document.querySelectorAll('#dataProdukTelp span'));
+
+    function cleanNumber(value){
+        value=(value || '').replace(/[^0-9]/g,'');
+
+        if(value.startsWith('62')){
+            value='0'+value.slice(2);
+        }
+
+        return value;
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function detectOperator(number){
+        const n=cleanNumber(number);
+
+        if(n.length<4) return '';
+
+        const first4=n.slice(0,4);
+
+        for(let item of prefixRules){
+            if(item.prefix.includes(first4)){
+                return item.op;
+            }
+        }
+
+        return '';
+    }
+
+    function getMinutes(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+        const found=text.match(/[0-9]+/g);
+
+        if(!found) return 0;
+
+        let biggest=0;
+
+        found.forEach(function(num){
+            const n=parseInt(num,10);
+            if(n>biggest) biggest=n;
+        });
+
+        return biggest;
+    }
+
+    function packageType(minutes){
+        if(minutes<=50) return 'short';
+        if(minutes<=100) return 'daily';
+        return 'long';
+    }
+
+    function getPackages(){
+        if(!activeOperator) return [];
+
+        let list=dataProduk.filter(function(item){
+            return item.dataset.operator===activeOperator;
+        });
+
+        if(!list.length){
+            list=dataProduk;
+        }
+
+        return list.map(function(item){
+            const minutes=getMinutes(item.dataset.nama,item.dataset.kode);
+
+            return {
+                kode:item.dataset.kode,
+                operator:item.dataset.operator,
+                nama:item.dataset.nama,
+                harga:item.dataset.harga,
+                hargaAngka:parseMoney(item.dataset.harga),
+                minutes:minutes,
+                type:packageType(minutes)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                if(a.minutes===100 && b.minutes!==100) return -1;
+                if(b.minutes===100 && a.minutes!==100) return 1;
+                return a.minutes-b.minutes;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){
+                return a.hargaAngka-b.hargaAngka;
+            });
+        }
+
+        return list.filter(function(item){
+            return item.type===activeFilter;
+        });
+    }
+
+    function resetState(){
+        activeOperator='';
+        selectedPackage=null;
+        kodeProduk.value='';
+        packageArea.classList.remove('show');
+        summaryBox.style.display='none';
+        telpInfo.style.display='none';
+        telpError.style.display='none';
+
+        callTitle.textContent='Nomor Belum Dibaca';
+        callSubtitle.textContent='Masukkan nomor untuk melihat paket telepon.';
+        callOperator.textContent='-';
+        callStatus.textContent='Idle';
+        callTotal.textContent='0';
+    }
+
+    function setOperator(op){
+        if(!op){
+            resetState();
+            return;
+        }
+
+        activeOperator=op;
+        selectedPackage=null;
+        kodeProduk.value='';
+
+        const total=getPackages().length;
+
+        callTitle.textContent='Nomor Siap Diisi Paket';
+        callSubtitle.textContent='Operator '+(operatorNames[op] || op)+' berhasil terbaca.';
+        callOperator.textContent=operatorNames[op] || op;
+        callStatus.textContent='Ready';
+        callTotal.textContent=total;
+
+        dashboardTitle.textContent='Paket Telp '+(operatorNames[op] || op);
+        dashboardSubtitle.textContent='Nomor '+cleanNumber(nomorInput.value)+' siap memilih paket telepon.';
+        dashOperator.textContent=operatorNames[op] || op;
+        dashTotal.textContent=total;
+
+        telpInfo.style.display='block';
+        telpInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Operator terdeteksi: <strong>'+(operatorNames[op] || op)+'</strong>. Paket telepon siap dipilih.';
+
+        telpError.style.display='none';
+        packageArea.classList.add('show');
+
+        renderPackages();
+    }
+
+    function handleInput(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>15){
+            nomor=nomor.slice(0,15);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/15';
+
+        if(!nomor){
+            resetState();
+            return;
+        }
+
+        if(nomor.length<4){
+            resetState();
+            callTitle.textContent='Nomor Sedang Dibaca';
+            callSubtitle.textContent='Lanjutkan input nomor HP.';
+            callStatus.textContent='Check';
+            return;
+        }
+
+        const detected=detectOperator(nomor);
+
+        if(detected){
+            setOperator(detected);
+        }else{
+            activeOperator='';
+            selectedPackage=null;
+            kodeProduk.value='';
+            packageArea.classList.remove('show');
+            summaryBox.style.display='none';
+
+            callTitle.textContent='Operator Belum Dikenali';
+            callSubtitle.textContent='Prefix nomor belum cocok dengan operator paket telepon.';
+            callOperator.textContent='-';
+            callStatus.textContent='Check';
+            callTotal.textContent='0';
+
+            telpInfo.style.display='none';
+            telpError.style.display='block';
+            telpError.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terdeteksi. Pastikan nomor benar atau produk operator tersedia.';
+        }
+    }
+
+    function renderPackages(){
+        packageList.innerHTML='';
+        selectedPackage=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        const list=applyFilter(getPackages());
+
+        if(!list.length){
+            packageList.innerHTML='<div class="empty-state">Paket pada kategori ini belum tersedia. Coba pilih filter lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='package-card';
+
+            const tag=item.type==='short'?'Singkat':item.type==='daily'?'Harian':'Banyak Menit';
+
+            card.innerHTML=
+                '<div class="package-main">'+
+                    '<div class="package-top">'+
+                        '<div class="package-left">'+
+                            '<div class="package-logo">'+(operatorNames[activeOperator] || activeOperator).slice(0,2).toUpperCase()+'</div>'+
+                            '<div class="package-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+(operatorNames[activeOperator] || activeOperator)+' · '+tag+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="package-tag">'+tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="package-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Durasi Telepon</span>'+
+                            '<strong>'+item.minutes+' Menit</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Estimasi Proses</span>'+
+                            '<strong>1-5 menit</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="package-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.harga+'</strong>'+
+                            '<small>Paket masuk otomatis ke nomor</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-package">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="package-benefits">'+
+                    '<span><i class="fa-solid fa-phone"></i> '+item.minutes+' menit</span>'+
+                    '<span><i class="fa-solid fa-signal"></i> '+(operatorNames[activeOperator] || activeOperator)+'</span>'+
+                    '<span><i class="fa-solid fa-bolt"></i> Auto proses</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-package').addEventListener('click',function(){
+                document.querySelectorAll('.package-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedPackage=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            packageList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedPackage){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
+        document.getElementById('sumOperator').textContent=operatorNames[activeOperator] || activeOperator;
+        document.getElementById('sumPaket').textContent=selectedPackage.nama;
+        document.getElementById('sumMenit').textContent=selectedPackage.minutes+' Menit';
+        document.getElementById('sumHarga').textContent=selectedPackage.harga;
+
+        summaryBox.style.display='block';
+    }
+
+    nomorInput.addEventListener('input',handleInput);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            handleInput();
+        });
+    });
+
+    document.querySelectorAll('.mode-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.mode-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderPackages();
+        });
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<9){
+            e.preventDefault();
+            alert('Masukkan nomor HP terlebih dahulu.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!activeOperator){
+            e.preventDefault();
+            alert('Operator belum terdeteksi. Pastikan nomor benar.');
+            return;
+        }
+
+        if(!selectedPackage || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih paket telepon terlebih dahulu.');
+            return;
+        }
+
+        btnCek.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Paket Telepon...';
+        btnCek.style.opacity='0.75';
+        btnCek.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

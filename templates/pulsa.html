@@ -1,0 +1,2046 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_pulsa = {
+    'TLK_5000': 'Telkomsel Pulsa 5.000',
+    'TLK_10000': 'Telkomsel Pulsa 10.000',
+    'TLK_15000': 'Telkomsel Pulsa 15.000',
+    'TLK_20000': 'Telkomsel Pulsa 20.000',
+    'TLK_25000': 'Telkomsel Pulsa 25.000',
+    'TLK_30000': 'Telkomsel Pulsa 30.000',
+    'TLK_50000': 'Telkomsel Pulsa 50.000',
+    'TLK_75000': 'Telkomsel Pulsa 75.000',
+    'TLK_100000': 'Telkomsel Pulsa 100.000',
+    'TLK_150000': 'Telkomsel Pulsa 150.000',
+
+    'ISAT_5000': 'Indosat Pulsa 5.000',
+    'ISAT_10000': 'Indosat Pulsa 10.000',
+    'ISAT_15000': 'Indosat Pulsa 15.000',
+    'ISAT_20000': 'Indosat Pulsa 20.000',
+    'ISAT_25000': 'Indosat Pulsa 25.000',
+    'ISAT_30000': 'Indosat Pulsa 30.000',
+    'ISAT_50000': 'Indosat Pulsa 50.000',
+    'ISAT_75000': 'Indosat Pulsa 75.000',
+    'ISAT_100000': 'Indosat Pulsa 100.000',
+    'ISAT_150000': 'Indosat Pulsa 150.000',
+
+    'XL_5000': 'XL Pulsa 5.000',
+    'XL_10000': 'XL Pulsa 10.000',
+    'XL_15000': 'XL Pulsa 15.000',
+    'XL_20000': 'XL Pulsa 20.000',
+    'XL_25000': 'XL Pulsa 25.000',
+    'XL_30000': 'XL Pulsa 30.000',
+    'XL_50000': 'XL Pulsa 50.000',
+    'XL_75000': 'XL Pulsa 75.000',
+    'XL_100000': 'XL Pulsa 100.000',
+    'XL_150000': 'XL Pulsa 150.000',
+
+    'TRI_5000': 'Tri Pulsa 5.000',
+    'TRI_10000': 'Tri Pulsa 10.000',
+    'TRI_15000': 'Tri Pulsa 15.000',
+    'TRI_20000': 'Tri Pulsa 20.000',
+    'TRI_25000': 'Tri Pulsa 25.000',
+    'TRI_30000': 'Tri Pulsa 30.000',
+    'TRI_50000': 'Tri Pulsa 50.000',
+    'TRI_75000': 'Tri Pulsa 75.000',
+    'TRI_100000': 'Tri Pulsa 100.000',
+    'TRI_150000': 'Tri Pulsa 150.000'
+} %}
+
+{% set fallback_harga_pulsa = {
+    'TLK_5000': 7000,
+    'TLK_10000': 12000,
+    'TLK_15000': 17000,
+    'TLK_20000': 22000,
+    'TLK_25000': 27000,
+    'TLK_30000': 32000,
+    'TLK_50000': 52000,
+    'TLK_75000': 77000,
+    'TLK_100000': 102000,
+    'TLK_150000': 152000,
+
+    'ISAT_5000': 7000,
+    'ISAT_10000': 12000,
+    'ISAT_15000': 17000,
+    'ISAT_20000': 22000,
+    'ISAT_25000': 27000,
+    'ISAT_30000': 32000,
+    'ISAT_50000': 52000,
+    'ISAT_75000': 77000,
+    'ISAT_100000': 102000,
+    'ISAT_150000': 152000,
+
+    'XL_5000': 7000,
+    'XL_10000': 12000,
+    'XL_15000': 17000,
+    'XL_20000': 22000,
+    'XL_25000': 27000,
+    'XL_30000': 32000,
+    'XL_50000': 52000,
+    'XL_75000': 77000,
+    'XL_100000': 102000,
+    'XL_150000': 152000,
+
+    'TRI_5000': 7000,
+    'TRI_10000': 12000,
+    'TRI_15000': 17000,
+    'TRI_20000': 22000,
+    'TRI_25000': 27000,
+    'TRI_30000': 32000,
+    'TRI_50000': 52000,
+    'TRI_75000': 77000,
+    'TRI_100000': 102000,
+    'TRI_150000': 152000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_pulsa %}
+{% set harga_final = harga_map if harga_map else fallback_harga_pulsa %}
+
+<style>
+:root{
+    --po-blue:#2563eb;
+    --po-cyan:#06b6d4;
+    --po-sky:#0ea5e9;
+    --po-purple:#7c3aed;
+    --po-indigo:#4f46e5;
+    --po-green:#16a34a;
+    --po-orange:#f59e0b;
+    --po-red:#ef4444;
+    --po-dark:#0f172a;
+    --po-text:#334155;
+    --po-muted:#64748b;
+    --po-border:#e2e8f0;
+    --po-soft:#f8fafc;
+    --po-shadow:0 18px 42px rgba(15,23,42,.10);
+    --po-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(6,182,212,.14),transparent 34%),
+        radial-gradient(circle at bottom,rgba(124,58,237,.10),transparent 42%),
+        linear-gradient(180deg,#f8fbff 0%,#eef6ff 45%,#ffffff 100%);
+}
+
+.orbit-page{
+    width:100%;
+    max-width:486px;
+    margin:0 auto;
+    padding:.8rem .7rem 5rem;
+    box-sizing:border-box;
+    color:var(--po-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.orbit-shell{
+    border-radius:31px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.10),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(6,182,212,.10),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(37,99,235,.14);
+    box-shadow:var(--po-shadow);
+    overflow:hidden;
+}
+
+.orbit-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#eff6ff;
+    color:#1d4ed8;
+    border:1px solid #bfdbfe;
+}
+
+.orbit-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.orbit-alert.error,
+.orbit-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.orbit-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.orbit-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.orbit-back,
+.orbit-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.orbit-back{
+    background:#fff;
+    border:1px solid var(--po-border);
+    color:#2563eb;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.orbit-chip{
+    background:#eff6ff;
+    color:#1d4ed8;
+    border:1px solid #bfdbfe;
+}
+
+.orbit-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(6,182,212,.30),transparent 28%),
+        linear-gradient(135deg,#0f172a 0%,#2563eb 52%,#06b6d4 100%);
+    box-shadow:0 16px 32px rgba(37,99,235,.25);
+}
+
+.orbit-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.13);
+}
+
+.orbit-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.orbit-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.orbit-hero-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:19px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.16rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.orbit-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.orbit-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.08rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.orbit-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.orbit-menu{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:.38rem;
+    margin-top:.74rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.orbit-menu::-webkit-scrollbar{
+    display:none;
+}
+
+.orbit-menu button{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border-radius:999px;
+    padding:.35rem .58rem;
+    font-size:.62rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.orbit-card{
+    border-radius:26px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #dbeafe;
+    box-shadow:var(--po-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.phone-console{
+    position:relative;
+    padding:.78rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(6,182,212,.10),transparent 30%),
+        #f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:56px;
+    border-radius:17px;
+    border:1.8px solid #dbeafe;
+    background:#fff;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:900;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+    letter-spacing:.02em;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.sim-orbit-card{
+    margin-top:.72rem;
+    overflow:hidden;
+    border-radius:23px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 30%),
+        linear-gradient(135deg,#0f172a,#2563eb 55%,#06b6d4);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 26px rgba(37,99,235,.15);
+}
+
+.sim-orbit-head{
+    padding:.82rem;
+    display:flex;
+    justify-content:space-between;
+    gap:.7rem;
+    align-items:flex-start;
+}
+
+.sim-orbit-head strong{
+    display:block;
+    color:#fff;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.sim-orbit-head span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.signal-bars{
+    display:flex;
+    align-items:flex-end;
+    gap:3px;
+    min-height:22px;
+}
+
+.signal-bars i{
+    display:block;
+    width:5px;
+    border-radius:999px;
+    background:rgba(255,255,255,.42);
+}
+
+.signal-bars i:nth-child(1){height:7px;}
+.signal-bars i:nth-child(2){height:11px;}
+.signal-bars i:nth-child(3){height:15px;}
+.signal-bars i:nth-child(4){height:20px;background:#fff;}
+
+.sim-orbit-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:0 .82rem .82rem;
+}
+
+.sim-stat{
+    padding:.56rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.11);
+    text-align:center;
+}
+
+.sim-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.sim-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.operator-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1e40af;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.operator-strip{
+    display:flex;
+    gap:.52rem;
+    overflow-x:auto;
+    padding:.15rem 0 .35rem;
+    scrollbar-width:none;
+}
+
+.operator-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.operator-card{
+    flex:0 0 118px;
+    min-height:104px;
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid #edf2f7;
+    border-radius:19px;
+    background:
+        radial-gradient(circle at top right,rgba(37,99,235,.10),transparent 34%),
+        #fff;
+    padding:.78rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.operator-card:hover{
+    transform:translateY(-2px);
+    border-color:#bfdbfe;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.operator-card.active{
+    border-color:#2563eb;
+    background:#eff6ff;
+    box-shadow:0 12px 24px rgba(37,99,235,.12);
+}
+
+.operator-logo{
+    width:38px;
+    height:38px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.operator-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.78rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.operator-card span{
+    display:block;
+    margin-top:.2rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.console-features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.42rem;
+    margin-top:.8rem;
+    padding:.65rem;
+    border-radius:20px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+}
+
+.console-box{
+    min-height:48px;
+    border-radius:15px;
+    background:#fff;
+    border:1px solid #dbeafe;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.console-box strong{
+    color:#0f172a;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.console-box span{
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.open-orbit-btn{
+    width:100%;
+    min-height:56px;
+    border:0;
+    border-radius:18px;
+    margin-top:.82rem;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    font-size:.92rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(37,99,235,.24);
+    transition:.2s ease;
+}
+
+.open-orbit-btn:hover{
+    transform:translateY(-1px);
+}
+
+.compact-orbit{
+    display:none;
+    position:sticky;
+    top:.5rem;
+    z-index:20;
+    margin-bottom:.75rem;
+    padding:.75rem;
+    border-radius:21px;
+    background:rgba(255,255,255,.94);
+    border:1px solid #dbeafe;
+    box-shadow:0 14px 30px rgba(15,23,42,.12);
+    backdrop-filter:blur(10px);
+}
+
+.compact-orbit.show{
+    display:block;
+}
+
+.compact-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+}
+
+.compact-inner strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.compact-inner span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:750;
+}
+
+.compact-edit{
+    flex:0 0 auto;
+    border:0;
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:999px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.orbit-dashboard{
+    display:none;
+}
+
+.orbit-dashboard.show{
+    display:block;
+}
+
+.orbit-balance{
+    overflow:hidden;
+    border-radius:27px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(6,182,212,.22),transparent 30%),
+        linear-gradient(135deg,#0f172a,#2563eb 55%,#06b6d4);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(37,99,235,.18);
+}
+
+.orbit-balance-main{
+    padding:.95rem;
+}
+
+.orbit-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.orbit-balance h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.orbit-balance p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.orbit-balance-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.stat-box{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.stat-box strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.stat-box span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.mode-wrap{
+    margin-bottom:.75rem;
+}
+
+.mode-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.mode-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.mode-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.mode-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.mode-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.mode-chip{
+    flex:0 0 auto;
+    border:1px solid #bfdbfe;
+    background:#fff;
+    color:#1d4ed8;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.mode-chip.active{
+    background:#2563eb;
+    color:#fff;
+    border-color:#2563eb;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#2563eb,#06b6d4 58%,#7c3aed);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(37,99,235,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#1d4ed8;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.nominal-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.nominal-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.nominal-card:hover{
+    transform:translateY(-2px);
+    border-color:#bfdbfe;
+}
+
+.nominal-card.active{
+    border-color:#2563eb;
+    background:#eff6ff;
+    box-shadow:0 0 0 1px #2563eb,0 14px 28px rgba(37,99,235,.10);
+}
+
+.nominal-main{
+    padding:.9rem;
+}
+
+.nominal-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.nominal-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.nominal-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(37,99,235,.14);
+}
+
+.nominal-name{
+    min-width:0;
+}
+
+.nominal-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.nominal-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.nominal-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.nominal-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.nominal-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#1d4ed8;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-nominal{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.nominal-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.nominal-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #bfdbfe;
+    box-shadow:0 12px 24px rgba(37,99,235,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(37,99,235,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:420px){
+    .orbit-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .orbit-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .operator-card{
+        flex-basis:110px;
+    }
+
+    .console-features{
+        grid-template-columns:1fr;
+    }
+
+    .nominal-detail{
+        grid-template-columns:1fr;
+    }
+
+    .nominal-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-nominal{
+        width:100%;
+    }
+}
+</style>
+
+<div class="orbit-page">
+    <div class="orbit-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="orbit-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="orbit-topbar">
+            <a href="{{ url_for('dashboard') }}" class="orbit-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Home
+            </a>
+
+            <div class="orbit-chip">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                Pulsa
+            </div>
+        </div>
+
+        <div class="orbit-hero" id="heroBox">
+            <div class="orbit-hero-main">
+                <div class="orbit-hero-icon">
+                    <i class="fa-solid fa-satellite"></i>
+                </div>
+
+                <div>
+                    <div class="orbit-badge">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                        Pulsa Orbit OS
+                    </div>
+                    <h2>Isi Pulsa dengan Cockpit Modern</h2>
+                    <p>Masukkan nomor, operator terbaca otomatis, lalu pilih nominal lewat orbit rekomendasi.</p>
+                </div>
+            </div>
+
+            <div class="orbit-menu">
+                <button type="button" data-op="TLK">Telkomsel</button>
+                <button type="button" data-op="ISAT">Indosat</button>
+                <button type="button" data-op="XL">XL</button>
+                <button type="button" data-op="AXIS">AXIS</button>
+                <button type="button" data-op="TRI">Tri</button>
+                <button type="button" data-op="SMART">Smartfren</button>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('pulsa') }}" id="pulsaForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="pulsa">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+            <input type="hidden" name="operator" id="operatorValue">
+
+            <div class="orbit-card" id="searchCard">
+                <div class="section-title">
+                    <div>
+                        <h3>Nomor Tujuan</h3>
+                        <p>Input nomor HP. Sistem akan membaca operator dan jalur pengisian pulsa.</p>
+                    </div>
+                    <span class="section-pill">Core 1</span>
+                </div>
+
+                <div class="phone-console">
+                    <div class="input-box">
+                        <input
+                            type="tel"
+                            id="nomor_tujuan"
+                            name="nomor_tujuan"
+                            class="input-control"
+                            placeholder="08xxxxxxxxxx"
+                            value="{{ request.form.get('nomor_tujuan', '') if request is defined else '' }}"
+                            inputmode="numeric"
+                            minlength="10"
+                            maxlength="14"
+                            required
+                            autofocus
+                        >
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+
+                    <div class="input-help">
+                        <span>Bisa diawali 08 atau 62.</span>
+                        <span id="charCount">0/14</span>
+                    </div>
+
+                    <div class="quick-row">
+                        <button type="button" data-id="081234567890">Telkomsel</button>
+                        <button type="button" data-id="085712345678">Indosat</button>
+                        <button type="button" data-id="087812345678">XL</button>
+                        <button type="button" data-id="089612345678">Tri</button>
+                        <button type="button" data-clear="1">Hapus</button>
+                    </div>
+
+                    <div class="sim-orbit-card">
+                        <div class="sim-orbit-head">
+                            <div>
+                                <strong id="simTitle">SIM Orbit Belum Aktif</strong>
+                                <span id="simSubtitle">Masukkan nomor untuk membaca operator.</span>
+                            </div>
+
+                            <div class="signal-bars">
+                                <i></i><i></i><i></i><i></i>
+                            </div>
+                        </div>
+
+                        <div class="sim-orbit-stats">
+                            <div class="sim-stat">
+                                <strong id="simOperator">-</strong>
+                                <span>Operator</span>
+                            </div>
+                            <div class="sim-stat">
+                                <strong id="simRoute">Idle</strong>
+                                <span>Route</span>
+                            </div>
+                            <div class="sim-stat">
+                                <strong>1-5</strong>
+                                <span>Menit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operator-info" id="operatorInfo"></div>
+
+                <div style="margin-top:1rem;">
+                    <div class="section-title">
+                        <div>
+                            <h3>Operator Manual</h3>
+                            <p>Pilih manual jika hasil baca nomor belum cocok.</p>
+                        </div>
+                        <span class="section-pill">Core 2</span>
+                    </div>
+
+                    <div class="operator-strip" id="operatorStrip"></div>
+                </div>
+
+                <div class="console-features">
+                    <div class="console-box">
+                        <strong>Read SIM</strong>
+                        <span>Deteksi prefix</span>
+                    </div>
+                    <div class="console-box">
+                        <strong>Fast Route</strong>
+                        <span>Jalur pulsa</span>
+                    </div>
+                    <div class="console-box">
+                        <strong>Smart Pick</strong>
+                        <span>Rekomendasi</span>
+                    </div>
+                </div>
+
+                <button type="button" class="open-orbit-btn" id="openOrbitBtn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Buka Orbit Nominal
+                </button>
+            </div>
+
+            <div class="compact-orbit" id="compactOrbit">
+                <div class="compact-inner">
+                    <div>
+                        <strong id="compactTitle">-</strong>
+                        <span id="compactInfo">-</span>
+                    </div>
+                    <button type="button" class="compact-edit" id="editBtn">Ubah</button>
+                </div>
+            </div>
+
+            <div class="orbit-dashboard" id="orbitDashboard">
+                <div class="orbit-balance">
+                    <div class="orbit-balance-main">
+                        <div class="orbit-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            ORBIT NOMINAL AKTIF
+                        </div>
+                        <h3 id="balanceTitle">Pulsa Orbit Dashboard</h3>
+                        <p id="balanceSubtitle">Pilih nominal pulsa yang cocok berdasarkan kebutuhan penggunaan.</p>
+                    </div>
+
+                    <div class="orbit-balance-stats">
+                        <div class="stat-box">
+                            <strong id="statOperator">-</strong>
+                            <span>Operator</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong id="statTotal">0</strong>
+                            <span>Nominal</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong>Auto</strong>
+                            <span>Proses</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-wrap">
+                    <div class="mode-title">
+                        <div>
+                            <strong>Mode kebutuhan</strong>
+                            <span>Geser untuk mengatur rekomendasi</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-strip">
+                        <button type="button" class="mode-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="mode-chip" data-filter="daily">Harian</button>
+                        <button type="button" class="mode-chip" data-filter="chat">Chat</button>
+                        <button type="button" class="mode-chip" data-filter="stream">Streaming</button>
+                        <button type="button" class="mode-chip" data-filter="big">Big Balance</button>
+                        <button type="button" class="mode-chip" data-filter="cheap">Termurah</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Orbit Smart Recommendation</strong>
+                        <span>Nominal dibuat terasa seperti pilihan kebutuhan, bukan list biasa.</span>
+                    </div>
+                    <div class="promo-badge">ORBIT OS</div>
+                </div>
+
+                <div class="nominal-list" id="nominalList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Checkout Pulsa
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Tujuan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Operator</span>
+                        <b id="sumOperator">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nominal</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="btnBayar">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Lanjutkan Pembayaran
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProduk" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        <span
+            data-kode="{{ kode }}"
+            data-operator="{{ kode.split('_')[0] }}"
+            data-nama="{{ nama }}"
+            data-harga="{{ harga_produk }}"
+            data-harga-teks="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const heroBox=document.getElementById('heroBox');
+    const searchCard=document.getElementById('searchCard');
+    const compactOrbit=document.getElementById('compactOrbit');
+    const compactTitle=document.getElementById('compactTitle');
+    const compactInfo=document.getElementById('compactInfo');
+    const editBtn=document.getElementById('editBtn');
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const operatorValue=document.getElementById('operatorValue');
+    const kodeProduk=document.getElementById('kode_produk');
+    const operatorInfo=document.getElementById('operatorInfo');
+    const operatorStrip=document.getElementById('operatorStrip');
+    const openOrbitBtn=document.getElementById('openOrbitBtn');
+    const orbitDashboard=document.getElementById('orbitDashboard');
+    const balanceTitle=document.getElementById('balanceTitle');
+    const balanceSubtitle=document.getElementById('balanceSubtitle');
+    const statOperator=document.getElementById('statOperator');
+    const statTotal=document.getElementById('statTotal');
+    const nominalList=document.getElementById('nominalList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('pulsaForm');
+    const btnBayar=document.getElementById('btnBayar');
+
+    const simTitle=document.getElementById('simTitle');
+    const simSubtitle=document.getElementById('simSubtitle');
+    const simOperator=document.getElementById('simOperator');
+    const simRoute=document.getElementById('simRoute');
+
+    let activeOperator='';
+    let activeFilter='recommended';
+    let selectedNominal=null;
+
+    const operatorMeta={
+        TLK:{nama:'Telkomsel',logo:'TS',prefix:'0811, 0812'},
+        TSEL:{nama:'Telkomsel',logo:'TS',prefix:'0811, 0812'},
+        ISAT:{nama:'Indosat',logo:'IM',prefix:'0855, 0857'},
+        INDOSAT:{nama:'Indosat',logo:'IM',prefix:'0855, 0857'},
+        XL:{nama:'XL',logo:'XL',prefix:'0817, 0878'},
+        AXIS:{nama:'AXIS',logo:'AX',prefix:'0831, 0838'},
+        TRI:{nama:'Tri',logo:'TR',prefix:'0895, 0899'},
+        THREE:{nama:'Tri',logo:'TR',prefix:'0895, 0899'},
+        SMART:{nama:'Smartfren',logo:'SF',prefix:'0881, 0889'},
+        SMARTFREN:{nama:'Smartfren',logo:'SF',prefix:'0881, 0889'},
+        BYU:{nama:'by.U',logo:'BY',prefix:'0851'}
+    };
+
+    const operatorOrder=['TLK','TSEL','ISAT','INDOSAT','XL','AXIS','TRI','THREE','SMART','SMARTFREN','BYU'];
+
+    const prefixRules=[
+        {prefix:['0851'],op:['BYU','TLK','TSEL']},
+        {prefix:['0811','0812','0813','0821','0822','0823','0852','0853'],op:['TLK','TSEL']},
+        {prefix:['0814','0815','0816','0855','0856','0857','0858'],op:['ISAT','INDOSAT']},
+        {prefix:['0817','0818','0819','0859','0877','0878'],op:['XL']},
+        {prefix:['0831','0832','0833','0838'],op:['AXIS']},
+        {prefix:['0895','0896','0897','0898','0899'],op:['TRI','THREE']},
+        {prefix:['0881','0882','0883','0884','0885','0886','0887','0888','0889'],op:['SMART','SMARTFREN']}
+    ];
+
+    const dataProduk=Array.from(document.querySelectorAll('#dataProduk span'));
+
+    const operatorAvailable=new Set(
+        dataProduk.map(function(el){
+            return (el.dataset.operator || '').trim();
+        }).filter(Boolean)
+    );
+
+    function cleanNumber(value){
+        value=(value || '').replace(/[^0-9]/g,'');
+
+        if(value.startsWith('62')){
+            value='0'+value.slice(2);
+        }
+
+        return value;
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function rupiah(num){
+        return 'Rp '+String(Math.max(0,Math.round(num))).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function meta(op){
+        return operatorMeta[op] || {
+            nama:op || '-',
+            logo:(op || 'OP').slice(0,2),
+            prefix:'Manual'
+        };
+    }
+
+    function priceLabel(text){
+        text=String(text || '0').trim();
+
+        if(text.toLowerCase().indexOf('rp')===0){
+            return text;
+        }
+
+        return 'Rp '+text;
+    }
+
+    function detectOperator(number){
+        const n=cleanNumber(number);
+
+        if(n.length<4) return '';
+
+        const first4=n.slice(0,4);
+
+        for(let item of prefixRules){
+            if(item.prefix.includes(first4)){
+                for(let op of item.op){
+                    if(operatorAvailable.has(op)) return op;
+                }
+            }
+        }
+
+        return '';
+    }
+
+    function nominalValue(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+        const matches=text.match(/[0-9]+/g);
+
+        if(!matches) return 0;
+
+        let biggest=0;
+
+        matches.forEach(function(num){
+            const n=parseInt(num,10);
+            if(n>biggest) biggest=n;
+        });
+
+        if(biggest<1000){
+            biggest=biggest*1000;
+        }
+
+        return biggest;
+    }
+
+    function needType(value){
+        if(value<=10000) return 'daily';
+        if(value<=25000) return 'chat';
+        if(value<=75000) return 'stream';
+        return 'big';
+    }
+
+    function renderOperators(){
+        const ordered=[];
+
+        operatorOrder.forEach(function(op){
+            if(operatorAvailable.has(op)) ordered.push(op);
+        });
+
+        operatorAvailable.forEach(function(op){
+            if(!ordered.includes(op)) ordered.push(op);
+        });
+
+        operatorStrip.innerHTML='';
+
+        if(!ordered.length){
+            operatorStrip.innerHTML='<div class="empty-state">Operator pulsa belum tersedia.</div>';
+            return;
+        }
+
+        ordered.forEach(function(op){
+            const m=meta(op);
+            const card=document.createElement('button');
+
+            card.type='button';
+            card.className='operator-card';
+            card.dataset.op=op;
+
+            card.innerHTML=
+                '<div class="operator-logo">'+m.logo+'</div>'+
+                '<strong>'+m.nama+'</strong>'+
+                '<span>'+m.prefix+'</span>';
+
+            card.addEventListener('click',function(){
+                setOperator(op,false);
+            });
+
+            operatorStrip.appendChild(card);
+        });
+    }
+
+    function setOperator(op,auto){
+        if(!op || !operatorAvailable.has(op)){
+            activeOperator='';
+            operatorValue.value='';
+            kodeProduk.value='';
+
+            document.querySelectorAll('.operator-card').forEach(function(card){
+                card.classList.remove('active');
+            });
+
+            simTitle.textContent='SIM Orbit Belum Aktif';
+            simSubtitle.textContent='Masukkan nomor untuk membaca operator.';
+            simOperator.textContent='-';
+            simRoute.textContent='Idle';
+
+            return;
+        }
+
+        activeOperator=op;
+        operatorValue.value=op;
+        kodeProduk.value='';
+
+        document.querySelectorAll('.operator-card').forEach(function(card){
+            card.classList.toggle('active',card.dataset.op===op);
+        });
+
+        simTitle.textContent='SIM Orbit '+meta(op).nama;
+        simSubtitle.textContent='Operator siap. Jalur pulsa sudah terbaca.';
+        simOperator.textContent=meta(op).nama;
+        simRoute.textContent='Ready';
+
+        operatorInfo.style.display='block';
+        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terbaca otomatis: ':'Operator dipilih manual: ')+'<strong>'+meta(op).nama+'</strong>';
+
+        if(orbitDashboard.classList.contains('show')){
+            renderNominals();
+        }
+    }
+
+    function getNominals(){
+        if(!activeOperator) return [];
+
+        return dataProduk.filter(function(el){
+            return el.dataset.operator===activeOperator;
+        }).map(function(el){
+            const value=nominalValue(el.dataset.nama,el.dataset.kode);
+            const harga=priceLabel(el.dataset.hargaTeks);
+
+            return {
+                kode:el.dataset.kode,
+                nama:el.dataset.nama,
+                harga:harga,
+                hargaAngka:parseMoney(harga),
+                value:value,
+                type:needType(value)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                if(a.value===20000 && b.value!==20000) return -1;
+                if(b.value===20000 && a.value!==20000) return 1;
+                if(a.value===50000 && b.value!==50000) return -1;
+                if(b.value===50000 && a.value!==50000) return 1;
+                return a.value-b.value;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){return a.hargaAngka-b.hargaAngka;});
+        }
+
+        return list.filter(function(item){
+            return item.type===activeFilter;
+        });
+    }
+
+    function updateInputInfo(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>14){
+            nomor=nomor.slice(0,14);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/14';
+
+        if(!nomor){
+            operatorInfo.style.display='none';
+            setOperator('',false);
+            return;
+        }
+
+        const detected=detectOperator(nomor);
+
+        if(detected){
+            setOperator(detected,true);
+        }else if(nomor.length>=4){
+            operatorInfo.style.display='block';
+            operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual di bawah.';
+            simTitle.textContent='SIM Orbit Manual';
+            simSubtitle.textContent='Pilih operator manual untuk membuka orbit nominal.';
+            simOperator.textContent='Manual';
+            simRoute.textContent='Check';
+        }
+
+        if(orbitDashboard.classList.contains('show')){
+            renderNominals();
+        }
+    }
+
+    function validateOpenOrbit(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<10){
+            alert('Masukkan nomor HP valid minimal 10 digit.');
+            nomorInput.focus();
+            return false;
+        }
+
+        if(!activeOperator){
+            alert('Silakan pilih operator terlebih dahulu.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function renderNominals(){
+        nominalList.innerHTML='';
+        selectedNominal=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        const list=applyFilter(getNominals());
+
+        balanceTitle.textContent='Orbit '+meta(activeOperator).nama;
+        balanceSubtitle.textContent='Nomor '+cleanNumber(nomorInput.value)+' siap diisi. Pilih nominal berdasarkan kebutuhan.';
+        compactTitle.textContent=meta(activeOperator).nama;
+        compactInfo.textContent='Nomor '+cleanNumber(nomorInput.value);
+        statOperator.textContent=meta(activeOperator).nama;
+        statTotal.textContent=getNominals().length;
+
+        if(!list.length){
+            nominalList.innerHTML='<div class="empty-state">Nominal pada mode ini belum tersedia. Coba pilih mode lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='nominal-card';
+
+            const labelMap={
+                daily:'Harian',
+                chat:'Chat',
+                stream:'Streaming',
+                big:'Big Balance'
+            };
+
+            const tag=labelMap[item.type] || 'Pulsa';
+
+            card.innerHTML=
+                '<div class="nominal-main">'+
+                    '<div class="nominal-top">'+
+                        '<div class="nominal-left">'+
+                            '<div class="nominal-logo">'+meta(activeOperator).logo+'</div>'+
+                            '<div class="nominal-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+meta(activeOperator).nama+' · '+tag+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="nominal-tag">'+tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="nominal-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Nominal Pulsa</span>'+
+                            '<strong>'+rupiah(item.value)+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Jalur Proses</span>'+
+                            '<strong>Fast Route</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="nominal-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.harga+'</strong>'+
+                            '<small>Masuk otomatis ke nomor tujuan</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-nominal">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="nominal-benefits">'+
+                    '<span><i class="fa-solid fa-bolt"></i> Instan</span>'+
+                    '<span><i class="fa-solid fa-signal"></i> '+meta(activeOperator).nama+'</span>'+
+                    '<span><i class="fa-solid fa-satellite"></i> Orbit route</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-nominal').addEventListener('click',function(){
+                document.querySelectorAll('.nominal-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedNominal=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            nominalList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedNominal){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
+        document.getElementById('sumOperator').textContent=meta(activeOperator).nama;
+        document.getElementById('sumProduk').textContent=selectedNominal.nama;
+        document.getElementById('sumHarga').textContent=selectedNominal.harga;
+
+        summaryBox.style.display='block';
+    }
+
+    function enterOrbit(){
+        heroBox.classList.add('hidden');
+        searchCard.classList.add('hidden');
+        compactOrbit.classList.add('show');
+        orbitDashboard.classList.add('show');
+
+        renderNominals();
+
+        setTimeout(function(){
+            orbitDashboard.scrollIntoView({behavior:'smooth',block:'start'});
+        },120);
+    }
+
+    renderOperators();
+
+    nomorInput.addEventListener('input',updateInputInfo);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInputInfo();
+        });
+    });
+
+    document.querySelectorAll('.orbit-menu button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            const op=btn.dataset.op;
+            const card=document.querySelector('.operator-card[data-op="'+op+'"]');
+
+            if(card){
+                card.click();
+                card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+            }
+        });
+    });
+
+    document.querySelectorAll('.mode-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.mode-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderNominals();
+        });
+    });
+
+    openOrbitBtn.addEventListener('click',function(){
+        if(!validateOpenOrbit()) return;
+        enterOrbit();
+    });
+
+    editBtn.addEventListener('click',function(){
+        heroBox.classList.remove('hidden');
+        searchCard.classList.remove('hidden');
+        compactOrbit.classList.remove('show');
+
+        setTimeout(function(){
+            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
+        },100);
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<10){
+            e.preventDefault();
+            alert('Masukkan nomor HP valid minimal 10 digit.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!activeOperator){
+            e.preventDefault();
+            alert('Silakan pilih operator terlebih dahulu.');
+            return;
+        }
+
+        if(!selectedNominal || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih nominal pulsa terlebih dahulu.');
+            return;
+        }
+
+        btnBayar.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pulsa...';
+        btnBayar.style.opacity='0.75';
+        btnBayar.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

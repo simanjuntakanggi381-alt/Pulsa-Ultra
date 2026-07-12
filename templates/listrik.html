@@ -1,0 +1,1651 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_pln = {
+    'PLN_20000': 'Token PLN 20.000',
+    'PLN_50000': 'Token PLN 50.000',
+    'PLN_100000': 'Token PLN 100.000',
+    'PLN_200000': 'Token PLN 200.000',
+    'PLN_500000': 'Token PLN 500.000',
+    'PLN_1000000': 'Token PLN 1.000.000'
+} %}
+
+{% set fallback_harga_pln = {
+    'PLN_20000': 22500,
+    'PLN_50000': 52500,
+    'PLN_100000': 102500,
+    'PLN_200000': 202500,
+    'PLN_500000': 502500,
+    'PLN_1000000': 1003500
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_pln %}
+{% set harga_final = harga_map if harga_map else fallback_harga_pln %}
+
+<style>
+:root{
+    --el-yellow:#facc15;
+    --el-gold:#f59e0b;
+    --el-orange:#fb923c;
+    --el-blue:#2563eb;
+    --el-sky:#0ea5e9;
+    --el-green:#16a34a;
+    --el-red:#ef4444;
+    --el-dark:#0f172a;
+    --el-text:#334155;
+    --el-muted:#64748b;
+    --el-border:#e2e8f0;
+    --el-soft:#f8fafc;
+    --el-shadow:0 18px 42px rgba(15,23,42,.10);
+    --el-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(250,204,21,.22),transparent 34%),
+        radial-gradient(circle at top right,rgba(37,99,235,.12),transparent 34%),
+        radial-gradient(circle at bottom,rgba(251,146,60,.13),transparent 42%),
+        linear-gradient(180deg,#fffdf4 0%,#f8fafc 48%,#ffffff 100%);
+}
+
+.energy-page{
+    width:100%;
+    max-width:490px;
+    margin:0 auto;
+    padding:.8rem .7rem 5.5rem;
+    box-sizing:border-box;
+    color:var(--el-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.energy-shell{
+    border-radius:32px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(250,204,21,.14),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(37,99,235,.08),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(245,158,11,.18);
+    box-shadow:var(--el-shadow);
+    overflow:hidden;
+}
+
+.energy-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#fffbeb;
+    color:#92400e;
+    border:1px solid #fde68a;
+}
+
+.energy-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.energy-alert.error,
+.energy-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.energy-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.energy-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.energy-back,
+.energy-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.energy-back{
+    background:#fff;
+    border:1px solid var(--el-border);
+    color:#b45309;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.energy-chip{
+    background:#fffbeb;
+    color:#b45309;
+    border:1px solid #fde68a;
+}
+
+.energy-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.32),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(37,99,235,.22),transparent 28%),
+        linear-gradient(135deg,#78350f 0%,#f59e0b 50%,#2563eb 100%);
+    box-shadow:0 16px 32px rgba(245,158,11,.25);
+}
+
+.energy-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.14);
+}
+
+.energy-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.energy-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.energy-hero-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:19px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.18rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.energy-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.energy-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.1rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.energy-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-mini-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.8rem;
+}
+
+.hero-mini{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.13);
+    text-align:center;
+}
+
+.hero-mini strong{
+    display:block;
+    color:#fff;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.hero-mini span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.panel-card{
+    border-radius:26px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #fde68a;
+    box-shadow:var(--el-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#fffbeb;
+    color:#b45309;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.meter-box{
+    position:relative;
+    padding:.78rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(250,204,21,.15),transparent 30%),
+        #f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:56px;
+    border-radius:17px;
+    border:1.8px solid #fde68a;
+    background:#fff;
+    color:#0f172a;
+    font-size:.94rem;
+    font-weight:950;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+    letter-spacing:.02em;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#f59e0b;
+    box-shadow:0 0 0 4px rgba(245,158,11,.14);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.live-meter-card{
+    margin-top:.72rem;
+    overflow:hidden;
+    border-radius:23px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.20),transparent 30%),
+        linear-gradient(135deg,#78350f,#f59e0b 58%,#2563eb);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 26px rgba(245,158,11,.16);
+}
+
+.live-meter-head{
+    padding:.82rem;
+    display:flex;
+    justify-content:space-between;
+    gap:.7rem;
+    align-items:flex-start;
+}
+
+.live-meter-head strong{
+    display:block;
+    color:#fff;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.live-meter-head span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.power-icon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1rem;
+}
+
+.live-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:0 .82rem .82rem;
+}
+
+.live-stat{
+    padding:.56rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.11);
+    text-align:center;
+}
+
+.live-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.live-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.pln-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.pln-error{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.daya-row{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+    margin-top:.8rem;
+    padding-bottom:.15rem;
+}
+
+.daya-row::-webkit-scrollbar{
+    display:none;
+}
+
+.daya-chip{
+    flex:0 0 auto;
+    border:1px solid #fde68a;
+    background:#fff;
+    color:#b45309;
+    border-radius:999px;
+    padding:.48rem .65rem;
+    font-size:.68rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.daya-chip.active{
+    background:#f59e0b;
+    color:#fff;
+    border-color:#f59e0b;
+    box-shadow:0 8px 18px rgba(245,158,11,.18);
+}
+
+.nominal-area{
+    display:none;
+}
+
+.nominal-area.show{
+    display:block;
+}
+
+.dashboard-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.20),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(37,99,235,.24),transparent 30%),
+        linear-gradient(135deg,#78350f,#f59e0b 55%,#2563eb);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(245,158,11,.18);
+}
+
+.dashboard-main{
+    padding:.95rem;
+}
+
+.dashboard-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.dashboard-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.dashboard-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.dashboard-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.dash-stat{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.dash-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.dash-stat span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.mode-wrap{
+    margin-bottom:.75rem;
+}
+
+.mode-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.mode-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.mode-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.mode-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.mode-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.mode-chip{
+    flex:0 0 auto;
+    border:1px solid #fde68a;
+    background:#fff;
+    color:#b45309;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.mode-chip.active{
+    background:#f59e0b;
+    color:#fff;
+    border-color:#f59e0b;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#f59e0b,#fb923c 58%,#2563eb);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(245,158,11,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#b45309;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.nominal-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.nominal-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.nominal-card:hover{
+    transform:translateY(-2px);
+    border-color:#fbbf24;
+}
+
+.nominal-card.active{
+    border-color:#f59e0b;
+    background:#fffbeb;
+    box-shadow:0 0 0 1px #f59e0b,0 14px 28px rgba(245,158,11,.10);
+}
+
+.nominal-main{
+    padding:.9rem;
+}
+
+.nominal-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.nominal-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.nominal-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#78350f,#f59e0b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(245,158,11,.14);
+}
+
+.nominal-name{
+    min-width:0;
+}
+
+.nominal-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.nominal-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.nominal-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.nominal-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.nominal-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#b45309;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-nominal{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#f59e0b,#fb923c);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.nominal-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.nominal-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #fde68a;
+    box-shadow:0 12px 24px rgba(245,158,11,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#78350f,#f59e0b);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#f59e0b,#fb923c);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(245,158,11,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+@media(max-width:420px){
+    .energy-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .energy-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .hero-mini-row,
+    .nominal-detail{
+        grid-template-columns:1fr;
+    }
+
+    .nominal-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-nominal{
+        width:100%;
+    }
+}
+</style>
+
+<div class="energy-page">
+    <div class="energy-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="energy-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="energy-topbar">
+            <a href="{{ url_for('dashboard') }}" class="energy-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Home
+            </a>
+
+            <div class="energy-chip">
+                <i class="fa-solid fa-bolt"></i>
+                PLN Token
+            </div>
+        </div>
+
+        <div class="energy-hero">
+            <div class="energy-hero-main">
+                <div class="energy-hero-icon">
+                    <i class="fa-solid fa-house-chimney-window"></i>
+                </div>
+
+                <div>
+                    <div class="energy-badge">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                        Panel Daya Rumah
+                    </div>
+                    <h2>Beli Token Listrik Lebih Rapi</h2>
+                    <p>Masukkan ID PLN, pilih daya rumah, lalu beli token dengan estimasi kWh dan ringkasan jelas.</p>
+                </div>
+            </div>
+
+            <div class="hero-mini-row">
+                <div class="hero-mini">
+                    <strong>11-12</strong>
+                    <span>Digit ID</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Token</strong>
+                    <span>Prabayar</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Jelas</strong>
+                    <span>Estimasi</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('listrik') }}" id="plnForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="listrik">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="panel-card">
+                <div class="section-title">
+                    <div>
+                        <h3>Nomor Meter / ID Pelanggan</h3>
+                        <p>Masukkan nomor PLN prabayar, lalu nominal token akan siap dipilih.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="meter-box">
+                    <div class="input-box">
+                        <input
+                            type="tel"
+                            id="nomor_tujuan"
+                            name="nomor_tujuan"
+                            class="input-control"
+                            placeholder="Contoh: 12345678901"
+                            value="{{ request.form.get('nomor_tujuan', '') if request is defined else '' }}"
+                            inputmode="numeric"
+                            minlength="11"
+                            maxlength="12"
+                            required
+                            autofocus
+                        >
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <div class="input-help">
+                        <span>Masukkan 11 sampai 12 digit angka.</span>
+                        <span id="charCount">0/12</span>
+                    </div>
+
+                    <div class="quick-row">
+                        <button type="button" data-id="12345678901">Contoh ID</button>
+                        <button type="button" data-id="987654321012">Contoh 12 Digit</button>
+                        <button type="button" data-clear="1">Hapus</button>
+                    </div>
+
+                    <div class="live-meter-card">
+                        <div class="live-meter-head">
+                            <div>
+                                <strong id="meterTitle">Meter Belum Terbaca</strong>
+                                <span id="meterSubtitle">Masukkan ID PLN untuk membuka pilihan token.</span>
+                            </div>
+
+                            <div class="power-icon">
+                                <i class="fa-solid fa-plug-circle-bolt"></i>
+                            </div>
+                        </div>
+
+                        <div class="live-stats">
+                            <div class="live-stat">
+                                <strong id="meterStatus">Idle</strong>
+                                <span>Status</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="meterDaya">900VA</strong>
+                                <span>Daya</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="meterToken">0</strong>
+                                <span>Token</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="daya-row">
+                        <button type="button" class="daya-chip" data-daya="450">450VA</button>
+                        <button type="button" class="daya-chip active" data-daya="900">900VA</button>
+                        <button type="button" class="daya-chip" data-daya="1300">1300VA</button>
+                        <button type="button" class="daya-chip" data-daya="2200">2200VA</button>
+                        <button type="button" class="daya-chip" data-daya="3500">3500VA</button>
+                    </div>
+                </div>
+
+                <div class="pln-info" id="plnInfo"></div>
+                <div class="pln-error" id="plnError"></div>
+            </div>
+
+            <div class="nominal-area" id="nominalArea">
+                <div class="dashboard-card">
+                    <div class="dashboard-main">
+                        <div class="dashboard-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            ID PLN SIAP
+                        </div>
+                        <h3 id="dashboardTitle">Panel Token Listrik</h3>
+                        <p id="dashboardSubtitle">Pilih token sesuai kebutuhan listrik rumah.</p>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="dash-stat">
+                            <strong id="dashId">-</strong>
+                            <span>ID PLN</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashDaya">900VA</strong>
+                            <span>Daya</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashTotal">0</strong>
+                            <span>Pilihan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-wrap">
+                    <div class="mode-title">
+                        <div>
+                            <strong>Pilih kebutuhan token</strong>
+                            <span>Geser untuk menyesuaikan nominal listrik</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-strip">
+                        <button type="button" class="mode-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="mode-chip" data-filter="small">Harian</button>
+                        <button type="button" class="mode-chip" data-filter="medium">Mingguan</button>
+                        <button type="button" class="mode-chip" data-filter="large">Bulanan</button>
+                        <button type="button" class="mode-chip" data-filter="big">Besar</button>
+                        <button type="button" class="mode-chip" data-filter="cheap">Termurah</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Token Listrik Lebih Mudah Dipilih</strong>
+                        <span>Nominal ditampilkan dengan estimasi kWh dan kategori kebutuhan.</span>
+                    </div>
+                    <div class="promo-badge">PLN</div>
+                </div>
+
+                <div class="nominal-list" id="nominalList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Token Listrik
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Meter / ID</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Daya Rumah</span>
+                        <b id="sumDaya">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Token</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Estimasi kWh</span>
+                        <b id="sumKwh">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="btnBayar">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Beli Token Sekarang
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProdukPLN" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        <span
+            data-kode="{{ kode }}"
+            data-nama="{{ nama }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const kodeProduk=document.getElementById('kode_produk');
+    const plnInfo=document.getElementById('plnInfo');
+    const plnError=document.getElementById('plnError');
+    const nominalArea=document.getElementById('nominalArea');
+    const nominalList=document.getElementById('nominalList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('plnForm');
+    const btnBayar=document.getElementById('btnBayar');
+
+    const meterTitle=document.getElementById('meterTitle');
+    const meterSubtitle=document.getElementById('meterSubtitle');
+    const meterStatus=document.getElementById('meterStatus');
+    const meterDaya=document.getElementById('meterDaya');
+    const meterToken=document.getElementById('meterToken');
+
+    const dashboardTitle=document.getElementById('dashboardTitle');
+    const dashboardSubtitle=document.getElementById('dashboardSubtitle');
+    const dashId=document.getElementById('dashId');
+    const dashDaya=document.getElementById('dashDaya');
+    const dashTotal=document.getElementById('dashTotal');
+
+    let activeFilter='recommended';
+    let selectedNominal=null;
+    let selectedDaya='900';
+
+    const dataProduk=Array.from(document.querySelectorAll('#dataProdukPLN span'));
+
+    function cleanNumber(value){
+        return (value || '').replace(/[^0-9]/g,'');
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function rupiah(num){
+        return 'Rp '+String(Math.max(0,Math.round(num))).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function tokenValue(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+
+        if(text.includes('1.000.000') || text.includes('1000000')) return 1000000;
+        if(text.includes('500.000') || text.includes('500000')) return 500000;
+        if(text.includes('200.000') || text.includes('200000')) return 200000;
+        if(text.includes('100.000') || text.includes('100000')) return 100000;
+        if(text.includes('50.000') || text.includes('50000')) return 50000;
+        if(text.includes('20.000') || text.includes('20000')) return 20000;
+
+        const found=text.match(/[0-9]+/g);
+        if(!found) return 0;
+
+        let biggest=0;
+
+        found.forEach(function(n){
+            const num=parseInt(n,10);
+            if(num>biggest) biggest=num;
+        });
+
+        if(biggest<1000) biggest=biggest*1000;
+
+        return biggest;
+    }
+
+    function tokenType(value){
+        if(value<=50000) return 'small';
+        if(value<=200000) return 'medium';
+        if(value<=500000) return 'large';
+        return 'big';
+    }
+
+    function estimateKwh(value){
+        const daya=parseInt(selectedDaya,10) || 900;
+        let rate=1450;
+
+        if(daya<=450) rate=415;
+        else if(daya<=900) rate=1352;
+        else if(daya<=2200) rate=1444;
+        else rate=1699;
+
+        const adminApprox=2500;
+        const clean=Math.max(0,value-adminApprox);
+        return Math.max(1,Math.round(clean/rate));
+    }
+
+    function getTokens(){
+        return dataProduk.map(function(el){
+            const value=tokenValue(el.dataset.nama,el.dataset.kode);
+            const harga=el.dataset.harga;
+            const type=tokenType(value);
+
+            return {
+                kode:el.dataset.kode,
+                nama:el.dataset.nama,
+                harga:harga,
+                hargaAngka:parseMoney(harga),
+                value:value,
+                type:type,
+                kwh:estimateKwh(value)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                if(a.value===100000 && b.value!==100000) return -1;
+                if(b.value===100000 && a.value!==100000) return 1;
+                if(a.value===200000 && b.value!==200000) return -1;
+                if(b.value===200000 && a.value!==200000) return 1;
+                return a.value-b.value;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){return a.hargaAngka-b.hargaAngka;});
+        }
+
+        return list.filter(function(item){
+            return item.type===activeFilter;
+        });
+    }
+
+    function resetMeter(){
+        selectedNominal=null;
+        kodeProduk.value='';
+        nominalArea.classList.remove('show');
+        summaryBox.style.display='none';
+        plnInfo.style.display='none';
+        plnError.style.display='none';
+        meterTitle.textContent='Meter Belum Terbaca';
+        meterSubtitle.textContent='Masukkan ID PLN untuk membuka pilihan token.';
+        meterStatus.textContent='Idle';
+        meterToken.textContent='0';
+    }
+
+    function showValidMeter(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        meterTitle.textContent='Meter PLN Terbaca';
+        meterSubtitle.textContent='ID '+nomor+' siap untuk pembelian token.';
+        meterStatus.textContent='Valid';
+        meterDaya.textContent=selectedDaya+'VA';
+        meterToken.textContent=getTokens().length;
+
+        dashboardTitle.textContent='Panel Token PLN';
+        dashboardSubtitle.textContent='ID '+nomor+' siap diisi token listrik.';
+        dashId.textContent=nomor.slice(-4);
+        dashDaya.textContent=selectedDaya+'VA';
+        dashTotal.textContent=getTokens().length;
+
+        plnInfo.style.display='block';
+        plnInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format ID PLN sudah sesuai. Pilih nominal token di bawah.';
+        plnError.style.display='none';
+        nominalArea.classList.add('show');
+
+        renderTokens();
+    }
+
+    function showInvalidMeter(message){
+        selectedNominal=null;
+        kodeProduk.value='';
+        nominalArea.classList.remove('show');
+        summaryBox.style.display='none';
+
+        meterTitle.textContent='ID PLN Belum Lengkap';
+        meterSubtitle.textContent='Masukkan 11 sampai 12 digit nomor meter / ID pelanggan.';
+        meterStatus.textContent='Check';
+        meterToken.textContent='0';
+
+        plnInfo.style.display='none';
+        plnError.style.display='block';
+        plnError.innerHTML='<i class="fa-solid fa-circle-info"></i> '+message;
+    }
+
+    function handleInput(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>12){
+            nomor=nomor.slice(0,12);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/12';
+
+        if(!nomor){
+            resetMeter();
+            return;
+        }
+
+        if(nomor.length<11){
+            showInvalidMeter('Nomor masih kurang. Masukkan minimal 11 digit angka.');
+            return;
+        }
+
+        showValidMeter();
+    }
+
+    function renderTokens(){
+        nominalList.innerHTML='';
+        selectedNominal=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        const list=applyFilter(getTokens());
+
+        dashTotal.textContent=getTokens().length;
+        meterToken.textContent=getTokens().length;
+
+        if(!list.length){
+            nominalList.innerHTML='<div class="empty-state">Token pada kategori ini belum tersedia. Coba pilih kategori lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='nominal-card';
+
+            const labelMap={
+                small:'Harian',
+                medium:'Mingguan',
+                large:'Bulanan',
+                big:'Besar'
+            };
+
+            const tag=labelMap[item.type] || 'Token';
+
+            card.innerHTML=
+                '<div class="nominal-main">'+
+                    '<div class="nominal-top">'+
+                        '<div class="nominal-left">'+
+                            '<div class="nominal-logo">PLN</div>'+
+                            '<div class="nominal-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>Token listrik · '+tag+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="nominal-tag">'+tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="nominal-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Nominal Token</span>'+
+                            '<strong>'+rupiah(item.value)+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Estimasi kWh</span>'+
+                            '<strong>± '+item.kwh+' kWh</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="nominal-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.harga+'</strong>'+
+                            '<small>Token diproses setelah pembayaran</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-nominal">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="nominal-benefits">'+
+                    '<span><i class="fa-solid fa-bolt"></i> Token PLN</span>'+
+                    '<span><i class="fa-solid fa-house"></i> '+selectedDaya+'VA</span>'+
+                    '<span><i class="fa-solid fa-chart-simple"></i> ± '+item.kwh+' kWh</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-nominal').addEventListener('click',function(){
+                document.querySelectorAll('.nominal-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedNominal=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            nominalList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedNominal){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
+        document.getElementById('sumDaya').textContent=selectedDaya+'VA';
+        document.getElementById('sumProduk').textContent=selectedNominal.nama;
+        document.getElementById('sumKwh').textContent='± '+selectedNominal.kwh+' kWh';
+        document.getElementById('sumHarga').textContent=selectedNominal.harga;
+
+        summaryBox.style.display='block';
+    }
+
+    nomorInput.addEventListener('input',handleInput);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            handleInput();
+        });
+    });
+
+    document.querySelectorAll('.daya-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            selectedDaya=btn.dataset.daya;
+
+            document.querySelectorAll('.daya-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+
+            meterDaya.textContent=selectedDaya+'VA';
+            dashDaya.textContent=selectedDaya+'VA';
+
+            if(nominalArea.classList.contains('show')){
+                renderTokens();
+            }
+        });
+    });
+
+    document.querySelectorAll('.mode-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.mode-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderTokens();
+        });
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<11 || nomor.length>12){
+            e.preventDefault();
+            alert('Masukkan nomor meter atau ID pelanggan PLN dengan benar. Minimal 11 digit dan maksimal 12 digit.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!selectedNominal || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih nominal token listrik terlebih dahulu.');
+            return;
+        }
+
+        btnBayar.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Token...';
+        btnBayar.style.opacity='0.75';
+        btnBayar.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

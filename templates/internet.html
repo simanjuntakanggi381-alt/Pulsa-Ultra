@@ -1,0 +1,1809 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+{% set hasil = hasil_cek|default(None, true) %}
+
+{% set fallback_produk_internet = {
+    'INET_INDIHOME': 'Internet IndiHome',
+    'INET_BIZNET': 'Internet Biznet',
+    'INET_MYREPUBLIC': 'Internet MyRepublic',
+    'INET_FIRSTMEDIA': 'Internet First Media',
+    'INET_ICONNET': 'Internet Iconnet',
+    'INET_MNCPLAY': 'Internet MNC Play',
+    'INET_CBN': 'Internet CBN',
+    'INET_OXYGEN': 'Internet Oxygen',
+    'INET_GIG': 'Internet GIG',
+    'INET_REPUBLIC': 'Internet Republic',
+    'INTERNET_INDIHOME': 'Tagihan IndiHome',
+    'INTERNET_BIZNET': 'Tagihan Biznet'
+} %}
+
+{% set fallback_harga_internet = {
+    'INET_INDIHOME': 3000,
+    'INET_BIZNET': 3000,
+    'INET_MYREPUBLIC': 3000,
+    'INET_FIRSTMEDIA': 3000,
+    'INET_ICONNET': 3000,
+    'INET_MNCPLAY': 3000,
+    'INET_CBN': 3000,
+    'INET_OXYGEN': 3000,
+    'INET_GIG': 3000,
+    'INET_REPUBLIC': 3000,
+    'INTERNET_INDIHOME': 3000,
+    'INTERNET_BIZNET': 3000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_internet %}
+{% set harga_final = harga_map if harga_map else fallback_harga_internet %}
+
+<style>
+:root{
+    --net-purple:#6d28d9;
+    --net-indigo:#4f46e5;
+    --net-blue:#2563eb;
+    --net-sky:#0ea5e9;
+    --net-cyan:#06b6d4;
+    --net-green:#16a34a;
+    --net-dark:#0f172a;
+    --net-text:#334155;
+    --net-muted:#64748b;
+    --net-border:#e2e8f0;
+    --net-soft:#f8fafc;
+    --net-shadow:0 18px 42px rgba(15,23,42,.10);
+    --net-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(79,70,229,.16),transparent 34%),
+        radial-gradient(circle at top right,rgba(6,182,212,.15),transparent 34%),
+        radial-gradient(circle at bottom,rgba(109,40,217,.09),transparent 42%),
+        linear-gradient(180deg,#f8fbff 0%,#eef2ff 46%,#ffffff 100%);
+}
+
+.net-page{
+    width:100%;
+    max-width:490px;
+    margin:0 auto;
+    padding:.8rem .7rem 5.5rem;
+    box-sizing:border-box;
+    color:var(--net-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.net-shell{
+    border-radius:32px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(79,70,229,.10),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(6,182,212,.10),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(79,70,229,.14);
+    box-shadow:var(--net-shadow);
+    overflow:hidden;
+}
+
+.net-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#eef2ff;
+    color:#3730a3;
+    border:1px solid #c7d2fe;
+}
+
+.net-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.net-alert.error,
+.net-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.net-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.net-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.net-back,
+.net-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.net-back{
+    background:#fff;
+    border:1px solid var(--net-border);
+    color:#4f46e5;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.net-chip{
+    background:#eef2ff;
+    color:#4338ca;
+    border:1px solid #c7d2fe;
+}
+
+.net-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(6,182,212,.30),transparent 28%),
+        linear-gradient(135deg,#111827 0%,#4f46e5 52%,#06b6d4 100%);
+    box-shadow:0 16px 32px rgba(79,70,229,.24);
+}
+
+.net-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.13);
+}
+
+.net-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.net-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.net-hero-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:19px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.16rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.net-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.net-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.1rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.net-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-mini-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.8rem;
+}
+
+.hero-mini{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.13);
+    text-align:center;
+}
+
+.hero-mini strong{
+    display:block;
+    color:#fff;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.hero-mini span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.panel-card{
+    border-radius:26px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #c7d2fe;
+    box-shadow:var(--net-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:56px;
+    border-radius:17px;
+    border:1.8px solid #c7d2fe;
+    background:#fff;
+    color:#0f172a;
+    font-size:.94rem;
+    font-weight:950;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+    letter-spacing:.02em;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#4f46e5;
+    box-shadow:0 0 0 4px rgba(79,70,229,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.modem-card{
+    margin-top:.72rem;
+    overflow:hidden;
+    border-radius:23px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 30%),
+        linear-gradient(135deg,#111827,#4f46e5 55%,#06b6d4);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 26px rgba(79,70,229,.16);
+}
+
+.modem-head{
+    padding:.82rem;
+    display:flex;
+    justify-content:space-between;
+    gap:.7rem;
+    align-items:flex-start;
+}
+
+.modem-head strong{
+    display:block;
+    color:#fff;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.modem-head span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.wifi-icon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1rem;
+}
+
+.modem-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:0 .82rem .82rem;
+}
+
+.modem-stat{
+    padding:.56rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.11);
+    text-align:center;
+}
+
+.modem-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.modem-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.net-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#eef2ff;
+    border:1px solid #c7d2fe;
+    color:#3730a3;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.provider-strip{
+    display:flex;
+    gap:.55rem;
+    overflow-x:auto;
+    padding:.15rem 0 .35rem;
+    scrollbar-width:none;
+}
+
+.provider-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.provider-card{
+    flex:0 0 132px;
+    min-height:112px;
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid #edf2f7;
+    border-radius:20px;
+    background:
+        radial-gradient(circle at top right,rgba(79,70,229,.10),transparent 34%),
+        #fff;
+    padding:.8rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.provider-card:hover{
+    transform:translateY(-2px);
+    border-color:#c7d2fe;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.provider-card.active{
+    border-color:#4f46e5;
+    background:#eef2ff;
+    box-shadow:0 12px 24px rgba(79,70,229,.12);
+}
+
+.provider-logo{
+    width:39px;
+    height:39px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.provider-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.78rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.provider-card span{
+    display:block;
+    margin-top:.2rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.feature-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.42rem;
+    margin-top:.8rem;
+    padding:.65rem;
+    border-radius:20px;
+    background:#eef2ff;
+    border:1px solid #c7d2fe;
+}
+
+.feature-box{
+    min-height:48px;
+    border-radius:15px;
+    background:#fff;
+    border:1px solid #dbeafe;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.feature-box strong{
+    color:#0f172a;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.feature-box span{
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.bill-area{
+    display:none;
+}
+
+.bill-area.show{
+    display:block;
+}
+
+.dashboard-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(6,182,212,.22),transparent 30%),
+        linear-gradient(135deg,#111827,#4f46e5 55%,#06b6d4);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(79,70,229,.18);
+}
+
+.dashboard-main{
+    padding:.95rem;
+}
+
+.dashboard-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.dashboard-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.dashboard-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.dashboard-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.dash-stat{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.dash-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.dash-stat span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.mode-wrap{
+    margin-bottom:.75rem;
+}
+
+.mode-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.mode-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.mode-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.mode-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.mode-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.mode-chip{
+    flex:0 0 auto;
+    border:1px solid #c7d2fe;
+    background:#fff;
+    color:#4338ca;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.mode-chip.active{
+    background:#4f46e5;
+    color:#fff;
+    border-color:#4f46e5;
+}
+
+.bill-preview-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.bill-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.bill-card:hover{
+    transform:translateY(-2px);
+    border-color:#c7d2fe;
+}
+
+.bill-card.active{
+    border-color:#4f46e5;
+    background:#eef2ff;
+    box-shadow:0 0 0 1px #4f46e5,0 14px 28px rgba(79,70,229,.10);
+}
+
+.bill-main{
+    padding:.9rem;
+}
+
+.bill-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.bill-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.bill-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#111827,#4f46e5);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(79,70,229,.14);
+}
+
+.bill-name{
+    min-width:0;
+}
+
+.bill-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.bill-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.bill-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.bill-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.bill-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#4338ca;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-bill{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #c7d2fe;
+    box-shadow:0 12px 24px rgba(79,70,229,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#111827,#4f46e5);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.btn-main{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(79,70,229,.24);
+}
+
+.btn-main.green{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    box-shadow:0 13px 26px rgba(22,163,74,.22);
+}
+
+.btn-main.blue{
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+}
+
+.result-card{
+    background:#fff;
+    border-radius:24px;
+    overflow:hidden;
+    border:1px solid #bbf7d0;
+    box-shadow:0 14px 30px rgba(22,163,74,.12);
+    margin-top:1rem;
+}
+
+.result-head{
+    padding:1rem;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+}
+
+.result-head strong{
+    display:block;
+    font-size:1rem;
+    font-weight:950;
+    margin-bottom:.25rem;
+}
+
+.result-head span{
+    display:block;
+    font-size:.8rem;
+    opacity:.95;
+    line-height:1.4;
+}
+
+.result-body{
+    padding:1rem;
+}
+
+.result-row{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.75rem;
+    border-radius:15px;
+    background:#f8fafc;
+    border:1px solid #edf2f7;
+    margin-bottom:.55rem;
+}
+
+.result-row span{
+    color:#64748b;
+    font-size:.8rem;
+    font-weight:750;
+}
+
+.result-row b{
+    color:#0f172a;
+    font-size:.84rem;
+    line-height:1.35;
+    text-align:right;
+    word-break:break-word;
+}
+
+.result-total{
+    margin-top:.75rem;
+    padding:.9rem;
+    border-radius:18px;
+    background:linear-gradient(135deg,#111827,#1f2937);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:center;
+}
+
+.result-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.78rem;
+    font-weight:750;
+}
+
+.result-total b{
+    display:block;
+    margin-top:.2rem;
+    color:#fff;
+    font-size:1.18rem;
+    font-weight:950;
+}
+
+.result-actions{
+    display:grid;
+    gap:.65rem;
+    margin-top:1rem;
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+@media(max-width:420px){
+    .net-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .net-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .hero-mini-row,
+    .feature-row,
+    .bill-detail{
+        grid-template-columns:1fr;
+    }
+
+    .bill-bottom,
+    .summary-total,
+    .result-total{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .result-row{
+        flex-direction:column;
+        gap:.25rem;
+    }
+
+    .result-row b{
+        text-align:left;
+    }
+
+    .choose-bill{
+        width:100%;
+    }
+}
+</style>
+
+<div class="net-page">
+    <div class="net-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="net-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="net-topbar">
+            <a href="{{ url_for('lainnya') }}" class="net-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="net-chip">
+                <i class="fa-solid fa-wifi"></i>
+                Internet
+            </div>
+        </div>
+
+        <div class="net-hero">
+            <div class="net-hero-main">
+                <div class="net-hero-icon">
+                    <i class="fa-solid fa-router"></i>
+                </div>
+
+                <div>
+                    <div class="net-badge">
+                        <i class="fa-solid fa-signal"></i>
+                        HomeNet Control
+                    </div>
+                    <h2>Bayar Internet Lebih Modern</h2>
+                    <p>Masukkan ID pelanggan, pilih provider, lalu cek tagihan lewat panel koneksi rumah.</p>
+                </div>
+            </div>
+
+            <div class="hero-mini-row">
+                <div class="hero-mini">
+                    <strong>Modem</strong>
+                    <span>Status</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Bill</strong>
+                    <span>Tagihan</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Fast</strong>
+                    <span>Check</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('internet') }}" id="internetForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="internet_pasca">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="panel-card">
+                <div class="section-title">
+                    <div>
+                        <h3>ID Pelanggan Internet</h3>
+                        <p>Masukkan ID pelanggan agar panel koneksi internet bisa dibuka.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="tel"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 12123456789"
+                        value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                        inputmode="numeric"
+                        minlength="5"
+                        maxlength="25"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan angka tanpa spasi.</span>
+                    <span id="charCount">0/25</span>
+                </div>
+
+                <div class="quick-row">
+                    <button type="button" data-id="12123456789">Contoh ID</button>
+                    <button type="button" data-id="881122334455">Contoh Rumah</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="modem-card">
+                    <div class="modem-head">
+                        <div>
+                            <strong id="modemTitle">Modem Belum Terbaca</strong>
+                            <span id="modemSubtitle">Masukkan ID pelanggan dan pilih provider.</span>
+                        </div>
+
+                        <div class="wifi-icon">
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                    </div>
+
+                    <div class="modem-stats">
+                        <div class="modem-stat">
+                            <strong id="modemStatus">Idle</strong>
+                            <span>Status</span>
+                        </div>
+                        <div class="modem-stat">
+                            <strong id="modemSpeed">-</strong>
+                            <span>Speed</span>
+                        </div>
+                        <div class="modem-stat">
+                            <strong id="modemProvider">-</strong>
+                            <span>Provider</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="net-info" id="internetInfo"></div>
+            </div>
+
+            <div class="panel-card">
+                <div class="section-title">
+                    <div>
+                        <h3>Pilih Provider Internet</h3>
+                        <p>Geser dan pilih provider sesuai layanan pelanggan.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="provider-strip" id="providerStrip">
+                    {% if produk_final %}
+                        {% for kode, nama in produk_final.items() %}
+                            {% set admin = harga_final.get(kode, 0) %}
+                            <button
+                                type="button"
+                                class="provider-card"
+                                data-kode="{{ kode }}"
+                                data-nama="{{ nama|e }}"
+                                data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+                            >
+                                <div class="provider-logo">{{ nama[:2].upper() }}</div>
+                                <strong>{{ nama }}</strong>
+                                <span>Cek tagihan internet</span>
+                            </button>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            Produk internet belum tersedia. Pastikan kode produk memakai prefix <b>INTERNET_</b> atau <b>INET_</b>.
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="feature-row">
+                    <div class="feature-box">
+                        <strong>Bill Check</strong>
+                        <span>Cek tagihan</span>
+                    </div>
+                    <div class="feature-box">
+                        <strong>Provider</strong>
+                        <span>Auto panel</span>
+                    </div>
+                    <div class="feature-box">
+                        <strong>Secure</strong>
+                        <span>Konfirmasi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bill-area" id="billArea">
+                <div class="dashboard-card">
+                    <div class="dashboard-main">
+                        <div class="dashboard-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            PANEL INTERNET SIAP
+                        </div>
+                        <h3 id="dashboardTitle">HomeNet Billing Panel</h3>
+                        <p id="dashboardSubtitle">Pilih mode pengecekan tagihan sebelum melanjutkan.</p>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="dash-stat">
+                            <strong id="dashProvider">-</strong>
+                            <span>Provider</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashSpeed">50M</strong>
+                            <span>Plan</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong>Ready</strong>
+                            <span>Status</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-wrap">
+                    <div class="mode-title">
+                        <div>
+                            <strong>Mode pengecekan</strong>
+                            <span>Geser untuk memilih jenis tagihan</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-strip">
+                        <button type="button" class="mode-chip active" data-mode="current">Tagihan Aktif</button>
+                        <button type="button" class="mode-chip" data-mode="home">Rumah</button>
+                        <button type="button" class="mode-chip" data-mode="fiber">Fiber</button>
+                        <button type="button" class="mode-chip" data-mode="business">Bisnis</button>
+                    </div>
+                </div>
+
+                <div class="bill-preview-list" id="billPreviewList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Cek Tagihan
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Pelanggan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Provider Internet</span>
+                        <b id="sumProvider">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Mode Cek</span>
+                        <b id="sumMode">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Biaya Admin</span>
+                            <b id="sumAdmin">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wifi"></i>
+                    </div>
+
+                    {% if produk_final %}
+                    <button type="submit" class="btn-main" id="btnCek">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Cek Tagihan Sekarang
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        {% if hasil %}
+        <div class="result-card">
+            <div class="result-head">
+                <strong><i class="fa-solid fa-circle-check"></i> Tagihan Ditemukan</strong>
+                <span>Periksa detail di bawah ini sebelum melanjutkan pembayaran.</span>
+            </div>
+
+            <div class="result-body">
+                <div class="result-row">
+                    <span>Nama Pelanggan</span>
+                    <b>{{ hasil.nama_pelanggan|default('-', true) }}</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Nomor Pelanggan</span>
+                    <b>{{ hasil.nomor_tujuan|default('-', true) }}</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Provider / Layanan</span>
+                    <b>{{ hasil.nama_produk|default('-', true) }}</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Periode</span>
+                    <b>{{ hasil.periode|default('-', true) }}</b>
+                </div>
+
+                <div class="result-row">
+                    <span>Tagihan</span>
+                    <b>
+                        {% if format_uang is defined %}
+                            {{ format_uang(hasil.tagihan|default(0, true)) }}
+                        {% else %}
+                            Rp {{ "{:,.0f}".format(hasil.tagihan|default(0, true)|int)|replace(",", ".") }}
+                        {% endif %}
+                    </b>
+                </div>
+
+                <div class="result-row">
+                    <span>Admin</span>
+                    <b>
+                        {% if format_uang is defined %}
+                            {{ format_uang(hasil.admin|default(0, true)) }}
+                        {% else %}
+                            Rp {{ "{:,.0f}".format(hasil.admin|default(0, true)|int)|replace(",", ".") }}
+                        {% endif %}
+                    </b>
+                </div>
+
+                <div class="result-total">
+                    <div>
+                        <span>Total Bayar</span>
+                        <b>
+                            {% if format_uang is defined %}
+                                {{ format_uang(hasil.total|default(0, true)) }}
+                            {% else %}
+                                Rp {{ "{:,.0f}".format(hasil.total|default(0, true)|int)|replace(",", ".") }}
+                            {% endif %}
+                        </b>
+                    </div>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+
+                <div class="result-actions">
+                    <form method="POST" action="{{ url_for('internet') }}">
+                        {% if csrf_token is defined %}
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        {% endif %}
+
+                        <input type="hidden" name="aksi" value="bayar_layanan">
+                        <input type="hidden" name="jenis" value="internet_pasca">
+                        <input type="hidden" name="ref_id" value="{{ hasil.ref_id|default('', true) }}">
+                        <input type="hidden" name="nomor_tujuan" value="{{ hasil.nomor_tujuan|default('', true) }}">
+                        <input type="hidden" name="kode_produk" value="{{ hasil.kode_produk|default('', true) }}">
+                        <input type="hidden" name="total" value="{{ hasil.total|default(0, true) }}">
+
+                        <button type="submit" class="btn-main green">
+                            <i class="fa-solid fa-lock"></i>
+                            Bayar Sekarang
+                        </button>
+                    </form>
+
+                    <a href="{{ url_for('internet') }}" class="btn-main blue">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        &nbsp; Cek Nomor Lain
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const kodeProduk=document.getElementById('kode_produk');
+    const internetInfo=document.getElementById('internetInfo');
+    const billArea=document.getElementById('billArea');
+    const billPreviewList=document.getElementById('billPreviewList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('internetForm');
+    const btnCek=document.getElementById('btnCek');
+
+    const modemTitle=document.getElementById('modemTitle');
+    const modemSubtitle=document.getElementById('modemSubtitle');
+    const modemStatus=document.getElementById('modemStatus');
+    const modemSpeed=document.getElementById('modemSpeed');
+    const modemProvider=document.getElementById('modemProvider');
+
+    const dashboardTitle=document.getElementById('dashboardTitle');
+    const dashboardSubtitle=document.getElementById('dashboardSubtitle');
+    const dashProvider=document.getElementById('dashProvider');
+    const dashSpeed=document.getElementById('dashSpeed');
+
+    let selectedProvider=null;
+    let activeMode='current';
+
+    const modeNames={
+        current:'Tagihan Aktif',
+        home:'Internet Rumah',
+        fiber:'Fiber Internet',
+        business:'Paket Bisnis'
+    };
+
+    function cleanNumber(value){
+        return (value || '').replace(/[^0-9]/g,'');
+    }
+
+    function shortProvider(name){
+        name=String(name || '-').replace('Internet','').replace('Tagihan','').trim();
+
+        if(!name) return '-';
+
+        return name.length>10 ? name.slice(0,10) : name;
+    }
+
+    function updateInputInfo(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>25){
+            nomor=nomor.slice(0,25);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/25';
+
+        if(!nomor){
+            internetInfo.style.display='none';
+            modemTitle.textContent='Modem Belum Terbaca';
+            modemSubtitle.textContent='Masukkan ID pelanggan dan pilih provider.';
+            modemStatus.textContent='Idle';
+            modemSpeed.textContent='-';
+            if(!selectedProvider){
+                modemProvider.textContent='-';
+            }
+            updatePanel();
+            return;
+        }
+
+        if(nomor.length<5){
+            internetInfo.style.display='block';
+            internetInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor pelanggan masih terlalu pendek.';
+            modemTitle.textContent='ID Belum Lengkap';
+            modemSubtitle.textContent='Lanjutkan input nomor pelanggan internet.';
+            modemStatus.textContent='Check';
+            updatePanel();
+            return;
+        }
+
+        internetInfo.style.display='block';
+        internetInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format ID pelanggan sudah cukup. Pilih provider internet.';
+        modemTitle.textContent='ID Pelanggan Terbaca';
+        modemSubtitle.textContent='ID '+nomor+' siap dicek tagihannya.';
+        modemStatus.textContent='Ready';
+        updatePanel();
+    }
+
+    function setProvider(card){
+        document.querySelectorAll('.provider-card').forEach(function(el){
+            el.classList.remove('active');
+        });
+
+        card.classList.add('active');
+
+        selectedProvider={
+            kode:card.dataset.kode,
+            nama:card.dataset.nama,
+            admin:card.dataset.admin
+        };
+
+        kodeProduk.value=selectedProvider.kode;
+
+        modemProvider.textContent=shortProvider(selectedProvider.nama);
+        modemSpeed.textContent=guessSpeed(selectedProvider.nama);
+        updatePanel();
+    }
+
+    function guessSpeed(name){
+        const text=String(name || '').toLowerCase();
+
+        if(text.includes('biznet')) return '100M';
+        if(text.includes('first')) return '75M';
+        if(text.includes('myrepublic')) return '100M';
+        if(text.includes('icon')) return '50M';
+        if(text.includes('mnc')) return '50M';
+        if(text.includes('cbn')) return '75M';
+
+        return '50M';
+    }
+
+    function updatePanel(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>=5 && selectedProvider){
+            billArea.classList.add('show');
+
+            dashboardTitle.textContent='Panel '+selectedProvider.nama;
+            dashboardSubtitle.textContent='ID '+nomor+' siap dicek tagihannya.';
+            dashProvider.textContent=shortProvider(selectedProvider.nama);
+            dashSpeed.textContent=guessSpeed(selectedProvider.nama);
+
+            renderBillPreview();
+            updateSummary();
+        }else{
+            billArea.classList.remove('show');
+            summaryBox.style.display='none';
+        }
+    }
+
+    function renderBillPreview(){
+        if(!selectedProvider) return;
+
+        billPreviewList.innerHTML='';
+
+        const previews=[
+            {
+                mode:'current',
+                title:'Cek Tagihan Aktif',
+                tag:'Aktif',
+                desc:'Cek tagihan internet bulan berjalan.',
+                plan:'Bulanan'
+            },
+            {
+                mode:'home',
+                title:'Internet Rumah',
+                tag:'Rumah',
+                desc:'Mode cek untuk pelanggan rumah.',
+                plan:'Home Plan'
+            },
+            {
+                mode:'fiber',
+                title:'Fiber Internet',
+                tag:'Fiber',
+                desc:'Cek tagihan layanan fiber internet.',
+                plan:guessSpeed(selectedProvider.nama)
+            },
+            {
+                mode:'business',
+                title:'Internet Bisnis',
+                tag:'Bisnis',
+                desc:'Mode cek untuk paket bisnis atau kantor.',
+                plan:'Business'
+            }
+        ];
+
+        previews.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='bill-card '+(activeMode===item.mode?'active':'');
+            card.dataset.mode=item.mode;
+
+            card.innerHTML=
+                '<div class="bill-main">'+
+                    '<div class="bill-top">'+
+                        '<div class="bill-left">'+
+                            '<div class="bill-logo">'+shortProvider(selectedProvider.nama).slice(0,2).toUpperCase()+'</div>'+
+                            '<div class="bill-name">'+
+                                '<strong>'+item.title+'</strong>'+
+                                '<span>'+selectedProvider.nama+' · '+item.plan+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="bill-tag">'+item.tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="bill-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Mode</span>'+
+                            '<strong>'+item.plan+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Admin</span>'+
+                            '<strong>'+selectedProvider.admin+'</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="bill-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Keterangan</span>'+
+                            '<strong>Cek tagihan</strong>'+
+                            '<small>'+item.desc+'</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-bill">Pilih</button>'+
+                    '</div>'+
+                '</div>';
+
+            card.querySelector('.choose-bill').addEventListener('click',function(){
+                activeMode=item.mode;
+
+                document.querySelectorAll('.mode-chip').forEach(function(btn){
+                    btn.classList.toggle('active',btn.dataset.mode===activeMode);
+                });
+
+                renderBillPreview();
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            billPreviewList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || !selectedProvider){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=nomor;
+        document.getElementById('sumProvider').textContent=selectedProvider.nama;
+        document.getElementById('sumMode').textContent=modeNames[activeMode] || '-';
+        document.getElementById('sumAdmin').textContent=selectedProvider.admin;
+
+        summaryBox.style.display='block';
+    }
+
+    nomorInput.addEventListener('input',updateInputInfo);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInputInfo();
+        });
+    });
+
+    document.querySelectorAll('.provider-card').forEach(function(card){
+        card.addEventListener('click',function(){
+            setProvider(card);
+        });
+    });
+
+    document.querySelectorAll('.mode-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeMode=btn.dataset.mode;
+
+            document.querySelectorAll('.mode-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderBillPreview();
+            updateSummary();
+        });
+    });
+
+    if(form){
+        form.addEventListener('submit',function(e){
+            const nomor=cleanNumber(nomorInput.value);
+            const produk=kodeProduk.value;
+
+            if(!nomor || nomor.length<5){
+                e.preventDefault();
+                alert('Masukkan nomor pelanggan internet terlebih dahulu.');
+                nomorInput.focus();
+                return;
+            }
+
+            if(!produk || !selectedProvider){
+                e.preventDefault();
+                alert('Silakan pilih provider internet terlebih dahulu.');
+                return;
+            }
+
+            if(btnCek){
+                btnCek.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Mengecek Tagihan...';
+                btnCek.style.opacity='0.75';
+                btnCek.style.pointerEvents='none';
+            }
+        });
+    }
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

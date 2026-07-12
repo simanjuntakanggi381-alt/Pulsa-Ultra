@@ -1,0 +1,1562 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_gas = {
+    'GAS_PGN': 'Gas Negara PGN',
+    'GAS_PERTAGAS': 'Gas Pertagas',
+    'GAS_RUMAH': 'Gas Rumah Tangga',
+    'GAS_BISNIS': 'Gas Bisnis',
+    'GAS_TOKEN_20': 'Token Gas 20rb',
+    'GAS_TOKEN_50': 'Token Gas 50rb',
+    'GAS_TOKEN_100': 'Token Gas 100rb',
+    'GAS_TOKEN_200': 'Token Gas 200rb'
+} %}
+
+{% set fallback_harga_gas = {
+    'GAS_PGN': 3000,
+    'GAS_PERTAGAS': 3000,
+    'GAS_RUMAH': 3000,
+    'GAS_BISNIS': 3000,
+    'GAS_TOKEN_20': 22000,
+    'GAS_TOKEN_50': 52000,
+    'GAS_TOKEN_100': 102000,
+    'GAS_TOKEN_200': 202000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_gas %}
+{% set harga_final = harga_map if harga_map else fallback_harga_gas %}
+
+<style>
+:root{
+    --gs-orange:#ff6d00;
+    --gs-orange2:#ff3d00;
+    --gs-amber:#f59e0b;
+    --gs-yellow:#facc15;
+    --gs-red:#ef4444;
+    --gs-green:#16a34a;
+    --gs-blue:#2563eb;
+    --gs-dark:#0f172a;
+    --gs-text:#334155;
+    --gs-muted:#64748b;
+    --gs-border:#e2e8f0;
+    --gs-soft:#f8fafc;
+    --gs-shadow:0 18px 42px rgba(15,23,42,.10);
+    --gs-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(255,109,0,.18),transparent 34%),
+        radial-gradient(circle at top right,rgba(245,158,11,.13),transparent 34%),
+        radial-gradient(circle at bottom,rgba(255,61,0,.10),transparent 42%),
+        linear-gradient(180deg,#fff8f1 0%,#f8fafc 48%,#ffffff 100%);
+}
+
+.gas-center-page{
+    width:100%;
+    max-width:490px;
+    margin:0 auto;
+    padding:.8rem .7rem 5.5rem;
+    box-sizing:border-box;
+    color:var(--gs-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.gas-center-shell{
+    border-radius:32px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(255,109,0,.12),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(245,158,11,.10),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(255,109,0,.16);
+    box-shadow:var(--gs-shadow);
+    overflow:hidden;
+}
+
+.gas-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#fff7ed;
+    color:#9a3412;
+    border:1px solid #fed7aa;
+}
+
+.gas-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.gas-alert.error,
+.gas-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.gas-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.gas-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.gas-back,
+.gas-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.gas-back{
+    background:#fff;
+    border:1px solid var(--gs-border);
+    color:#ea580c;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.gas-chip{
+    background:#fff7ed;
+    color:#c2410c;
+    border:1px solid #fed7aa;
+}
+
+.gas-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.30),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(250,204,21,.22),transparent 28%),
+        linear-gradient(135deg,#111827 0%,#ff6d00 52%,#ff3d00 100%);
+    box-shadow:0 16px 32px rgba(255,61,0,.25);
+}
+
+.gas-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.13);
+}
+
+.gas-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.hero-icon{
+    width:52px;
+    height:52px;
+    flex:0 0 52px;
+    border-radius:19px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.16rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.gas-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.1rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.gas-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-mini-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    margin-top:.8rem;
+}
+
+.hero-mini{
+    padding:.58rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.13);
+    text-align:center;
+}
+
+.hero-mini strong{
+    display:block;
+    color:#fff;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.hero-mini span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.panel-card{
+    border-radius:26px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #fed7aa;
+    box-shadow:var(--gs-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#fff7ed;
+    color:#c2410c;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.input-console{
+    position:relative;
+    padding:.78rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right,rgba(255,109,0,.10),transparent 30%),
+        #f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:56px;
+    border-radius:17px;
+    border:1.8px solid #fed7aa;
+    background:#fff;
+    color:#0f172a;
+    font-size:.94rem;
+    font-weight:950;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+    letter-spacing:.02em;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#ff6d00;
+    box-shadow:0 0 0 4px rgba(255,109,0,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.gas-live-card{
+    margin-top:.72rem;
+    overflow:hidden;
+    border-radius:23px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 30%),
+        linear-gradient(135deg,#111827,#ff6d00 55%,#ff3d00);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 12px 26px rgba(255,61,0,.16);
+}
+
+.gas-live-head{
+    padding:.82rem;
+    display:flex;
+    justify-content:space-between;
+    gap:.7rem;
+    align-items:flex-start;
+}
+
+.gas-live-head strong{
+    display:block;
+    color:#fff;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.gas-live-head span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.flame-icon{
+    width:42px;
+    height:42px;
+    border-radius:16px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:1rem;
+}
+
+.live-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:0 .82rem .82rem;
+}
+
+.live-stat{
+    padding:.56rem .42rem;
+    border-radius:15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.11);
+    text-align:center;
+}
+
+.live-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+}
+
+.live-stat span{
+    display:block;
+    margin-top:.1rem;
+    color:rgba(255,255,255,.78);
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.gas-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#9a3412;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.gas-error{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#991b1b;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.service-area{
+    display:none;
+}
+
+.service-area.show{
+    display:block;
+}
+
+.dashboard-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(250,204,21,.20),transparent 30%),
+        linear-gradient(135deg,#111827,#ff6d00 55%,#ff3d00);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(255,61,0,.18);
+}
+
+.dashboard-main{
+    padding:.95rem;
+}
+
+.dashboard-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.dashboard-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.dashboard-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.dashboard-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.dash-stat{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.dash-stat strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.dash-stat span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.mode-wrap{
+    margin-bottom:.75rem;
+}
+
+.mode-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.mode-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.mode-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.mode-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.mode-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.mode-chip{
+    flex:0 0 auto;
+    border:1px solid #fed7aa;
+    background:#fff;
+    color:#c2410c;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.mode-chip.active{
+    background:#ff6d00;
+    color:#fff;
+    border-color:#ff6d00;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#ff6d00,#ff3d00 58%,#facc15);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(255,61,0,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#c2410c;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.service-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.service-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.service-card:hover{
+    transform:translateY(-2px);
+    border-color:#fdba74;
+}
+
+.service-card.active{
+    border-color:#ff6d00;
+    background:#fff7ed;
+    box-shadow:0 0 0 1px #ff6d00,0 14px 28px rgba(255,61,0,.10);
+}
+
+.service-main{
+    padding:.9rem;
+}
+
+.service-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.service-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.service-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#111827,#ff6d00);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(255,61,0,.14);
+}
+
+.service-name{
+    min-width:0;
+}
+
+.service-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.service-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.service-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.service-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.service-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#c2410c;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-service{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#ff6d00,#ff3d00);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.service-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.service-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #fed7aa;
+    box-shadow:0 12px 24px rgba(255,61,0,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#111827,#ff3d00);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#ff6d00,#ff3d00);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(255,61,0,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+@media(max-width:420px){
+    .gas-center-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .gas-center-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .hero-mini-row,
+    .service-detail{
+        grid-template-columns:1fr;
+    }
+
+    .service-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-service{
+        width:100%;
+    }
+}
+</style>
+
+<div class="gas-center-page">
+    <div class="gas-center-shell">
+
+        {% with pesan = get_flashed_messages(with_categories=true) %}
+            {% if pesan %}
+                {% for kategori, isi in pesan %}
+                    <div class="gas-alert {{ kategori }}">{{ isi }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="gas-topbar">
+            <a href="{{ url_for('lainnya') }}" class="gas-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="gas-chip">
+                <i class="fa-solid fa-fire-flame-simple"></i>
+                Gas
+            </div>
+        </div>
+
+        <div class="gas-hero">
+            <div class="hero-main">
+                <div class="hero-icon">
+                    <i class="fa-solid fa-fire-burner"></i>
+                </div>
+
+                <div>
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                        Dapur Gas Center
+                    </div>
+                    <h2>Bayar & Isi Gas Lebih Menarik</h2>
+                    <p>Masukkan nomor meter atau pelanggan, lalu pilih layanan gas rumah, bisnis, tagihan, atau token.</p>
+                </div>
+            </div>
+
+            <div class="hero-mini-row">
+                <div class="hero-mini">
+                    <strong>Meter</strong>
+                    <span>Validasi</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Gas</strong>
+                    <span>Rumah</span>
+                </div>
+                <div class="hero-mini">
+                    <strong>Token</strong>
+                    <span>Instan</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('gas') }}" id="gasForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="gas">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="panel-card">
+                <div class="section-title">
+                    <div>
+                        <h3>Nomor Meter / Pelanggan</h3>
+                        <p>Masukkan nomor meter gas atau ID pelanggan untuk membuka layanan.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-console">
+                    <div class="input-box">
+                        <input
+                            type="text"
+                            id="nomor_tujuan"
+                            name="nomor_tujuan"
+                            class="input-control"
+                            placeholder="Contoh: 12345678901"
+                            value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                            minlength="5"
+                            maxlength="30"
+                            required
+                            autofocus
+                        >
+                        <i class="fa-solid fa-hashtag"></i>
+                    </div>
+
+                    <div class="input-help">
+                        <span>Gunakan nomor tanpa spasi.</span>
+                        <span id="charCount">0/30</span>
+                    </div>
+
+                    <div class="quick-row">
+                        <button type="button" data-id="12345678901">Contoh Rumah</button>
+                        <button type="button" data-id="880012345678">Contoh Bisnis</button>
+                        <button type="button" data-clear="1">Hapus</button>
+                    </div>
+
+                    <div class="gas-live-card">
+                        <div class="gas-live-head">
+                            <div>
+                                <strong id="gasTitle">Meter Gas Belum Terbaca</strong>
+                                <span id="gasSubtitle">Masukkan nomor meter atau pelanggan untuk melihat layanan.</span>
+                            </div>
+
+                            <div class="flame-icon">
+                                <i class="fa-solid fa-fire-flame-simple"></i>
+                            </div>
+                        </div>
+
+                        <div class="live-stats">
+                            <div class="live-stat">
+                                <strong id="gasStatus">Idle</strong>
+                                <span>Status</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="gasType">Rumah</strong>
+                                <span>Mode</span>
+                            </div>
+                            <div class="live-stat">
+                                <strong id="gasTotal">0</strong>
+                                <span>Layanan</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gas-info" id="gasInfo"></div>
+                <div class="gas-error" id="gasError"></div>
+            </div>
+
+            <div class="service-area" id="serviceArea">
+                <div class="dashboard-card">
+                    <div class="dashboard-main">
+                        <div class="dashboard-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            GAS CENTER SIAP
+                        </div>
+                        <h3 id="dashboardTitle">Panel Layanan Gas</h3>
+                        <p id="dashboardSubtitle">Pilih layanan gas yang sesuai dengan kebutuhan transaksi.</p>
+                    </div>
+
+                    <div class="dashboard-stats">
+                        <div class="dash-stat">
+                            <strong id="dashId">-</strong>
+                            <span>ID</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashMode">Rumah</strong>
+                            <span>Mode</span>
+                        </div>
+                        <div class="dash-stat">
+                            <strong id="dashTotal">0</strong>
+                            <span>Layanan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mode-wrap">
+                    <div class="mode-title">
+                        <div>
+                            <strong>Pilih jenis layanan gas</strong>
+                            <span>Geser untuk memilih kategori transaksi</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-strip">
+                        <button type="button" class="mode-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="mode-chip" data-filter="bill">Tagihan</button>
+                        <button type="button" class="mode-chip" data-filter="token">Token</button>
+                        <button type="button" class="mode-chip" data-filter="home">Rumah</button>
+                        <button type="button" class="mode-chip" data-filter="business">Bisnis</button>
+                        <button type="button" class="mode-chip" data-filter="cheap">Termurah</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Layanan Gas Lebih Mudah Dipilih</strong>
+                        <span>Tagihan, token, rumah tangga, dan bisnis dibuat dalam tampilan yang jelas.</span>
+                    </div>
+                    <div class="promo-badge">GAS</div>
+                </div>
+
+                <div class="service-list" id="serviceList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Gas
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Meter / Pelanggan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Jenis Layanan</span>
+                        <b id="sumJenis">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Layanan Gas</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Keterangan</span>
+                        <b id="sumInfo">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Harga</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    {% if produk_final %}
+                    <button type="submit" class="submit-btn" id="btnCek">
+                        <i class="fa-solid fa-fire-flame-simple"></i>
+                        Bayar / Isi Gas Sekarang
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProdukGas" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        <span
+            data-kode="{{ kode }}"
+            data-nama="{{ nama|e }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const kodeProduk=document.getElementById('kode_produk');
+    const gasInfo=document.getElementById('gasInfo');
+    const gasError=document.getElementById('gasError');
+    const serviceArea=document.getElementById('serviceArea');
+    const serviceList=document.getElementById('serviceList');
+    const summaryBox=document.getElementById('summaryBox');
+    const form=document.getElementById('gasForm');
+    const btnCek=document.getElementById('btnCek');
+
+    const gasTitle=document.getElementById('gasTitle');
+    const gasSubtitle=document.getElementById('gasSubtitle');
+    const gasStatus=document.getElementById('gasStatus');
+    const gasType=document.getElementById('gasType');
+    const gasTotal=document.getElementById('gasTotal');
+
+    const dashboardTitle=document.getElementById('dashboardTitle');
+    const dashboardSubtitle=document.getElementById('dashboardSubtitle');
+    const dashId=document.getElementById('dashId');
+    const dashMode=document.getElementById('dashMode');
+    const dashTotal=document.getElementById('dashTotal');
+
+    let activeFilter='recommended';
+    let selectedService=null;
+
+    const dataProduk=Array.from(document.querySelectorAll('#dataProdukGas span'));
+
+    function cleanValue(value){
+        return (value || '').replace(/\s+/g,'').replace(/[^a-zA-Z0-9]/g,'');
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function serviceType(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+
+        if(text.includes('token')) return 'token';
+        if(text.includes('bisnis')) return 'business';
+        if(text.includes('rumah')) return 'home';
+        if(text.includes('pgn') || text.includes('pertagas') || text.includes('negara')) return 'bill';
+
+        return 'bill';
+    }
+
+    function typeLabel(type){
+        if(type==='token') return 'Token';
+        if(type==='business') return 'Bisnis';
+        if(type==='home') return 'Rumah';
+        if(type==='bill') return 'Tagihan';
+
+        return 'Gas';
+    }
+
+    function serviceInfo(type){
+        if(type==='token') return 'Token gas diproses setelah pembayaran berhasil.';
+        if(type==='business') return 'Cocok untuk pelanggan bisnis atau usaha.';
+        if(type==='home') return 'Cocok untuk pelanggan rumah tangga.';
+        return 'Cek atau bayar tagihan gas pelanggan.';
+    }
+
+    function getServices(){
+        return dataProduk.map(function(item){
+            const type=serviceType(item.dataset.nama,item.dataset.kode);
+
+            return {
+                kode:item.dataset.kode,
+                nama:item.dataset.nama,
+                harga:item.dataset.harga,
+                hargaAngka:parseMoney(item.dataset.harga),
+                type:type,
+                label:typeLabel(type),
+                info:serviceInfo(type)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                const order={bill:0,home:1,token:2,business:3};
+                return (order[a.type]||9)-(order[b.type]||9) || a.hargaAngka-b.hargaAngka;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){
+                return a.hargaAngka-b.hargaAngka;
+            });
+        }
+
+        return list.filter(function(item){
+            return item.type===activeFilter;
+        });
+    }
+
+    function resetState(){
+        selectedService=null;
+        kodeProduk.value='';
+        serviceArea.classList.remove('show');
+        summaryBox.style.display='none';
+        gasInfo.style.display='none';
+        gasError.style.display='none';
+
+        gasTitle.textContent='Meter Gas Belum Terbaca';
+        gasSubtitle.textContent='Masukkan nomor meter atau pelanggan untuk melihat layanan.';
+        gasStatus.textContent='Idle';
+        gasType.textContent='Rumah';
+        gasTotal.textContent='0';
+    }
+
+    function handleInput(){
+        let value=cleanValue(nomorInput.value);
+
+        if(value.length>30){
+            value=value.slice(0,30);
+        }
+
+        nomorInput.value=value;
+        charCount.textContent=value.length+'/30';
+
+        if(!value){
+            resetState();
+            return;
+        }
+
+        if(value.length<5){
+            selectedService=null;
+            kodeProduk.value='';
+            serviceArea.classList.remove('show');
+            summaryBox.style.display='none';
+
+            gasTitle.textContent='Nomor Belum Lengkap';
+            gasSubtitle.textContent='Lanjutkan input nomor meter atau pelanggan.';
+            gasStatus.textContent='Check';
+            gasType.textContent='-';
+            gasTotal.textContent='0';
+
+            gasInfo.style.display='none';
+            gasError.style.display='block';
+            gasError.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor meter atau pelanggan masih terlalu pendek.';
+            return;
+        }
+
+        openServices();
+    }
+
+    function openServices(){
+        const value=cleanValue(nomorInput.value);
+        const total=getServices().length;
+
+        gasTitle.textContent='Meter Gas Terbaca';
+        gasSubtitle.textContent='ID '+value+' siap memilih layanan gas.';
+        gasStatus.textContent='Ready';
+        gasType.textContent='Aktif';
+        gasTotal.textContent=total;
+
+        dashboardTitle.textContent='Dapur Gas Center';
+        dashboardSubtitle.textContent='ID '+value+' siap diproses dengan layanan gas pilihan.';
+        dashId.textContent=value.slice(-4);
+        dashMode.textContent='Aktif';
+        dashTotal.textContent=total;
+
+        gasInfo.style.display='block';
+        gasInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format nomor sudah cukup. Pilih layanan gas di bawah.';
+
+        gasError.style.display='none';
+        serviceArea.classList.add('show');
+
+        renderServices();
+    }
+
+    function renderServices(){
+        serviceList.innerHTML='';
+        selectedService=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        const list=applyFilter(getServices());
+
+        dashTotal.textContent=getServices().length;
+        gasTotal.textContent=getServices().length;
+
+        if(!list.length){
+            serviceList.innerHTML='<div class="empty-state">Layanan gas pada kategori ini belum tersedia. Coba pilih kategori lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='service-card';
+
+            card.innerHTML=
+                '<div class="service-main">'+
+                    '<div class="service-top">'+
+                        '<div class="service-left">'+
+                            '<div class="service-logo">'+item.label.slice(0,2).toUpperCase()+'</div>'+
+                            '<div class="service-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+item.label+' · Layanan Gas</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="service-tag">'+item.label+'</div>'+
+                    '</div>'+
+
+                    '<div class="service-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Jenis Layanan</span>'+
+                            '<strong>'+item.label+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Estimasi Proses</span>'+
+                            '<strong>1-5 menit</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="service-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.harga+'</strong>'+
+                            '<small>'+item.info+'</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-service">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="service-benefits">'+
+                    '<span><i class="fa-solid fa-fire-flame-simple"></i> '+item.label+'</span>'+
+                    '<span><i class="fa-solid fa-bolt"></i> Auto proses</span>'+
+                    '<span><i class="fa-solid fa-shield-halved"></i> Aman</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-service').addEventListener('click',function(){
+                document.querySelectorAll('.service-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedService=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            serviceList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedService){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanValue(nomorInput.value);
+        document.getElementById('sumJenis').textContent=selectedService.label;
+        document.getElementById('sumProduk').textContent=selectedService.nama;
+        document.getElementById('sumInfo').textContent=selectedService.info;
+        document.getElementById('sumHarga').textContent=selectedService.harga;
+
+        summaryBox.style.display='block';
+    }
+
+    nomorInput.addEventListener('input',handleInput);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            handleInput();
+        });
+    });
+
+    document.querySelectorAll('.mode-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.mode-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderServices();
+        });
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanValue(nomorInput.value);
+
+        if(!nomor || nomor.length<5){
+            e.preventDefault();
+            alert('Masukkan nomor meter atau pelanggan terlebih dahulu.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!selectedService || !kodeProduk.value){
+            e.preventDefault();
+            alert('Silakan pilih nominal atau jenis gas terlebih dahulu.');
+            return;
+        }
+
+        btnCek.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Gas...';
+        btnCek.style.opacity='0.75';
+        btnCek.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

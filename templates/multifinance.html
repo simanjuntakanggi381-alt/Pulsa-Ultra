@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block konten %}
+<div class="container py-4">
+  <h4 class="mb-3 text-center">Angsuran Multifinance</h4>
+
+  {% with pesan = get_flashed_messages(with_categories=true) %}
+    {% if pesan %}
+      {% for kategori, isi in pesan %}
+        <div class="alert alert-{{ kategori }} alert-dismissible fade show" role="alert">
+          {{ isi }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" class="mb-4">
+    <div class="mb-3">
+      <label class="form-label">Nomor Kontrak / Angsuran</label>
+      <input type="text" name="nomor_tujuan" class="form-control" placeholder="Masukkan nomor kontrak" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Pilih Perusahaan Pembiayaan</label>
+      <select name="kode_produk" class="form-select" required>
+        <option value="">-- Pilih --</option>
+        {% for kode, nama in daftar_produk.items() %}
+        <option value="{{ kode }}">{{ nama }} - {{ format_uang(harga[kode]) }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Bayar Angsuran</button>
+  </form>
+</div>
+{% endblock %}

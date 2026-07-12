@@ -1,0 +1,1891 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_aktif = {
+    'AKTIF_TSEL_7': 'Telkomsel Masa Aktif 7 Hari',
+    'AKTIF_TSEL_30': 'Telkomsel Masa Aktif 30 Hari',
+    'AKTIF_TSEL_90': 'Telkomsel Masa Aktif 90 Hari',
+    'AKTIF_ISAT_30': 'Indosat Masa Aktif 30 Hari',
+    'AKTIF_XL_30': 'XL Masa Aktif 30 Hari',
+    'AKTIF_AXIS_30': 'AXIS Masa Aktif 30 Hari',
+    'AKTIF_TRI_30': 'Tri Masa Aktif 30 Hari',
+    'AKTIF_SMART_30': 'Smartfren Masa Aktif 30 Hari',
+    'MASA_AKTIF_TSEL_30': 'Telkomsel Masa Aktif 30 Hari',
+    'MASA_AKTIF_ISAT_30': 'Indosat Masa Aktif 30 Hari'
+} %}
+
+{% set fallback_harga_aktif = {
+    'AKTIF_TSEL_7': 5000,
+    'AKTIF_TSEL_30': 15000,
+    'AKTIF_TSEL_90': 35000,
+    'AKTIF_ISAT_30': 12000,
+    'AKTIF_XL_30': 12000,
+    'AKTIF_AXIS_30': 12000,
+    'AKTIF_TRI_30': 10000,
+    'AKTIF_SMART_30': 10000,
+    'MASA_AKTIF_TSEL_30': 15000,
+    'MASA_AKTIF_ISAT_30': 12000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_aktif %}
+{% set harga_final = harga_map if harga_map else fallback_harga_aktif %}
+
+<style>
+:root{
+    --sv-orange:#ff8a00;
+    --sv-orange2:#f97316;
+    --sv-yellow:#facc15;
+    --sv-amber:#f59e0b;
+    --sv-blue:#2563eb;
+    --sv-sky:#0ea5e9;
+    --sv-green:#16a34a;
+    --sv-red:#ef4444;
+    --sv-purple:#7c3aed;
+    --sv-dark:#0f172a;
+    --sv-text:#334155;
+    --sv-muted:#64748b;
+    --sv-border:#e2e8f0;
+    --sv-soft:#f8fafc;
+    --sv-shadow:0 18px 42px rgba(15,23,42,.10);
+    --sv-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(255,138,0,.17),transparent 34%),
+        radial-gradient(circle at top right,rgba(14,165,233,.13),transparent 34%),
+        radial-gradient(circle at bottom,rgba(250,204,21,.12),transparent 42%),
+        linear-gradient(180deg,#fffaf2 0%,#f8fafc 46%,#ffffff 100%);
+}
+
+.simvault-page{
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+    padding:.8rem .7rem 5rem;
+    box-sizing:border-box;
+    color:var(--sv-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.simvault-shell{
+    border-radius:30px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(255,138,0,.12),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(14,165,233,.08),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(255,138,0,.15);
+    box-shadow:var(--sv-shadow);
+    overflow:hidden;
+}
+
+.simvault-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#fff7ed;
+    color:#9a3412;
+    border:1px solid #fed7aa;
+}
+
+.simvault-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.simvault-alert.error,
+.simvault-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.simvault-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.simvault-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.simvault-back,
+.simvault-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.simvault-back{
+    background:#fff;
+    border:1px solid var(--sv-border);
+    color:#ea580c;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.simvault-chip{
+    background:#fff7ed;
+    color:#c2410c;
+    border:1px solid #fed7aa;
+}
+
+.sim-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:27px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 88% 10%,rgba(14,165,233,.22),transparent 28%),
+        linear-gradient(135deg,#111827 0%,#f97316 54%,#ff8a00 100%);
+    box-shadow:0 16px 32px rgba(249,115,22,.25);
+}
+
+.sim-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.13);
+}
+
+.sim-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.sim-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.sim-hero-icon{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
+    border-radius:18px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.14rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.sim-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.sim-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.08rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.sim-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-menu{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:.38rem;
+    margin-top:.74rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.hero-menu::-webkit-scrollbar{
+    display:none;
+}
+
+.hero-menu button{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border-radius:999px;
+    padding:.35rem .58rem;
+    font-size:.62rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.simvault-card{
+    border-radius:25px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #fed7aa;
+    box-shadow:var(--sv-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#fff7ed;
+    color:#c2410c;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:55px;
+    border-radius:16px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#ff8a00;
+    box-shadow:0 0 0 4px rgba(255,138,0,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.sim-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#9a3412;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.operator-strip{
+    display:flex;
+    gap:.52rem;
+    overflow-x:auto;
+    padding:.15rem 0 .35rem;
+    scrollbar-width:none;
+}
+
+.operator-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.operator-card{
+    flex:0 0 118px;
+    min-height:104px;
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid #edf2f7;
+    border-radius:19px;
+    background:
+        radial-gradient(circle at top right,rgba(255,138,0,.10),transparent 34%),
+        #fff;
+    padding:.78rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.operator-card:hover{
+    transform:translateY(-2px);
+    border-color:#fdba74;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.operator-card.active{
+    border-color:#ff8a00;
+    background:#fff7ed;
+    box-shadow:0 12px 24px rgba(255,138,0,.12);
+}
+
+.operator-logo{
+    width:38px;
+    height:38px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#f97316,#ff8a00);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.operator-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.78rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.operator-card span{
+    display:block;
+    margin-top:.2rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.ai-panel{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.42rem;
+    margin-top:.8rem;
+    padding:.65rem;
+    border-radius:20px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+}
+
+.ai-box{
+    min-height:48px;
+    border-radius:15px;
+    background:#fff;
+    border:1px solid #ffedd5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.ai-box strong{
+    color:#0f172a;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.ai-box span{
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.scan-btn{
+    width:100%;
+    min-height:56px;
+    border:0;
+    border-radius:18px;
+    margin-top:.82rem;
+    color:#fff;
+    background:linear-gradient(135deg,#f97316,#ff8a00);
+    font-size:.92rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(249,115,22,.24);
+    transition:.2s ease;
+}
+
+.scan-btn:hover{
+    transform:translateY(-1px);
+}
+
+.compact-sim{
+    display:none;
+    position:sticky;
+    top:.5rem;
+    z-index:20;
+    margin-bottom:.75rem;
+    padding:.75rem;
+    border-radius:21px;
+    background:rgba(255,255,255,.94);
+    border:1px solid #fed7aa;
+    box-shadow:0 14px 30px rgba(15,23,42,.12);
+    backdrop-filter:blur(10px);
+}
+
+.compact-sim.show{
+    display:block;
+}
+
+.compact-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+}
+
+.compact-inner strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.compact-inner span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:750;
+}
+
+.compact-edit{
+    flex:0 0 auto;
+    border:0;
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:999px;
+    background:#fff7ed;
+    color:#c2410c;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.vault-dashboard{
+    display:none;
+}
+
+.vault-dashboard.show{
+    display:block;
+}
+
+.vault-card{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(14,165,233,.22),transparent 30%),
+        linear-gradient(135deg,#0f172a,#f97316 55%,#ff8a00);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 18px 36px rgba(249,115,22,.18);
+}
+
+.vault-main{
+    padding:.95rem;
+}
+
+.vault-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.16);
+    color:#dcfce7;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.vault-card h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.vault-card p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.vault-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.stat-box{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.stat-box strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.stat-box span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.duration-wrap{
+    margin-bottom:.75rem;
+}
+
+.duration-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.duration-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.duration-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.duration-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.duration-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.duration-chip{
+    flex:0 0 auto;
+    border:1px solid #fed7aa;
+    background:#fff;
+    color:#c2410c;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.duration-chip.active{
+    background:#f97316;
+    color:#fff;
+    border-color:#f97316;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#f97316,#ff8a00 58%,#facc15);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(249,115,22,.16);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#c2410c;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.package-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.package-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.package-card:hover{
+    transform:translateY(-2px);
+    border-color:#fdba74;
+}
+
+.package-card.active{
+    border-color:#ff8a00;
+    background:#fff7ed;
+    box-shadow:0 0 0 1px #ff8a00,0 14px 28px rgba(249,115,22,.10);
+}
+
+.package-main{
+    padding:.9rem;
+}
+
+.package-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.package-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.package-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#111827,#f97316);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(249,115,22,.14);
+}
+
+.package-name{
+    min-width:0;
+}
+
+.package-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.package-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.package-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.package-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.package-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#ea580c;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-package{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#f97316,#ff8a00);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.package-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.package-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #fed7aa;
+    box-shadow:0 12px 24px rgba(249,115,22,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#0f172a,#f97316);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#f97316,#ff8a00);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(249,115,22,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:420px){
+    .simvault-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .simvault-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .operator-card{
+        flex-basis:110px;
+    }
+
+    .ai-panel{
+        grid-template-columns:1fr;
+    }
+
+    .package-detail{
+        grid-template-columns:1fr;
+    }
+
+    .package-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-package{
+        width:100%;
+    }
+}
+</style>
+
+<div class="simvault-page">
+    <div class="simvault-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="simvault-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="simvault-topbar">
+            <a href="{{ url_for('lainnya') }}" class="simvault-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="simvault-chip">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Masa Aktif
+            </div>
+        </div>
+
+        <div class="sim-hero" id="heroBox">
+            <div class="sim-hero-main">
+                <div class="sim-hero-icon">
+                    <i class="fa-solid fa-sim-card"></i>
+                </div>
+
+                <div>
+                    <div class="sim-badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        SIM Life Vault
+                    </div>
+                    <h2>Perpanjang Masa Aktif Lebih Pintar</h2>
+                    <p>Scan nomor, deteksi operator, lalu pilih banyak durasi masa aktif dalam tampilan premium.</p>
+                </div>
+            </div>
+
+            <div class="hero-menu">
+                <button type="button" data-operator="TSEL">Telkomsel</button>
+                <button type="button" data-operator="ISAT">Indosat</button>
+                <button type="button" data-operator="XL">XL</button>
+                <button type="button" data-operator="AXIS">AXIS</button>
+                <button type="button" data-operator="TRI">Tri</button>
+                <button type="button" data-operator="SMART">Smartfren</button>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('masa_aktif') }}" id="aktifForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="masa_aktif">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="simvault-card" id="searchCard">
+                <div class="section-title">
+                    <div>
+                        <h3>Scan Nomor HP</h3>
+                        <p>Masukkan nomor HP agar sistem mendeteksi operator dan rekomendasi masa aktif.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="tel"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 081234567890"
+                        value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                        inputmode="numeric"
+                        minlength="9"
+                        maxlength="15"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan angka tanpa spasi.</span>
+                    <span id="charCount">0/15</span>
+                </div>
+
+                <div class="quick-row">
+                    <button type="button" data-id="081234567890">Contoh TSEL</button>
+                    <button type="button" data-id="085712345678">Contoh ISAT</button>
+                    <button type="button" data-id="089912345678">Contoh TRI</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="sim-info" id="simInfo"></div>
+
+                <div style="margin-top:1rem;">
+                    <div class="section-title">
+                        <div>
+                            <h3>Operator Terdeteksi</h3>
+                            <p>Pilih manual jika hasil deteksi belum sesuai.</p>
+                        </div>
+                        <span class="section-pill">Step 2</span>
+                    </div>
+
+                    <div class="operator-strip">
+                        <button type="button" class="operator-card" data-operator="TSEL">
+                            <div class="operator-logo">TS</div>
+                            <strong>Telkomsel</strong>
+                            <span>0811, 0812, 0822</span>
+                        </button>
+
+                        <button type="button" class="operator-card" data-operator="ISAT">
+                            <div class="operator-logo">IS</div>
+                            <strong>Indosat</strong>
+                            <span>0855, 0857, 0858</span>
+                        </button>
+
+                        <button type="button" class="operator-card" data-operator="XL">
+                            <div class="operator-logo">XL</div>
+                            <strong>XL</strong>
+                            <span>0817, 0818, 0878</span>
+                        </button>
+
+                        <button type="button" class="operator-card" data-operator="AXIS">
+                            <div class="operator-logo">AX</div>
+                            <strong>AXIS</strong>
+                            <span>0831, 0838</span>
+                        </button>
+
+                        <button type="button" class="operator-card" data-operator="TRI">
+                            <div class="operator-logo">TR</div>
+                            <strong>Tri</strong>
+                            <span>0895, 0899</span>
+                        </button>
+
+                        <button type="button" class="operator-card" data-operator="SMART">
+                            <div class="operator-logo">SM</div>
+                            <strong>Smartfren</strong>
+                            <span>0881, 0889</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ai-panel">
+                    <div class="ai-box">
+                        <strong>Detect</strong>
+                        <span>Operator</span>
+                    </div>
+                    <div class="ai-box">
+                        <strong>Vault</strong>
+                        <span>Proteksi nomor</span>
+                    </div>
+                    <div class="ai-box">
+                        <strong>Smart Plan</strong>
+                        <span>Banyak pilihan</span>
+                    </div>
+                </div>
+
+                <button type="button" class="scan-btn" id="scanBtn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Scan Nomor & Cari Paket
+                </button>
+            </div>
+
+            <div class="compact-sim" id="compactSim">
+                <div class="compact-inner">
+                    <div>
+                        <strong id="compactTitle">-</strong>
+                        <span id="compactInfo">-</span>
+                    </div>
+                    <button type="button" class="compact-edit" id="editBtn">Ubah</button>
+                </div>
+            </div>
+
+            <div class="vault-dashboard" id="vaultDashboard">
+                <div class="vault-card">
+                    <div class="vault-main">
+                        <div class="vault-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            NOMOR SIAP DIPERPANJANG
+                        </div>
+                        <h3 id="vaultTitle">SIM Life Vault Dashboard</h3>
+                        <p id="vaultSubtitle">Pilih durasi masa aktif yang paling sesuai dengan kebutuhan kartu.</p>
+                    </div>
+
+                    <div class="vault-stats">
+                        <div class="stat-box">
+                            <strong id="statOperator">-</strong>
+                            <span>Operator</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong id="statSafe">Aman</strong>
+                            <span>Status</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong id="statChoice">8</strong>
+                            <span>Pilihan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="duration-wrap">
+                    <div class="duration-title">
+                        <div>
+                            <strong>Filter durasi</strong>
+                            <span>Geser untuk pilih rekomendasi</span>
+                        </div>
+                    </div>
+
+                    <div class="duration-strip">
+                        <button type="button" class="duration-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="duration-chip" data-filter="short">Pendek</button>
+                        <button type="button" class="duration-chip" data-filter="monthly">30 Hari</button>
+                        <button type="button" class="duration-chip" data-filter="medium">60 Hari</button>
+                        <button type="button" class="duration-chip" data-filter="long">90+ Hari</button>
+                        <button type="button" class="duration-chip" data-filter="cheap">Termurah</button>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Smart Active Recommendation</strong>
+                        <span>Pilihan durasi dibuat lebih banyak, rapi, dan mudah dipahami pengguna.</span>
+                    </div>
+                    <div class="promo-badge">VAULT AI</div>
+                </div>
+
+                <div class="package-list" id="packageList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Masa Aktif
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor HP</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Operator</span>
+                        <b id="sumOperator">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Paket</span>
+                        <b id="sumPackage">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Estimasi Aktif Sampai</span>
+                        <b id="sumExpired">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Pembayaran</span>
+                            <b id="sumPrice">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Perpanjang Masa Aktif
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="dataProdukAktif" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set harga_produk = harga_final.get(kode, 0) %}
+        {% set kode_upper = kode|upper %}
+        {% set nama_upper = nama|upper %}
+
+        {% if 'TSEL' in kode_upper or 'TELKOMSEL' in nama_upper %}
+            {% set operator = 'TSEL' %}
+        {% elif 'ISAT' in kode_upper or 'INDOSAT' in nama_upper %}
+            {% set operator = 'ISAT' %}
+        {% elif 'AXIS' in kode_upper or 'AXIS' in nama_upper %}
+            {% set operator = 'AXIS' %}
+        {% elif 'XL' in kode_upper or 'XL' in nama_upper %}
+            {% set operator = 'XL' %}
+        {% elif 'TRI' in kode_upper or 'TRI' in nama_upper %}
+            {% set operator = 'TRI' %}
+        {% elif 'SMART' in kode_upper or 'SMARTFREN' in nama_upper %}
+            {% set operator = 'SMART' %}
+        {% else %}
+            {% set operator = 'LAINNYA' %}
+        {% endif %}
+
+        <span
+            data-kode="{{ kode }}"
+            data-operator="{{ operator }}"
+            data-nama="{{ nama|e }}"
+            data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const heroBox=document.getElementById('heroBox');
+    const searchCard=document.getElementById('searchCard');
+    const compactSim=document.getElementById('compactSim');
+    const compactTitle=document.getElementById('compactTitle');
+    const compactInfo=document.getElementById('compactInfo');
+    const editBtn=document.getElementById('editBtn');
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const simInfo=document.getElementById('simInfo');
+    const scanBtn=document.getElementById('scanBtn');
+    const vaultDashboard=document.getElementById('vaultDashboard');
+    const vaultTitle=document.getElementById('vaultTitle');
+    const vaultSubtitle=document.getElementById('vaultSubtitle');
+    const statOperator=document.getElementById('statOperator');
+    const statChoice=document.getElementById('statChoice');
+    const packageList=document.getElementById('packageList');
+    const summaryBox=document.getElementById('summaryBox');
+    const kodeProduk=document.getElementById('kode_produk');
+    const form=document.getElementById('aktifForm');
+    const submitBtn=document.getElementById('submitBtn');
+
+    let activeOperator='';
+    let activeFilter='recommended';
+    let selectedPackage=null;
+
+    const operatorNames={
+        TSEL:'Telkomsel',
+        ISAT:'Indosat',
+        XL:'XL',
+        AXIS:'AXIS',
+        TRI:'Tri',
+        SMART:'Smartfren',
+        LAINNYA:'Operator Lain'
+    };
+
+    const planLibrary=[
+        {days:7,title:'Quick Active 7 Hari',tag:'Kilat',type:'short',note:'Cocok untuk kartu yang hampir tenggang.'},
+        {days:14,title:'Safe Extend 14 Hari',tag:'Aman',type:'short',note:'Durasi pendek tapi lebih nyaman.'},
+        {days:30,title:'Monthly Shield 30 Hari',tag:'Favorit',type:'monthly',note:'Pilihan paling seimbang untuk penggunaan bulanan.'},
+        {days:45,title:'Extra Active 45 Hari',tag:'Extra',type:'medium',note:'Tambahan aktif lebih panjang dari paket bulanan.'},
+        {days:60,title:'Double Month 60 Hari',tag:'Hemat',type:'medium',note:'Aman untuk dua bulan ke depan.'},
+        {days:90,title:'Long Guard 90 Hari',tag:'Long',type:'long',note:'Pilihan panjang untuk menjaga kartu tetap hidup.'},
+        {days:180,title:'Half Year Vault 180 Hari',tag:'Premium',type:'long',note:'Perlindungan masa aktif jangka panjang.'},
+        {days:365,title:'Ultra Life 365 Hari',tag:'Max',type:'long',note:'Durasi paling panjang untuk nomor utama.'}
+    ];
+
+    function cleanNumber(value){
+        return (value || '').replace(/[^0-9]/g,'');
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function rupiah(num){
+        return 'Rp '+String(Math.max(0,Math.round(num))).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function moneyText(text){
+        text=String(text || '0').trim();
+        if(text.toLowerCase().indexOf('rp')===0) return text;
+        return 'Rp '+text;
+    }
+
+    function detectOperator(number){
+        const n=cleanNumber(number);
+
+        if(/^(0811|0812|0813|0821|0822|0823|0852|0853)/.test(n)) return 'TSEL';
+        if(/^(0855|0856|0857|0858|0814|0815|0816)/.test(n)) return 'ISAT';
+        if(/^(0817|0818|0819|0859|0877|0878)/.test(n)) return 'XL';
+        if(/^(0831|0832|0833|0838)/.test(n)) return 'AXIS';
+        if(/^(0895|0896|0897|0898|0899)/.test(n)) return 'TRI';
+        if(/^(0881|0882|0883|0884|0885|0886|0887|0888|0889)/.test(n)) return 'SMART';
+
+        return '';
+    }
+
+    function durationFromName(name,kode){
+        const text=(name+' '+kode).toLowerCase();
+
+        if(text.includes('365')) return 365;
+        if(text.includes('180')) return 180;
+        if(text.includes('90')) return 90;
+        if(text.includes('60')) return 60;
+        if(text.includes('45')) return 45;
+        if(text.includes('30')) return 30;
+        if(text.includes('14')) return 14;
+        if(text.includes('7')) return 7;
+
+        return 30;
+    }
+
+    function addDays(days){
+        const d=new Date();
+        d.setDate(d.getDate()+days);
+        return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+    }
+
+    function setOperator(operator){
+        activeOperator=operator;
+
+        document.querySelectorAll('.operator-card').forEach(function(card){
+            card.classList.toggle('active',card.dataset.operator===operator);
+        });
+    }
+
+    function updateInfo(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>15){
+            nomor=nomor.slice(0,15);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/15';
+
+        if(!nomor){
+            simInfo.style.display='none';
+            setOperator('');
+            return;
+        }
+
+        if(nomor.length<9){
+            simInfo.style.display='block';
+            simInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor HP masih terlalu pendek.';
+            setOperator('');
+            return;
+        }
+
+        const detected=detectOperator(nomor);
+
+        if(detected){
+            setOperator(detected);
+            simInfo.style.display='block';
+            simInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Operator terdeteksi: <strong>'+operatorNames[detected]+'</strong>. Siap cari paket masa aktif.';
+        }else{
+            simInfo.style.display='block';
+            simInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terdeteksi otomatis. Pilih operator manual.';
+        }
+
+        if(vaultDashboard.classList.contains('show')){
+            renderPackages();
+        }
+    }
+
+    function rawProducts(){
+        return Array.from(document.querySelectorAll('#dataProdukAktif span')).map(function(item){
+            return {
+                kode:item.dataset.kode,
+                operator:item.dataset.operator,
+                nama:item.dataset.nama,
+                harga:moneyText(item.dataset.harga),
+                angka:parseMoney(item.dataset.harga),
+                days:durationFromName(item.dataset.nama,item.dataset.kode)
+            };
+        });
+    }
+
+    function operatorProducts(){
+        let list=rawProducts().filter(function(item){
+            return item.operator===activeOperator;
+        });
+
+        if(!list.length){
+            list=rawProducts();
+        }
+
+        return list;
+    }
+
+    function nearestProduct(days){
+        const list=operatorProducts();
+
+        if(!list.length){
+            return {
+                kode:'',
+                nama:'Paket Masa Aktif '+days+' Hari',
+                harga:rupiah(days*550),
+                angka:days*550,
+                days:days
+            };
+        }
+
+        let exact=list.find(function(item){
+            return item.days===days;
+        });
+
+        if(exact) return exact;
+
+        return list.slice().sort(function(a,b){
+            return Math.abs(a.days-days)-Math.abs(b.days-days);
+        })[0];
+    }
+
+    function simulatedPrice(days, matched){
+        const exact=matched && matched.days===days;
+
+        if(exact){
+            return matched.angka;
+        }
+
+        let base=0;
+
+        if(activeOperator==='TSEL') base=5200;
+        else if(activeOperator==='ISAT') base=4600;
+        else if(activeOperator==='XL') base=4800;
+        else if(activeOperator==='AXIS') base=4300;
+        else if(activeOperator==='TRI') base=3900;
+        else if(activeOperator==='SMART') base=4000;
+        else base=4500;
+
+        let price=base+(days*430);
+
+        if(days>=90) price=base+(days*330);
+        if(days>=180) price=base+(days*280);
+        if(days>=365) price=base+(days*220);
+
+        return Math.round(price/500)*500;
+    }
+
+    function buildPlans(){
+        if(!activeOperator) return [];
+
+        return planLibrary.map(function(plan){
+            const matched=nearestProduct(plan.days);
+            const price=simulatedPrice(plan.days,matched);
+
+            return {
+                kode:matched.kode,
+                nama:plan.title+' - '+operatorNames[activeOperator],
+                matchedName:matched.nama,
+                days:plan.days,
+                tag:plan.tag,
+                type:plan.type,
+                note:plan.note,
+                price:price,
+                priceText:rupiah(price),
+                expired:addDays(plan.days)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                if(a.days===30 && b.days!==30) return -1;
+                if(b.days===30 && a.days!==30) return 1;
+                return a.days-b.days;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){return a.price-b.price;});
+        }
+
+        if(activeFilter==='short'){
+            return list.filter(function(item){return item.type==='short';});
+        }
+
+        if(activeFilter==='monthly'){
+            return list.filter(function(item){return item.days===30;});
+        }
+
+        if(activeFilter==='medium'){
+            return list.filter(function(item){return item.type==='medium';});
+        }
+
+        if(activeFilter==='long'){
+            return list.filter(function(item){return item.type==='long';});
+        }
+
+        return list;
+    }
+
+    function validateSearch(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<9){
+            alert('Masukkan nomor HP minimal 9 digit.');
+            nomorInput.focus();
+            return false;
+        }
+
+        if(!activeOperator){
+            alert('Pilih operator terlebih dahulu.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function renderPackages(){
+        packageList.innerHTML='';
+        selectedPackage=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        const list=applyFilter(buildPlans());
+
+        vaultTitle.textContent='SIM Life Vault '+operatorNames[activeOperator];
+        vaultSubtitle.textContent='Nomor '+cleanNumber(nomorInput.value)+' berhasil discan. Pilihan masa aktif tersedia lengkap.';
+        compactTitle.textContent=operatorNames[activeOperator];
+        compactInfo.textContent='Nomor '+cleanNumber(nomorInput.value);
+        statOperator.textContent=operatorNames[activeOperator] || '-';
+        statChoice.textContent=buildPlans().length;
+
+        if(!list.length){
+            packageList.innerHTML='<div class="empty-state">Paket pada filter ini belum tersedia. Coba pilih filter lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='package-card';
+
+            card.innerHTML=
+                '<div class="package-main">'+
+                    '<div class="package-top">'+
+                        '<div class="package-left">'+
+                            '<div class="package-logo">'+activeOperator.slice(0,2)+'</div>'+
+                            '<div class="package-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+item.note+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="package-tag">'+item.tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="package-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Durasi Aktif</span>'+
+                            '<strong>'+item.days+' Hari</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Aktif Sampai</span>'+
+                            '<strong>'+item.expired+'</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="package-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total pembayaran</span>'+
+                            '<strong>'+item.priceText+'</strong>'+
+                            '<small>Diproses via '+item.matchedName+'</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-package">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="package-benefits">'+
+                    '<span><i class="fa-solid fa-shield-halved"></i> SIM vault</span>'+
+                    '<span><i class="fa-solid fa-clock"></i> '+item.days+' hari</span>'+
+                    '<span><i class="fa-solid fa-calendar-check"></i> '+item.expired+'</span>'+
+                    '<span><i class="fa-solid fa-bolt"></i> Auto proses</span>'+
+                '</div>';
+
+            card.querySelector('.choose-package').addEventListener('click',function(){
+                document.querySelectorAll('.package-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedPackage=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            packageList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedPackage){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
+        document.getElementById('sumOperator').textContent=operatorNames[activeOperator] || '-';
+        document.getElementById('sumPackage').textContent=selectedPackage.nama;
+        document.getElementById('sumExpired').textContent=selectedPackage.days+' Hari · '+selectedPackage.expired;
+        document.getElementById('sumPrice').textContent=selectedPackage.priceText;
+
+        summaryBox.style.display='block';
+    }
+
+    function enterDashboard(){
+        heroBox.classList.add('hidden');
+        searchCard.classList.add('hidden');
+        compactSim.classList.add('show');
+        vaultDashboard.classList.add('show');
+
+        renderPackages();
+
+        setTimeout(function(){
+            vaultDashboard.scrollIntoView({behavior:'smooth',block:'start'});
+        },120);
+    }
+
+    nomorInput.addEventListener('input',updateInfo);
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInfo();
+        });
+    });
+
+    document.querySelectorAll('.operator-card').forEach(function(card){
+        card.addEventListener('click',function(){
+            setOperator(card.dataset.operator);
+
+            simInfo.style.display='block';
+            simInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Operator dipilih manual: <strong>'+operatorNames[activeOperator]+'</strong>.';
+
+            if(vaultDashboard.classList.contains('show')){
+                renderPackages();
+            }
+        });
+    });
+
+    document.querySelectorAll('.hero-menu button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            const operator=btn.dataset.operator;
+            const card=document.querySelector('.operator-card[data-operator="'+operator+'"]');
+
+            if(card){
+                card.click();
+                card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+            }
+        });
+    });
+
+    document.querySelectorAll('.duration-chip').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.duration-chip').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderPackages();
+        });
+    });
+
+    scanBtn.addEventListener('click',function(){
+        if(!validateSearch()) return;
+        enterDashboard();
+    });
+
+    editBtn.addEventListener('click',function(){
+        heroBox.classList.remove('hidden');
+        searchCard.classList.remove('hidden');
+        compactSim.classList.remove('show');
+
+        setTimeout(function(){
+            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
+        },100);
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<9){
+            e.preventDefault();
+            alert('Masukkan nomor HP terlebih dahulu.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!activeOperator){
+            e.preventDefault();
+            alert('Pilih operator terlebih dahulu.');
+            return;
+        }
+
+        if(!selectedPackage || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih paket masa aktif terlebih dahulu.');
+            return;
+        }
+
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Masa Aktif...';
+        submitBtn.style.opacity='0.75';
+        submitBtn.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

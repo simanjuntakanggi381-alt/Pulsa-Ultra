@@ -1,0 +1,1016 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_angsuran = {
+    'FIN_ADIRA': 'Angsuran Adira Finance',
+    'FIN_FIF': 'Angsuran FIF',
+    'FIN_BAF': 'Angsuran BAF',
+    'FIN_WOM': 'Angsuran WOM Finance',
+    'FIN_MCF': 'Angsuran MCF',
+    'FIN_MANDIRI_TUNAS': 'Mandiri Tunas Finance',
+    'FIN_ACC': 'Astra Credit Companies',
+    'ANGSURAN_ADIRA': 'Angsuran Adira Finance',
+    'ANGSURAN_FIF': 'Angsuran FIF',
+    'ANGSURAN_BAF': 'Angsuran BAF'
+} %}
+
+{% set fallback_harga_angsuran = {
+    'FIN_ADIRA': 3500,
+    'FIN_FIF': 3500,
+    'FIN_BAF': 3500,
+    'FIN_WOM': 3500,
+    'FIN_MCF': 3500,
+    'FIN_MANDIRI_TUNAS': 3500,
+    'FIN_ACC': 3500,
+    'ANGSURAN_ADIRA': 3500,
+    'ANGSURAN_FIF': 3500,
+    'ANGSURAN_BAF': 3500
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_angsuran %}
+{% set harga_final = harga_map if harga_map else fallback_harga_angsuran %}
+
+<style>
+:root {
+    --ang-primary: #ec4899;
+    --ang-primary-2: #be185d;
+    --ang-dark: #0f172a;
+    --ang-text: #334155;
+    --ang-muted: #64748b;
+    --ang-border: #e2e8f0;
+    --ang-green: #16a34a;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(236,72,153,.10), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(190,24,93,.10), transparent 32%),
+        #f6f8fc;
+}
+
+.angsuran-page {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem 1rem 5rem;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--ang-text);
+}
+
+.angsuran-shell {
+    border-radius: 30px;
+    padding: .9rem;
+    background:
+        radial-gradient(circle at top left, rgba(236,72,153,.15), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(190,24,93,.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(236,72,153,.13);
+    box-shadow: 0 18px 45px rgba(15,23,42,.08);
+}
+
+.angsuran-alert {
+    margin-bottom: 1rem;
+    padding: .9rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 800;
+    font-size: .9rem;
+    line-height: 1.45;
+    background: #fdf2f8;
+    color: #be185d;
+    border: 1px solid #fbcfe8;
+}
+
+.angsuran-alert.success {
+    background: #ecfdf5;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.angsuran-alert.error,
+.angsuran-alert.danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.angsuran-alert.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.angsuran-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .7rem;
+    margin-bottom: 1rem;
+}
+
+.back-menu {
+    min-height: 40px;
+    padding: 0 .8rem;
+    border-radius: 999px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #be185d;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .38rem;
+    font-size: .76rem;
+    font-weight: 950;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(15,23,42,.05);
+}
+
+.status-pill {
+    min-height: 40px;
+    padding: 0 .8rem;
+    border-radius: 999px;
+    background: #fdf2f8;
+    color: #be185d;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .38rem;
+    font-size: .76rem;
+    font-weight: 950;
+}
+
+.angsuran-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 26px;
+    padding: 1.25rem;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.40), transparent 34%),
+        linear-gradient(135deg, #ec4899 0%, #db2777 48%, #be185d 100%);
+    box-shadow: 0 16px 34px rgba(190,24,93,.28);
+    margin-bottom: 1rem;
+}
+
+.angsuran-hero::before {
+    content: "";
+    position: absolute;
+    right: -58px;
+    top: -58px;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+}
+
+.angsuran-hero::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: -45px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    border: 18px solid rgba(255,255,255,.10);
+}
+
+.angsuran-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.angsuran-hero-icon {
+    width: 60px;
+    height: 60px;
+    flex: 0 0 60px;
+    border-radius: 21px;
+    background: rgba(255,255,255,.20);
+    border: 1px solid rgba(255,255,255,.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.25),
+        0 12px 24px rgba(15,23,42,.14);
+}
+
+.angsuran-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .28rem .62rem;
+    margin-bottom: .45rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    color: #ffffff;
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.angsuran-hero h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.35rem;
+    line-height: 1.18;
+    font-weight: 950;
+    letter-spacing: -.035em;
+}
+
+.angsuran-hero p {
+    margin: .38rem 0 0;
+    color: rgba(255,255,255,.92);
+    font-size: .84rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.angsuran-step-row {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .55rem;
+    margin-top: 1rem;
+}
+
+.angsuran-step {
+    padding: .68rem .45rem;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+.angsuran-step strong {
+    display: block;
+    color: #ffffff;
+    font-size: .76rem;
+    font-weight: 950;
+}
+
+.angsuran-step span {
+    display: block;
+    margin-top: .12rem;
+    color: rgba(255,255,255,.84);
+    font-size: .66rem;
+}
+
+.angsuran-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 1rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 12px 28px rgba(15,23,42,.06);
+    margin-bottom: 1rem;
+}
+
+.section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: .9rem;
+}
+
+.section-head h3 {
+    margin: 0;
+    color: var(--ang-dark);
+    font-size: 1rem;
+    line-height: 1.25;
+    font-weight: 950;
+    letter-spacing: -.02em;
+}
+
+.section-head p {
+    margin: .25rem 0 0;
+    color: var(--ang-muted);
+    font-size: .78rem;
+    line-height: 1.45;
+    font-weight: 600;
+}
+
+.section-pill {
+    flex: 0 0 auto;
+    padding: .4rem .62rem;
+    border-radius: 999px;
+    background: #fdf2f8;
+    color: #be185d;
+    font-size: .7rem;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.input-control {
+    width: 100%;
+    min-height: 58px;
+    border-radius: 18px;
+    border: 2px solid var(--ang-border);
+    background: #ffffff;
+    color: var(--ang-dark);
+    font-size: 1rem;
+    font-weight: 850;
+    box-sizing: border-box;
+    outline: none;
+    padding: 0 1rem 0 2.85rem;
+    letter-spacing: .02em;
+    transition: .22s ease;
+}
+
+.input-control::placeholder {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.input-control:focus {
+    border-color: var(--ang-primary);
+    box-shadow: 0 0 0 5px rgba(236,72,153,.12);
+}
+
+.input-help {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: .45rem;
+    color: var(--ang-muted);
+    font-size: .75rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.angsuran-info {
+    display: none;
+    margin-top: .65rem;
+    padding: .8rem;
+    border-radius: 16px;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    color: #be185d;
+    font-size: .82rem;
+    line-height: 1.45;
+    font-weight: 750;
+}
+
+.angsuran-quick {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .7rem;
+}
+
+.angsuran-quick button {
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #374151;
+    border-radius: 999px;
+    padding: .5rem .72rem;
+    font-size: .74rem;
+    font-weight: 850;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.angsuran-quick button:hover {
+    background: #f9fafb;
+    border-color: #cbd5e1;
+}
+
+.provider-note {
+    margin-bottom: .85rem;
+    padding: .8rem;
+    border-radius: 16px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: .8rem;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.angsuran-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .75rem;
+}
+
+.angsuran-product-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 112px;
+    border: 1.5px solid #edf2f7;
+    border-radius: 18px;
+    background: #ffffff;
+    padding: .85rem;
+    cursor: pointer;
+    text-align: left;
+    transition: .2s ease;
+}
+
+.angsuran-product-card:hover {
+    transform: translateY(-2px);
+    border-color: #f9a8d4;
+    box-shadow: 0 10px 20px rgba(15,23,42,.07);
+}
+
+.angsuran-product-card.active {
+    border-color: var(--ang-primary);
+    background: #fdf2f8;
+    box-shadow: 0 12px 24px rgba(236,72,153,.13);
+}
+
+.angsuran-product-card::before {
+    content: "";
+    position: absolute;
+    right: -32px;
+    top: -32px;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: rgba(236,72,153,.10);
+}
+
+.product-label {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    padding: .18rem .4rem;
+    margin-bottom: .4rem;
+    border-radius: 999px;
+    background: #fce7f3;
+    color: #be185d;
+    font-size: .56rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.product-name {
+    position: relative;
+    z-index: 2;
+    color: var(--ang-dark);
+    font-size: .9rem;
+    line-height: 1.22;
+    font-weight: 950;
+    margin-bottom: .3rem;
+}
+
+.product-desc {
+    position: relative;
+    z-index: 2;
+    color: var(--ang-muted);
+    font-size: .72rem;
+    line-height: 1.35;
+    font-weight: 650;
+    margin-bottom: .35rem;
+}
+
+.product-price {
+    position: relative;
+    z-index: 2;
+    color: var(--ang-green);
+    font-size: .78rem;
+    font-weight: 950;
+}
+
+.summary-box {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at top right, rgba(236,72,153,.10), transparent 32%),
+        #ffffff;
+    border: 1px solid #fbcfe8;
+    box-shadow: 0 12px 24px rgba(236,72,153,.08);
+}
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-bottom: .75rem;
+    color: var(--ang-dark);
+    font-size: .95rem;
+    font-weight: 950;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .65rem 0;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.summary-row span {
+    color: var(--ang-muted);
+    font-size: .8rem;
+    font-weight: 750;
+}
+
+.summary-row b {
+    color: var(--ang-dark);
+    font-size: .84rem;
+    line-height: 1.35;
+    text-align: right;
+    word-break: break-word;
+}
+
+.summary-total {
+    margin-top: .75rem;
+    padding: .9rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #0f172a, #be185d);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.summary-total span {
+    display: block;
+    color: rgba(255,255,255,.78);
+    font-size: .78rem;
+    font-weight: 750;
+}
+
+.summary-total b {
+    display: block;
+    margin-top: .2rem;
+    color: #ffffff;
+    font-size: 1.18rem;
+    font-weight: 950;
+}
+
+.btn-main {
+    width: 100%;
+    min-height: 58px;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 18px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ec4899, #be185d);
+    font-size: 1rem;
+    font-weight: 950;
+    cursor: pointer;
+    box-shadow: 0 13px 28px rgba(190,24,93,.28);
+    transition: .22s ease;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 17px 34px rgba(190,24,93,.34);
+}
+
+.angsuran-note {
+    margin-top: 1rem;
+    padding: .95rem;
+    border-radius: 20px;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    border-left: 5px solid #ec4899;
+    color: #be185d;
+    font-size: .8rem;
+    line-height: 1.55;
+    font-weight: 650;
+}
+
+.angsuran-note strong {
+    color: #831843;
+}
+
+.empty-state {
+    padding: 1rem;
+    border-radius: 18px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #713f12;
+    font-size: .85rem;
+    line-height: 1.55;
+    font-weight: 700;
+    text-align: center;
+}
+
+@media (max-width: 480px) {
+    .angsuran-page {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+
+    .angsuran-shell {
+        padding: .7rem;
+        border-radius: 26px;
+    }
+
+    .angsuran-topbar {
+        gap: .5rem;
+    }
+
+    .back-menu,
+    .status-pill {
+        min-height: 38px;
+        padding: 0 .7rem;
+        font-size: .72rem;
+    }
+
+    .angsuran-hero {
+        padding: 1.1rem;
+        border-radius: 24px;
+    }
+
+    .angsuran-hero-content {
+        align-items: flex-start;
+    }
+
+    .angsuran-hero-icon {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+        border-radius: 18px;
+        font-size: 1.25rem;
+    }
+
+    .angsuran-hero h2 {
+        font-size: 1.16rem;
+    }
+
+    .angsuran-step-row {
+        grid-template-columns: 1fr;
+    }
+
+    .section-head {
+        flex-direction: column;
+        gap: .45rem;
+    }
+
+    .angsuran-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-row {
+        flex-direction: column;
+        gap: .25rem;
+    }
+
+    .summary-row b {
+        text-align: left;
+    }
+
+    .summary-total {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+
+<div class="angsuran-page">
+    <div class="angsuran-shell">
+
+        {% with pesan = get_flashed_messages(with_categories=true) %}
+            {% if pesan %}
+                {% for kategori, isi in pesan %}
+                    <div class="angsuran-alert {{ kategori }}">{{ isi }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="angsuran-topbar">
+            <a href="{{ url_for('lainnya') }}" class="back-menu">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="status-pill">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                Angsuran
+            </div>
+        </div>
+
+        <div class="angsuran-hero">
+            <div class="angsuran-hero-content">
+                <div class="angsuran-hero-icon">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+
+                <div>
+                    <div class="angsuran-badge">
+                        <i class="fa-solid fa-receipt"></i>
+                        Bayar Angsuran
+                    </div>
+                    <h2>Bayar Cicilan Lebih Mudah</h2>
+                    <p>Masukkan nomor kontrak, pilih leasing, cek data, lalu lanjutkan pembayaran angsuran.</p>
+                </div>
+            </div>
+
+            <div class="angsuran-step-row">
+                <div class="angsuran-step">
+                    <strong>1. Input Kontrak</strong>
+                    <span>Nomor angsuran</span>
+                </div>
+                <div class="angsuran-step">
+                    <strong>2. Pilih Leasing</strong>
+                    <span>Finance</span>
+                </div>
+                <div class="angsuran-step">
+                    <strong>3. Bayar</strong>
+                    <span>Konfirmasi</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('angsuran') }}" id="angsuranForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="angsuran">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="angsuran-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Nomor Kontrak Angsuran</h3>
+                        <p>Masukkan nomor kontrak atau nomor pelanggan sesuai leasing.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="text"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 900123456789"
+                        value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                        minlength="5"
+                        maxlength="30"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan nomor kontrak tanpa spasi.</span>
+                    <span id="charCount">0/30</span>
+                </div>
+
+                <div class="angsuran-quick">
+                    <button type="button" data-id="900123456789">Isi Contoh Kontrak</button>
+                    <button type="button" data-clear="1">Hapus Kontrak</button>
+                </div>
+
+                <div class="angsuran-info" id="angsuranInfo"></div>
+            </div>
+
+            <div class="angsuran-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Leasing / Finance</h3>
+                        <p>Pilih perusahaan pembiayaan sesuai nomor kontrak.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="provider-note">
+                    <strong>Info:</strong> Pastikan leasing sesuai dengan nomor kontrak agar tagihan bisa ditemukan.
+                </div>
+
+                {% if produk_final %}
+                <div class="angsuran-grid">
+                    {% for kode, nama in produk_final.items() %}
+                        {% set nominal = harga_final.get(kode, 0) %}
+                        <button
+                            type="button"
+                            class="angsuran-product-card"
+                            data-kode="{{ kode }}"
+                            data-nama="{{ nama|e }}"
+                            data-harga="{% if format_uang is defined %}{{ format_uang(nominal) }}{% else %}{{ '{:,.0f}'.format(nominal|int)|replace(',', '.') }}{% endif %}"
+                        >
+                            <div class="product-label">Finance</div>
+                            <div class="product-name">{{ nama }}</div>
+                            <div class="product-desc">Cek tagihan sebelum pembayaran</div>
+                            <div class="product-price">
+                                Admin Rp
+                                {% if format_uang is defined %}
+                                    {{ format_uang(nominal) }}
+                                {% else %}
+                                    {{ "{:,.0f}".format(nominal|int)|replace(",", ".") }}
+                                {% endif %}
+                            </div>
+                        </button>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    Produk angsuran belum tersedia. Pastikan kode produk memakai prefix <b>FIN_</b> atau <b>ANGSURAN_</b>.
+                </div>
+                {% endif %}
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Angsuran
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Kontrak</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Leasing / Finance</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Biaya Admin</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                {% if produk_final %}
+                <button type="submit" class="btn-main" id="btnCek">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Cek Tagihan Angsuran
+                </button>
+                {% endif %}
+
+                <div class="angsuran-note">
+                    💳 <strong>Catatan:</strong> Periksa nomor kontrak dan leasing dengan benar sebelum membayar. Kesalahan data dapat membuat tagihan tidak ditemukan.
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const nomorInput = document.getElementById('nomor_tujuan');
+    const charCount = document.getElementById('charCount');
+    const kodeProduk = document.getElementById('kode_produk');
+    const angsuranInfo = document.getElementById('angsuranInfo');
+    const summaryBox = document.getElementById('summaryBox');
+    const form = document.getElementById('angsuranForm');
+    const btnCek = document.getElementById('btnCek');
+
+    function cleanValue(value) {
+        return (value || '').replace(/\s+/g, '');
+    }
+
+    function updateInfo() {
+        if (!nomorInput) return;
+
+        let nomor = cleanValue(nomorInput.value);
+
+        if (nomor.length > 30) {
+            nomor = nomor.slice(0, 30);
+        }
+
+        nomorInput.value = nomor;
+
+        if (charCount) {
+            charCount.textContent = nomor.length + '/30';
+        }
+
+        if (!angsuranInfo) return;
+
+        if (!nomor) {
+            angsuranInfo.style.display = 'none';
+            return;
+        }
+
+        if (nomor.length < 5) {
+            angsuranInfo.style.display = 'block';
+            angsuranInfo.innerHTML = '<i class="fa-solid fa-circle-info"></i> Nomor kontrak masih terlalu pendek.';
+            return;
+        }
+
+        angsuranInfo.style.display = 'block';
+        angsuranInfo.innerHTML = '<i class="fa-solid fa-circle-check"></i> Format nomor kontrak sudah cukup. Silakan pilih leasing.';
+    }
+
+    function updateSummary(selected) {
+        selected = selected || {};
+
+        if (!summaryBox) return;
+
+        const nomor = nomorInput ? cleanValue(nomorInput.value) : '';
+        const activeProduk = document.querySelector('.angsuran-product-card.active');
+
+        const sumNomor = document.getElementById('sumNomor');
+        const sumProduk = document.getElementById('sumProduk');
+        const sumHarga = document.getElementById('sumHarga');
+
+        if (sumNomor) sumNomor.textContent = nomor || '-';
+        if (sumProduk) sumProduk.textContent = selected.nama || (activeProduk ? activeProduk.dataset.nama : '-');
+        if (sumHarga) sumHarga.textContent = 'Rp ' + (selected.harga || (activeProduk ? activeProduk.dataset.harga : '0'));
+
+        summaryBox.style.display = nomor && activeProduk ? 'block' : 'none';
+    }
+
+    if (nomorInput) {
+        nomorInput.addEventListener('input', function () {
+            updateInfo();
+            updateSummary();
+        });
+    }
+
+    document.querySelectorAll('.angsuran-quick button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (!nomorInput) return;
+
+            if (btn.getAttribute('data-clear')) {
+                nomorInput.value = '';
+            } else {
+                nomorInput.value = btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInfo();
+            updateSummary();
+        });
+    });
+
+    document.querySelectorAll('.angsuran-product-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.angsuran-product-card').forEach(function(el) {
+                el.classList.remove('active');
+            });
+
+            card.classList.add('active');
+
+            if (kodeProduk) {
+                kodeProduk.value = card.dataset.kode;
+            }
+
+            updateSummary({
+                nama: card.dataset.nama,
+                harga: card.dataset.harga
+            });
+        });
+    });
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const nomor = nomorInput ? cleanValue(nomorInput.value) : '';
+            const produk = kodeProduk ? kodeProduk.value : '';
+
+            if (!nomor || nomor.length < 5) {
+                e.preventDefault();
+                alert('Masukkan nomor kontrak angsuran terlebih dahulu.');
+                if (nomorInput) nomorInput.focus();
+                return;
+            }
+
+            if (!produk) {
+                e.preventDefault();
+                alert('Silakan pilih leasing atau finance terlebih dahulu.');
+                return;
+            }
+
+            if (btnCek) {
+                btnCek.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengecek Angsuran...';
+                btnCek.style.opacity = '0.75';
+                btnCek.style.pointerEvents = 'none';
+            }
+        });
+    }
+
+    if (nomorInput && nomorInput.value) {
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

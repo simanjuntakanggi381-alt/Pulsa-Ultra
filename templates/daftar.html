@@ -1,0 +1,857 @@
+{% extends "base.html" %}
+{% block konten %}
+
+<style>
+:root {
+    --reg-primary: #007ae6;
+    --reg-primary-2: #00c6ff;
+    --reg-dark: #0f172a;
+    --reg-text: #334155;
+    --reg-muted: #64748b;
+    --reg-border: #e2e8f0;
+    --reg-soft: #f8fafc;
+    --reg-green: #16a34a;
+    --reg-red: #ef4444;
+    --reg-orange: #f59e0b;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(0, 122, 230, 0.10), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0, 198, 255, 0.12), transparent 32%),
+        #f6f8fc;
+}
+
+.register-page {
+    width: 100%;
+    max-width: 470px;
+    margin: 0 auto;
+    padding: 1rem 1rem 5rem;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+.register-shell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at top left, rgba(0, 122, 230, 0.14), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0, 198, 255, 0.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(0, 122, 230, 0.10);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    animation: registerFade 0.45s ease;
+}
+
+@keyframes registerFade {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.register-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    padding: 1.45rem 1.15rem;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,0.38), transparent 34%),
+        linear-gradient(135deg, var(--reg-primary), var(--reg-primary-2));
+    box-shadow: 0 16px 34px rgba(0, 122, 230, 0.28);
+    margin-bottom: 1rem;
+}
+
+.register-hero::before {
+    content: "";
+    position: absolute;
+    right: -58px;
+    top: -58px;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+}
+
+.register-hero::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: -45px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    border: 18px solid rgba(255,255,255,0.10);
+}
+
+.register-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.register-icon {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 1rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.20);
+    border: 1px solid rgba(255,255,255,0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.85rem;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
+.register-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.28rem 0.65rem;
+    margin-bottom: 0.6rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.18);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.register-hero h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.55rem;
+    line-height: 1.18;
+    font-weight: 950;
+    letter-spacing: -0.035em;
+}
+
+.register-hero p {
+    margin: 0.45rem auto 0;
+    max-width: 330px;
+    color: rgba(255,255,255,0.92);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.register-benefits {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.55rem;
+    margin-top: 1rem;
+}
+
+.register-benefit {
+    padding: 0.68rem 0.45rem;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+}
+
+.register-benefit strong {
+    display: block;
+    color: #ffffff;
+    font-size: 0.76rem;
+    font-weight: 950;
+}
+
+.register-benefit span {
+    display: block;
+    margin-top: 0.12rem;
+    color: rgba(255,255,255,0.84);
+    font-size: 0.66rem;
+}
+
+.register-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 1.2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.register-alert {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.register-alert.success {
+    background: #ecfdf5;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.register-alert.error,
+.register-alert.danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.register-alert.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.register-inline-alert {
+    display: none;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 16px;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    font-size: 0.84rem;
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.register-form-group {
+    margin-bottom: 1rem;
+}
+
+.register-form-group label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--reg-dark);
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.register-input-box {
+    position: relative;
+}
+
+.register-input-box .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.register-input {
+    width: 100%;
+    min-height: 56px;
+    border-radius: 18px;
+    border: 2px solid var(--reg-border);
+    background: #ffffff;
+    color: var(--reg-dark);
+    font-size: 0.95rem;
+    font-weight: 750;
+    box-sizing: border-box;
+    outline: none;
+    padding: 0 1rem 0 2.85rem;
+    transition: 0.22s ease;
+}
+
+.register-input.password {
+    padding-right: 3rem;
+}
+
+.register-input::placeholder {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.register-input:focus {
+    border-color: var(--reg-primary);
+    box-shadow: 0 0 0 5px rgba(0, 122, 230, 0.12);
+}
+
+.register-toggle-pass {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 13px;
+    background: #f8fafc;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+}
+
+.register-toggle-pass:hover {
+    background: #eff6ff;
+    color: var(--reg-primary);
+}
+
+.register-help {
+    margin-top: 0.45rem;
+    color: var(--reg-muted);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.password-meter {
+    margin-top: 0.55rem;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.password-meter-track {
+    height: 7px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.password-meter-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 999px;
+    background: var(--reg-red);
+    transition: 0.22s ease;
+}
+
+.password-meter-text {
+    color: var(--reg-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+}
+
+.register-check-box {
+    margin: 1.15rem 0;
+    padding: 0.95rem;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+}
+
+.register-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    color: #475569;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.register-check input {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin-top: 0.12rem;
+    accent-color: var(--reg-primary);
+}
+
+.register-check a {
+    color: var(--reg-primary);
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.register-check a:hover {
+    text-decoration: underline;
+}
+
+.register-submit {
+    width: 100%;
+    min-height: 56px;
+    border-radius: 18px;
+    border: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--reg-primary), var(--reg-primary-2));
+    font-size: 1rem;
+    font-weight: 950;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(0, 122, 230, 0.28);
+    transition: 0.22s ease;
+}
+
+.register-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(0, 122, 230, 0.34);
+}
+
+.register-submit:active {
+    transform: scale(0.99);
+}
+
+.register-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.register-security {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border-radius: 18px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.register-security i {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 13px;
+    background: #ecfdf5;
+    color: var(--reg-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-security strong {
+    display: block;
+    color: var(--reg-dark);
+    font-size: 0.82rem;
+    font-weight: 950;
+}
+
+.register-security span {
+    display: block;
+    margin-top: 0.12rem;
+    color: var(--reg-muted);
+    font-size: 0.74rem;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.register-login {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 22px;
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    text-align: center;
+    color: var(--reg-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+}
+
+.register-login a {
+    color: var(--reg-primary);
+    font-weight: 950;
+    text-decoration: none;
+}
+
+.register-login a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 430px) {
+    .register-page {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .register-shell {
+        padding: 0.75rem;
+        border-radius: 26px;
+    }
+
+    .register-hero {
+        padding: 1.15rem;
+        border-radius: 24px;
+    }
+
+    .register-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 21px;
+        font-size: 1.55rem;
+    }
+
+    .register-hero h2 {
+        font-size: 1.32rem;
+    }
+
+    .register-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .register-card {
+        padding: 1rem;
+        border-radius: 24px;
+    }
+}
+</style>
+
+<div class="register-page">
+    <div class="register-shell">
+
+        <div class="register-hero">
+            <div class="register-hero-content">
+                <div class="register-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div class="register-badge">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Daftar Gratis
+                </div>
+
+                <h2>Buat Akun Baru</h2>
+                <p>Daftar sekali untuk menikmati transaksi pulsa, paket data, e-wallet, token listrik, dan tagihan 24 jam.</p>
+
+                <div class="register-benefits">
+                    <div class="register-benefit">
+                        <strong>24 Jam</strong>
+                        <span>Layanan aktif</span>
+                    </div>
+                    <div class="register-benefit">
+                        <strong>Cepat</strong>
+                        <span>Proses instan</span>
+                    </div>
+                    <div class="register-benefit">
+                        <strong>Aman</strong>
+                        <span>Data terlindungi</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="register-card">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for kategori, pesan in messages %}
+                        <div class="register-alert {{ kategori }}">
+                            {{ pesan }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="register-inline-alert" id="registerError"></div>
+
+            <form method="POST" action="{{ url_for('daftar') }}" id="registerForm" autocomplete="on">
+                {% if csrf_token is defined %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% endif %}
+
+                <div class="register-form-group">
+                    <label for="nama_lengkap">Nama Lengkap</label>
+                    <div class="register-input-box">
+                        <i class="fa-solid fa-id-card input-icon"></i>
+                        <input
+                            type="text"
+                            id="nama_lengkap"
+                            name="nama_lengkap"
+                            class="register-input"
+                            placeholder="Contoh: Budi Santoso"
+                            value="{{ request.form.get('nama_lengkap', '') if request is defined else '' }}"
+                            autocomplete="name"
+                            required
+                            autofocus
+                        >
+                    </div>
+                </div>
+
+                <div class="register-form-group">
+                    <label for="nomor_hp">Nomor Handphone</label>
+                    <div class="register-input-box">
+                        <i class="fa-solid fa-mobile-screen-button input-icon"></i>
+                        <input
+                            type="tel"
+                            id="nomor_hp"
+                            name="nomor_hp"
+                            class="register-input"
+                            placeholder="Contoh: 081234567890"
+                            value="{{ request.form.get('nomor_hp', '') if request is defined else '' }}"
+                            inputmode="numeric"
+                            autocomplete="tel"
+                            required
+                        >
+                    </div>
+                    <div class="register-help">Gunakan nomor HP aktif untuk kebutuhan verifikasi dan informasi transaksi.</div>
+                </div>
+
+                <div class="register-form-group">
+                    <label for="email">Alamat Email</label>
+                    <div class="register-input-box">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="register-input"
+                            placeholder="Contoh: nama@email.com"
+                            value="{{ request.form.get('email', '') if request is defined else '' }}"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="register-form-group">
+                    <label for="kata_sandi">Kata Sandi</label>
+                    <div class="register-input-box">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input
+                            type="password"
+                            id="kata_sandi"
+                            name="kata_sandi"
+                            class="register-input password"
+                            placeholder="Minimal 6 karakter"
+                            minlength="6"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button type="button" class="register-toggle-pass" data-target="kata_sandi" aria-label="Tampilkan kata sandi">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <div class="password-meter">
+                        <div class="password-meter-track">
+                            <div class="password-meter-fill" id="passwordMeterFill"></div>
+                        </div>
+                        <div class="password-meter-text" id="passwordMeterText">Kekuatan sandi: belum diisi</div>
+                    </div>
+                </div>
+
+                <div class="register-form-group">
+                    <label for="ulangi_sandi">Ulangi Kata Sandi</label>
+                    <div class="register-input-box">
+                        <i class="fa-solid fa-lock-open input-icon"></i>
+                        <input
+                            type="password"
+                            id="ulangi_sandi"
+                            name="ulangi_sandi"
+                            class="register-input password"
+                            placeholder="Masukkan ulang kata sandi"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <button type="button" class="register-toggle-pass" data-target="ulangi_sandi" aria-label="Tampilkan ulang kata sandi">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="register-help" id="matchHelp">Pastikan kata sandi sama dengan kolom sebelumnya.</div>
+                </div>
+
+                <div class="register-check-box">
+                    <label class="register-check" for="setuju">
+                        <input
+                            type="checkbox"
+                            id="setuju"
+                            name="setuju"
+                            required
+                            {% if request is defined and request.form.get('setuju') %}checked{% endif %}
+                        >
+                        <span>
+                            Saya menyetujui
+                            <a href="#">Syarat & Ketentuan</a>
+                            serta
+                            <a href="#">Kebijakan Privasi</a>.
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-submit" id="registerButton">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Daftar Sekarang
+                </button>
+            </form>
+
+            <div class="register-security">
+                <i class="fa-solid fa-lock"></i>
+                <div>
+                    <strong>Data Akun Lebih Aman</strong>
+                    <span>Gunakan data yang benar dan jangan bagikan kata sandi kepada siapa pun.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="register-login">
+            Sudah punya akun?
+            <a href="{{ url_for('login') }}">Masuk di Sini</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const form = document.getElementById('registerForm');
+    const button = document.getElementById('registerButton');
+    const errorBox = document.getElementById('registerError');
+    const nomorHp = document.getElementById('nomor_hp');
+    const password = document.getElementById('kata_sandi');
+    const confirmPassword = document.getElementById('ulangi_sandi');
+    const meterFill = document.getElementById('passwordMeterFill');
+    const meterText = document.getElementById('passwordMeterText');
+    const matchHelp = document.getElementById('matchHelp');
+
+    function showError(message) {
+        if (!errorBox) {
+            alert(message);
+            return;
+        }
+
+        errorBox.textContent = message;
+        errorBox.style.display = 'block';
+        errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideError() {
+        if (errorBox) {
+            errorBox.textContent = '';
+            errorBox.style.display = 'none';
+        }
+    }
+
+    function updatePasswordMeter() {
+        if (!password || !meterFill || !meterText) return;
+
+        const value = password.value;
+        let score = 0;
+
+        if (value.length >= 6) score++;
+        if (value.length >= 10) score++;
+        if (/[A-Z]/.test(value)) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+
+        let width = '0%';
+        let color = '#ef4444';
+        let text = 'Kekuatan sandi: belum diisi';
+
+        if (value.length > 0) {
+            if (score <= 2) {
+                width = '35%';
+                color = '#ef4444';
+                text = 'Kekuatan sandi: lemah';
+            } else if (score <= 4) {
+                width = '70%';
+                color = '#f59e0b';
+                text = 'Kekuatan sandi: cukup';
+            } else {
+                width = '100%';
+                color = '#16a34a';
+                text = 'Kekuatan sandi: kuat';
+            }
+        }
+
+        meterFill.style.width = width;
+        meterFill.style.background = color;
+        meterText.textContent = text;
+    }
+
+    function updatePasswordMatch() {
+        if (!password || !confirmPassword || !matchHelp) return;
+
+        if (!confirmPassword.value) {
+            matchHelp.textContent = 'Pastikan kata sandi sama dengan kolom sebelumnya.';
+            matchHelp.style.color = '#64748b';
+            return;
+        }
+
+        if (password.value === confirmPassword.value) {
+            matchHelp.textContent = 'Kata sandi sudah cocok.';
+            matchHelp.style.color = '#16a34a';
+        } else {
+            matchHelp.textContent = 'Kata sandi belum sama.';
+            matchHelp.style.color = '#ef4444';
+        }
+    }
+
+    document.querySelectorAll('.register-toggle-pass').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const targetId = btn.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+
+            if (!input) return;
+
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+
+            btn.innerHTML = isPassword
+                ? '<i class="fa-solid fa-eye-slash"></i>'
+                : '<i class="fa-solid fa-eye"></i>';
+        });
+    });
+
+    if (nomorHp) {
+        nomorHp.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+
+    if (password) {
+        password.addEventListener('input', function () {
+            updatePasswordMeter();
+            updatePasswordMatch();
+        });
+    }
+
+    if (confirmPassword) {
+        confirmPassword.addEventListener('input', updatePasswordMatch);
+    }
+
+    if (form && button) {
+        form.addEventListener('submit', function (e) {
+            hideError();
+
+            if (password && confirmPassword && password.value !== confirmPassword.value) {
+                e.preventDefault();
+                showError('Kata sandi dan ulangi kata sandi belum sama.');
+                confirmPassword.focus();
+                return;
+            }
+
+            if (nomorHp && nomorHp.value.length < 9) {
+                e.preventDefault();
+                showError('Nomor handphone terlalu pendek. Periksa kembali nomor Anda.');
+                nomorHp.focus();
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Membuat Akun...';
+        });
+    }
+
+    updatePasswordMeter();
+    updatePasswordMatch();
+})();
+</script>
+
+{% endblock %}

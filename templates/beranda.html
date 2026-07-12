@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block konten %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+.beranda-header {
+    background: linear-gradient(180deg, #0099e6 0%, #007acc 100%);
+    padding: 1.2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.logo-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+.top-aksi {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.top-aksi a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+.top-aksi a.masuk-btn {
+    background: #ffffff;
+    color: #007acc;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.layanan-grid {
+    max-width: 520px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+}
+.layanan-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+.layanan-item:hover {
+    transform: translateY(-2px);
+}
+.layanan-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.layanan-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+}
+.nav-bawah {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.7rem 0;
+    z-index: 100;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+    color: #999;
+    font-size: 0.8rem;
+}
+.nav-item.aktif {
+    color: #007acc;
+}
+.nav-item i {
+    font-size: 1.2rem;
+}
+body {
+    padding-bottom: 70px;
+    background: #f8fafc;
+}
+</style>
+
+<!-- Header -->
+<div class="beranda-header">
+    <div class="logo-brand">
+        <i class="fa-solid fa-bolt"></i>
+        pulsa24jam
+    </div>
+    <div class="top-aksi">
+        <a href="#"><i class="fa-solid fa-headset"></i></a>
+        {% if sudah_login %}
+            <a href="{{ url_for('profil') }}" class="masuk-btn">Akun</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="masuk-btn">Masuk</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Daftar Layanan -->
+<div class="layanan-grid">
+    <!-- Baris 1 -->
+    <a href="{{ url_for('pulsa') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #7b2ffd;">
+            <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <span class="layanan-label">Pulsa</span>
+    </a>
+
+    <a href="{{ url_for('data') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #e91e63;">
+            <i class="fa-solid fa-wifi"></i>
+        </div>
+        <span class="layanan-label">Paket Data</span>
+    </a>
+
+    <a href="{{ url_for('ewallet') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #009688;">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+        <span class="layanan-label">E-Wallet</span>
+    </a>
+
+    <a href="{{ url_for('listrik') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #ffc107;">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
+        <span class="layanan-label">Listrik</span>
+    </a>
+
+    <!-- Baris 2 -->
+    <a href="{{ url_for('lainnya', jenis='game') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #9c27b0;">
+            <i class="fa-solid fa-gamepad"></i>
+        </div>
+        <span class="layanan-label">Game</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='tv') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #f44336;">
+            <i class="fa-solid fa-tv"></i>
+        </div>
+        <span class="layanan-label">TV</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='pdam') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #2196f3;">
+            <i class="fa-solid fa-water"></i>
+        </div>
+        <span class="layanan-label">PDAM</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='bpjs') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #4caf50;">
+            <i class="fa-solid fa-heartbeat"></i>
+        </div>
+        <span class="layanan-label">BPJS</span>
+    </a>
+
+    <!-- Baris 3 -->
+    <a href="{{ url_for('lainnya', jenis='internet_pasca') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #2196f3;">
+            <i class="fa-solid fa-globe"></i>
+        </div>
+        <span class="layanan-label">Internet Pascabayar</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='hp_pasca') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #333333;">
+            <i class="fa-solid fa-mobile-screen"></i>
+        </div>
+        <span class="layanan-label">HP Pascabayar</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='masa_aktif') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #ff9800;">
+            <i class="fa-solid fa-clock"></i>
+        </div>
+        <span class="layanan-label">Masa Aktif</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='paket_telp') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #00bcd4;">
+            <i class="fa-solid fa-phone"></i>
+        </div>
+        <span class="layanan-label">Paket Telepon</span>
+    </a>
+
+    <!-- Baris 4 -->
+    <a href="{{ url_for('lainnya', jenis='aktivasi') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #f44336;">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <span class="layanan-label">Aktivasi Perdana</span>
+    </a>
+
+    <a href="{{ url_for('lainnya', jenis='gas') }}" class="layanan-item">
+        <div class="layanan-icon" style="background: #ff5722;">
+            <i class="fa-solid fa-fire"></i>
+        </div>
+        <span class="layanan-label">Gas Negara</span>
+    </a>
+</div>
+
+<!-- Navigasi Bawah -->
+<div class="nav-bawah">
+    <a href="{{ url_for('beranda') }}" class="nav-item aktif">
+        <i class="fa-solid fa-home"></i>
+        <span>Beranda</span>
+    </a>
+    <a href="{{ url_for('riwayat') }}" class="nav-item">
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>Transaksi</span>
+    </a>
+    {% if sudah_login %}
+        <a href="{{ url_for('profil') }}" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Akun</span>
+        </a>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="nav-item">
+            <i class="fa-solid fa-user"></i>
+            <span>Masuk</span>
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,749 @@
+/* =========================================================
+   RESET & DASAR
+========================================================= */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background:
+        radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(13,148,136,.08), transparent 30%),
+        #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-size: 16px;
+}
+
+img,
+svg,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   NAVIGASI ATAS
+========================================================= */
+.navbar {
+    width: 100%;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,.22), transparent 32%),
+        linear-gradient(135deg, #0f766e, #0d9488);
+    color: #ffffff;
+    padding: 1rem 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 8px 22px rgba(15,118,110,.18);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar h1 {
+    font-size: 1.35rem;
+    line-height: 1.2;
+    font-weight: 850;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    white-space: nowrap;
+}
+
+.navbar div,
+.navbar nav {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.navbar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 0;
+    font-weight: 700;
+    font-size: .88rem;
+    padding: .45rem .75rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.10);
+    transition: .2s ease;
+}
+
+.navbar a:hover {
+    background: rgba(255,255,255,.22);
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   KONTAINER UTAMA
+========================================================= */
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 1.4rem auto;
+    padding: 0 1rem 5rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    line-height: 1.25;
+}
+
+h2 {
+    color: #0f766e;
+    margin-bottom: 1.1rem;
+    font-size: 1.55rem;
+    font-weight: 850;
+    letter-spacing: -.02em;
+}
+
+/* =========================================================
+   KARTU UMUM
+========================================================= */
+.card {
+    background: #ffffff;
+    padding: 1.35rem;
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(15,23,42,.07);
+    margin-bottom: 1.2rem;
+    transition: transform .2s ease, box-shadow .2s ease;
+    border: 1px solid #f1f5f9;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(15,23,42,.09);
+}
+
+.card h3 {
+    color: #0f766e;
+    margin-bottom: .8rem;
+    font-size: 1.15rem;
+    font-weight: 850;
+}
+
+/* =========================================================
+   GRID TATA LETAK
+========================================================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+/* =========================================================
+   PERINGATAN & PESAN
+========================================================= */
+.peringatan {
+    background: #fffbeb;
+    color: #92400e;
+    padding: .95rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    border: 1px solid #fde68a;
+    border-left: 5px solid #f59e0b;
+    font-size: .92rem;
+    font-weight: 650;
+}
+
+.alert {
+    padding: .95rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-size: .92rem;
+    line-height: 1.45;
+    border: 1px solid transparent;
+}
+
+.alert.success {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #86efac;
+}
+
+.alert.danger,
+.alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fca5a5;
+}
+
+.alert.info {
+    background: #e0f2fe;
+    color: #075985;
+    border-color: #7dd3fc;
+}
+
+.alert.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border-color: #fcd34d;
+}
+
+/* =========================================================
+   TABEL
+========================================================= */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(15,23,42,.06);
+}
+
+table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+table th,
+table td {
+    padding: .9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: .92rem;
+    white-space: nowrap;
+}
+
+table th {
+    background: #f1f5f9;
+    font-weight: 800;
+    color: #334155;
+}
+
+table tr:hover {
+    background: #f8fafc;
+}
+
+/* =========================================================
+   FORMULIR & INPUT
+========================================================= */
+input,
+select,
+textarea {
+    width: 100%;
+    min-height: 54px;
+    padding: 0 .95rem;
+    margin: .45rem 0;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 650;
+    background: #ffffff;
+    color: #0f172a;
+    outline: none;
+    transition: .2s ease;
+}
+
+textarea {
+    min-height: 120px;
+    padding-top: .9rem;
+    resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #0d9488;
+    box-shadow: 0 0 0 5px rgba(13,148,136,.12);
+}
+
+/* Tombol default */
+button,
+.btn,
+.info-btn,
+.btn-aksi {
+    border: none;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+button {
+    min-height: 52px;
+    padding: .9rem 1rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f766e, #0d9488);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(13,148,136,.22);
+}
+
+/* =========================================================
+   STATUS TRANSAKSI
+========================================================= */
+.berhasil {
+    color: #166534;
+    font-weight: 700;
+}
+
+.gagal {
+    color: #991b1b;
+    font-weight: 700;
+}
+
+.menunggu {
+    color: #92400e;
+    font-weight: 700;
+}
+
+.status {
+    padding: .38rem .75rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 800;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 86px;
+    line-height: 1.2;
+}
+
+.status.pending  { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.status.dibayar  { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+.status.diproses { background: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
+.status.berhasil { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.status.gagal    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.status.expired  { background: #f3e8ff; color: #6b21a8; border: 1px solid #d8b4fe; }
+.status.batal    { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.status.refund   { background: #ecfccb; color: #4d7c0f; border: 1px solid #bef264; }
+
+/* =========================================================
+   KARTU LAYANAN DASHBOARD
+========================================================= */
+.info-card {
+    background: #ffffff;
+    padding: 1.35rem;
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(15,23,42,.07);
+    margin-bottom: 1rem;
+    border: 1px solid #f1f5f9;
+    border-left: 5px solid #0f766e;
+    transition: .2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(15,23,42,.09);
+}
+
+.info-card.ewallet {
+    border-left-color: #0284c7;
+    background: linear-gradient(180deg, #ffffff, #f0f9ff);
+}
+
+.info-card.mitra {
+    border-left-color: #7c3aed;
+    background: linear-gradient(180deg, #ffffff, #faf5ff);
+}
+
+.info-card h3 {
+    color: #0f766e;
+    margin-bottom: .65rem;
+    font-size: 1.15rem;
+    font-weight: 850;
+}
+
+.info-card p {
+    color: #475569;
+    line-height: 1.55;
+    margin-bottom: .85rem;
+    font-size: .94rem;
+}
+
+.info-card ul {
+    margin: .85rem 0 .85rem 1.2rem;
+    padding: 0;
+    color: #475569;
+    line-height: 1.7;
+    font-size: .94rem;
+}
+
+.info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .7rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: .9rem;
+    margin-top: .4rem;
+    margin-right: .45rem;
+    background: #0f766e;
+    color: #ffffff;
+}
+
+.info-btn:hover {
+    background: #0d9488;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.info-btn.outline {
+    background: #ffffff;
+    color: #0f766e;
+    border: 1.5px solid #0f766e;
+}
+
+.info-btn.outline:hover {
+    background: #ecfdf5;
+    color: #0d9488;
+}
+
+/* =========================================================
+   TAMPILAN TRANSAKSI
+========================================================= */
+.daftar-transaksi {
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+}
+
+.item-transaksi {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.kiri-transaksi {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.info-transaksi {
+    min-width: 0;
+}
+
+.info-transaksi h4 {
+    font-size: .98rem;
+    color: #1e293b;
+    margin-bottom: .25rem;
+    font-weight: 850;
+    line-height: 1.3;
+}
+
+.info-transaksi p {
+    font-size: .86rem;
+    color: #64748b;
+    margin: .15rem 0;
+    line-height: 1.4;
+}
+
+.tanggal-transaksi {
+    font-size: .78rem;
+    color: #94a3b8;
+}
+
+.kanan-transaksi {
+    text-align: right;
+    min-width: 120px;
+}
+
+.harga-transaksi {
+    font-size: 1.05rem;
+    font-weight: 850;
+    color: #0f766e;
+    margin-bottom: .45rem;
+}
+
+.btn-aksi {
+    margin-top: .5rem;
+    padding: .45rem .75rem;
+    font-size: .8rem;
+    border-radius: 999px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.btn-detail {
+    background: #0f766e;
+    color: #ffffff;
+}
+
+.btn-bayar {
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.btn-batal {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+/* =========================================================
+   RESPONSIF TABLET
+========================================================= */
+@media (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    .navbar {
+        padding: .85rem .8rem;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: .65rem;
+    }
+
+    .navbar h1 {
+        font-size: 1.18rem;
+        width: 100%;
+    }
+
+    .navbar div,
+    .navbar nav {
+        width: 100%;
+        justify-content: flex-start;
+        gap: .4rem;
+    }
+
+    .navbar a {
+        font-size: .82rem;
+        padding: .42rem .65rem;
+    }
+
+    .container {
+        padding: 0 .8rem 5rem;
+        margin: 1rem auto;
+    }
+
+    h2 {
+        font-size: 1.35rem;
+        margin-bottom: .9rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: .85rem;
+    }
+
+    .card,
+    .info-card {
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    table th,
+    table td {
+        padding: .75rem;
+        font-size: .85rem;
+    }
+}
+
+/* =========================================================
+   RESPONSIF HP
+========================================================= */
+@media (max-width: 576px) {
+    body {
+        background: #f8fafc;
+    }
+
+    .navbar {
+        position: sticky;
+        padding: .8rem .75rem;
+        border-radius: 0 0 18px 18px;
+    }
+
+    .navbar h1 {
+        font-size: 1.08rem;
+    }
+
+    .navbar a {
+        font-size: .78rem;
+        padding: .4rem .58rem;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: .75rem .75rem 5.5rem;
+        margin: 0 auto;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+        line-height: 1.25;
+    }
+
+    .card,
+    .info-card {
+        padding: .95rem;
+        border-radius: 18px;
+        margin-bottom: .9rem;
+    }
+
+    .card h3,
+    .info-card h3 {
+        font-size: 1.02rem;
+    }
+
+    .card p,
+    .info-card p,
+    .info-card ul {
+        font-size: .88rem;
+    }
+
+    input,
+    select,
+    textarea {
+        min-height: 54px;
+        border-radius: 15px;
+        font-size: 16px;
+        margin: .4rem 0;
+    }
+
+    button {
+        min-height: 54px;
+        border-radius: 15px;
+        font-size: .95rem;
+    }
+
+    .info-btn {
+        width: 100%;
+        margin-right: 0;
+        margin-top: .5rem;
+    }
+
+    .peringatan,
+    .alert {
+        padding: .85rem;
+        font-size: .86rem;
+        border-radius: 14px;
+    }
+
+    .item-transaksi {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: .95rem;
+        border-radius: 18px;
+    }
+
+    .kiri-transaksi {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .kanan-transaksi {
+        text-align: left;
+        width: 100%;
+        min-width: 0;
+        border-top: 1px dashed #e2e8f0;
+        padding-top: .85rem;
+    }
+
+    .harga-transaksi {
+        font-size: 1rem;
+    }
+
+    .status {
+        min-width: 78px;
+        font-size: .74rem;
+        padding: .34rem .65rem;
+    }
+
+    .btn-aksi {
+        width: 100%;
+        min-height: 42px;
+        margin-top: .45rem;
+    }
+}
+
+/* =========================================================
+   HP KECIL
+========================================================= */
+@media (max-width: 360px) {
+    .container {
+        padding-left: .6rem;
+        padding-right: .6rem;
+    }
+
+    .navbar {
+        padding-left: .6rem;
+        padding-right: .6rem;
+    }
+
+    .navbar h1 {
+        font-size: 1rem;
+    }
+
+    .navbar a {
+        font-size: .74rem;
+        padding: .35rem .5rem;
+    }
+
+    .card,
+    .info-card {
+        padding: .85rem;
+    }
+
+    h2 {
+        font-size: 1.15rem;
+    }
+}

@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block konten %}
+
+<div style="max-width: 540px; margin: 0 auto; font-family: 'Inter', system-ui, -apple-system, sans-serif; padding: 2.5rem 1rem 1.5rem; box-sizing: border-box; overflow: hidden;">
+    
+    <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: #0F172A; margin: 0; letter-spacing: -0.5px;">Riwayat Transaksi</h2>
+        <p style="margin: 0.2rem 0 0 0; font-size: 0.85rem; color: #64748B;">Geser untuk melihat status transaksi Anda</p>
+    </div>
+
+    <div id="tab-container" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -webkit-overflow-scrolling: touch;">
+        <button onclick="pindahTab(0, 'semua')" class="tab-btn aktif" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, #007ae6, #00c6ff); color: #ffffff; white-space: nowrap; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0, 122, 230, 0.2);">Semua</button>
+        <button onclick="pindahTab(1, 'pending')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Pending</button>
+        <button onclick="pindahTab(2, 'dibayar')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Dibayar</button>
+        <button onclick="pindahTab(3, 'diproses')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Diproses</button>
+        <button onclick="pindahTab(4, 'berhasil')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Berhasil</button>
+        <button onclick="pindahTab(5, 'gagal')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Gagal</button>
+        <button onclick="pindahTab(6, 'expired')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Expired</button>
+        <button onclick="pindahTab(7, 'batal')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Batal</button>
+        <button onclick="pindahTab(8, 'refund')" class="tab-btn" style="padding: 0.6rem 1.2rem; border: none; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; background: #F1F5F9; color: #64748B; white-space: nowrap; transition: all 0.2s ease;">Refund</button>
+    </div>
+
+    <div id="carousel-viewport" style="display: flex; width: 900%; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); will-change: transform;">
+        
+        <!-- Kolom SEMUA -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% if daftar %}
+                {% for trx in daftar %}
+                    <div class="kartu-trx" data-status="{{ trx.status|lower }}" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <!-- Ikon/Gambar Berdasarkan Jenis Transaksi -->
+                            {% if trx.jenis == 'Pulsa' %}
+                                <img src="{{ url_for('static', filename='gambar/operator.png') }}" alt="Pulsa" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FFF5F5; padding: 4px; border: 1px solid #FEE2E2;">
+                            {% elif trx.jenis == 'Paket Data' %}
+                                <img src="{{ url_for('static', filename='gambar/data.png') }}" alt="Data" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FFFBEB; padding: 4px; border: 1px solid #FEF3C7;">
+                            {% elif trx.jenis == 'E-Wallet' %}
+                                <img src="{{ url_for('static', filename='gambar/ewallet.png') }}" alt="E-Wallet" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #ECFDF5; padding: 4px; border: 1px solid #A7F3D0;">
+                            {% elif trx.jenis == 'Listrik' %}
+                                <img src="{{ url_for('static', filename='gambar/pln.png') }}" alt="Listrik" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #E0F2FE; padding: 4px; border: 1px solid #BAE6FD;">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='gambar/lainnya.png') }}" alt="Layanan" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #F3E8FF; padding: 4px; border: 1px solid #E9D5FF;">
+                            {% endif %}
+                            <div>
+                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                                <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                                <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                                <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.4rem; flex-wrap: wrap;">
+                                    <span style="font-size: 0.75rem; background: #F8FAFC; color: #64748B; padding: 0.2rem 0.5rem; border-radius: 6px; font-family: monospace;">{{ trx.sn or '-' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem;">
+                            <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                            {% if trx.status == 'Berhasil' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 0.3rem 0.6rem; border-radius: 8px;">Berhasil</span>
+                            {% elif trx.status == 'Pending' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #FFFBEB; color: #D97706; padding: 0.3rem 0.6rem; border-radius: 8px;">Pending</span>
+                            {% elif trx.status == 'Dibayar' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #EFF6FF; color: #2563EB; padding: 0.3rem 0.6rem; border-radius: 8px;">Dibayar</span>
+                            {% elif trx.status == 'Diproses' %}
+                                <span class="status-proses-anim" style="font-size: 0.75rem; font-weight: 700; background: #ECFDF5; color: #059669; padding: 0.3rem 0.6rem; border-radius: 8px;">Diproses</span>
+                            {% elif trx.status == 'Gagal' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #FEE2E2; color: #991B1B; padding: 0.3rem 0.6rem; border-radius: 8px;">Gagal</span>
+                            {% elif trx.status == 'Expired' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #E2E8F0; color: #475569; padding: 0.3rem 0.6rem; border-radius: 8px;">Expired</span>
+                            {% elif trx.status == 'Batal' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #FEE2E2; color: #991B1B; padding: 0.3rem 0.6rem; border-radius: 8px;">Batal</span>
+                            {% elif trx.status == 'Refund' %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #CCFBF1; color: #0D9488; padding: 0.3rem 0.6rem; border-radius: 8px;">Refund</span>
+                            {% else %}
+                                <span style="font-size: 0.75rem; font-weight: 700; background: #F1F5F9; color: #64748B; padding: 0.3rem 0.6rem; border-radius: 8px;">{{ trx.status }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 3rem 1rem;">
+                    <i class="fa-solid fa-receipt" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+                    <h4 style="font-size: 1.1rem; color: #64748B; margin-bottom: 0.5rem;">Belum Ada Transaksi</h4>
+                    <p style="font-size: 0.9rem; color: #94a3b8;">Transaksi yang Anda buat akan muncul di sini</p>
+                    <a href="{{ url_for('dashboard') }}" style="display: inline-block; margin-top: 1.2rem; padding: 0.6rem 1.2rem; background: #007ae6; color: white; border-radius: 12px; text-decoration: none; font-weight: 600;">Mulai Bertransaksi</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Kolom PENDING -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'pending' %}
+                <div class="kartu-trx" data-status="pending" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/operator.png') }}" alt="Pulsa" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FFF5F5; padding: 4px; border: 1px solid #FEE2E2;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #FFFBEB; color: #D97706; padding: 0.3rem 0.6rem; border-radius: 8px;">Pending</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Pending</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom DIBAYAR -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'dibayar' %}
+                <div class="kartu-trx" data-status="dibayar" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/data.png') }}" alt="Data" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FFFBEB; padding: 4px; border: 1px solid #FEF3C7;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #EFF6FF; color: #2563EB; padding: 0.3rem 0.6rem; border-radius: 8px;">Dibayar</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Dibayar</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom DIPROSES -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'diproses' %}
+                <div class="kartu-trx" data-status="diproses" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/operator.png') }}" alt="Pulsa" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #EEF2FF; padding: 4px; border: 1px solid #E0E7FF;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span class="status-proses-anim" style="font-size: 0.75rem; font-weight: 700; background: #ECFDF5; color: #059669; padding: 0.3rem 0.6rem; border-radius: 8px;">Diproses</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Diproses</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom BERHASIL -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'berhasil' %}
+                <div class="kartu-trx" data-status="berhasil" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/pln.png') }}" alt="Listrik" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #E0F2FE; padding: 4px; border: 1px solid #BAE6FD;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                            <span style="font-size: 0.75rem; background: #F8FAFC; color: #64748B; padding: 0.2rem 0.5rem; border-radius: 6px;">SN: {{ trx.sn or '-' }}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #DCFCE7; color: #15803D; padding: 0.3rem 0.6rem; border-radius: 8px;">Berhasil</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Berhasil</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom GAGAL -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'gagal' %}
+                <div class="kartu-trx" data-status="gagal" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/operator.png') }}" alt="Pulsa" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FCE7F3; padding: 4px; border: 1px solid #FBCFE8;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #FEE2E2; color: #991B1B; padding: 0.3rem 0.6rem; border-radius: 8px;">Gagal</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Gagal</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom EXPIRED -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'expired' %}
+                <div class="kartu-trx" data-status="expired" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/ewallet.png') }}" alt="E-Wallet" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #EFF6FF; padding: 4px; border: 1px solid #DBEAFE;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #E2E8F0; color: #475569; padding: 0.3rem 0.6rem; border-radius: 8px;">Expired</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Expired</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom BATAL -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'batal' %}
+                <div class="kartu-trx" data-status="batal" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/operator.png') }}" alt="Pulsa" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #FFF5F5; padding: 4px; border: 1px solid #FEE2E2;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #FEE2E2; color: #991B1B; padding: 0.3rem 0.6rem; border-radius: 8px;">Batal</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Batal</div>
+            {% endfor %}
+        </div>
+
+        <!-- Kolom REFUND -->
+        <div class="kolom-status" style="width: 11.11%; padding-right: 4px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1rem;">
+            {% for trx in daftar if trx.status|lower == 'refund' %}
+                <div class="kartu-trx" data-status="refund" style="background: #ffffff; border-radius: 24px; padding: 1.25rem; border: 1px solid rgba(0, 122, 230, 0.08); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; box-shadow: 0 8px 25px rgba(0, 122, 230, 0.12); transition: all 0.3s ease;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                        <img src="{{ url_for('static', filename='gambar/ewallet.png') }}" alt="E-Wallet" style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain; background: #ECFDF5; padding: 4px; border: 1px solid #A7F3D0;">
+                        <div>
+                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ trx.jenis }}</h4>
+                            <p style="margin: 0.2rem 0; font-size: 0.8rem; color: #64748B; font-weight: 500;">{{ trx.nomor_tujuan }}</p>
+                            <p style="margin: 0.2rem 0; font-size: 0.75rem; color: #94a3b8;">{{ trx.waktu.strftime('%d %b %Y, %H:%M') }}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A;">{{ format_uang(trx.jumlah) }}</div>
+                        <span style="font-size: 0.75rem; font-weight: 700; background: #CCFBF1; color: #0D9488; padding: 0.3rem 0.6rem; border-radius: 8px;">Refund</span>
+                    </div>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem 1rem; color: #94a3b8;">Tidak ada transaksi Refund</div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+function pindahTab(indexKolom, statusName) {
+    const derajatGeser = indexKolom * -11.11;
+    document.getElementById('carousel-viewport').style.transform = `translateX(${derajatGeser}%)`;
+
+    const allTabs = document.querySelectorAll('.tab-btn');
+    allTabs.forEach(tab => {
+        tab.style.background = '#F1F5F9';
+        tab.style.color = '#64748B';
+        tab.style.boxShadow = 'none';
+    });
+
+    const tabAktif = allTabs[indexKolom];
+    tabAktif.style.background = 'linear-gradient(135deg, #007ae6, #00c6ff)';
+    tabAktif.style.color = '#ffffff';
+    tabAktif.style.boxShadow = '0 2px 8px rgba(0, 122, 230, 0.2)';
+
+    const containerTab = document.getElementById('tab-container');
+    const sisaLebarCard = tabAktif.offsetLeft - (containerTab.offsetWidth / 2) + (tabAktif.offsetWidth / 2);
+    containerTab.scrollTo({
+        left: sisaLebarCard,
+        behavior: 'smooth'
+    });
+}
+</script>
+
+<style>
+div::-webkit-scrollbar {
+    display: none;
+}
+.status-proses-anim {
+    animation: smoothPulse 1.8s infinite ease-in-out;
+}
+@keyframes smoothPulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+.kartu-trx:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(0, 122, 230, 0.18) !important;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,1800 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_tv = {
+    'TV_INDIHOME': 'IndiHome / UseeTV',
+    'TV_FIRSTMEDIA': 'First Media',
+    'TV_TRANSVISION': 'Transvision',
+    'TV_MNCVISION': 'MNC Vision',
+    'TV_KVISION': 'K-Vision',
+    'TV_NEXPARABOLA': 'Nex Parabola',
+    'TV_BIZNET': 'Biznet Home TV',
+    'TV_MYREPUBLIC': 'MyRepublic TV',
+    'TV_VISIONPLUS': 'Vision+ Premium',
+    'TV_VIDIO': 'Vidio Platinum',
+    'TV_CATCHPLAY': 'Catchplay+',
+    'TV_VIU': 'Viu Premium'
+} %}
+
+{% set fallback_harga_tv = {
+    'TV_INDIHOME': 2500,
+    'TV_FIRSTMEDIA': 3000,
+    'TV_TRANSVISION': 3000,
+    'TV_MNCVISION': 3500,
+    'TV_KVISION': 2500,
+    'TV_NEXPARABOLA': 2500,
+    'TV_BIZNET': 3000,
+    'TV_MYREPUBLIC': 3000,
+    'TV_VISIONPLUS': 2500,
+    'TV_VIDIO': 2500,
+    'TV_CATCHPLAY': 3000,
+    'TV_VIU': 2500
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_tv %}
+{% set harga_final = harga_map if harga_map else fallback_harga_tv %}
+
+<style>
+:root{
+    --tv-red:#ef1748;
+    --tv-rose:#fb7185;
+    --tv-pink:#fce7f3;
+    --tv-blue:#2563eb;
+    --tv-sky:#0ea5e9;
+    --tv-purple:#7c3aed;
+    --tv-green:#16a34a;
+    --tv-orange:#f59e0b;
+    --tv-dark:#0f172a;
+    --tv-text:#334155;
+    --tv-muted:#64748b;
+    --tv-border:#e2e8f0;
+    --tv-soft:#f8fafc;
+    --tv-card:#ffffff;
+    --tv-shadow:0 18px 42px rgba(15,23,42,.10);
+    --tv-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(251,113,133,.20),transparent 34%),
+        radial-gradient(circle at top right,rgba(14,165,233,.16),transparent 34%),
+        radial-gradient(circle at bottom,rgba(124,58,237,.09),transparent 42%),
+        linear-gradient(180deg,#fff7fb 0%,#f8fafc 42%,#ffffff 100%);
+}
+
+.tv-lounge-page{
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+    padding:.8rem .7rem 5rem;
+    box-sizing:border-box;
+    color:var(--tv-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.tv-lounge-shell{
+    border-radius:30px;
+    padding:.72rem;
+    background:
+        radial-gradient(circle at top left,rgba(251,113,133,.11),transparent 32%),
+        radial-gradient(circle at bottom right,rgba(14,165,233,.10),transparent 32%),
+        linear-gradient(180deg,#ffffff,#f8fafc);
+    border:1px solid rgba(251,113,133,.18);
+    box-shadow:var(--tv-shadow);
+    overflow:hidden;
+}
+
+.tv-alert{
+    margin-bottom:.8rem;
+    padding:.82rem .9rem;
+    border-radius:17px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#fff1f2;
+    color:#be123c;
+    border:1px solid #ffe4e6;
+}
+
+.tv-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.tv-alert.error,
+.tv-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.tv-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.tv-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.tv-back,
+.tv-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.tv-back{
+    background:#fff;
+    border:1px solid var(--tv-border);
+    color:#be123c;
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.tv-chip{
+    background:#fff1f2;
+    color:#be123c;
+    border:1px solid #ffe4e6;
+}
+
+.tv-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:26px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
+        radial-gradient(circle at 90% 10%,rgba(255,255,255,.20),transparent 28%),
+        linear-gradient(135deg,#be123c 0%,#ef1748 52%,#fb7185 100%);
+    box-shadow:0 16px 32px rgba(239,23,72,.22);
+}
+
+.tv-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.14);
+}
+
+.tv-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.10);
+}
+
+.tv-hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.76rem;
+}
+
+.tv-hero-icon{
+    width:50px;
+    height:50px;
+    flex:0 0 50px;
+    border-radius:18px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.14rem;
+    box-shadow:0 10px 22px rgba(15,23,42,.12);
+}
+
+.tv-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.tv-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.07rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.tv-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:650;
+}
+
+.hero-menu{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:.38rem;
+    margin-top:.74rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.hero-menu::-webkit-scrollbar{
+    display:none;
+}
+
+.hero-menu button{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border-radius:999px;
+    padding:.35rem .58rem;
+    font-size:.62rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.tv-card{
+    border-radius:25px;
+    padding:.9rem;
+    background:#fff;
+    border:1px solid #ffe4e6;
+    box-shadow:var(--tv-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:.75rem;
+}
+
+.section-title h3{
+    margin:0;
+    color:#0f172a;
+    font-size:.95rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.section-title p{
+    margin:.18rem 0 0;
+    color:#64748b;
+    font-size:.72rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.34rem .56rem;
+    border-radius:999px;
+    background:#fff1f2;
+    color:#be123c;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.88rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.9rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:55px;
+    border-radius:16px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.5rem;
+    transition:.2s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#fb7185;
+    box-shadow:0 0 0 4px rgba(239,23,72,.12);
+}
+
+.input-help{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-top:.45rem;
+    color:#64748b;
+    font-size:.7rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.quick-row{
+    display:flex;
+    gap:.42rem;
+    overflow-x:auto;
+    margin-top:.65rem;
+    padding-bottom:.15rem;
+    scrollbar-width:none;
+}
+
+.quick-row::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-row button{
+    flex:0 0 auto;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    color:#374151;
+    border-radius:999px;
+    padding:.46rem .65rem;
+    font-size:.7rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.tv-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.76rem;
+    border-radius:16px;
+    background:#fff1f2;
+    border:1px solid #ffe4e6;
+    color:#be123c;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.provider-strip{
+    display:flex;
+    gap:.55rem;
+    overflow-x:auto;
+    padding:.15rem 0 .35rem;
+    scrollbar-width:none;
+}
+
+.provider-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.provider-card{
+    flex:0 0 132px;
+    min-height:112px;
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid #edf2f7;
+    border-radius:20px;
+    background:
+        radial-gradient(circle at top right,rgba(251,113,133,.11),transparent 34%),
+        #fff;
+    padding:.8rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.provider-card:hover{
+    transform:translateY(-2px);
+    border-color:#fda4af;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.provider-card.active{
+    border-color:#fb7185;
+    background:#fff1f2;
+    box-shadow:0 12px 24px rgba(239,23,72,.12);
+}
+
+.provider-logo{
+    width:39px;
+    height:39px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.68rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.provider-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.78rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.provider-card span{
+    display:block;
+    margin-top:.2rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.tv-feature-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.42rem;
+    margin-top:.8rem;
+    padding:.65rem;
+    border-radius:20px;
+    background:#fff7f8;
+    border:1px solid #ffe4e6;
+}
+
+.tv-feature{
+    min-height:40px;
+    border:0;
+    border-radius:14px;
+    background:#fff;
+    color:#be123c;
+    font-size:.68rem;
+    font-weight:950;
+    box-shadow:0 6px 14px rgba(15,23,42,.045);
+}
+
+.search-tv-btn{
+    width:100%;
+    min-height:56px;
+    border:0;
+    border-radius:18px;
+    margin-top:.82rem;
+    color:#fff;
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    font-size:.92rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(239,23,72,.22);
+    transition:.2s ease;
+}
+
+.search-tv-btn:hover{
+    transform:translateY(-1px);
+}
+
+.compact-tv{
+    display:none;
+    position:sticky;
+    top:.5rem;
+    z-index:20;
+    margin-bottom:.75rem;
+    padding:.75rem;
+    border-radius:21px;
+    background:rgba(255,255,255,.94);
+    border:1px solid #ffe4e6;
+    box-shadow:0 14px 30px rgba(15,23,42,.12);
+    backdrop-filter:blur(10px);
+}
+
+.compact-tv.show{
+    display:block;
+}
+
+.compact-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+}
+
+.compact-inner strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.compact-inner span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:750;
+}
+
+.compact-edit{
+    flex:0 0 auto;
+    border:0;
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:999px;
+    background:#fff1f2;
+    color:#be123c;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.tv-dashboard{
+    display:none;
+}
+
+.tv-dashboard.show{
+    display:block;
+}
+
+.lounge-screen{
+    overflow:hidden;
+    border-radius:26px;
+    margin-bottom:.75rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 86% 0%,rgba(56,189,248,.22),transparent 30%),
+        linear-gradient(135deg,#1e3a8a,#7c3aed 48%,#ef1748);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 18px 36px rgba(124,58,237,.18);
+}
+
+.lounge-screen-main{
+    padding:.95rem;
+}
+
+.lounge-label{
+    display:inline-flex;
+    align-items:center;
+    gap:.28rem;
+    padding:.28rem .55rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.17);
+    color:#fff;
+    font-size:.64rem;
+    font-weight:950;
+    margin-bottom:.55rem;
+}
+
+.lounge-screen h3{
+    margin:0;
+    color:#fff;
+    font-size:1.02rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.lounge-screen p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.84);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.screen-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.45rem;
+    padding:.78rem .95rem .95rem;
+}
+
+.stat-box{
+    padding:.58rem .45rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.15);
+    border:1px solid rgba(255,255,255,.12);
+    text-align:center;
+}
+
+.stat-box strong{
+    display:block;
+    color:#fff;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.stat-box span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.78);
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.channel-wrap{
+    margin-bottom:.75rem;
+}
+
+.channel-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.channel-title strong{
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.channel-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.channel-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.channel-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.channel-chip{
+    flex:0 0 112px;
+    border:1px solid #e2e8f0;
+    background:#fff;
+    border-radius:17px;
+    padding:.68rem .55rem;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s ease;
+    box-shadow:0 8px 18px rgba(15,23,42,.045);
+}
+
+.channel-chip:hover{
+    transform:translateY(-2px);
+    border-color:#fda4af;
+}
+
+.channel-chip.active{
+    background:#fff1f2;
+    border-color:#ef1748;
+    box-shadow:inset 0 -3px 0 #ef1748,0 10px 22px rgba(239,23,72,.10);
+}
+
+.channel-chip strong{
+    display:block;
+    color:#0f172a;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.channel-chip span{
+    display:block;
+    margin-top:.22rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:750;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:19px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.22),transparent 26%),
+        linear-gradient(135deg,#7c3aed,#ef1748 58%,#fb7185);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(239,23,72,.14);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.86);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#be123c;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.filter-scroll{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .55rem;
+    margin-bottom:.55rem;
+    scrollbar-width:none;
+}
+
+.filter-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.filter-btn{
+    flex:0 0 auto;
+    border:1px solid #fecdd3;
+    background:#fff;
+    color:#be123c;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.filter-btn.active{
+    background:#ef1748;
+    color:#fff;
+    border-color:#ef1748;
+}
+
+.package-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.package-card{
+    overflow:hidden;
+    border-radius:23px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.package-card:hover{
+    transform:translateY(-2px);
+    border-color:#fda4af;
+}
+
+.package-card.active{
+    border-color:#ef1748;
+    background:#fff1f2;
+    box-shadow:0 0 0 1px #ef1748,0 14px 28px rgba(239,23,72,.10);
+}
+
+.package-main{
+    padding:.9rem;
+}
+
+.package-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.76rem;
+}
+
+.package-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.package-logo{
+    width:43px;
+    height:43px;
+    flex:0 0 43px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(239,23,72,.14);
+}
+
+.package-name{
+    min-width:0;
+}
+
+.package-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.package-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.package-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.package-detail{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+    margin-bottom:.75rem;
+}
+
+.detail-box{
+    padding:.65rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #eef2f7;
+}
+
+.detail-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.detail-box strong{
+    display:block;
+    margin-top:.12rem;
+    color:#0f172a;
+    font-size:.8rem;
+    font-weight:950;
+}
+
+.package-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#be123c;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-package{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.package-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.package-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:23px;
+    background:#fff;
+    border:1px solid #fecdd3;
+    box-shadow:0 12px 24px rgba(239,23,72,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:19px;
+    background:linear-gradient(135deg,#0f172a,#be123c);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:18px;
+    color:#fff;
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(239,23,72,.24);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:420px){
+    .tv-lounge-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .tv-lounge-shell{
+        padding:.65rem;
+        border-radius:25px;
+    }
+
+    .provider-card{
+        flex-basis:124px;
+    }
+
+    .package-detail{
+        grid-template-columns:1fr;
+    }
+
+    .package-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-package{
+        width:100%;
+    }
+
+    .tv-feature-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+</style>
+
+<div class="tv-lounge-page">
+    <div class="tv-lounge-shell">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="tv-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="tv-topbar">
+            <a href="{{ url_for('lainnya') }}" class="tv-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="tv-chip">
+                <i class="fa-solid fa-tv"></i>
+                TV Kabel
+            </div>
+        </div>
+
+        <div class="tv-hero" id="heroBox">
+            <div class="tv-hero-main">
+                <div class="tv-hero-icon">
+                    <i class="fa-solid fa-display"></i>
+                </div>
+
+                <div>
+                    <div class="tv-badge">
+                        <i class="fa-solid fa-clapperboard"></i>
+                        Entertainment Lounge
+                    </div>
+                    <h2>TV Kabel Premium Lebih Rapi</h2>
+                    <p>Kelola tagihan, paket channel, film, sport, family, dan premium dalam satu dashboard ringan.</p>
+                </div>
+            </div>
+
+            <div class="hero-menu">
+                <button type="button" data-provider="TV_INDIHOME">IndiHome</button>
+                <button type="button" data-provider="TV_FIRSTMEDIA">First Media</button>
+                <button type="button" data-provider="TV_MNCVISION">MNC Vision</button>
+                <button type="button" data-provider="TV_KVISION">K-Vision</button>
+                <button type="button" data-provider="TV_TRANSVISION">Transvision</button>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('tv') }}" id="tvForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="tv">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="tv-card" id="searchCard">
+                <div class="section-title">
+                    <div>
+                        <h3>ID Pelanggan TV Kabel</h3>
+                        <p>Masukkan nomor pelanggan TV kabel, parabola, atau streaming.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="tel"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 1000123456"
+                        value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                        inputmode="numeric"
+                        minlength="5"
+                        maxlength="25"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan angka tanpa spasi.</span>
+                    <span id="charCount">0/25</span>
+                </div>
+
+                <div class="quick-row">
+                    <button type="button" data-id="1000123456">Contoh ID</button>
+                    <button type="button" data-id="8800112233">Contoh Parabola</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="tv-info" id="tvInfo"></div>
+
+                <div style="margin-top:1rem;">
+                    <div class="section-title">
+                        <div>
+                            <h3>Pilih Provider TV</h3>
+                            <p>Geser dan pilih provider sesuai layanan kamu.</p>
+                        </div>
+                        <span class="section-pill">Step 2</span>
+                    </div>
+
+                    <div class="provider-strip" id="providerStrip">
+                        {% for kode, nama in produk_final.items() %}
+                            {% set admin = harga_final.get(kode, 0) %}
+                            <button
+                                type="button"
+                                class="provider-card"
+                                data-kode="{{ kode }}"
+                                data-nama="{{ nama|e }}"
+                                data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+                            >
+                                <div class="provider-logo">{{ nama[:2].upper() }}</div>
+                                <strong>{{ nama }}</strong>
+                                <span>Tagihan / paket TV</span>
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="tv-feature-grid">
+                    <button type="button" class="tv-feature">MOVIE</button>
+                    <button type="button" class="tv-feature">SPORT</button>
+                    <button type="button" class="tv-feature">KIDS</button>
+                    <button type="button" class="tv-feature">NEWS</button>
+                    <button type="button" class="tv-feature">HD</button>
+                    <button type="button" class="tv-feature">VOD</button>
+                    <button type="button" class="tv-feature">FAMILY</button>
+                    <button type="button" class="tv-feature">PREMIUM</button>
+                </div>
+
+                <button type="button" class="search-tv-btn" id="searchBtn">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    Buka Dashboard TV
+                </button>
+            </div>
+
+            <div class="compact-tv" id="compactTv">
+                <div class="compact-inner">
+                    <div>
+                        <strong id="compactProvider">-</strong>
+                        <span id="compactInfo">-</span>
+                    </div>
+                    <button type="button" class="compact-edit" id="editBtn">Ubah</button>
+                </div>
+            </div>
+
+            <div class="tv-dashboard" id="tvDashboard">
+                <div class="lounge-screen">
+                    <div class="lounge-screen-main">
+                        <div class="lounge-label">
+                            <i class="fa-solid fa-circle-check"></i>
+                            TV LOUNGE AKTIF
+                        </div>
+                        <h3 id="screenTitle">Dashboard TV Kabel</h3>
+                        <p id="screenSubtitle">Pilih paket channel, periode, atau tagihan TV kabel yang ingin dibayar.</p>
+                    </div>
+
+                    <div class="screen-stats">
+                        <div class="stat-box">
+                            <strong id="statChannel">80+</strong>
+                            <span>Channel</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong id="statQuality">HD</strong>
+                            <span>Kualitas</span>
+                        </div>
+                        <div class="stat-box">
+                            <strong>1-5</strong>
+                            <span>Menit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="channel-wrap">
+                    <div class="channel-title">
+                        <div>
+                            <strong>Kategori channel</strong>
+                            <span>Geser untuk pilih mode hiburan</span>
+                        </div>
+                    </div>
+
+                    <div class="channel-strip" id="channelStrip"></div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Paket Hiburan Rumah</strong>
+                        <span>Film, sport, keluarga, berita, premium, dan tagihan aktif dalam satu dashboard.</span>
+                    </div>
+                    <div class="promo-badge">TV LOUNGE</div>
+                </div>
+
+                <div class="filter-scroll">
+                    <button type="button" class="filter-btn active" data-filter="recommended">Rekomendasi</button>
+                    <button type="button" class="filter-btn" data-filter="bill">Tagihan</button>
+                    <button type="button" class="filter-btn" data-filter="family">Keluarga</button>
+                    <button type="button" class="filter-btn" data-filter="movie">Film</button>
+                    <button type="button" class="filter-btn" data-filter="sport">Olahraga</button>
+                    <button type="button" class="filter-btn" data-filter="premium">Premium</button>
+                    <button type="button" class="filter-btn" data-filter="cheap">Hemat</button>
+                </div>
+
+                <div class="package-list" id="packageList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan TV Kabel
+                    </div>
+
+                    <div class="summary-row">
+                        <span>ID Pelanggan</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Provider</span>
+                        <b id="sumProvider">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Paket / Tagihan</span>
+                        <b id="sumPackage">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Channel</span>
+                        <b id="sumChannel">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Estimasi</span>
+                            <b id="sumTotal">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-tv"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Lanjutkan Pembayaran
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="tvProductData" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set admin = harga_final.get(kode, 0) %}
+        <span
+            data-kode="{{ kode }}"
+            data-nama="{{ nama|e }}"
+            data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const heroBox=document.getElementById('heroBox');
+    const searchCard=document.getElementById('searchCard');
+    const compactTv=document.getElementById('compactTv');
+    const editBtn=document.getElementById('editBtn');
+    const form=document.getElementById('tvForm');
+    const nomorInput=document.getElementById('nomor_tujuan');
+    const charCount=document.getElementById('charCount');
+    const tvInfo=document.getElementById('tvInfo');
+    const providerCards=document.querySelectorAll('.provider-card');
+    const searchBtn=document.getElementById('searchBtn');
+    const tvDashboard=document.getElementById('tvDashboard');
+    const compactProvider=document.getElementById('compactProvider');
+    const compactInfo=document.getElementById('compactInfo');
+    const screenTitle=document.getElementById('screenTitle');
+    const screenSubtitle=document.getElementById('screenSubtitle');
+    const statChannel=document.getElementById('statChannel');
+    const statQuality=document.getElementById('statQuality');
+    const channelStrip=document.getElementById('channelStrip');
+    const packageList=document.getElementById('packageList');
+    const summaryBox=document.getElementById('summaryBox');
+    const kodeProduk=document.getElementById('kode_produk');
+    const submitBtn=document.getElementById('submitBtn');
+
+    let selectedProvider=null;
+    let selectedPackage=null;
+    let activeFilter='recommended';
+    let activeChannel='all';
+
+    const channelModes=[
+        {key:'all',label:'Semua',info:'80+ channel'},
+        {key:'family',label:'Family',info:'Anak & hiburan'},
+        {key:'movie',label:'Movie',info:'Film & series'},
+        {key:'sport',label:'Sport',info:'Olahraga'},
+        {key:'news',label:'News',info:'Berita'},
+        {key:'premium',label:'Premium',info:'Channel spesial'}
+    ];
+
+    const packageTemplates=[
+        {type:'bill',channel:'all',title:'Bayar Tagihan Aktif',pack:'Tagihan Bulanan',desc:'Pembayaran tagihan TV kabel bulan berjalan.',base:185000,tag:'Aktif',quality:'HD',channels:'80+',premium:false},
+        {type:'cheap',channel:'family',title:'Basic Home TV',pack:'Paket Hemat',desc:'Channel nasional, keluarga, anak, dan hiburan dasar.',base:145000,tag:'Hemat',quality:'SD/HD',channels:'45+',premium:false},
+        {type:'family',channel:'family',title:'Family Entertainment',pack:'Paket Keluarga',desc:'Hiburan keluarga, anak, edukasi, musik, dan lifestyle.',base:220000,tag:'Family',quality:'HD',channels:'95+',premium:false},
+        {type:'movie',channel:'movie',title:'Movie & Series Pack',pack:'Paket Film',desc:'Channel film, drama, series, dan tayangan internasional.',base:275000,tag:'Movie',quality:'HD',channels:'110+',premium:false},
+        {type:'sport',channel:'sport',title:'Sports Arena Pack',pack:'Paket Olahraga',desc:'Channel olahraga lokal dan internasional pilihan.',base:325000,tag:'Sport',quality:'HD',channels:'120+',premium:false},
+        {type:'premium',channel:'premium',title:'Ultimate Premium TV',pack:'Paket Premium',desc:'Paket lengkap film, sport, anak, berita, dan entertainment.',base:435000,tag:'Premium',quality:'Full HD',channels:'160+',premium:true}
+    ];
+
+    function cleanNumber(value){
+        return (value || '').replace(/[^0-9]/g,'');
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function rupiah(num){
+        return 'Rp '+String(Math.max(0,Math.round(num))).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function logoText(name){
+        return String(name || 'TV').split(' ').map(function(word){
+            return word[0];
+        }).join('').slice(0,2).toUpperCase();
+    }
+
+    function updateInfo(){
+        let nomor=cleanNumber(nomorInput.value);
+
+        if(nomor.length>25){
+            nomor=nomor.slice(0,25);
+        }
+
+        nomorInput.value=nomor;
+        charCount.textContent=nomor.length+'/25';
+
+        if(!nomor){
+            tvInfo.style.display='none';
+            return;
+        }
+
+        if(nomor.length<5){
+            tvInfo.style.display='block';
+            tvInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> ID pelanggan masih terlalu pendek.';
+            return;
+        }
+
+        tvInfo.style.display='block';
+        tvInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format ID sudah cukup. Pilih provider lalu buka dashboard TV.';
+    }
+
+    function validateSearch(){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<5){
+            alert('Masukkan ID pelanggan TV Kabel minimal 5 digit.');
+            nomorInput.focus();
+            return false;
+        }
+
+        if(!selectedProvider){
+            alert('Silakan pilih provider TV Kabel terlebih dahulu.');
+            return false;
+        }
+
+        return true;
+    }
+
+    function renderChannels(){
+        channelStrip.innerHTML='';
+
+        channelModes.forEach(function(item){
+            const btn=document.createElement('button');
+            btn.type='button';
+            btn.className='channel-chip '+(activeChannel===item.key?'active':'');
+            btn.dataset.channel=item.key;
+            btn.innerHTML='<strong>'+item.label+'</strong><span>'+item.info+'</span>';
+
+            btn.addEventListener('click',function(){
+                activeChannel=btn.dataset.channel;
+                renderChannels();
+                renderPackages();
+            });
+
+            channelStrip.appendChild(btn);
+        });
+    }
+
+    function makePackages(){
+        if(!selectedProvider) return [];
+
+        const admin=parseMoney(selectedProvider.admin);
+
+        return packageTemplates.map(function(item){
+            const total=item.base + admin;
+
+            return {
+                kode:selectedProvider.kode,
+                provider:selectedProvider.nama,
+                admin:selectedProvider.admin,
+                title:item.title,
+                pack:item.pack,
+                desc:item.desc,
+                type:item.type,
+                channel:item.channel,
+                tag:item.tag,
+                quality:item.quality,
+                channels:item.channels,
+                premium:item.premium,
+                total:total,
+                totalText:rupiah(total)
+            };
+        });
+    }
+
+    function applyFilter(list){
+        if(activeChannel!=='all'){
+            list=list.filter(function(item){
+                return item.channel===activeChannel || item.type==='bill';
+            });
+        }
+
+        if(activeFilter==='recommended'){
+            return list.sort(function(a,b){
+                if(a.type==='bill') return -1;
+                if(b.type==='bill') return 1;
+                return a.total-b.total;
+            });
+        }
+
+        if(activeFilter==='cheap'){
+            return list.sort(function(a,b){return a.total-b.total;});
+        }
+
+        if(activeFilter==='premium'){
+            return list.filter(function(item){return item.premium;});
+        }
+
+        return list.filter(function(item){return item.type===activeFilter;});
+    }
+
+    function renderPackages(){
+        packageList.innerHTML='';
+        selectedPackage=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+
+        let list=applyFilter(makePackages());
+
+        screenTitle.textContent='TV Lounge '+selectedProvider.nama;
+        screenSubtitle.textContent='ID '+cleanNumber(nomorInput.value)+' · Pilih paket channel atau bayar tagihan aktif.';
+        compactProvider.textContent=selectedProvider.nama;
+        compactInfo.textContent='ID '+cleanNumber(nomorInput.value)+' · '+(activeChannel==='all'?'Semua channel':activeChannel);
+
+        if(statChannel){
+            statChannel.textContent=activeChannel==='premium'?'160+':activeChannel==='movie'?'110+':activeChannel==='sport'?'120+':'80+';
+        }
+
+        if(statQuality){
+            statQuality.textContent=activeChannel==='premium'?'FHD':'HD';
+        }
+
+        if(!list.length){
+            packageList.innerHTML='<div class="empty-state">Tidak ada paket pada filter ini. Coba pilih kategori lain.</div>';
+            return;
+        }
+
+        list.forEach(function(item){
+            const card=document.createElement('div');
+            card.className='package-card';
+
+            card.innerHTML=
+                '<div class="package-main">'+
+                    '<div class="package-top">'+
+                        '<div class="package-left">'+
+                            '<div class="package-logo">'+logoText(item.provider)+'</div>'+
+                            '<div class="package-name">'+
+                                '<strong>'+item.title+'</strong>'+
+                                '<span>'+item.provider+' · '+item.pack+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="package-tag">'+item.tag+'</div>'+
+                    '</div>'+
+
+                    '<div class="package-detail">'+
+                        '<div class="detail-box">'+
+                            '<span>Channel</span>'+
+                            '<strong>'+item.channels+'</strong>'+
+                        '</div>'+
+                        '<div class="detail-box">'+
+                            '<span>Kualitas</span>'+
+                            '<strong>'+item.quality+'</strong>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="package-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total estimasi</span>'+
+                            '<strong>'+item.totalText+'</strong>'+
+                            '<small>Admin '+item.admin+' termasuk</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-package">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="package-benefits">'+
+                    '<span><i class="fa-solid fa-tv"></i> TV Kabel</span>'+
+                    '<span><i class="fa-solid fa-clapperboard"></i> '+item.tag+'</span>'+
+                    '<span><i class="fa-solid fa-display"></i> '+item.quality+'</span>'+
+                    '<span><i class="fa-solid fa-wallet"></i> Admin '+item.admin+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-package').addEventListener('click',function(){
+                document.querySelectorAll('.package-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedPackage=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            packageList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedPackage){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
+        document.getElementById('sumProvider').textContent=selectedPackage.provider;
+        document.getElementById('sumPackage').textContent=selectedPackage.title+' · '+selectedPackage.pack;
+        document.getElementById('sumChannel').textContent=selectedPackage.channels+' · '+selectedPackage.quality;
+        document.getElementById('sumTotal').textContent=selectedPackage.totalText;
+
+        summaryBox.style.display='block';
+    }
+
+    function enterDashboard(){
+        heroBox.classList.add('hidden');
+        searchCard.classList.add('hidden');
+        compactTv.classList.add('show');
+        tvDashboard.classList.add('show');
+
+        renderChannels();
+        renderPackages();
+
+        setTimeout(function(){
+            tvDashboard.scrollIntoView({behavior:'smooth',block:'start'});
+        },120);
+    }
+
+    nomorInput.addEventListener('input',function(){
+        updateInfo();
+
+        if(tvDashboard.classList.contains('show')){
+            renderPackages();
+        }
+    });
+
+    document.querySelectorAll('.quick-row button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            if(btn.getAttribute('data-clear')){
+                nomorInput.value='';
+            }else{
+                nomorInput.value=btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInfo();
+
+            if(tvDashboard.classList.contains('show')){
+                renderPackages();
+            }
+        });
+    });
+
+    providerCards.forEach(function(card){
+        card.addEventListener('click',function(){
+            providerCards.forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            card.classList.add('active');
+
+            selectedProvider={
+                kode:card.dataset.kode,
+                nama:card.dataset.nama,
+                admin:card.dataset.admin
+            };
+
+            if(tvDashboard.classList.contains('show')){
+                renderPackages();
+            }
+        });
+    });
+
+    document.querySelectorAll('.hero-menu button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            const target=btn.dataset.provider;
+            const card=document.querySelector('.provider-card[data-kode="'+target+'"]');
+
+            if(card){
+                card.click();
+                card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+            }
+        });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeFilter=btn.dataset.filter;
+
+            document.querySelectorAll('.filter-btn').forEach(function(el){
+                el.classList.remove('active');
+            });
+
+            btn.classList.add('active');
+            renderPackages();
+        });
+    });
+
+    searchBtn.addEventListener('click',function(){
+        if(!validateSearch()) return;
+        enterDashboard();
+    });
+
+    editBtn.addEventListener('click',function(){
+        heroBox.classList.remove('hidden');
+        searchCard.classList.remove('hidden');
+        compactTv.classList.remove('show');
+
+        setTimeout(function(){
+            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
+        },100);
+    });
+
+    form.addEventListener('submit',function(e){
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!nomor || nomor.length<5){
+            e.preventDefault();
+            alert('Masukkan ID pelanggan TV Kabel terlebih dahulu.');
+            nomorInput.focus();
+            return;
+        }
+
+        if(!selectedProvider){
+            e.preventDefault();
+            alert('Silakan pilih provider TV Kabel terlebih dahulu.');
+            return;
+        }
+
+        if(!selectedPackage || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih salah satu paket atau tagihan TV Kabel terlebih dahulu.');
+            return;
+        }
+
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses TV Kabel...';
+        submitBtn.style.opacity='0.75';
+        submitBtn.style.pointerEvents='none';
+    });
+
+    if(nomorInput.value){
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

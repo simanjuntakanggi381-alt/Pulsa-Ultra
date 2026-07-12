@@ -1,0 +1,1014 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_pbb = {
+    'PBB_JAKARTA': 'PBB Jakarta',
+    'PBB_BANDUNG': 'PBB Bandung',
+    'PBB_SURABAYA': 'PBB Surabaya',
+    'PBB_MEDAN': 'PBB Medan',
+    'PBB_SEMARANG': 'PBB Semarang',
+    'PBB_TANGERANG': 'PBB Tangerang',
+    'PBB_BEKASI': 'PBB Bekasi',
+    'PBB_BOGOR': 'PBB Bogor',
+    'PBB_DEPOK': 'PBB Depok',
+    'PBB_MAKASSAR': 'PBB Makassar'
+} %}
+
+{% set fallback_harga_pbb = {
+    'PBB_JAKARTA': 3500,
+    'PBB_BANDUNG': 3500,
+    'PBB_SURABAYA': 3500,
+    'PBB_MEDAN': 3500,
+    'PBB_SEMARANG': 3500,
+    'PBB_TANGERANG': 3500,
+    'PBB_BEKASI': 3500,
+    'PBB_BOGOR': 3500,
+    'PBB_DEPOK': 3500,
+    'PBB_MAKASSAR': 3500
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_pbb %}
+{% set harga_final = harga_map if harga_map else fallback_harga_pbb %}
+
+<style>
+:root{
+    --pbb-main:#0ea5e9;
+    --pbb-main2:#0369a1;
+    --pbb-dark:#0f172a;
+    --pbb-text:#334155;
+    --pbb-muted:#64748b;
+    --pbb-line:#e2e8f0;
+    --pbb-green:#16a34a;
+}
+
+body{
+    background:
+        radial-gradient(circle at top left, rgba(14,165,233,.10), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(3,105,161,.10), transparent 32%),
+        #f6f8fc;
+}
+
+.pbb-page{
+    width:100%;
+    max-width:600px;
+    margin:0 auto;
+    padding:1rem 1rem 5rem;
+    box-sizing:border-box;
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+    color:var(--pbb-text);
+}
+
+.pbb-shell{
+    border-radius:30px;
+    padding:.9rem;
+    background:
+        radial-gradient(circle at top left, rgba(14,165,233,.15), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(3,105,161,.12), transparent 34%),
+        linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+    border:1px solid rgba(14,165,233,.13);
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.pbb-alert{
+    margin-bottom:1rem;
+    padding:.9rem 1rem;
+    border-radius:16px;
+    text-align:center;
+    font-weight:800;
+    font-size:.9rem;
+    line-height:1.45;
+    background:#f0f9ff;
+    color:#075985;
+    border:1px solid #bae6fd;
+}
+
+.pbb-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.pbb-alert.error,
+.pbb-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.pbb-alert.warning{
+    background:#fffbeb;
+    color:#92400e;
+    border-color:#fde68a;
+}
+
+.pbb-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    margin-bottom:1rem;
+}
+
+.back-menu{
+    min-height:40px;
+    padding:0 .8rem;
+    border-radius:999px;
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    color:#0369a1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.38rem;
+    font-size:.76rem;
+    font-weight:950;
+    text-decoration:none;
+    box-shadow:0 8px 18px rgba(15,23,42,.05);
+}
+
+.status-pill{
+    min-height:40px;
+    padding:0 .8rem;
+    border-radius:999px;
+    background:#f0f9ff;
+    color:#0369a1;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.38rem;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.pbb-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:26px;
+    padding:1.25rem;
+    color:#ffffff;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.40), transparent 34%),
+        linear-gradient(135deg,#0ea5e9 0%,#0284c7 48%,#0369a1 100%);
+    box-shadow:0 16px 34px rgba(3,105,161,.28);
+    margin-bottom:1rem;
+}
+
+.pbb-hero:before{
+    content:"";
+    position:absolute;
+    right:-58px;
+    top:-58px;
+    width:165px;
+    height:165px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+}
+
+.pbb-hero:after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-45px;
+    width:115px;
+    height:115px;
+    border-radius:50%;
+    border:18px solid rgba(255,255,255,.10);
+}
+
+.pbb-hero-content{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+}
+
+.pbb-hero-icon{
+    width:60px;
+    height:60px;
+    flex:0 0 60px;
+    border-radius:21px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.45rem;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 12px 24px rgba(15,23,42,.14);
+}
+
+.pbb-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+    padding:.28rem .62rem;
+    margin-bottom:.45rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#ffffff;
+    font-size:.72rem;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.pbb-hero h2{
+    margin:0;
+    color:#ffffff;
+    font-size:1.35rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.035em;
+}
+
+.pbb-hero p{
+    margin:.38rem 0 0;
+    color:rgba(255,255,255,.92);
+    font-size:.84rem;
+    line-height:1.5;
+    font-weight:500;
+}
+
+.pbb-step-row{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+    margin-top:1rem;
+}
+
+.pbb-step{
+    padding:.68rem .45rem;
+    border-radius:16px;
+    text-align:center;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);
+}
+
+.pbb-step strong{
+    display:block;
+    color:#ffffff;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.pbb-step span{
+    display:block;
+    margin-top:.12rem;
+    color:rgba(255,255,255,.84);
+    font-size:.66rem;
+}
+
+.pbb-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:1rem;
+    border:1px solid #f1f5f9;
+    box-shadow:0 12px 28px rgba(15,23,42,.06);
+    margin-bottom:1rem;
+}
+
+.section-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    margin-bottom:.9rem;
+}
+
+.section-head h3{
+    margin:0;
+    color:var(--pbb-dark);
+    font-size:1rem;
+    line-height:1.25;
+    font-weight:950;
+    letter-spacing:-.02em;
+}
+
+.section-head p{
+    margin:.25rem 0 0;
+    color:var(--pbb-muted);
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:600;
+}
+
+.section-pill{
+    flex:0 0 auto;
+    padding:.4rem .62rem;
+    border-radius:999px;
+    background:#f0f9ff;
+    color:#0369a1;
+    font-size:.7rem;
+    font-weight:950;
+    white-space:nowrap;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:1rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#94a3b8;
+    font-size:1rem;
+    pointer-events:none;
+    z-index:2;
+}
+
+.input-control{
+    width:100%;
+    min-height:58px;
+    border-radius:18px;
+    border:2px solid var(--pbb-line);
+    background:#ffffff;
+    color:var(--pbb-dark);
+    font-size:1rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 1rem 0 2.85rem;
+    letter-spacing:.02em;
+    transition:.22s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:600;
+}
+
+.input-control:focus{
+    border-color:var(--pbb-main);
+    box-shadow:0 0 0 5px rgba(14,165,233,.12);
+}
+
+.input-help{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    margin-top:.45rem;
+    color:var(--pbb-muted);
+    font-size:.75rem;
+    line-height:1.4;
+    font-weight:600;
+}
+
+.pbb-info{
+    display:none;
+    margin-top:.65rem;
+    padding:.8rem;
+    border-radius:16px;
+    background:#f0f9ff;
+    border:1px solid #bae6fd;
+    color:#075985;
+    font-size:.82rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.pbb-quick{
+    display:flex;
+    gap:.5rem;
+    flex-wrap:wrap;
+    margin-top:.7rem;
+}
+
+.pbb-quick button{
+    border:1px solid #e5e7eb;
+    background:#ffffff;
+    color:#374151;
+    border-radius:999px;
+    padding:.5rem .72rem;
+    font-size:.74rem;
+    font-weight:850;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.pbb-quick button:hover{
+    background:#f9fafb;
+    border-color:#cbd5e1;
+}
+
+.provider-note{
+    margin-bottom:.85rem;
+    padding:.8rem;
+    border-radius:16px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#92400e;
+    font-size:.8rem;
+    line-height:1.5;
+    font-weight:700;
+}
+
+.pbb-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.75rem;
+}
+
+.pbb-product-card{
+    position:relative;
+    overflow:hidden;
+    min-height:112px;
+    border:1.5px solid #edf2f7;
+    border-radius:18px;
+    background:#ffffff;
+    padding:.85rem;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s ease;
+}
+
+.pbb-product-card:hover{
+    transform:translateY(-2px);
+    border-color:#7dd3fc;
+    box-shadow:0 10px 20px rgba(15,23,42,.07);
+}
+
+.pbb-product-card.active{
+    border-color:var(--pbb-main);
+    background:#f0f9ff;
+    box-shadow:0 12px 24px rgba(14,165,233,.13);
+}
+
+.pbb-product-card:before{
+    content:"";
+    position:absolute;
+    right:-32px;
+    top:-32px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    background:rgba(14,165,233,.10);
+}
+
+.product-label{
+    position:relative;
+    z-index:2;
+    display:inline-flex;
+    padding:.18rem .4rem;
+    margin-bottom:.4rem;
+    border-radius:999px;
+    background:#e0f2fe;
+    color:#0369a1;
+    font-size:.56rem;
+    font-weight:950;
+    text-transform:uppercase;
+}
+
+.product-name{
+    position:relative;
+    z-index:2;
+    color:var(--pbb-dark);
+    font-size:.9rem;
+    line-height:1.22;
+    font-weight:950;
+    margin-bottom:.3rem;
+}
+
+.product-desc{
+    position:relative;
+    z-index:2;
+    color:var(--pbb-muted);
+    font-size:.72rem;
+    line-height:1.35;
+    font-weight:650;
+    margin-bottom:.35rem;
+}
+
+.product-price{
+    position:relative;
+    z-index:2;
+    color:var(--pbb-green);
+    font-size:.78rem;
+    font-weight:950;
+}
+
+.summary-box{
+    display:none;
+    margin-top:1rem;
+    padding:1rem;
+    border-radius:22px;
+    background:
+        radial-gradient(circle at top right, rgba(14,165,233,.10), transparent 32%),
+        #ffffff;
+    border:1px solid #bae6fd;
+    box-shadow:0 12px 24px rgba(14,165,233,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    margin-bottom:.75rem;
+    color:var(--pbb-dark);
+    font-size:.95rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.65rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:var(--pbb-muted);
+    font-size:.8rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:var(--pbb-dark);
+    font-size:.84rem;
+    line-height:1.35;
+    text-align:right;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.75rem;
+    padding:.9rem;
+    border-radius:18px;
+    background:linear-gradient(135deg,#0f172a,#0369a1);
+    color:#ffffff;
+    display:flex;
+    justify-content:space-between;
+    gap:1rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.78rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.2rem;
+    color:#ffffff;
+    font-size:1.18rem;
+    font-weight:950;
+}
+
+.btn-main{
+    width:100%;
+    min-height:58px;
+    margin-top:1rem;
+    border:none;
+    border-radius:18px;
+    color:#ffffff;
+    background:linear-gradient(135deg,#0ea5e9,#0369a1);
+    font-size:1rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 28px rgba(3,105,161,.28);
+    transition:.22s ease;
+}
+
+.btn-main:hover{
+    transform:translateY(-2px);
+    box-shadow:0 17px 34px rgba(3,105,161,.34);
+}
+
+.pbb-note{
+    margin-top:1rem;
+    padding:.95rem;
+    border-radius:20px;
+    background:#f0f9ff;
+    border:1px solid #bae6fd;
+    border-left:5px solid #0ea5e9;
+    color:#075985;
+    font-size:.8rem;
+    line-height:1.55;
+    font-weight:650;
+}
+
+.pbb-note strong{
+    color:#0c4a6e;
+}
+
+.empty-state{
+    padding:1rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.85rem;
+    line-height:1.55;
+    font-weight:700;
+    text-align:center;
+}
+
+@media(max-width:480px){
+    .pbb-page{
+        padding-left:.75rem;
+        padding-right:.75rem;
+    }
+
+    .pbb-shell{
+        padding:.7rem;
+        border-radius:26px;
+    }
+
+    .pbb-topbar{
+        gap:.5rem;
+    }
+
+    .back-menu,
+    .status-pill{
+        min-height:38px;
+        padding:0 .7rem;
+        font-size:.72rem;
+    }
+
+    .pbb-hero{
+        padding:1.1rem;
+        border-radius:24px;
+    }
+
+    .pbb-hero-content{
+        align-items:flex-start;
+    }
+
+    .pbb-hero-icon{
+        width:54px;
+        height:54px;
+        flex-basis:54px;
+        border-radius:18px;
+        font-size:1.25rem;
+    }
+
+    .pbb-hero h2{
+        font-size:1.16rem;
+    }
+
+    .pbb-step-row{
+        grid-template-columns:1fr;
+    }
+
+    .section-head{
+        flex-direction:column;
+        gap:.45rem;
+    }
+
+    .pbb-grid{
+        grid-template-columns:1fr;
+    }
+
+    .summary-row{
+        flex-direction:column;
+        gap:.25rem;
+    }
+
+    .summary-row b{
+        text-align:left;
+    }
+
+    .summary-total{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+}
+</style>
+
+<div class="pbb-page">
+    <div class="pbb-shell">
+
+        {% with pesan = get_flashed_messages(with_categories=true) %}
+            {% if pesan %}
+                {% for kategori, isi in pesan %}
+                    <div class="pbb-alert {{ kategori }}">{{ isi }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="pbb-topbar">
+            <a href="{{ url_for('lainnya') }}" class="back-menu">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="status-pill">
+                <i class="fa-solid fa-building-columns"></i>
+                PBB
+            </div>
+        </div>
+
+        <div class="pbb-hero">
+            <div class="pbb-hero-content">
+                <div class="pbb-hero-icon">
+                    <i class="fa-solid fa-building-columns"></i>
+                </div>
+
+                <div>
+                    <div class="pbb-badge">
+                        <i class="fa-solid fa-receipt"></i>
+                        Pajak Bumi & Bangunan
+                    </div>
+                    <h2>Bayar PBB Lebih Mudah</h2>
+                    <p>Masukkan Nomor Objek Pajak, pilih wilayah PBB, cek data, lalu lanjutkan pembayaran.</p>
+                </div>
+            </div>
+
+            <div class="pbb-step-row">
+                <div class="pbb-step">
+                    <strong>1. Input NOP</strong>
+                    <span>Nomor objek pajak</span>
+                </div>
+                <div class="pbb-step">
+                    <strong>2. Pilih Wilayah</strong>
+                    <span>Kota / daerah</span>
+                </div>
+                <div class="pbb-step">
+                    <strong>3. Bayar</strong>
+                    <span>Konfirmasi</span>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('pbb') }}" id="pbbForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="pbb">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+
+            <div class="pbb-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Nomor Objek Pajak</h3>
+                        <p>Masukkan NOP sesuai SPPT PBB atau data pajak Anda.</p>
+                    </div>
+                    <span class="section-pill">Step 1</span>
+                </div>
+
+                <div class="input-box">
+                    <input
+                        type="text"
+                        id="nomor_tujuan"
+                        name="nomor_tujuan"
+                        class="input-control"
+                        placeholder="Contoh: 327601000000000000"
+                        value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
+                        minlength="5"
+                        maxlength="30"
+                        required
+                        autofocus
+                    >
+                    <i class="fa-solid fa-hashtag"></i>
+                </div>
+
+                <div class="input-help">
+                    <span>Gunakan NOP tanpa spasi.</span>
+                    <span id="charCount">0/30</span>
+                </div>
+
+                <div class="pbb-quick">
+                    <button type="button" data-id="327601000000000000">Isi Contoh NOP</button>
+                    <button type="button" data-clear="1">Hapus NOP</button>
+                </div>
+
+                <div class="pbb-info" id="pbbInfo"></div>
+            </div>
+
+            <div class="pbb-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Wilayah / Tahun Pajak</h3>
+                        <p>Pilih layanan PBB sesuai wilayah atau tahun pajak yang tersedia.</p>
+                    </div>
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="provider-note">
+                    <strong>Info:</strong> Pastikan wilayah PBB sesuai dengan NOP agar tagihan bisa ditemukan.
+                </div>
+
+                {% if produk_final %}
+                <div class="pbb-grid">
+                    {% for kode, nama in produk_final.items() %}
+                        {% set nominal = harga_final.get(kode, 0) %}
+                        <button
+                            type="button"
+                            class="pbb-product-card"
+                            data-kode="{{ kode }}"
+                            data-nama="{{ nama|e }}"
+                            data-harga="{% if format_uang is defined %}{{ format_uang(nominal) }}{% else %}{{ '{:,.0f}'.format(nominal|int)|replace(',', '.') }}{% endif %}"
+                        >
+                            <div class="product-label">PBB</div>
+                            <div class="product-name">{{ nama }}</div>
+                            <div class="product-desc">Cek tagihan sebelum pembayaran</div>
+                            <div class="product-price">
+                                Admin Rp
+                                {% if format_uang is defined %}
+                                    {{ format_uang(nominal) }}
+                                {% else %}
+                                    {{ "{:,.0f}".format(nominal|int)|replace(",", ".") }}
+                                {% endif %}
+                            </div>
+                        </button>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    Produk PBB belum tersedia. Pastikan kode produk memakai prefix <b>PBB_</b>.
+                </div>
+                {% endif %}
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan PBB
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Nomor Objek Pajak</span>
+                        <b id="sumNomor">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Wilayah / Tahun</span>
+                        <b id="sumProduk">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Biaya Admin</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                </div>
+
+                {% if produk_final %}
+                <button type="submit" class="btn-main" id="btnCek">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Cek / Bayar PBB
+                </button>
+                {% endif %}
+
+                <div class="pbb-note">
+                    🏛️ <strong>Catatan:</strong> Pastikan NOP dan wilayah PBB sudah benar sebelum melanjutkan pembayaran.
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    const nomorInput = document.getElementById('nomor_tujuan');
+    const charCount = document.getElementById('charCount');
+    const kodeProduk = document.getElementById('kode_produk');
+    const pbbInfo = document.getElementById('pbbInfo');
+    const summaryBox = document.getElementById('summaryBox');
+    const form = document.getElementById('pbbForm');
+    const btnCek = document.getElementById('btnCek');
+
+    function cleanValue(value) {
+        return (value || '').replace(/\s+/g, '');
+    }
+
+    function updateInfo() {
+        if (!nomorInput) return;
+
+        let nomor = cleanValue(nomorInput.value);
+
+        if (nomor.length > 30) {
+            nomor = nomor.slice(0, 30);
+        }
+
+        nomorInput.value = nomor;
+
+        if (charCount) {
+            charCount.textContent = nomor.length + '/30';
+        }
+
+        if (!pbbInfo) return;
+
+        if (!nomor) {
+            pbbInfo.style.display = 'none';
+            return;
+        }
+
+        if (nomor.length < 5) {
+            pbbInfo.style.display = 'block';
+            pbbInfo.innerHTML = '<i class="fa-solid fa-circle-info"></i> NOP masih terlalu pendek.';
+            return;
+        }
+
+        pbbInfo.style.display = 'block';
+        pbbInfo.innerHTML = '<i class="fa-solid fa-circle-check"></i> Format NOP sudah cukup. Silakan pilih wilayah PBB.';
+    }
+
+    function updateSummary(selected) {
+        selected = selected || {};
+
+        if (!summaryBox) return;
+
+        const nomor = nomorInput ? cleanValue(nomorInput.value) : '';
+        const activeProduk = document.querySelector('.pbb-product-card.active');
+
+        const sumNomor = document.getElementById('sumNomor');
+        const sumProduk = document.getElementById('sumProduk');
+        const sumHarga = document.getElementById('sumHarga');
+
+        if (sumNomor) sumNomor.textContent = nomor || '-';
+        if (sumProduk) sumProduk.textContent = selected.nama || (activeProduk ? activeProduk.dataset.nama : '-');
+        if (sumHarga) sumHarga.textContent = 'Rp ' + (selected.harga || (activeProduk ? activeProduk.dataset.harga : '0'));
+
+        summaryBox.style.display = nomor && activeProduk ? 'block' : 'none';
+    }
+
+    if (nomorInput) {
+        nomorInput.addEventListener('input', function () {
+            updateInfo();
+            updateSummary();
+        });
+    }
+
+    document.querySelectorAll('.pbb-quick button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (!nomorInput) return;
+
+            if (btn.getAttribute('data-clear')) {
+                nomorInput.value = '';
+            } else {
+                nomorInput.value = btn.getAttribute('data-id') || '';
+            }
+
+            nomorInput.focus();
+            updateInfo();
+            updateSummary();
+        });
+    });
+
+    document.querySelectorAll('.pbb-product-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.pbb-product-card').forEach(function(el) {
+                el.classList.remove('active');
+            });
+
+            card.classList.add('active');
+
+            if (kodeProduk) {
+                kodeProduk.value = card.dataset.kode;
+            }
+
+            updateSummary({
+                nama: card.dataset.nama,
+                harga: card.dataset.harga
+            });
+        });
+    });
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const nomor = nomorInput ? cleanValue(nomorInput.value) : '';
+            const produk = kodeProduk ? kodeProduk.value : '';
+
+            if (!nomor || nomor.length < 5) {
+                e.preventDefault();
+                alert('Masukkan Nomor Objek Pajak terlebih dahulu.');
+                if (nomorInput) nomorInput.focus();
+                return;
+            }
+
+            if (!produk) {
+                e.preventDefault();
+                alert('Silakan pilih wilayah atau tahun pajak terlebih dahulu.');
+                return;
+            }
+
+            if (btnCek) {
+                btnCek.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengecek PBB...';
+                btnCek.style.opacity = '0.75';
+                btnCek.style.pointerEvents = 'none';
+            }
+        });
+    }
+
+    if (nomorInput && nomorInput.value) {
+        nomorInput.dispatchEvent(new Event('input'));
+    }
+})();
+</script>
+
+{% endblock %}

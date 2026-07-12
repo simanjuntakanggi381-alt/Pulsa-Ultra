@@ -1,0 +1,2035 @@
+{% extends "base.html" %}
+{% block konten %}
+
+{% set produk_list = daftar_produk|default({}, true) %}
+{% set harga_map = harga|default({}, true) %}
+
+{% set fallback_produk_pesawat = {
+    'PESAWAT_GARUDA': 'Garuda Indonesia',
+    'PESAWAT_CITILINK': 'Citilink',
+    'PESAWAT_BATIK': 'Batik Air',
+    'PESAWAT_LION': 'Lion Air',
+    'PESAWAT_SUPERAIRJET': 'Super Air Jet',
+    'PESAWAT_AIRASIA': 'AirAsia Indonesia',
+    'PESAWAT_PELITA': 'Pelita Air',
+    'PESAWAT_SRIWIJAYA': 'Sriwijaya Air',
+    'PESAWAT_NAM': 'NAM Air',
+    'PESAWAT_TRANSNUSA': 'TransNusa',
+    'PESAWAT_WINGS': 'Wings Air',
+    'PESAWAT_SUSI': 'Susi Air'
+} %}
+
+{% set fallback_harga_pesawat = {
+    'PESAWAT_GARUDA': 18000,
+    'PESAWAT_CITILINK': 12000,
+    'PESAWAT_BATIK': 15000,
+    'PESAWAT_LION': 10000,
+    'PESAWAT_SUPERAIRJET': 10000,
+    'PESAWAT_AIRASIA': 12000,
+    'PESAWAT_PELITA': 11000,
+    'PESAWAT_SRIWIJAYA': 11000,
+    'PESAWAT_NAM': 10000,
+    'PESAWAT_TRANSNUSA': 12000,
+    'PESAWAT_WINGS': 9000,
+    'PESAWAT_SUSI': 14000
+} %}
+
+{% set produk_final = produk_list if produk_list else fallback_produk_pesawat %}
+{% set harga_final = harga_map if harga_map else fallback_harga_pesawat %}
+
+<style>
+:root{
+    --ct-blue:#2563eb;
+    --ct-blue-2:#0ea5e9;
+    --ct-blue-3:#1d4ed8;
+    --ct-dark:#0f172a;
+    --ct-text:#334155;
+    --ct-muted:#64748b;
+    --ct-border:#e2e8f0;
+    --ct-soft:#f8fafc;
+    --ct-green:#16a34a;
+    --ct-red:#ef4444;
+    --ct-orange:#f59e0b;
+    --ct-purple:#7c3aed;
+    --ct-shadow:0 18px 42px rgba(15,23,42,.10);
+    --ct-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+}
+
+body{
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.14),transparent 34%),
+        radial-gradient(circle at top right,rgba(14,165,233,.10),transparent 34%),
+        linear-gradient(180deg,#f8fafc 0%,#edf4ff 42%,#f8fafc 100%);
+}
+
+.flight-page{
+    width:100%;
+    max-width:460px;
+    margin:0 auto;
+    padding:.8rem .7rem 5rem;
+    box-sizing:border-box;
+    color:var(--ct-text);
+    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+}
+
+.flight-shell{
+    border-radius:28px;
+    padding:.75rem;
+    background:
+        radial-gradient(circle at top left,rgba(37,99,235,.08),transparent 32%),
+        linear-gradient(180deg,#fff,#f8fafc);
+    border:1px solid rgba(37,99,235,.12);
+    box-shadow:var(--ct-shadow);
+    overflow:hidden;
+}
+
+.flight-alert{
+    margin-bottom:.8rem;
+    padding:.8rem .9rem;
+    border-radius:16px;
+    text-align:center;
+    font-weight:850;
+    font-size:.84rem;
+    line-height:1.45;
+    background:#eff6ff;
+    color:#1d4ed8;
+    border:1px solid #bfdbfe;
+}
+
+.flight-alert.success{
+    background:#ecfdf5;
+    color:#166534;
+    border-color:#bbf7d0;
+}
+
+.flight-alert.error,
+.flight-alert.danger{
+    background:#fef2f2;
+    color:#991b1b;
+    border-color:#fecaca;
+}
+
+.flight-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.75rem;
+}
+
+.flight-back,
+.flight-chip{
+    min-height:38px;
+    padding:0 .72rem;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.36rem;
+    text-decoration:none;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.flight-back{
+    background:#fff;
+    border:1px solid var(--ct-border);
+    color:var(--ct-blue);
+    box-shadow:0 8px 18px rgba(15,23,42,.055);
+}
+
+.flight-chip{
+    background:#eff6ff;
+    color:#1d4ed8;
+    border:1px solid #bfdbfe;
+}
+
+.flight-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:24px;
+    padding:1rem;
+    margin-bottom:.8rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at 18% 0%,rgba(255,255,255,.25),transparent 34%),
+        linear-gradient(135deg,#1e3a8a 0%,#2563eb 58%,#0ea5e9 100%);
+    box-shadow:0 16px 32px rgba(37,99,235,.23);
+}
+
+.flight-hero::before{
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:-32px;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    background:rgba(255,255,255,.12);
+}
+
+.flight-hero::after{
+    content:"";
+    position:absolute;
+    right:18px;
+    bottom:-34px;
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:12px solid rgba(255,255,255,.09);
+}
+
+.hero-main{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:flex-start;
+    gap:.75rem;
+}
+
+.hero-icon{
+    width:48px;
+    height:48px;
+    flex:0 0 48px;
+    border-radius:18px;
+    background:rgba(255,255,255,.20);
+    border:1px solid rgba(255,255,255,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.15rem;
+}
+
+.hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.32rem;
+    padding:.28rem .58rem;
+    margin-bottom:.42rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.18);
+    color:#fff;
+    font-size:.62rem;
+    font-weight:950;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+}
+
+.flight-hero h2{
+    margin:0;
+    color:#fff;
+    font-size:1.05rem;
+    line-height:1.18;
+    font-weight:950;
+    letter-spacing:-.03em;
+}
+
+.flight-hero p{
+    margin:.32rem 0 0;
+    color:rgba(255,255,255,.90);
+    font-size:.74rem;
+    line-height:1.45;
+    font-weight:600;
+}
+
+.hero-tags{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:.38rem;
+    margin-top:.72rem;
+    overflow-x:auto;
+    scrollbar-width:none;
+}
+
+.hero-tags::-webkit-scrollbar{
+    display:none;
+}
+
+.hero-tags button{
+    flex:0 0 auto;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    border-radius:999px;
+    padding:.34rem .58rem;
+    font-size:.62rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.search-card{
+    border-radius:24px;
+    padding:.88rem;
+    background:#fff;
+    border:1px solid #dbeafe;
+    box-shadow:var(--ct-soft-shadow);
+    margin-bottom:.85rem;
+}
+
+.trip-row{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    overflow-x:auto;
+    padding-bottom:.2rem;
+    margin-bottom:.8rem;
+    scrollbar-width:none;
+}
+
+.trip-row::-webkit-scrollbar{
+    display:none;
+}
+
+.trip-option,
+.direct-check{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:.36rem;
+    color:#334155;
+    font-size:.76rem;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.trip-option input,
+.direct-check input{
+    margin:0;
+    accent-color:#2563eb;
+}
+
+.trip-line{
+    flex:0 0 auto;
+    width:1px;
+    height:20px;
+    background:#e2e8f0;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:.55rem;
+}
+
+.route-row{
+    display:grid;
+    grid-template-columns:1fr 42px 1fr;
+    gap:.45rem;
+    align-items:center;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box i{
+    position:absolute;
+    left:.85rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:#64748b;
+    z-index:2;
+    pointer-events:none;
+    font-size:.88rem;
+}
+
+.input-control{
+    width:100%;
+    min-height:54px;
+    border-radius:15px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:.86rem;
+    font-weight:850;
+    box-sizing:border-box;
+    outline:none;
+    padding:0 .85rem 0 2.45rem;
+    transition:.2s ease;
+}
+
+.input-control::placeholder{
+    color:#94a3b8;
+    font-weight:650;
+}
+
+.input-control:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,.10);
+}
+
+.date-control{
+    padding-left:.85rem !important;
+}
+
+.swap-btn{
+    width:42px;
+    height:42px;
+    border:0;
+    border-radius:50%;
+    background:#eff6ff;
+    color:#2563eb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 7px 16px rgba(37,99,235,.13);
+    transition:.22s ease;
+}
+
+.swap-btn:hover{
+    transform:rotate(180deg);
+    background:#dbeafe;
+}
+
+.date-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.55rem;
+}
+
+.passenger-box{
+    min-height:54px;
+    border-radius:15px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.7rem;
+    padding:0 .85rem;
+    cursor:pointer;
+    transition:.2s ease;
+}
+
+.passenger-box:hover{
+    border-color:#93c5fd;
+}
+
+.passenger-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.passenger-left i{
+    color:#64748b;
+}
+
+.passenger-left strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.passenger-panel{
+    display:none;
+    margin-top:.65rem;
+    padding:.78rem;
+    border-radius:18px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.passenger-panel.show{
+    display:block;
+}
+
+.passenger-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:.55rem;
+}
+
+.small-label{
+    display:block;
+    margin-bottom:.35rem;
+    color:#475569;
+    font-size:.7rem;
+    font-weight:850;
+}
+
+.select-control{
+    width:100%;
+    min-height:44px;
+    border-radius:13px;
+    border:1.8px solid #e2e8f0;
+    background:#fff;
+    color:#0f172a;
+    font-size:.82rem;
+    font-weight:850;
+    padding:0 .7rem;
+    outline:none;
+}
+
+.search-btn{
+    width:100%;
+    min-height:56px;
+    border:0;
+    border-radius:17px;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    font-size:.92rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(37,99,235,.25);
+    transition:.2s ease;
+}
+
+.search-btn:hover{
+    transform:translateY(-1px);
+}
+
+.search-info{
+    display:none;
+    margin-top:.72rem;
+    padding:.78rem;
+    border-radius:16px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1d4ed8;
+    font-size:.78rem;
+    line-height:1.45;
+    font-weight:750;
+}
+
+.results-mode{
+    display:none;
+}
+
+.results-mode.show{
+    display:block;
+}
+
+.compact-search{
+    display:none;
+    position:sticky;
+    top:.5rem;
+    z-index:20;
+    margin-bottom:.75rem;
+    padding:.75rem;
+    border-radius:20px;
+    background:rgba(255,255,255,.92);
+    border:1px solid #dbeafe;
+    box-shadow:0 14px 30px rgba(15,23,42,.12);
+    backdrop-filter:blur(10px);
+}
+
+.compact-search.show{
+    display:block;
+}
+
+.compact-route{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+}
+
+.compact-route strong{
+    display:block;
+    color:#0f172a;
+    font-size:.84rem;
+    font-weight:950;
+}
+
+.compact-route span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:750;
+}
+
+.compact-btn{
+    flex:0 0 auto;
+    border:0;
+    min-height:38px;
+    padding:0 .7rem;
+    border-radius:999px;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.date-strip-wrap{
+    margin-bottom:.75rem;
+}
+
+.date-strip-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:.45rem;
+}
+
+.date-strip-title strong{
+    display:block;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.date-strip-title span{
+    color:#64748b;
+    font-size:.72rem;
+    font-weight:700;
+}
+
+.date-strip{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .4rem;
+    scrollbar-width:none;
+}
+
+.date-strip::-webkit-scrollbar{
+    display:none;
+}
+
+.date-chip{
+    flex:0 0 105px;
+    border:1px solid #e2e8f0;
+    background:#fff;
+    border-radius:16px;
+    padding:.68rem .55rem;
+    text-align:center;
+    cursor:pointer;
+    box-shadow:0 8px 18px rgba(15,23,42,.045);
+    transition:.2s ease;
+}
+
+.date-chip:hover{
+    transform:translateY(-2px);
+    border-color:#93c5fd;
+}
+
+.date-chip.active{
+    background:#eff6ff;
+    border-color:#2563eb;
+    box-shadow:inset 0 -3px 0 #2563eb,0 10px 22px rgba(37,99,235,.10);
+}
+
+.date-chip strong{
+    display:block;
+    color:#0f172a;
+    font-size:.76rem;
+    font-weight:950;
+}
+
+.date-chip span{
+    display:block;
+    margin-top:.22rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:750;
+}
+
+.results-head{
+    overflow:hidden;
+    border-radius:22px;
+    margin-bottom:.65rem;
+    color:#fff;
+    background:
+        radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 32%),
+        linear-gradient(135deg,#0f172a,#1d4ed8);
+    box-shadow:0 12px 26px rgba(15,23,42,.16);
+}
+
+.results-head-main{
+    padding:.95rem;
+}
+
+.results-head h3{
+    margin:0;
+    color:#fff;
+    font-size:1rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.results-head p{
+    margin:.3rem 0 0;
+    color:rgba(255,255,255,.82);
+    font-size:.74rem;
+    line-height:1.4;
+    font-weight:650;
+}
+
+.results-count{
+    display:inline-flex;
+    margin-top:.55rem;
+    padding:.32rem .58rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.16);
+    color:#fff;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.promo-banner{
+    margin-bottom:.65rem;
+    padding:.82rem .9rem;
+    border-radius:18px;
+    color:#fff;
+    background:
+        radial-gradient(circle at 20% 20%,rgba(255,255,255,.25),transparent 26%),
+        linear-gradient(135deg,#7c3aed,#2563eb 58%,#0ea5e9);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    box-shadow:0 12px 26px rgba(37,99,235,.18);
+}
+
+.promo-banner strong{
+    display:block;
+    color:#fff;
+    font-size:.82rem;
+    line-height:1.25;
+    font-weight:950;
+}
+
+.promo-banner span{
+    display:block;
+    margin-top:.14rem;
+    color:rgba(255,255,255,.85);
+    font-size:.66rem;
+    font-weight:700;
+}
+
+.promo-badge{
+    flex:0 0 auto;
+    padding:.38rem .6rem;
+    border-radius:999px;
+    background:#fff;
+    color:#2563eb;
+    font-size:.68rem;
+    font-weight:950;
+}
+
+.filter-scroll{
+    display:flex;
+    gap:.45rem;
+    overflow-x:auto;
+    padding:.15rem 0 .55rem;
+    margin-bottom:.55rem;
+    scrollbar-width:none;
+}
+
+.filter-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.filter-btn{
+    flex:0 0 auto;
+    border:1px solid #bfdbfe;
+    background:#fff;
+    color:#1d4ed8;
+    border-radius:999px;
+    padding:.5rem .68rem;
+    font-size:.7rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.filter-btn.active{
+    background:#2563eb;
+    color:#fff;
+    border-color:#2563eb;
+}
+
+.flight-list{
+    display:grid;
+    gap:.68rem;
+}
+
+.flight-card{
+    overflow:hidden;
+    border-radius:22px;
+    background:#fff;
+    border:1.5px solid #e2e8f0;
+    box-shadow:0 10px 24px rgba(15,23,42,.055);
+    transition:.22s ease;
+}
+
+.flight-card:hover{
+    transform:translateY(-2px);
+    border-color:#93c5fd;
+}
+
+.flight-card.active{
+    border-color:#2563eb;
+    background:#eff6ff;
+    box-shadow:0 0 0 1px #2563eb,0 14px 28px rgba(37,99,235,.10);
+}
+
+.flight-main{
+    padding:.88rem;
+}
+
+.airline-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-bottom:.75rem;
+}
+
+.airline-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+}
+
+.airline-logo{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#1e3a8a,#3b82f6);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:950;
+    font-size:.78rem;
+    box-shadow:0 6px 14px rgba(37,99,235,.14);
+}
+
+.airline-name{
+    min-width:0;
+}
+
+.airline-name strong{
+    display:block;
+    color:#0f172a;
+    font-size:.88rem;
+    font-weight:950;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.airline-name span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:700;
+}
+
+.flight-tag{
+    flex:0 0 auto;
+    padding:.3rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-size:.62rem;
+    font-weight:950;
+}
+
+.flight-route{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:.62rem;
+    align-items:center;
+    margin-bottom:.75rem;
+}
+
+.time-block strong{
+    display:block;
+    color:#0f172a;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.time-block span{
+    display:block;
+    margin-top:.08rem;
+    color:#64748b;
+    font-size:.68rem;
+    font-weight:750;
+}
+
+.time-block.right{
+    text-align:right;
+}
+
+.route-line{
+    min-width:78px;
+    text-align:center;
+    color:#64748b;
+    font-size:.62rem;
+    font-weight:750;
+}
+
+.route-line .line{
+    height:2px;
+    background:#bfdbfe;
+    margin:.3rem 0;
+    position:relative;
+}
+
+.route-line .line::after{
+    content:"";
+    position:absolute;
+    right:-2px;
+    top:50%;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#2563eb;
+    transform:translateY(-50%);
+}
+
+.flight-bottom{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:.7rem;
+    padding-top:.75rem;
+    border-top:1px solid #eef2f7;
+}
+
+.price-box span{
+    display:block;
+    color:#64748b;
+    font-size:.66rem;
+    font-weight:750;
+}
+
+.price-box strong{
+    display:block;
+    margin-top:.08rem;
+    color:#2563eb;
+    font-size:1rem;
+    font-weight:950;
+}
+
+.price-box small{
+    display:block;
+    margin-top:.1rem;
+    color:#16a34a;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.choose-flight{
+    min-height:40px;
+    padding:0 .82rem;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    color:#fff;
+    font-size:.74rem;
+    font-weight:950;
+    cursor:pointer;
+}
+
+.flight-benefits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+    padding:.68rem .88rem;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+}
+
+.flight-benefits span{
+    display:inline-flex;
+    align-items:center;
+    gap:.25rem;
+    padding:.28rem .48rem;
+    border-radius:999px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.62rem;
+    font-weight:850;
+}
+
+.summary-box{
+    display:none;
+    margin-top:.85rem;
+    padding:.9rem;
+    border-radius:22px;
+    background:#fff;
+    border:1px solid #bfdbfe;
+    box-shadow:0 12px 24px rgba(37,99,235,.08);
+}
+
+.summary-title{
+    display:flex;
+    align-items:center;
+    gap:.42rem;
+    margin-bottom:.7rem;
+    color:#0f172a;
+    font-size:.9rem;
+    font-weight:950;
+}
+
+.summary-row{
+    display:flex;
+    flex-direction:column;
+    gap:.16rem;
+    padding:.58rem 0;
+    border-bottom:1px solid #eef2f7;
+}
+
+.summary-row span{
+    color:#64748b;
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-row b{
+    color:#0f172a;
+    font-size:.82rem;
+    line-height:1.35;
+    word-break:break-word;
+}
+
+.summary-total{
+    margin-top:.72rem;
+    padding:.85rem;
+    border-radius:18px;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:.85rem;
+    align-items:center;
+}
+
+.summary-total span{
+    display:block;
+    color:rgba(255,255,255,.78);
+    font-size:.74rem;
+    font-weight:750;
+}
+
+.summary-total b{
+    display:block;
+    margin-top:.16rem;
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:950;
+}
+
+.submit-btn{
+    width:100%;
+    min-height:56px;
+    margin-top:.85rem;
+    border:0;
+    border-radius:17px;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    font-size:.94rem;
+    font-weight:950;
+    cursor:pointer;
+    box-shadow:0 13px 26px rgba(37,99,235,.25);
+}
+
+.empty-state{
+    padding:.9rem;
+    border-radius:18px;
+    background:#fffbeb;
+    border:1px solid #fde68a;
+    color:#713f12;
+    font-size:.8rem;
+    line-height:1.45;
+    font-weight:750;
+    text-align:center;
+}
+
+.hidden{
+    display:none !important;
+}
+
+@media(max-width:420px){
+    .flight-page{
+        padding-left:.5rem;
+        padding-right:.5rem;
+    }
+
+    .flight-shell{
+        padding:.65rem;
+        border-radius:24px;
+    }
+
+    .route-row{
+        grid-template-columns:1fr;
+    }
+
+    .swap-btn{
+        margin:auto;
+        transform:rotate(90deg);
+    }
+
+    .swap-btn:hover{
+        transform:rotate(270deg);
+    }
+
+    .date-row{
+        grid-template-columns:1fr;
+    }
+
+    .flight-route{
+        grid-template-columns:1fr;
+        gap:.45rem;
+    }
+
+    .route-line{
+        text-align:left;
+    }
+
+    .time-block.right{
+        text-align:left;
+    }
+
+    .flight-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .choose-flight{
+        width:100%;
+    }
+}
+</style>
+
+<div class="flight-page">
+    <div class="flight-shell">
+
+        {% with pesan = get_flashed_messages(with_categories=true) %}
+            {% if pesan %}
+                {% for kategori, isi in pesan %}
+                    <div class="flight-alert {{ kategori }}">{{ isi }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="flight-topbar">
+            <a href="{{ url_for('lainnya') }}" class="flight-back">
+                <i class="fa-solid fa-chevron-left"></i>
+                Menu
+            </a>
+
+            <div class="flight-chip">
+                <i class="fa-solid fa-plane"></i>
+                Pesawat
+            </div>
+        </div>
+
+        <div class="flight-hero" id="heroBox">
+            <div class="hero-main">
+                <div class="hero-icon">
+                    <i class="fa-solid fa-plane-departure"></i>
+                </div>
+
+                <div>
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-crown"></i>
+                        Flight Booking
+                    </div>
+                    <h2>Cari Tiket Pesawat Lebih Mudah</h2>
+                    <p>Pilih bandara, tanggal, dan penumpang dulu. Setelah dicari, daftar pesawat akan tampil lengkap.</p>
+                </div>
+            </div>
+
+            <div class="hero-tags">
+                <button type="button" data-fill="CGK-DPS">CGK → DPS</button>
+                <button type="button" data-fill="KNO-CGK">KNO → CGK</button>
+                <button type="button" data-fill="CGK-KNO">CGK → KNO</button>
+                <button type="button" data-fill="SUB-CGK">SUB → CGK</button>
+                <button type="button" data-fill="UPG-CGK">UPG → CGK</button>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('tiket') }}" id="flightForm" autocomplete="off">
+            {% if csrf_token is defined %}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% endif %}
+
+            <input type="hidden" name="aksi" value="cek_layanan">
+            <input type="hidden" name="jenis" value="pesawat">
+            <input type="hidden" name="kode_produk" id="kode_produk">
+            <input type="hidden" name="nomor_tujuan" id="nomor_tujuan">
+
+            <div class="search-card" id="searchCard">
+                <div class="trip-row">
+                    <label class="trip-option">
+                        <input type="radio" name="trip_type_ui" value="roundtrip" checked>
+                        <span>Pulang-Pergi</span>
+                    </label>
+
+                    <label class="trip-option">
+                        <input type="radio" name="trip_type_ui" value="oneway">
+                        <span>Sekali Jalan</span>
+                    </label>
+
+                    <label class="trip-option">
+                        <input type="radio" name="trip_type_ui" value="multicity">
+                        <span>Multi-Kota</span>
+                    </label>
+
+                    <div class="trip-line"></div>
+
+                    <label class="direct-check">
+                        <input type="checkbox" id="directOnly">
+                        <span>Langsung</span>
+                    </label>
+                </div>
+
+                <div class="form-grid">
+                    <div class="route-row">
+                        <div class="input-box">
+                            <input type="text" id="asal" class="input-control" placeholder="Berangkat dari" list="airportList" required>
+                            <i class="fa-solid fa-plane-departure"></i>
+                        </div>
+
+                        <button type="button" class="swap-btn" id="swapBtn">
+                            <i class="fa-solid fa-right-left"></i>
+                        </button>
+
+                        <div class="input-box">
+                            <input type="text" id="tujuan" class="input-control" placeholder="Pergi ke" list="airportList" required>
+                            <i class="fa-solid fa-plane-arrival"></i>
+                        </div>
+                    </div>
+
+                    <datalist id="airportList">
+                        <option value="Jakarta (CGK) - Soekarno-Hatta International Airport">
+                        <option value="Jakarta (HLP) - Halim Perdanakusuma Airport">
+                        <option value="Medan (KNO) - Kualanamu International Airport">
+                        <option value="Bali (DPS) - I Gusti Ngurah Rai International Airport">
+                        <option value="Surabaya (SUB) - Juanda International Airport">
+                        <option value="Yogyakarta (YIA) - Yogyakarta International Airport">
+                        <option value="Yogyakarta (JOG) - Adisutjipto Airport">
+                        <option value="Semarang (SRG) - Ahmad Yani International Airport">
+                        <option value="Solo (SOC) - Adi Soemarmo Airport">
+                        <option value="Bandung (BDO) - Husein Sastranegara Airport">
+                        <option value="Majalengka (KJT) - Kertajati International Airport">
+                        <option value="Palembang (PLM) - Sultan Mahmud Badaruddin II Airport">
+                        <option value="Pekanbaru (PKU) - Sultan Syarif Kasim II Airport">
+                        <option value="Padang (PDG) - Minangkabau International Airport">
+                        <option value="Banda Aceh (BTJ) - Sultan Iskandar Muda Airport">
+                        <option value="Batam (BTH) - Hang Nadim International Airport">
+                        <option value="Tanjung Pinang (TNJ) - Raja Haji Fisabilillah Airport">
+                        <option value="Lampung (TKG) - Radin Inten II Airport">
+                        <option value="Bengkulu (BKS) - Fatmawati Soekarno Airport">
+                        <option value="Jambi (DJB) - Sultan Thaha Airport">
+                        <option value="Pangkal Pinang (PGK) - Depati Amir Airport">
+                        <option value="Pontianak (PNK) - Supadio International Airport">
+                        <option value="Banjarmasin (BDJ) - Syamsudin Noor Airport">
+                        <option value="Balikpapan (BPN) - Sultan Aji Muhammad Sulaiman Sepinggan Airport">
+                        <option value="Samarinda (AAP) - APT Pranoto Airport">
+                        <option value="Tarakan (TRK) - Juwata International Airport">
+                        <option value="Palangka Raya (PKY) - Tjilik Riwut Airport">
+                        <option value="Makassar (UPG) - Sultan Hasanuddin International Airport">
+                        <option value="Manado (MDC) - Sam Ratulangi International Airport">
+                        <option value="Gorontalo (GTO) - Djalaluddin Airport">
+                        <option value="Palu (PLW) - Mutiara SIS Al-Jufrie Airport">
+                        <option value="Kendari (KDI) - Haluoleo Airport">
+                        <option value="Lombok (LOP) - Lombok International Airport">
+                        <option value="Kupang (KOE) - El Tari Airport">
+                        <option value="Labuan Bajo (LBJ) - Komodo Airport">
+                        <option value="Ambon (AMQ) - Pattimura Airport">
+                        <option value="Ternate (TTE) - Sultan Babullah Airport">
+                        <option value="Jayapura (DJJ) - Sentani Airport">
+                        <option value="Timika (TIM) - Mozes Kilangin Airport">
+                        <option value="Manokwari (MKW) - Rendani Airport">
+                        <option value="Sorong (SOQ) - Domine Eduard Osok Airport">
+                        <option value="Biak (BIK) - Frans Kaisiepo Airport">
+                        <option value="Merauke (MKQ) - Mopah Airport">
+                        <option value="Nabire (NBX) - Douw Aturure Airport">
+                        <option value="Wamena (WAM) - Wamena Airport">
+                    </datalist>
+
+                    <div class="date-row">
+                        <div class="input-box">
+                            <input type="date" id="tanggalBerangkat" class="input-control date-control" required>
+                        </div>
+
+                        <div class="input-box" id="tanggalPulangWrap">
+                            <input type="date" id="tanggalPulang" class="input-control date-control">
+                        </div>
+                    </div>
+
+                    <div class="passenger-box" id="passengerTrigger">
+                        <div class="passenger-left">
+                            <i class="fa-regular fa-user"></i>
+                            <div>
+                                <strong id="passengerSummary">1 dewasa · Ekonomi</strong>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-down" style="color:#64748b;"></i>
+                    </div>
+
+                    <div class="passenger-panel" id="passengerPanel">
+                        <div class="passenger-grid">
+                            <div>
+                                <label class="small-label">Dewasa</label>
+                                <select id="dewasa" class="select-control">
+                                    <option value="1">1 Dewasa</option>
+                                    <option value="2">2 Dewasa</option>
+                                    <option value="3">3 Dewasa</option>
+                                    <option value="4">4 Dewasa</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="small-label">Anak</label>
+                                <select id="anak" class="select-control">
+                                    <option value="0">0 Anak</option>
+                                    <option value="1">1 Anak</option>
+                                    <option value="2">2 Anak</option>
+                                    <option value="3">3 Anak</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="small-label">Kelas</label>
+                                <select id="kelas" class="select-control">
+                                    <option value="Ekonomi">Ekonomi</option>
+                                    <option value="Premium Ekonomi">Premium Ekonomi</option>
+                                    <option value="Bisnis">Bisnis</option>
+                                    <option value="First Class">First Class</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="search-btn" id="searchBtn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Cari Penerbangan
+                    </button>
+
+                    <div class="search-info" id="searchInfo"></div>
+                </div>
+            </div>
+
+            <div class="compact-search" id="compactSearch">
+                <div class="compact-route">
+                    <div>
+                        <strong id="compactRoute">-</strong>
+                        <span id="compactInfo">-</span>
+                    </div>
+                    <button type="button" class="compact-btn" id="editSearchBtn">Ubah</button>
+                </div>
+            </div>
+
+            <div class="results-mode" id="resultsMode">
+                <div class="date-strip-wrap">
+                    <div class="date-strip-title">
+                        <div>
+                            <strong>Pilih tanggal terbaik</strong>
+                            <span>Geser untuk melihat harga hari lain</span>
+                        </div>
+                    </div>
+
+                    <div class="date-strip" id="dateStrip"></div>
+                </div>
+
+                <div class="results-head">
+                    <div class="results-head-main">
+                        <h3 id="routeTitle">Hasil Penerbangan</h3>
+                        <p id="routeSubtitle">Pilih pesawat yang paling cocok untuk perjalanan kamu.</p>
+                        <div class="results-count" id="foundCount">0 penerbangan ditemukan</div>
+                    </div>
+                </div>
+
+                <div class="promo-banner">
+                    <div>
+                        <strong>Promo Pesawat Hari Ini</strong>
+                        <span>Lebih banyak pilihan jam, maskapai, dan harga estimasi.</span>
+                    </div>
+                    <div class="promo-badge">PROMO</div>
+                </div>
+
+                <div class="filter-scroll">
+                    <button type="button" class="filter-btn active" data-sort="recommended">Rekomendasi</button>
+                    <button type="button" class="filter-btn" data-sort="cheap">Termurah</button>
+                    <button type="button" class="filter-btn" data-sort="early">Paling Pagi</button>
+                    <button type="button" class="filter-btn" data-sort="late">Paling Malam</button>
+                    <button type="button" class="filter-btn" data-sort="direct">Langsung</button>
+                    <button type="button" class="filter-btn" data-sort="baggage">Bagasi</button>
+                    <button type="button" class="filter-btn" data-sort="premium">Premium</button>
+                </div>
+
+                <div class="flight-list" id="flightList"></div>
+
+                <div class="summary-box" id="summaryBox">
+                    <div class="summary-title">
+                        <i class="fa-solid fa-receipt"></i>
+                        Ringkasan Pesawat
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Rute</span>
+                        <b id="sumRute">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Tanggal</span>
+                        <b id="sumTanggal">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Penumpang</span>
+                        <b id="sumPassenger">-</b>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Penerbangan</span>
+                        <b id="sumFlight">-</b>
+                    </div>
+
+                    <div class="summary-total">
+                        <div>
+                            <span>Total Estimasi</span>
+                            <b id="sumHarga">Rp 0</b>
+                        </div>
+                        <i class="fa-solid fa-plane"></i>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fa-solid fa-ticket"></i>
+                        Lanjutkan Pemesanan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="flightProductData" style="display:none;">
+    {% for kode, nama in produk_final.items() %}
+        {% set nominal = harga_final.get(kode, 0) %}
+        <span
+            data-kode="{{ kode }}"
+            data-nama="{{ nama|e }}"
+            data-admin="{% if format_uang is defined %}{{ format_uang(nominal) }}{% else %}Rp {{ '{:,.0f}'.format(nominal|int)|replace(',', '.') }}{% endif %}"
+        ></span>
+    {% endfor %}
+</div>
+
+<script>
+(function(){
+    const form=document.getElementById('flightForm');
+    const heroBox=document.getElementById('heroBox');
+    const searchCard=document.getElementById('searchCard');
+    const compactSearch=document.getElementById('compactSearch');
+    const editSearchBtn=document.getElementById('editSearchBtn');
+    const asal=document.getElementById('asal');
+    const tujuan=document.getElementById('tujuan');
+    const swapBtn=document.getElementById('swapBtn');
+    const tanggalBerangkat=document.getElementById('tanggalBerangkat');
+    const tanggalPulang=document.getElementById('tanggalPulang');
+    const tanggalPulangWrap=document.getElementById('tanggalPulangWrap');
+    const directOnly=document.getElementById('directOnly');
+    const passengerTrigger=document.getElementById('passengerTrigger');
+    const passengerPanel=document.getElementById('passengerPanel');
+    const dewasa=document.getElementById('dewasa');
+    const anak=document.getElementById('anak');
+    const kelas=document.getElementById('kelas');
+    const passengerSummary=document.getElementById('passengerSummary');
+    const searchBtn=document.getElementById('searchBtn');
+    const searchInfo=document.getElementById('searchInfo');
+    const resultsMode=document.getElementById('resultsMode');
+    const compactRoute=document.getElementById('compactRoute');
+    const compactInfo=document.getElementById('compactInfo');
+    const dateStrip=document.getElementById('dateStrip');
+    const routeTitle=document.getElementById('routeTitle');
+    const routeSubtitle=document.getElementById('routeSubtitle');
+    const foundCount=document.getElementById('foundCount');
+    const flightList=document.getElementById('flightList');
+    const kodeProduk=document.getElementById('kode_produk');
+    const nomorTujuan=document.getElementById('nomor_tujuan');
+    const summaryBox=document.getElementById('summaryBox');
+    const submitBtn=document.getElementById('submitBtn');
+
+    let activeSort='recommended';
+    let selectedFlight=null;
+
+    const defaultFlights=[
+        {kode:'PESAWAT_GARUDA',nama:'Garuda Indonesia',admin:'Rp 18.000'},
+        {kode:'PESAWAT_CITILINK',nama:'Citilink',admin:'Rp 12.000'},
+        {kode:'PESAWAT_BATIK',nama:'Batik Air',admin:'Rp 15.000'},
+        {kode:'PESAWAT_LION',nama:'Lion Air',admin:'Rp 10.000'},
+        {kode:'PESAWAT_SUPERAIRJET',nama:'Super Air Jet',admin:'Rp 10.000'},
+        {kode:'PESAWAT_AIRASIA',nama:'AirAsia Indonesia',admin:'Rp 12.000'},
+        {kode:'PESAWAT_PELITA',nama:'Pelita Air',admin:'Rp 11.000'},
+        {kode:'PESAWAT_SRIWIJAYA',nama:'Sriwijaya Air',admin:'Rp 11.000'},
+        {kode:'PESAWAT_NAM',nama:'NAM Air',admin:'Rp 10.000'},
+        {kode:'PESAWAT_TRANSNUSA',nama:'TransNusa',admin:'Rp 12.000'},
+        {kode:'PESAWAT_WINGS',nama:'Wings Air',admin:'Rp 9.000'},
+        {kode:'PESAWAT_SUSI',nama:'Susi Air',admin:'Rp 14.000'}
+    ];
+
+    const scheduleSet=[
+        {depart:'05.10',arrive:'07.25',label:'Pagi',duration:'2j 15m'},
+        {depart:'06.30',arrive:'08.45',label:'Pagi',duration:'2j 15m'},
+        {depart:'07.55',arrive:'10.10',label:'Pagi',duration:'2j 15m'},
+        {depart:'09.20',arrive:'11.35',label:'Pagi',duration:'2j 15m'},
+        {depart:'10.45',arrive:'13.00',label:'Siang',duration:'2j 15m'},
+        {depart:'12.10',arrive:'14.25',label:'Siang',duration:'2j 15m'},
+        {depart:'13.35',arrive:'15.50',label:'Siang',duration:'2j 15m'},
+        {depart:'15.00',arrive:'17.15',label:'Sore',duration:'2j 15m'},
+        {depart:'16.25',arrive:'18.40',label:'Sore',duration:'2j 15m'},
+        {depart:'17.50',arrive:'20.05',label:'Sore',duration:'2j 15m'},
+        {depart:'19.15',arrive:'21.30',label:'Malam',duration:'2j 15m'},
+        {depart:'20.40',arrive:'22.55',label:'Malam',duration:'2j 15m'},
+        {depart:'22.05',arrive:'00.20',label:'Malam',duration:'2j 15m'}
+    ];
+
+    function clean(value){
+        return (value || '').replace(/\s{2,}/g,' ').trim();
+    }
+
+    function rupiah(num){
+        num=Math.max(0,Math.round(num));
+        return 'Rp'+String(num).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    }
+
+    function parseMoney(text){
+        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
+    }
+
+    function getCode(value){
+        const match=String(value || '').match(/\(([A-Z]{3})\)/);
+        if(match) return match[1];
+        return clean(value).slice(0,3).toUpperCase();
+    }
+
+    function getCity(value){
+        return clean(value).split(' - ')[0].trim();
+    }
+
+    function dateText(value){
+        if(!value) return '-';
+        const d=new Date(value+'T00:00:00');
+        if(isNaN(d.getTime())) return value;
+        return d.toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+    }
+
+    function fullDateText(value){
+        if(!value) return '-';
+        const d=new Date(value+'T00:00:00');
+        if(isNaN(d.getTime())) return value;
+        return d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+    }
+
+    function addDays(value,days){
+        const d=new Date(value+'T00:00:00');
+        d.setDate(d.getDate()+days);
+        return d.toISOString().slice(0,10);
+    }
+
+    function todayPlus(days){
+        const d=new Date();
+        d.setDate(d.getDate()+days);
+        return d.toISOString().slice(0,10);
+    }
+
+    function getTripType(){
+        const checked=document.querySelector('input[name="trip_type_ui"]:checked');
+        return checked ? checked.value : 'roundtrip';
+    }
+
+    function tripLabel(){
+        const t=getTripType();
+        if(t==='oneway') return 'Sekali Jalan';
+        if(t==='multicity') return 'Multi-Kota';
+        return 'Pulang-Pergi';
+    }
+
+    function updateTripView(){
+        if(getTripType()==='oneway'){
+            tanggalPulangWrap.classList.add('hidden');
+            tanggalPulang.value='';
+        }else{
+            tanggalPulangWrap.classList.remove('hidden');
+            if(!tanggalPulang.value && tanggalBerangkat.value){
+                tanggalPulang.value=addDays(tanggalBerangkat.value,3);
+            }
+        }
+    }
+
+    function updatePassenger(){
+        let text=dewasa.value+' dewasa';
+        if(parseInt(anak.value,10)>0){
+            text+=' · '+anak.value+' anak';
+        }
+        text+=' · '+kelas.value;
+        passengerSummary.textContent=text;
+    }
+
+    function passengerCount(){
+        return parseInt(dewasa.value,10)+(parseInt(anak.value,10)*.75);
+    }
+
+    function classMultiplier(){
+        if(kelas.value==='Premium Ekonomi') return 1.28;
+        if(kelas.value==='Bisnis') return 2.1;
+        if(kelas.value==='First Class') return 3.2;
+        return 1;
+    }
+
+    function routeText(){
+        return getCity(asal.value)+' → '+getCity(tujuan.value);
+    }
+
+    function tanggalText(){
+        if(getTripType()==='oneway'){
+            return fullDateText(tanggalBerangkat.value);
+        }
+        return fullDateText(tanggalBerangkat.value)+' - '+fullDateText(tanggalPulang.value);
+    }
+
+    function composeNomorTujuan(){
+        const direct=directOnly.checked?'Langsung':'Bebas Transit';
+        let text='Pesawat | '+tripLabel()+' | '+routeText()+' | Tanggal: '+tanggalText();
+        text+=' | '+passengerSummary.textContent+' | '+direct;
+        if(selectedFlight){
+            text+=' | '+selectedFlight.nama+' | '+selectedFlight.depart+'-'+selectedFlight.arrive+' | '+selectedFlight.priceText;
+        }
+        return text;
+    }
+
+    function rawProducts(){
+        const data=Array.from(document.querySelectorAll('#flightProductData span'));
+        const mapped=data.map(function(el){
+            return {
+                kode:el.dataset.kode,
+                nama:el.dataset.nama,
+                admin:el.dataset.admin
+            };
+        }).filter(function(item){
+            const text=(item.kode+' '+item.nama).toLowerCase();
+            return text.includes('pesawat') || text.includes('flight') || text.includes('air') || text.includes('garuda') || text.includes('lion') || text.includes('citilink') || text.includes('batik') || text.includes('pelita') || text.includes('transnusa') || text.includes('wings');
+        });
+        return mapped.length ? mapped : defaultFlights;
+    }
+
+    function airlineLogo(name){
+        return name.split(' ').map(function(word){
+            return word[0];
+        }).join('').slice(0,2).toUpperCase();
+    }
+
+    function isBudget(name){
+        const n=name.toLowerCase();
+        return n.includes('lion') || n.includes('super') || n.includes('airasia') || n.includes('wings') || n.includes('transnusa');
+    }
+
+    function makePrice(index,adminText){
+        const asalCode=getCode(asal.value);
+        const tujuanCode=getCode(tujuan.value);
+        const seed=(asalCode.charCodeAt(0)||65)+(tujuanCode.charCodeAt(0)||66)+(index*137);
+        const base=850000+(seed%11)*165000+(index%7)*85000;
+        const total=(base*passengerCount()*classMultiplier())+parseMoney(adminText);
+        return Math.round(total/1000)*1000;
+    }
+
+    function getFlights(){
+        const products=rawProducts();
+        const flights=[];
+        products.forEach(function(product,productIndex){
+            scheduleSet.forEach(function(schedule,scheduleIndex){
+                const index=(productIndex*scheduleSet.length)+scheduleIndex;
+                const direct=index%4!==0;
+                const baggage=productIndex%3!==0;
+                const premium=!isBudget(product.nama);
+                const price=makePrice(index,product.admin || 'Rp 0');
+                flights.push({
+                    kode:product.kode,
+                    nama:product.nama,
+                    admin:product.admin || 'Rp 0',
+                    depart:schedule.depart,
+                    arrive:schedule.arrive,
+                    label:schedule.label,
+                    duration:schedule.duration,
+                    terminal:productIndex%2===0?'Terminal 3':'Terminal 2',
+                    direct:direct,
+                    baggage:baggage,
+                    premium:premium,
+                    budget:isBudget(product.nama),
+                    price:price,
+                    priceText:rupiah(price)
+                });
+            });
+        });
+        return flights;
+    }
+
+    function validateSearch(){
+        if(!clean(asal.value)){
+            alert('Isi bandara keberangkatan dulu. Contoh: Medan (KNO), Jakarta (CGK), Kualanamu.');
+            asal.focus();
+            return false;
+        }
+
+        if(!clean(tujuan.value)){
+            alert('Isi bandara tujuan dulu. Contoh: Bali (DPS), Surabaya (SUB), Jakarta (CGK).');
+            tujuan.focus();
+            return false;
+        }
+
+        if(clean(asal.value).toLowerCase()===clean(tujuan.value).toLowerCase()){
+            alert('Bandara asal dan tujuan tidak boleh sama.');
+            tujuan.focus();
+            return false;
+        }
+
+        if(!tanggalBerangkat.value){
+            alert('Pilih tanggal berangkat terlebih dahulu.');
+            tanggalBerangkat.focus();
+            return false;
+        }
+
+        if(getTripType()!=='oneway' && !tanggalPulang.value){
+            alert('Pilih tanggal pulang terlebih dahulu.');
+            tanggalPulang.focus();
+            return false;
+        }
+
+        if(getTripType()!=='oneway' && tanggalPulang.value < tanggalBerangkat.value){
+            alert('Tanggal pulang tidak boleh lebih awal dari tanggal berangkat.');
+            tanggalPulang.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    function renderDates(){
+        const base=tanggalBerangkat.value;
+        const offsets=[-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12];
+        dateStrip.innerHTML='';
+
+        offsets.forEach(function(offset,index){
+            const date=addDays(base,offset);
+            const active=offset===0?'active':'';
+            const price=rupiah(920000+(Math.abs(offset)*62000)+(index*17500));
+
+            const btn=document.createElement('button');
+            btn.type='button';
+            btn.className='date-chip '+active;
+            btn.dataset.date=date;
+            btn.innerHTML='<strong>'+dateText(date)+'</strong><span>'+price+'</span>';
+
+            btn.addEventListener('click',function(){
+                tanggalBerangkat.value=btn.dataset.date;
+                if(getTripType()!=='oneway' && tanggalPulang.value < tanggalBerangkat.value){
+                    tanggalPulang.value=addDays(tanggalBerangkat.value,3);
+                }
+                renderDates();
+                renderFlights();
+            });
+
+            dateStrip.appendChild(btn);
+        });
+    }
+
+    function applySort(list){
+        if(activeSort==='cheap'){
+            list=list.sort(function(a,b){return a.price-b.price;});
+        }
+
+        if(activeSort==='early'){
+            list=list.sort(function(a,b){return a.depart.localeCompare(b.depart);});
+        }
+
+        if(activeSort==='late'){
+            list=list.sort(function(a,b){return b.depart.localeCompare(a.depart);});
+        }
+
+        if(activeSort==='direct'){
+            list=list.filter(function(item){return item.direct;});
+        }
+
+        if(activeSort==='baggage'){
+            list=list.filter(function(item){return item.baggage;});
+        }
+
+        if(activeSort==='premium'){
+            list=list.filter(function(item){return item.premium;});
+        }
+
+        if(activeSort==='recommended'){
+            list=list.sort(function(a,b){
+                if(a.direct!==b.direct) return a.direct?-1:1;
+                if(a.premium!==b.premium) return a.premium?-1:1;
+                return a.price-b.price;
+            });
+        }
+
+        if(directOnly.checked){
+            list=list.filter(function(item){return item.direct;});
+        }
+
+        return list;
+    }
+
+    function renderFlights(){
+        selectedFlight=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+        flightList.innerHTML='';
+
+        let list=applySort(getFlights());
+
+        routeTitle.textContent='Penerbangan ke '+getCity(tujuan.value);
+        routeSubtitle.textContent=routeText()+' · '+tanggalText()+' · '+passengerSummary.textContent;
+        foundCount.textContent=list.length+' penerbangan ditemukan';
+
+        compactRoute.textContent=routeText();
+        compactInfo.textContent=tanggalText()+' · '+passengerSummary.textContent;
+
+        if(!list.length){
+            flightList.innerHTML='<div class="empty-state">Tidak ada penerbangan pada filter ini. Coba pilih filter lain atau ubah tanggal.</div>';
+            return;
+        }
+
+        list.slice(0,42).forEach(function(item){
+            const cheapest=Math.min.apply(null,list.map(function(x){return x.price;}));
+            const card=document.createElement('div');
+            card.className='flight-card';
+
+            card.innerHTML=
+                '<div class="flight-main">'+
+                    '<div class="airline-top">'+
+                        '<div class="airline-left">'+
+                            '<div class="airline-logo">'+airlineLogo(item.nama)+'</div>'+
+                            '<div class="airline-name">'+
+                                '<strong>'+item.nama+'</strong>'+
+                                '<span>'+item.terminal+' · '+(item.premium?'Premium service':'Value service')+'</span>'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="flight-tag">'+(item.price===cheapest?'Termurah':item.label)+'</div>'+
+                    '</div>'+
+
+                    '<div class="flight-route">'+
+                        '<div class="time-block">'+
+                            '<strong>'+item.depart+'</strong>'+
+                            '<span>'+getCode(asal.value)+'</span>'+
+                        '</div>'+
+                        '<div class="route-line">'+
+                            '<span>'+item.duration+'</span>'+
+                            '<div class="line"></div>'+
+                            '<span>'+(item.direct?'Langsung':'1 Transit')+'</span>'+
+                        '</div>'+
+                        '<div class="time-block right">'+
+                            '<strong>'+item.arrive+'</strong>'+
+                            '<span>'+getCode(tujuan.value)+'</span>'+
+                        '</div>'+
+                    '</div>'+
+
+                    '<div class="flight-bottom">'+
+                        '<div class="price-box">'+
+                            '<span>Total estimasi</span>'+
+                            '<strong>'+item.priceText+'</strong>'+
+                            '<small>Admin '+item.admin+' termasuk</small>'+
+                        '</div>'+
+                        '<button type="button" class="choose-flight">Pilih</button>'+
+                    '</div>'+
+                '</div>'+
+
+                '<div class="flight-benefits">'+
+                    '<span><i class="fa-solid fa-circle-check"></i> '+(item.direct?'Langsung':'Transit')+'</span>'+
+                    '<span><i class="fa-solid fa-suitcase"></i> '+(item.baggage?'Bagasi':'Opsional')+'</span>'+
+                    '<span><i class="fa-solid fa-clock"></i> '+item.label+'</span>'+
+                    '<span><i class="fa-solid fa-shield"></i> '+(item.premium?'Premium':'Hemat')+'</span>'+
+                '</div>';
+
+            card.querySelector('.choose-flight').addEventListener('click',function(){
+                document.querySelectorAll('.flight-card').forEach(function(el){
+                    el.classList.remove('active');
+                });
+
+                card.classList.add('active');
+                selectedFlight=item;
+                kodeProduk.value=item.kode;
+                updateSummary();
+
+                setTimeout(function(){
+                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
+                },120);
+            });
+
+            flightList.appendChild(card);
+        });
+    }
+
+    function updateSummary(){
+        if(!selectedFlight){
+            summaryBox.style.display='none';
+            return;
+        }
+
+        document.getElementById('sumRute').textContent=routeText();
+        document.getElementById('sumTanggal').textContent=tanggalText();
+        document.getElementById('sumPassenger').textContent=passengerSummary.textContent;
+        document.getElementById('sumFlight').textContent=selectedFlight.nama+' · '+selectedFlight.depart+'-'+selectedFlight.arrive;
+        document.getElementById('sumHarga').textContent=selectedFlight.priceText;
+
+        nomorTujuan.value=composeNomorTujuan();
+        summaryBox.style.display='block';
+    }
+
+    function enterResultMode(){
+        heroBox.classList.add('hidden');
+        searchCard.classList.add('hidden');
+        compactSearch.classList.add('show');
+        resultsMode.classList.add('show');
+        renderDates();
+        renderFlights();
+
+        searchInfo.style.display='block';
+        searchInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Pencarian berhasil. Silakan pilih tanggal dan pesawat yang paling cocok.';
+
+        setTimeout(function(){
+            resultsMode.scrollIntoView({behavior:'smooth',block:'start'});
+        },120);
+    }
+
+    document.querySelectorAll('input[name="trip_type_ui"]').forEach(function(el){
+        el.addEventListener('change',function(){
+            updateTripView();
+            if(resultsMode.classList.contains('show')){
+                renderDates();
+                renderFlights();
+            }
+        });
+    });
+
+    document.querySelectorAll('.hero-tags button').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            const val=btn.dataset.fill;
+            if(val==='CGK-DPS'){
+                asal.value='Jakarta (CGK) - Soekarno-Hatta International Airport';
+                tujuan.value='Bali (DPS) - I Gusti Ngurah Rai International Airport';
+            }
+            if(val==='KNO-CGK'){
+                asal.value='Medan (KNO) - Kualanamu International Airport';
+                tujuan.value='Jakarta (CGK) - Soekarno-Hatta International Airport';
+            }
+            if(val==='CGK-KNO'){
+                asal.value='Jakarta (CGK) - Soekarno-Hatta International Airport';
+                tujuan.value='Medan (KNO) - Kualanamu International Airport';
+            }
+            if(val==='SUB-CGK'){
+                asal.value='Surabaya (SUB) - Juanda International Airport';
+                tujuan.value='Jakarta (CGK) - Soekarno-Hatta International Airport';
+            }
+            if(val==='UPG-CGK'){
+                asal.value='Makassar (UPG) - Sultan Hasanuddin International Airport';
+                tujuan.value='Jakarta (CGK) - Soekarno-Hatta International Airport';
+            }
+        });
+    });
+
+    swapBtn.addEventListener('click',function(){
+        const temp=asal.value;
+        asal.value=tujuan.value;
+        tujuan.value=temp;
+
+        if(resultsMode.classList.contains('show')){
+            renderFlights();
+        }
+    });
+
+    passengerTrigger.addEventListener('click',function(){
+        passengerPanel.classList.toggle('show');
+    });
+
+    [dewasa,anak,kelas].forEach(function(el){
+        el.addEventListener('change',function(){
+            updatePassenger();
+            if(resultsMode.classList.contains('show')){
+                renderFlights();
+            }
+        });
+    });
+
+    [asal,tujuan,tanggalBerangkat,tanggalPulang,directOnly].forEach(function(el){
+        if(!el) return;
+        el.addEventListener('input',function(){
+            if(resultsMode.classList.contains('show')){
+                renderFlights();
+            }
+        });
+        el.addEventListener('change',function(){
+            if(resultsMode.classList.contains('show')){
+                renderFlights();
+            }
+        });
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            activeSort=btn.dataset.sort;
+            document.querySelectorAll('.filter-btn').forEach(function(el){
+                el.classList.remove('active');
+            });
+            btn.classList.add('active');
+            renderFlights();
+        });
+    });
+
+    searchBtn.addEventListener('click',function(){
+        if(!validateSearch()) return;
+        enterResultMode();
+    });
+
+    editSearchBtn.addEventListener('click',function(){
+        heroBox.classList.remove('hidden');
+        searchCard.classList.remove('hidden');
+        compactSearch.classList.remove('show');
+
+        setTimeout(function(){
+            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
+        },100);
+    });
+
+    form.addEventListener('submit',function(e){
+        if(!validateSearch()){
+            e.preventDefault();
+            return;
+        }
+
+        if(!selectedFlight || !kodeProduk.value){
+            e.preventDefault();
+            alert('Pilih salah satu penerbangan terlebih dahulu.');
+            return;
+        }
+
+        nomorTujuan.value=composeNomorTujuan();
+
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pesawat...';
+        submitBtn.style.opacity='0.75';
+        submitBtn.style.pointerEvents='none';
+    });
+
+    tanggalBerangkat.value=todayPlus(3);
+    tanggalPulang.value=todayPlus(6);
+
+    updateTripView();
+    updatePassenger();
+})();
+</script>
+
+{% endblock %}
