@@ -3,1475 +3,6 @@
 <head>
     <meta charset="UTF-8">
 
-    <!-- WAJIB UNTUK MOBILE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SenjaData ⚡ | Isi Pulsa & Pembayaran Cepat</title>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-        /* =========================================================
-           RESET & DASAR
-        ========================================================= */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-            -webkit-text-size-adjust: 100%;
-            text-size-adjust: 100%;
-        }
-
-        body {
-            width: 100%;
-            max-width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background:
-                radial-gradient(circle at top left, rgba(0, 122, 230, .10), transparent 34%),
-                radial-gradient(circle at bottom right, rgba(0, 198, 255, .10), transparent 30%),
-                #f6f8fc;
-            color: #1e293b;
-            line-height: 1.6;
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            font-size: 16px;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font-family: inherit;
-        }
-
-        img,
-        svg,
-        video {
-            max-width: 100%;
-            height: auto;
-        }
-
-        button,
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* =========================================================
-           FRAME APLIKASI
-        ========================================================= */
-        .app-frame {
-            width: 100%;
-            max-width: 560px;
-            min-height: 100vh;
-            margin: 0 auto;
-            background: #ffffff;
-            position: relative;
-            box-shadow: 0 0 45px rgba(15, 23, 42, .08);
-            overflow-x: hidden;
-        }
-
-        /* =========================================================
-           HEADER
-        ========================================================= */
-        .top-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-            padding: 1.08rem 1rem;
-            color: #ffffff;
-            background:
-                radial-gradient(circle at top left, rgba(255,255,255,.32), transparent 32%),
-                linear-gradient(135deg, #007ae6 0%, #00a6ff 55%, #00c6ff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: .75rem;
-            box-shadow: 0 8px 24px rgba(0, 122, 230, .28);
-            border-bottom-left-radius: 26px;
-            border-bottom-right-radius: 26px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: .55rem;
-            min-width: 0;
-            color: #ffffff;
-            font-size: 1.34rem;
-            line-height: 1.15;
-            font-weight: 950;
-            letter-spacing: -.03em;
-            text-shadow: 0 2px 8px rgba(0,0,0,.16);
-        }
-
-        .logo i {
-            flex: 0 0 auto;
-            font-size: 1.6rem;
-            color: #fff700;
-            filter: drop-shadow(0 0 8px rgba(255,247,0,.8));
-        }
-
-        .logo span {
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: .55rem;
-            flex: 0 0 auto;
-        }
-
-        .support-btn {
-            width: 46px;
-            height: 46px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            background: rgba(255,255,255,.18);
-            border: 1px solid rgba(255,255,255,.22);
-            font-size: 1.22rem;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.20);
-            transition: .2s ease;
-        }
-
-        .support-btn:hover {
-            transform: translateY(-1px);
-            background: rgba(255,255,255,.26);
-        }
-
-        .masuk-btn {
-            min-height: 46px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 1.05rem;
-            border-radius: 999px;
-            color: #ffffff;
-            background: rgba(255,255,255,.20);
-            border: 1px solid rgba(255,255,255,.34);
-            font-size: .9rem;
-            font-weight: 850;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.20);
-            transition: .2s ease;
-            white-space: nowrap;
-        }
-
-        .masuk-btn:hover {
-            background: #ffffff;
-            color: #007ae6;
-            transform: translateY(-1px);
-        }
-
-        /* =========================================================
-           CONTAINER
-        ========================================================= */
-        .container {
-            width: 100%;
-            padding: 1rem .85rem 7.3rem;
-            min-height: calc(100vh - 76px);
-        }
-
-        .page-fade-in {
-            animation: fadeInUp .45s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* =========================================================
-           ALERT
-        ========================================================= */
-        .alert {
-            padding: .95rem 1rem;
-            border-radius: 18px;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: .92rem;
-            line-height: 1.45;
-            border: 1px solid transparent;
-        }
-
-        .alert.sukses,
-        .alert.success {
-            background: #ecfdf5;
-            color: #065f46;
-            border-color: #a7f3d0;
-        }
-
-        .alert.danger,
-        .alert.error {
-            background: #fef2f2;
-            color: #991b1b;
-            border-color: #fecaca;
-        }
-
-        .alert.info {
-            background: #eff6ff;
-            color: #1e40af;
-            border-color: #bfdbfe;
-        }
-
-        .alert.warning {
-            background: #fffbeb;
-            color: #92400e;
-            border-color: #fcd34d;
-        }
-
-        /* =========================================================
-           DASHBOARD - KATEGORI
-        ========================================================= */
-        .kategori-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: .58rem;
-            margin-bottom: 1rem;
-            padding: 1rem .65rem;
-            border-radius: 26px;
-            background: #ffffff;
-            border: 1px solid rgba(0,122,230,.08);
-            box-shadow: 0 12px 28px rgba(0, 122, 230, .10);
-        }
-
-        .kategori-card {
-            min-height: 88px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: .42rem;
-            border-radius: 18px;
-            transition: .2s ease;
-        }
-
-        .kategori-card:hover {
-            background: #f8fafc;
-            transform: translateY(-2px);
-        }
-
-        .kategori-card:active {
-            transform: scale(.95);
-        }
-
-        .kategori-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 17px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.16rem;
-            color: #ffffff;
-            box-shadow: 0 8px 18px rgba(15,23,42,.14);
-        }
-
-        .pulsa { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-        .data { background: linear-gradient(135deg, #a855f7, #6366f1); }
-        .ewallet { background: linear-gradient(135deg, #10b981, #059669); }
-        .listrik { background: linear-gradient(135deg, #f59e0b, #ea580c); }
-        .lainnya { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
-
-        .kategori-nama {
-            color: #334155;
-            font-size: .68rem;
-            line-height: 1.15;
-            font-weight: 900;
-            text-align: center;
-        }
-
-        /* =========================================================
-           DASHBOARD - BANNER
-        ========================================================= */
-        .banner-slider {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 26px;
-            margin-bottom: 1rem;
-            box-shadow: 0 14px 32px rgba(0, 122, 230, .18);
-        }
-
-        .banner-wrapper {
-            display: flex;
-            width: 300%;
-            transition: transform .55s ease-in-out;
-        }
-
-        .hero-banner {
-            width: 33.333333%;
-            min-height: 215px;
-            padding: 1.45rem 1.2rem 2.8rem;
-            color: #ffffff;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-banner h3 {
-            position: relative;
-            z-index: 2;
-            max-width: 76%;
-            font-size: 1.35rem;
-            line-height: 1.18;
-            font-weight: 950;
-            margin-bottom: .55rem;
-            text-shadow: 0 2px 10px rgba(0,0,0,.16);
-        }
-
-        .hero-banner p {
-            position: relative;
-            z-index: 2;
-            max-width: 74%;
-            font-size: .9rem;
-            line-height: 1.48;
-            opacity: .95;
-            margin-bottom: 1rem;
-        }
-
-        .hero-badge-container {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            gap: .4rem;
-            flex-wrap: wrap;
-            max-width: 78%;
-        }
-
-        .hero-badge {
-            padding: .36rem .68rem;
-            border-radius: 999px;
-            background: rgba(255,255,255,.22);
-            border: 1px solid rgba(255,255,255,.18);
-            color: #ffffff;
-            font-size: .7rem;
-            line-height: 1;
-            font-weight: 850;
-        }
-
-        .hero-floating-art {
-            position: absolute;
-            right: -26px;
-            bottom: -28px;
-            width: 158px;
-            height: 158px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.14);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4.25rem;
-            color: rgba(255,255,255,.86);
-        }
-
-        .banner-indicators {
-            position: absolute;
-            bottom: .95rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: .45rem;
-            z-index: 3;
-        }
-
-        .indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.45);
-            cursor: pointer;
-            transition: .2s ease;
-        }
-
-        .indicator.active {
-            width: 26px;
-            background: #ffffff;
-            box-shadow: 0 0 10px rgba(255,255,255,.70);
-        }
-
-        /* =========================================================
-           DASHBOARD - KARTU LAYANAN
-        ========================================================= */
-        .layanan-card {
-            background: #ffffff;
-            border-radius: 26px;
-            padding: 1.12rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 12px 28px rgba(15,23,42,.06);
-            border: 1px solid #f1f5f9;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .layanan-badge-wrap {
-            display: flex;
-            align-items: center;
-            gap: .75rem;
-            margin-bottom: .85rem;
-        }
-
-        .layanan-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.22rem;
-            flex: 0 0 auto;
-        }
-
-        .layanan-card h4 {
-            color: #0f172a;
-            font-size: 1.18rem;
-            line-height: 1.25;
-            font-weight: 950;
-            margin-bottom: .6rem;
-        }
-
-        .layanan-card p {
-            color: #64748b;
-            font-size: .92rem;
-            line-height: 1.58;
-            margin-bottom: 1rem;
-        }
-
-        .btn-aksi {
-            display: inline-flex;
-            min-height: 52px;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            padding: .82rem 1.1rem;
-            border-radius: 999px;
-            font-size: .94rem;
-            line-height: 1.2;
-            font-weight: 900;
-            box-shadow: 0 8px 18px rgba(15,23,42,.12);
-            transition: .2s ease;
-        }
-
-        .btn-aksi:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.05);
-        }
-
-        /* =========================================================
-           FORM DEFAULT
-        ========================================================= */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: .48rem;
-            color: #1e293b;
-            font-size: .96rem;
-            font-weight: 900;
-        }
-
-        .form-group input,
-        .form-group select,
-        input,
-        select,
-        textarea {
-            width: 100%;
-            min-height: 58px;
-            padding: 0 1rem;
-            border-radius: 18px;
-            border: 2px solid #e2e8f0;
-            background: #ffffff;
-            color: #0f172a;
-            font-size: 16px;
-            font-weight: 750;
-            outline: none;
-            transition: .2s ease;
-        }
-
-        textarea {
-            min-height: 120px;
-            padding-top: .9rem;
-            resize: vertical;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #007ae6;
-            box-shadow: 0 0 0 5px rgba(0,122,230,.12);
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================================================
-           BOOST SEMUA HALAMAN LAYANAN
-           Pulsa, Data, E-Wallet, Listrik, Lainnya, Game, PDAM, TV
-        ========================================================= */
-        .pulsa-page,
-        .data-page,
-        .ew-page,
-        .pln-page,
-        .tv-page,
-        .tvx-page,
-        .pdam-page,
-        .game-page,
-        .ppob-page,
-        .transaksi-wrapper {
-            width: 100% !important;
-            max-width: 560px !important;
-            padding: 1rem .85rem 7rem !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
-        }
-
-        .pulsa-shell,
-        .data-shell,
-        .ew-shell,
-        .pln-shell,
-        .tv-shell,
-        .tvx-shell,
-        .pdam-shell,
-        .game-shell,
-        .ppob-shell,
-        .form-card,
-        .transaksi-card {
-            border-radius: 32px !important;
-            padding: 1rem !important;
-        }
-
-        .pulsa-hero,
-        .data-hero,
-        .ew-hero,
-        .pln-hero,
-        .tv-hero,
-        .tvx-hero,
-        .pdam-hero,
-        .game-hero,
-        .ppob-hero,
-        .header-kategori {
-            border-radius: 28px !important;
-            padding: 1.35rem !important;
-        }
-
-        .pulsa-hero-content,
-        .data-hero-content,
-        .ew-hero-content,
-        .pln-hero-content,
-        .tv-hero-content,
-        .tvx-hero-content,
-        .pdam-hero-content,
-        .game-hero-content,
-        .ppob-hero-inner {
-            gap: 1rem !important;
-            align-items: flex-start !important;
-        }
-
-        .pulsa-hero-icon,
-        .data-hero-icon,
-        .ew-hero-icon,
-        .pln-hero-icon,
-        .tv-hero-icon,
-        .tvx-hero-icon,
-        .pdam-hero-icon,
-        .game-hero-icon,
-        .ppob-hero-icon,
-        .icon-kategori {
-            width: 66px !important;
-            height: 66px !important;
-            flex: 0 0 66px !important;
-            border-radius: 23px !important;
-            font-size: 1.6rem !important;
-        }
-
-        .pulsa-hero h2,
-        .data-hero h2,
-        .ew-hero h2,
-        .pln-hero h2,
-        .tv-hero h2,
-        .tvx-hero h2,
-        .pdam-hero h2,
-        .game-hero h2,
-        .ppob-hero h2,
-        .info-kategori h3 {
-            font-size: 1.48rem !important;
-            line-height: 1.16 !important;
-            font-weight: 950 !important;
-        }
-
-        .pulsa-hero p,
-        .data-hero p,
-        .ew-hero p,
-        .pln-hero p,
-        .tv-hero p,
-        .tvx-hero p,
-        .pdam-hero p,
-        .game-hero p,
-        .ppob-hero p,
-        .info-kategori p {
-            font-size: .92rem !important;
-            line-height: 1.5 !important;
-        }
-
-        .pulsa-step-row,
-        .data-step-row,
-        .ew-step-row,
-        .pln-step-row,
-        .tv-step-row,
-        .tvx-step-row,
-        .pdam-step-row,
-        .game-step-row {
-            gap: .6rem !important;
-        }
-
-        .pulsa-step,
-        .data-step,
-        .ew-step,
-        .pln-step,
-        .tv-step,
-        .tvx-step,
-        .pdam-step,
-        .game-step {
-            padding: .8rem .55rem !important;
-            border-radius: 18px !important;
-        }
-
-        .pulsa-step strong,
-        .data-step strong,
-        .ew-step strong,
-        .pln-step strong,
-        .tv-step strong,
-        .tvx-step strong,
-        .pdam-step strong,
-        .game-step strong {
-            font-size: .82rem !important;
-        }
-
-        .pulsa-step span,
-        .data-step span,
-        .ew-step span,
-        .pln-step span,
-        .tv-step span,
-        .tvx-step span,
-        .pdam-step span,
-        .game-step span {
-            font-size: .7rem !important;
-        }
-
-        .pulsa-card,
-        .data-card,
-        .ew-card,
-        .pln-card,
-        .tv-card,
-        .tvx-card,
-        .pdam-card,
-        .game-card,
-        .ppob-card,
-        .pay-panel,
-        .result-card,
-        .form-card {
-            border-radius: 26px !important;
-            padding: 1.12rem !important;
-            margin-bottom: 1rem !important;
-        }
-
-        .section-head h3,
-        .ppob-title-row h3,
-        .form-group label {
-            font-size: 1.08rem !important;
-        }
-
-        .section-head p,
-        .ppob-title-row p,
-        .form-help,
-        .input-help {
-            font-size: .84rem !important;
-        }
-
-        .section-pill,
-        .ppob-badge {
-            font-size: .76rem !important;
-            padding: .45rem .7rem !important;
-        }
-
-        .input-control,
-        .select-control,
-        .form-group input,
-        .form-group select {
-            min-height: 64px !important;
-            border-radius: 21px !important;
-            font-size: 1.08rem !important;
-            font-weight: 850 !important;
-        }
-
-        .input-box i {
-            font-size: 1.08rem !important;
-        }
-
-        .operator-info,
-        .wallet-info,
-        .tv-info,
-        .tvx-info,
-        .pdam-info,
-        .game-info,
-        .product-info,
-        .pln-info,
-        .data-info {
-            font-size: .9rem !important;
-            padding: .92rem !important;
-            border-radius: 18px !important;
-        }
-
-        /* =========================================================
-           OPERATOR / WALLET / GAME / LAYANAN LAINNYA
-        ========================================================= */
-        .operator-grid,
-        .wallet-grid,
-        .game-type-grid,
-        .service-grid,
-        .kategori-layanan-grid {
-            gap: .65rem !important;
-        }
-
-        .operator-card,
-        .wallet-card,
-        .game-type-card {
-            min-height: 88px !important;
-            border-radius: 20px !important;
-            padding: .65rem .38rem !important;
-        }
-
-        .operator-logo,
-        .wallet-logo,
-        .game-logo {
-            width: 42px !important;
-            height: 42px !important;
-            border-radius: 15px !important;
-            font-size: .8rem !important;
-            margin-bottom: .42rem !important;
-        }
-
-        .operator-name,
-        .wallet-name,
-        .game-name {
-            font-size: .76rem !important;
-            line-height: 1.18 !important;
-            font-weight: 900 !important;
-        }
-
-        .service-link {
-            min-height: 92px !important;
-            border-radius: 20px !important;
-            padding: .65rem .28rem !important;
-        }
-
-        .service-icon {
-            width: 46px !important;
-            height: 46px !important;
-            border-radius: 16px !important;
-            font-size: 1.08rem !important;
-        }
-
-        .service-name {
-            font-size: .72rem !important;
-            font-weight: 900 !important;
-            line-height: 1.15 !important;
-        }
-
-        /* =========================================================
-           NOMINAL / PRODUK / PAKET DATA / WILAYAH
-        ========================================================= */
-        .nominal-grid,
-        .product-grid,
-        .region-grid,
-        .package-grid,
-        .paket-grid {
-            gap: .8rem !important;
-        }
-
-        .nominal-card,
-        .product-card,
-        .region-card,
-        .package-card,
-        .paket-card,
-        .service-card {
-            min-height: 122px !important;
-            border-radius: 23px !important;
-            padding: 1rem !important;
-        }
-
-        .nominal-label,
-        .product-label,
-        .region-label,
-        .service-label,
-        .package-label,
-        .paket-label {
-            font-size: .66rem !important;
-            padding: .24rem .55rem !important;
-        }
-
-        .nominal-name,
-        .product-name,
-        .region-name,
-        .package-name,
-        .paket-name {
-            font-size: 1rem !important;
-            line-height: 1.24 !important;
-            font-weight: 950 !important;
-        }
-
-        .nominal-price,
-        .product-price,
-        .region-price,
-        .service-price,
-        .package-price,
-        .paket-price {
-            font-size: .92rem !important;
-            font-weight: 950 !important;
-        }
-
-        .nominal-note,
-        .product-note,
-        .region-note,
-        .service-note,
-        .note,
-        .tv-note,
-        .pdam-note,
-        .tvx-note,
-        .package-note,
-        .paket-note,
-        .info-bantuan {
-            font-size: .88rem !important;
-            padding: .98rem !important;
-            border-radius: 19px !important;
-        }
-
-        /* Filter paket data */
-        .filter-row,
-        .filter-grid,
-        .package-filter,
-        .paket-filter {
-            gap: .55rem !important;
-        }
-
-        .filter-btn,
-        .filter-chip,
-        .package-filter button,
-        .paket-filter button {
-            min-height: 42px !important;
-            padding: .55rem .8rem !important;
-            border-radius: 999px !important;
-            font-size: .82rem !important;
-            font-weight: 900 !important;
-        }
-
-        /* =========================================================
-           SUMMARY / HASIL TRANSAKSI
-        ========================================================= */
-        .summary-box {
-            padding: 1.08rem !important;
-            border-radius: 24px !important;
-        }
-
-        .summary-title {
-            font-size: 1.02rem !important;
-        }
-
-        .summary-row span,
-        .summary-row b,
-        .detail-row span,
-        .detail-row b,
-        .result-row span,
-        .result-row b {
-            font-size: .9rem !important;
-        }
-
-        .summary-total,
-        .total-row,
-        .result-total {
-            padding: 1.05rem !important;
-            border-radius: 21px !important;
-        }
-
-        .summary-total b,
-        .total-row b,
-        .result-total b {
-            font-size: 1.32rem !important;
-        }
-
-        .btn-submit,
-        .btn-main,
-        .btn-lanjut {
-            min-height: 64px !important;
-            border-radius: 21px !important;
-            font-size: 1.08rem !important;
-            font-weight: 950 !important;
-        }
-
-        /* =========================================================
-           BANTUAN FLOAT
-        ========================================================= */
-        .bantuan-float {
-            position: fixed;
-            right: max(14px, calc((100vw - 560px) / 2 + 14px));
-            bottom: 104px;
-            z-index: 120;
-        }
-
-        .tombol-bantuan {
-            min-height: 52px;
-            display: inline-flex;
-            align-items: center;
-            gap: .5rem;
-            padding: .72rem .95rem;
-            border-radius: 999px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            box-shadow: 0 10px 24px rgba(37, 211, 102, .28);
-            font-weight: 850;
-            transition: .2s ease;
-        }
-
-        .tombol-bantuan:hover {
-            transform: translateY(-2px);
-        }
-
-        .tombol-bantuan i {
-            font-size: 1.3rem;
-        }
-
-        .teks-bantuan small {
-            display: block;
-            font-size: .66rem;
-            line-height: 1.1;
-            opacity: .88;
-        }
-
-        .teks-bantuan strong {
-            display: block;
-            font-size: .82rem;
-            line-height: 1.15;
-        }
-
-        /* =========================================================
-           BOTTOM NAV
-        ========================================================= */
-        .bottom-nav {
-            position: fixed;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            z-index: 110;
-            width: 100%;
-            max-width: 560px;
-            min-height: 88px;
-            padding: .68rem .58rem calc(.68rem + env(safe-area-inset-bottom));
-            background: rgba(255,255,255,.96);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(226,232,240,.90);
-            border-top-left-radius: 28px;
-            border-top-right-radius: 28px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            box-shadow: 0 -10px 28px rgba(15,23,42,.10);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: .28rem;
-            color: #94a3b8;
-            text-align: center;
-            font-size: .8rem;
-            line-height: 1.1;
-            font-weight: 900;
-            border-radius: 20px;
-            transition: .2s ease;
-        }
-
-        .nav-icon {
-            font-size: 1.6rem;
-            line-height: 1;
-            transition: .2s ease;
-        }
-
-        .nav-item.active {
-            color: #007ae6;
-            background: #eff6ff;
-        }
-
-        .nav-item.active .nav-icon {
-            transform: translateY(-1px) scale(1.08);
-            filter: drop-shadow(0 0 8px rgba(0,122,230,.30));
-        }
-
-        /* =========================================================
-           RESPONSIF HP
-        ========================================================= */
-        @media (max-width: 560px) {
-            .app-frame {
-                max-width: 100%;
-                box-shadow: none;
-            }
-
-            .top-header {
-                padding: 1rem .85rem;
-                border-bottom-left-radius: 24px;
-                border-bottom-right-radius: 24px;
-            }
-
-            .logo {
-                font-size: 1.24rem;
-            }
-
-            .logo i {
-                font-size: 1.5rem;
-            }
-
-            .support-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 1.12rem;
-            }
-
-            .masuk-btn {
-                min-height: 44px;
-                padding: 0 .9rem;
-                font-size: .84rem;
-            }
-
-            .container {
-                padding: .95rem .8rem 7.2rem;
-            }
-
-            .kategori-grid {
-                gap: .5rem;
-                padding: .9rem .55rem;
-            }
-
-            .kategori-card {
-                min-height: 84px;
-            }
-
-            .kategori-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.08rem;
-            }
-
-            .kategori-nama {
-                font-size: .64rem;
-            }
-
-            .hero-banner {
-                min-height: 210px;
-            }
-
-            .bottom-nav {
-                max-width: 100%;
-                min-height: 88px;
-            }
-
-            .nav-icon {
-                font-size: 1.6rem;
-            }
-
-            .nav-item {
-                font-size: .8rem;
-            }
-
-            .operator-grid,
-            .wallet-grid,
-            .game-type-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-            }
-
-            .service-grid {
-                grid-template-columns: repeat(4, 1fr) !important;
-            }
-
-            .nominal-grid,
-            .product-grid,
-            .region-grid,
-            .package-grid,
-            .paket-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-
-            .bantuan-float {
-                right: 12px;
-                bottom: 104px;
-            }
-        }
-
-        @media (max-width: 390px) {
-            .container {
-                padding-left: .65rem;
-                padding-right: .65rem;
-            }
-
-            .kategori-grid {
-                grid-template-columns: repeat(5, 1fr);
-                gap: .3rem;
-                padding-left: .45rem;
-                padding-right: .45rem;
-            }
-
-            .kategori-icon {
-                width: 40px;
-                height: 40px;
-                font-size: .98rem;
-            }
-
-            .kategori-nama {
-                font-size: .58rem;
-            }
-
-            .operator-grid,
-            .wallet-grid,
-            .game-type-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-            }
-
-            .service-grid {
-                grid-template-columns: repeat(3, 1fr) !important;
-            }
-
-            .nominal-grid,
-            .product-grid,
-            .region-grid,
-            .package-grid,
-            .paket-grid {
-                grid-template-columns: 1fr !important;
-            }
-
-            .pulsa-hero h2,
-            .data-hero h2,
-            .ew-hero h2,
-            .pln-hero h2,
-            .tv-hero h2,
-            .tvx-hero h2,
-            .pdam-hero h2,
-            .game-hero h2,
-            .ppob-hero h2,
-            .info-kategori h3 {
-                font-size: 1.3rem !important;
-            }
-
-            .pulsa-hero-icon,
-            .data-hero-icon,
-            .ew-hero-icon,
-            .pln-hero-icon,
-            .tv-hero-icon,
-            .tvx-hero-icon,
-            .pdam-hero-icon,
-            .game-hero-icon,
-            .ppob-hero-icon,
-            .icon-kategori {
-                width: 58px !important;
-                height: 58px !important;
-                flex-basis: 58px !important;
-                font-size: 1.35rem !important;
-            }
-        }
-    </style>
-</head>
-
-<body>
-<div class="app-frame">
-
-    <!-- HEADER -->
-    <div class="top-header">
-        <a href="{{ url_for('dashboard') }}" class="logo">
-            <i class="fa-solid fa-bolt"></i>
-            <span>SenjaData</span>
-        </a>
-
-        <div class="header-right">
-            <a href="https://wa.me/6283153214390" target="_blank" rel="noopener noreferrer" class="support-btn" title="Bantuan">
-                <i class="fa-solid fa-headset"></i>
-            </a>
-
-            {% if sudah_login %}
-                <a href="{{ url_for('profil') }}" class="masuk-btn">Profil</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="masuk-btn">Masuk</a>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- CONTAINER -->
-    <main class="container page-fade-in">
-
-        <!-- NOTIFIKASI -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for kategori, pesan in messages %}
-                    <div class="alert {{ kategori }}">{{ pesan }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        {% if request.endpoint in ['dashboard', None] %}
-            <!-- KATEGORI -->
-            <div class="kategori-grid">
-                <a href="{{ url_for('pulsa') }}" class="kategori-card">
-                    <div class="kategori-icon pulsa"><i class="fa-solid fa-signal"></i></div>
-                    <div class="kategori-nama">Pulsa</div>
-                </a>
-
-                <a href="{{ url_for('data') }}" class="kategori-card">
-                    <div class="kategori-icon data"><i class="fa-solid fa-wifi"></i></div>
-                    <div class="kategori-nama">Paket Data</div>
-                </a>
-
-                <a href="{{ url_for('ewallet') }}" class="kategori-card">
-                    <div class="kategori-icon ewallet"><i class="fa-solid fa-wallet"></i></div>
-                    <div class="kategori-nama">E-Wallet</div>
-                </a>
-
-                <a href="{{ url_for('listrik') }}" class="kategori-card">
-                    <div class="kategori-icon listrik"><i class="fa-solid fa-bolt"></i></div>
-                    <div class="kategori-nama">Listrik</div>
-                </a>
-
-                <a href="{{ url_for('lainnya') }}" class="kategori-card">
-                    <div class="kategori-icon lainnya"><i class="fa-solid fa-list-check"></i></div>
-                    <div class="kategori-nama">Lainnya</div>
-                </a>
-            </div>
-
-            <!-- BANNER -->
-            <div class="banner-slider">
-                <div class="banner-wrapper">
-                    <div class="hero-banner" style="background: linear-gradient(135deg, #0066cc, #00c6ff);">
-                        <h3>Pulsa Semua Operator</h3>
-                        <p>Nominal lengkap, harga terbaik, proses instan 24 jam.</p>
-
-                        <div class="hero-badge-container">
-                            <div class="hero-badge">Telkomsel</div>
-                            <div class="hero-badge">Indosat</div>
-                            <div class="hero-badge">XL</div>
-                            <div class="hero-badge">Tri</div>
-                            <div class="hero-badge">Smartfren</div>
-                        </div>
-
-                        <div class="hero-floating-art">
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-                        </div>
-                    </div>
-
-                    <div class="hero-banner" style="background: linear-gradient(135deg, #059669, #34d399);">
-                        <h3>Top Up E-Wallet</h3>
-                        <p>Isi saldo DANA, OVO, GoPay, dan LinkAja dengan cepat.</p>
-
-                        <div class="hero-badge-container">
-                            <div class="hero-badge">DANA</div>
-                            <div class="hero-badge">OVO</div>
-                            <div class="hero-badge">GoPay</div>
-                            <div class="hero-badge">LinkAja</div>
-                        </div>
-
-                        <div class="hero-floating-art">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-                    </div>
-
-                    <div class="hero-banner" style="background: linear-gradient(135deg, #d97706, #fbbf24);">
-                        <h3>Token & Tagihan</h3>
-                        <p>Bayar listrik, PDAM, BPJS, internet, dan layanan lainnya.</p>
-
-                        <div class="hero-badge-container">
-                            <div class="hero-badge">PLN</div>
-                            <div class="hero-badge">PDAM</div>
-                            <div class="hero-badge">BPJS</div>
-                            <div class="hero-badge">Internet</div>
-                        </div>
-
-                        <div class="hero-floating-art">
-                            <i class="fa-solid fa-lightbulb"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="banner-indicators">
-                    <span class="indicator active" onclick="goToSlide(0)"></span>
-                    <span class="indicator" onclick="goToSlide(1)"></span>
-                    <span class="indicator" onclick="goToSlide(2)"></span>
-                </div>
-            </div>
-
-            <!-- KARTU LAYANAN -->
-            <div class="layanan-card">
-                <div class="layanan-badge-wrap">
-                    <div class="layanan-icon" style="background: #ecfdf5; color: #059669;">
-                        <i class="fa-solid fa-credit-card"></i>
-                    </div>
-
-                    <span style="font-size: .86rem; font-weight: 900; color: #059669; text-transform: uppercase; letter-spacing: .04em;">
-                        Dompet Digital
-                    </span>
-                </div>
-
-                <h4>Top Up DANA, OVO, GoPay & LinkAja</h4>
-                <p>Isi saldo kapan saja dengan proses otomatis, tampilan mudah digunakan, dan transaksi lebih jelas.</p>
-
-                <a href="{{ url_for('ewallet') }}" class="btn-aksi" style="background: linear-gradient(135deg, #059669, #10b981);">
-                    Buka Layanan Sekarang
-                </a>
-            </div>
-        {% endif %}
-
-        <!-- TEMPAT HALAMAN LAIN MASUK -->
-        {% block konten %}{% endblock %}
-    </main>
-
-
-    <!-- NAVIGASI BAWAH -->
-    <nav class="bottom-nav">
-        <a href="{{ url_for('dashboard') }}" class="nav-item {{ 'active' if request.endpoint == 'dashboard' else '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-home"></i></div>
-            <div>Beranda</div>
-        </a>
-
-        <a href="{{ url_for('riwayat') }}" class="nav-item {{ 'active' if request.endpoint == 'riwayat' else '' }}">
-            <div class="nav-icon"><i class="fa-solid fa-receipt"></i></div>
-            <div>Transaksi</div>
-        </a>
-
-        {% if sudah_login %}
-            <a href="{{ url_for('profil') }}" class="nav-item {{ 'active' if request.endpoint == 'profil' else '' }}">
-                <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
-                <div>Profil</div>
-            </a>
-        {% else %}
-            <a href="{{ url_for('login') }}" class="nav-item {{ 'active' if request.endpoint == 'login' else '' }}">
-                <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
-                <div>Masuk</div>
-            </a>
-        {% endif %}
-    </nav>
-
-</div>
-
-<script>
-let currentSlide = 0;
-const totalSlides = 3;
-
-function goToSlide(index) {
-    currentSlide = index;
-
-    const wrapper = document.querySelector('.banner-wrapper');
-    if (!wrapper) return;
-
-    wrapper.style.transform = `translateX(-${currentSlide * 33.333333}%)`;
-    updateIndicators();
-}
-
-function updateIndicators() {
-    document.querySelectorAll('.indicator').forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentSlide);
-    });
-}
-
-const bannerWrapper = document.querySelector('.banner-wrapper');
-
-if (bannerWrapper) {
-    setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        goToSlide(currentSlide);
-    }, 5000);
-
-    let startX = 0;
-    let isDragging = false;
-
-    bannerWrapper.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-    }, { passive: true });
-
-    bannerWrapper.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-
-        const endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-
-        if (diff > 50 && currentSlide < totalSlides - 1) {
-            currentSlide++;
-        }
-
-        if (diff < -50 && currentSlide > 0) {
-            currentSlide--;
-        }
-
-        goToSlide(currentSlide);
-        isDragging = false;
-    }, { passive: true });
-}
-
-function lihatSandi(id, tombol) {
-    const input = document.getElementById(id);
-    if (!input || !tombol) return;
-
-    const icon = tombol.querySelector("i");
-
-    if (input.type === "password") {
-        input.type = "text";
-
-        if (icon) {
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        }
-    } else {
-        input.type = "password";
-
-        if (icon) {
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
-    }
-}
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="id-ID">
-<head>
-    <meta charset="UTF-8">
-
     <!-- GOOGLE SEARCH CONSOLE VERIFICATION -->
     <meta name="google-site-verification" content="zb6DFjKqJHOzkMv91UNcxLHHXzjeuw-TfgqTebve8Ps" />
 
@@ -1479,14 +10,14 @@ function lihatSandi(id, tombol) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SenjaData ⚡ | Isi Pulsa & Pembayaran Cepat</title>
+    <meta name="description" content="SenjaData adalah aplikasi isi pulsa, paket data, e-wallet, token listrik, dan pembayaran digital yang cepat, ringan, dan mudah digunakan.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#007ae6">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <style>
-        /* =========================================================
-           RESET & DASAR
-        ========================================================= */
         *,
         *::before,
         *::after {
@@ -1542,9 +73,6 @@ function lihatSandi(id, tombol) {
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* =========================================================
-           FRAME APLIKASI
-        ========================================================= */
         .app-frame {
             width: 100%;
             max-width: 560px;
@@ -1556,9 +84,6 @@ function lihatSandi(id, tombol) {
             overflow-x: hidden;
         }
 
-        /* =========================================================
-           HEADER
-        ========================================================= */
         .top-header {
             position: sticky;
             top: 0;
@@ -1655,9 +180,6 @@ function lihatSandi(id, tombol) {
             transform: translateY(-1px);
         }
 
-        /* =========================================================
-           CONTAINER
-        ========================================================= */
         .container {
             width: 100%;
             padding: 1rem .85rem 7.3rem;
@@ -1679,9 +201,6 @@ function lihatSandi(id, tombol) {
             }
         }
 
-        /* =========================================================
-           ALERT
-        ========================================================= */
         .alert {
             padding: .95rem 1rem;
             border-radius: 18px;
@@ -1719,9 +238,6 @@ function lihatSandi(id, tombol) {
             border-color: #fcd34d;
         }
 
-        /* =========================================================
-           DASHBOARD - KATEGORI
-        ========================================================= */
         .kategori-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -1780,9 +296,6 @@ function lihatSandi(id, tombol) {
             text-align: center;
         }
 
-        /* =========================================================
-           DASHBOARD - BANNER
-        ========================================================= */
         .banner-slider {
             position: relative;
             width: 100%;
@@ -1888,9 +401,6 @@ function lihatSandi(id, tombol) {
             box-shadow: 0 0 10px rgba(255,255,255,.70);
         }
 
-        /* =========================================================
-           DASHBOARD - KARTU LAYANAN
-        ========================================================= */
         .layanan-card {
             background: #ffffff;
             border-radius: 26px;
@@ -1955,9 +465,6 @@ function lihatSandi(id, tombol) {
             filter: brightness(1.05);
         }
 
-        /* =========================================================
-           FORM DEFAULT
-        ========================================================= */
         .form-group {
             margin-bottom: 1rem;
         }
@@ -2007,9 +514,6 @@ function lihatSandi(id, tombol) {
             cursor: pointer;
         }
 
-        /* =========================================================
-           BOOST SEMUA HALAMAN LAYANAN
-        ========================================================= */
         .pulsa-page,
         .data-page,
         .ew-page,
@@ -2115,51 +619,6 @@ function lihatSandi(id, tombol) {
             line-height: 1.5 !important;
         }
 
-        .pulsa-step-row,
-        .data-step-row,
-        .ew-step-row,
-        .pln-step-row,
-        .tv-step-row,
-        .tvx-step-row,
-        .pdam-step-row,
-        .game-step-row {
-            gap: .6rem !important;
-        }
-
-        .pulsa-step,
-        .data-step,
-        .ew-step,
-        .pln-step,
-        .tv-step,
-        .tvx-step,
-        .pdam-step,
-        .game-step {
-            padding: .8rem .55rem !important;
-            border-radius: 18px !important;
-        }
-
-        .pulsa-step strong,
-        .data-step strong,
-        .ew-step strong,
-        .pln-step strong,
-        .tv-step strong,
-        .tvx-step strong,
-        .pdam-step strong,
-        .game-step strong {
-            font-size: .82rem !important;
-        }
-
-        .pulsa-step span,
-        .data-step span,
-        .ew-step span,
-        .pln-step span,
-        .tv-step span,
-        .tvx-step span,
-        .pdam-step span,
-        .game-step span {
-            font-size: .7rem !important;
-        }
-
         .pulsa-card,
         .data-card,
         .ew-card,
@@ -2177,25 +636,6 @@ function lihatSandi(id, tombol) {
             margin-bottom: 1rem !important;
         }
 
-        .section-head h3,
-        .ppob-title-row h3,
-        .form-group label {
-            font-size: 1.08rem !important;
-        }
-
-        .section-head p,
-        .ppob-title-row p,
-        .form-help,
-        .input-help {
-            font-size: .84rem !important;
-        }
-
-        .section-pill,
-        .ppob-badge {
-            font-size: .76rem !important;
-            padding: .45rem .7rem !important;
-        }
-
         .input-control,
         .select-control,
         .form-group input,
@@ -2204,24 +644,6 @@ function lihatSandi(id, tombol) {
             border-radius: 21px !important;
             font-size: 1.08rem !important;
             font-weight: 850 !important;
-        }
-
-        .input-box i {
-            font-size: 1.08rem !important;
-        }
-
-        .operator-info,
-        .wallet-info,
-        .tv-info,
-        .tvx-info,
-        .pdam-info,
-        .game-info,
-        .product-info,
-        .pln-info,
-        .data-info {
-            font-size: .9rem !important;
-            padding: .92rem !important;
-            border-radius: 18px !important;
         }
 
         .operator-grid,
@@ -2326,40 +748,6 @@ function lihatSandi(id, tombol) {
             font-weight: 950 !important;
         }
 
-        .nominal-note,
-        .product-note,
-        .region-note,
-        .service-note,
-        .note,
-        .tv-note,
-        .pdam-note,
-        .tvx-note,
-        .package-note,
-        .paket-note,
-        .info-bantuan {
-            font-size: .88rem !important;
-            padding: .98rem !important;
-            border-radius: 19px !important;
-        }
-
-        .filter-row,
-        .filter-grid,
-        .package-filter,
-        .paket-filter {
-            gap: .55rem !important;
-        }
-
-        .filter-btn,
-        .filter-chip,
-        .package-filter button,
-        .paket-filter button {
-            min-height: 42px !important;
-            padding: .55rem .8rem !important;
-            border-radius: 999px !important;
-            font-size: .82rem !important;
-            font-weight: 900 !important;
-        }
-
         .summary-box {
             padding: 1.08rem !important;
             border-radius: 24px !important;
@@ -2400,9 +788,6 @@ function lihatSandi(id, tombol) {
             font-weight: 950 !important;
         }
 
-        /* =========================================================
-           BANTUAN FLOAT
-        ========================================================= */
         .bantuan-float {
             position: fixed;
             right: max(14px, calc((100vw - 560px) / 2 + 14px));
@@ -2445,9 +830,6 @@ function lihatSandi(id, tombol) {
             line-height: 1.15;
         }
 
-        /* =========================================================
-           BOTTOM NAV
-        ========================================================= */
         .bottom-nav {
             position: fixed;
             left: 50%;
@@ -2671,7 +1053,6 @@ function lihatSandi(id, tombol) {
 <body>
 <div class="app-frame">
 
-    <!-- HEADER -->
     <div class="top-header">
         <a href="{{ url_for('dashboard') }}" class="logo">
             <i class="fa-solid fa-bolt"></i>
@@ -2683,7 +1064,7 @@ function lihatSandi(id, tombol) {
                 <i class="fa-solid fa-headset"></i>
             </a>
 
-            {% if sudah_login %}
+            {% if sudah_login|default(false) %}
                 <a href="{{ url_for('profil') }}" class="masuk-btn">Profil</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="masuk-btn">Masuk</a>
@@ -2691,10 +1072,8 @@ function lihatSandi(id, tombol) {
         </div>
     </div>
 
-    <!-- CONTAINER -->
     <main class="container page-fade-in">
 
-        <!-- NOTIFIKASI -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for kategori, pesan in messages %}
@@ -2704,7 +1083,6 @@ function lihatSandi(id, tombol) {
         {% endwith %}
 
         {% if request.endpoint in ['dashboard', None] %}
-            <!-- KATEGORI -->
             <div class="kategori-grid">
                 <a href="{{ url_for('pulsa') }}" class="kategori-card">
                     <div class="kategori-icon pulsa"><i class="fa-solid fa-signal"></i></div>
@@ -2732,7 +1110,6 @@ function lihatSandi(id, tombol) {
                 </a>
             </div>
 
-            <!-- BANNER -->
             <div class="banner-slider">
                 <div class="banner-wrapper">
                     <div class="hero-banner" style="background: linear-gradient(135deg, #0066cc, #00c6ff);">
@@ -2792,7 +1169,6 @@ function lihatSandi(id, tombol) {
                 </div>
             </div>
 
-            <!-- KARTU LAYANAN -->
             <div class="layanan-card">
                 <div class="layanan-badge-wrap">
                     <div class="layanan-icon" style="background: #ecfdf5; color: #059669;">
@@ -2813,11 +1189,9 @@ function lihatSandi(id, tombol) {
             </div>
         {% endif %}
 
-        <!-- TEMPAT HALAMAN LAIN MASUK -->
         {% block konten %}{% endblock %}
     </main>
 
-    <!-- NAVIGASI BAWAH -->
     <nav class="bottom-nav">
         <a href="{{ url_for('dashboard') }}" class="nav-item {{ 'active' if request.endpoint == 'dashboard' else '' }}">
             <div class="nav-icon"><i class="fa-solid fa-home"></i></div>
@@ -2829,7 +1203,7 @@ function lihatSandi(id, tombol) {
             <div>Transaksi</div>
         </a>
 
-        {% if sudah_login %}
+        {% if sudah_login|default(false) %}
             <a href="{{ url_for('profil') }}" class="nav-item {{ 'active' if request.endpoint == 'profil' else '' }}">
                 <div class="nav-icon"><i class="fa-solid fa-user-circle"></i></div>
                 <div>Profil</div>
