@@ -193,8 +193,8 @@ def index():
 # =========================================================
 # ADMIN PANEL SENJADATA V2
 # =========================================================
-ADMIN_PANEL_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PANEL_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
+ADMIN_PANEL_USERNAME = os.getenv("ADMIN_USERNAME", "anggi budino")
+ADMIN_PANEL_PASSWORD = os.getenv("ADMIN_PASSWORD", "anggi080811")
 
 
 def validasi_login_admin(username, password):
