@@ -14,6 +14,8 @@ from utils import format_uang
 from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from functools import wraps
+import os
 
 
 app = Flask(__name__)
@@ -100,6 +102,16 @@ def wajib_login():
     return None
 
 
+def wajib_admin(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not user_sedang_login() or not user_admin():
+            flash("⚠️ Silakan masuk sebagai admin terlebih dahulu.", "warning")
+            return redirect(url_for("admin_login"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
 def format_flash_nominal(nominal):
     try:
         return format_uang(int(nominal))
@@ -151,7 +163,14 @@ def cek_akses():
         "voucher",
         "zakat",
         "pln_pasca",
-        "tiket"
+        "tiket",
+        "admin_index",
+        "admin_login",
+        "admin_dashboard",
+        "admin_logout",
+        "admin_transaksi",
+        "admin_pengguna",
+        "admin_produk"
     ]
 
     if request.endpoint in halaman_bebas:
@@ -168,6 +187,144 @@ def cek_akses():
 @app.route("/")
 def index():
     return redirect(url_for("dashboard"))
+
+
+# =========================================================
+# ADMIN PANEL SENJADATA
+# =========================================================
+ADMIN_PANEL_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
+ADMIN_PANEL_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
+
+
+@app.route("/admin")
+def admin_index():
+    if user_sedang_login() and user_admin():
+        return redirect(url_for("admin_dashboard"))
+    return redirect(url_for("admin_login"))
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if user_sedang_login() and user_admin():
+        return redirect(url_for("admin_dashboard"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        admin_email_config = AKUN_ADMIN.get("email", "")
+        admin_password_config = AKUN_ADMIN.get("password", "")
+
+        login_dari_env = (
+            username == ADMIN_PANEL_USERNAME and
+            password == ADMIN_PANEL_PASSWORD
+        )
+
+        login_dari_config = (
+            username == admin_email_config and
+            password == admin_password_config
+        )
+
+        if login_dari_env or login_dari_config:
+            session["sudah_login"] = True
+            session["email"] = username
+            session["nama"] = "Admin"
+            session["peran"] = "admin"
+
+            flash("✅ Berhasil masuk ke panel admin.", "success")
+            return redirect(url_for("admin_dashboard"))
+
+        flash("❌ Username atau password admin salah.", "danger")
+        return redirect(url_for("admin_login"))
+
+    return render_template("admin_login.html")
+
+
+@app.route("/admin/dashboard")
+@wajib_admin
+def admin_dashboard():
+    total_pengguna = Pengguna.query.count()
+    total_produk = len(NAMA_PRODUK)
+    total_transaksi = Transaksi.query.count()
+
+    transaksi_sukses = Transaksi.query.filter_by(status="Berhasil").count()
+    transaksi_pending = Transaksi.query.filter_by(status="Pending").count()
+    transaksi_gagal = Transaksi.query.filter_by(status="Gagal").count()
+
+    total_laba = db.session.query(func.sum(Transaksi.laba)).filter_by(status="Berhasil").scalar() or 0
+
+    transaksi_terbaru = Transaksi.query.order_by(Transaksi.waktu.desc()).limit(8).all()
+    pengguna_terbaru = Pengguna.query.order_by(Pengguna.id.desc()).limit(6).all()
+
+    statistik = {
+        "total_pengguna": total_pengguna,
+        "total_produk": total_produk,
+        "total_transaksi": total_transaksi,
+        "transaksi_sukses": transaksi_sukses,
+        "transaksi_pending": transaksi_pending,
+        "transaksi_gagal": transaksi_gagal,
+        "total_laba": total_laba
+    }
+
+    return render_template(
+        "admin_dashboard.html",
+        statistik=statistik,
+        transaksi_terbaru=transaksi_terbaru,
+        pengguna_terbaru=pengguna_terbaru,
+        admin_username=session.get("nama", "Admin"),
+        format_uang=format_uang
+    )
+
+
+@app.route("/admin/transaksi")
+@wajib_admin
+def admin_transaksi():
+    daftar = Transaksi.query.order_by(Transaksi.waktu.desc()).limit(200).all()
+
+    return render_template(
+        "admin_transaksi.html",
+        daftar=daftar,
+        format_uang=format_uang
+    )
+
+
+@app.route("/admin/pengguna")
+@wajib_admin
+def admin_pengguna():
+    daftar = Pengguna.query.order_by(Pengguna.id.desc()).all()
+
+    return render_template(
+        "admin_pengguna.html",
+        daftar=daftar,
+        format_uang=format_uang
+    )
+
+
+@app.route("/admin/produk")
+@wajib_admin
+def admin_produk():
+    daftar = [
+        {
+            "kode": kode,
+            "nama": nama,
+            "harga": HARGA_JUAL.get(kode, 0)
+        }
+        for kode, nama in NAMA_PRODUK.items()
+    ]
+
+    return render_template(
+        "admin_produk.html",
+        daftar=daftar,
+        format_uang=format_uang
+    )
+
+
+@app.route("/admin/logout")
+@wajib_admin
+def admin_logout():
+    session.clear()
+    flash("✅ Berhasil keluar dari panel admin.", "success")
+    return redirect(url_for("admin_login"))
 
 
 # =========================================================
@@ -240,7 +397,7 @@ def login():
             session["nama"] = "Admin"
             session["peran"] = "admin"
             flash("✅ Berhasil masuk sebagai Admin.", "success")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("admin_dashboard"))
 
         pengguna = Pengguna.query.filter(
             (Pengguna.email == identitas) | (Pengguna.nomor_hp == identitas)
@@ -281,7 +438,7 @@ def profil():
 
     if user_admin():
         flash("ℹ️ Admin tidak memiliki profil saldo pengguna.", "info")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("admin_dashboard"))
 
     pengguna = ambil_pengguna_login()
 
@@ -295,10 +452,6 @@ def profil():
 
 # =========================================================
 # TOP UP SALDO
-# Endpoint tetap: topup_saldo
-# URL didukung:
-# - /topup-saldo
-# - /topup_saldo
 # =========================================================
 @app.route("/topup-saldo", methods=["GET", "POST"])
 @app.route("/topup_saldo", methods=["GET", "POST"])
@@ -309,7 +462,7 @@ def topup_saldo():
 
     if user_admin():
         flash("⚠️ Admin tidak bisa melakukan top up saldo pengguna.", "warning")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("admin_dashboard"))
 
     pengguna = ambil_pengguna_login()
 
@@ -350,10 +503,6 @@ def topup_saldo():
 
 # =========================================================
 # MUTASI SALDO
-# Endpoint tetap: mutasi_saldo
-# URL didukung:
-# - /mutasi-saldo
-# - /mutasi_saldo
 # =========================================================
 @app.route("/mutasi-saldo")
 @app.route("/mutasi_saldo")
