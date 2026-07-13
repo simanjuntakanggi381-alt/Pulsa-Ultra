@@ -190,42 +190,93 @@ def index():
 
 
 # =========================================================
-# ADMIN PANEL SENJADATA
+# ADMIN PANEL SENJADATA - FIX + MODERN
 # =========================================================
+# Login default admin panel:
+# Username : admin
+# Password : admin12345
+#
+# Bisa juga login pakai AKUN_ADMIN dari config.py:
+# AKUN_ADMIN["email"] / AKUN_ADMIN["password"]
+# =========================================================
+
 ADMIN_PANEL_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PANEL_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin12345")
 
 
+def validasi_login_admin(username, password):
+    """
+    Validasi login admin dibuat fleksibel:
+    1. admin / admin12345
+    2. ENV ADMIN_USERNAME / ADMIN_PASSWORD
+    3. config.py AKUN_ADMIN["email"] / AKUN_ADMIN["password"]
+    """
+
+    username = (username or "").strip()
+    password = (password or "").strip()
+
+    username_lower = username.lower()
+    env_username = str(ADMIN_PANEL_USERNAME or "admin").strip().lower()
+    env_password = str(ADMIN_PANEL_PASSWORD or "admin12345").strip()
+
+    # Login default supaya pasti bisa masuk
+    if username_lower == "admin" and password == "admin12345":
+        return True
+
+    # Login dari environment variable
+    if username_lower == env_username and password == env_password:
+        return True
+
+    # Login dari config.py
+    try:
+        admin_email_config = str(AKUN_ADMIN.get("email", "")).strip().lower()
+        admin_password_config = str(AKUN_ADMIN.get("password", "")).strip()
+
+        if username_lower == admin_email_config and password == admin_password_config:
+            return True
+    except Exception:
+        pass
+
+    return False
+
+
 @app.route("/admin")
+@app.route("/panel")
+@app.route("/admin-panel")
 def admin_index():
     if user_sedang_login() and user_admin():
         return redirect(url_for("admin_dashboard"))
+
     return redirect(url_for("admin_login"))
 
 
 @app.route("/admin/login", methods=["GET", "POST"])
+@app.route("/admin-login", methods=["GET", "POST"])
+@app.route("/panel/login", methods=["GET", "POST"])
 def admin_login():
+    # Kalau sudah login sebagai admin, langsung masuk dashboard admin
     if user_sedang_login() and user_admin():
         return redirect(url_for("admin_dashboard"))
 
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        password = request.form.get("password", "").strip()
+        # Dibuat fleksibel supaya cocok dengan berbagai nama input form
+        username = (
+            request.form.get("username")
+            or request.form.get("identitas")
+            or request.form.get("email")
+            or request.form.get("admin_username")
+            or ""
+        ).strip()
 
-        admin_email_config = AKUN_ADMIN.get("email", "")
-        admin_password_config = AKUN_ADMIN.get("password", "")
+        password = (
+            request.form.get("password")
+            or request.form.get("kata_sandi")
+            or request.form.get("admin_password")
+            or ""
+        ).strip()
 
-        login_dari_env = (
-            username == ADMIN_PANEL_USERNAME and
-            password == ADMIN_PANEL_PASSWORD
-        )
-
-        login_dari_config = (
-            username == admin_email_config and
-            password == admin_password_config
-        )
-
-        if login_dari_env or login_dari_config:
+        if validasi_login_admin(username, password):
+            session.clear()
             session["sudah_login"] = True
             session["email"] = username
             session["nama"] = "Admin"
@@ -234,13 +285,14 @@ def admin_login():
             flash("✅ Berhasil masuk ke panel admin.", "success")
             return redirect(url_for("admin_dashboard"))
 
-        flash("❌ Username atau password admin salah.", "danger")
+        flash("❌ Username atau password admin salah. Coba pakai admin / admin12345.", "danger")
         return redirect(url_for("admin_login"))
 
     return render_template("admin_login.html")
 
 
 @app.route("/admin/dashboard")
+@app.route("/panel/dashboard")
 @wajib_admin
 def admin_dashboard():
     total_pengguna = Pengguna.query.count()
@@ -277,6 +329,7 @@ def admin_dashboard():
 
 
 @app.route("/admin/transaksi")
+@app.route("/panel/transaksi")
 @wajib_admin
 def admin_transaksi():
     daftar = Transaksi.query.order_by(Transaksi.waktu.desc()).limit(200).all()
@@ -289,6 +342,7 @@ def admin_transaksi():
 
 
 @app.route("/admin/pengguna")
+@app.route("/panel/pengguna")
 @wajib_admin
 def admin_pengguna():
     daftar = Pengguna.query.order_by(Pengguna.id.desc()).all()
@@ -301,6 +355,7 @@ def admin_pengguna():
 
 
 @app.route("/admin/produk")
+@app.route("/panel/produk")
 @wajib_admin
 def admin_produk():
     daftar = [
@@ -320,7 +375,8 @@ def admin_produk():
 
 
 @app.route("/admin/logout")
-@wajib_admin
+@app.route("/admin/keluar")
+@app.route("/panel/logout")
 def admin_logout():
     session.clear()
     flash("✅ Berhasil keluar dari panel admin.", "success")
