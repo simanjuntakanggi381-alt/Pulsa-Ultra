@@ -203,12 +203,12 @@ def validasi_login_admin(username, password):
     username_lower = username.lower()
 
     # Login default
-    if username_lower == "admin" and password == "admin12345":
+    if username_lower == "anggi budino" and password == "anggi080811":
         return True
 
     # Login dari environment variable
-    env_username = str(ADMIN_PANEL_USERNAME or "admin").strip().lower()
-    env_password = str(ADMIN_PANEL_PASSWORD or "admin12345").strip()
+    env_username = str(ADMIN_PANEL_USERNAME or "anggi budino").strip().lower()
+    env_password = str(ADMIN_PANEL_PASSWORD or "anggi080811").strip()
 
     if username_lower == env_username and password == env_password:
         return True
