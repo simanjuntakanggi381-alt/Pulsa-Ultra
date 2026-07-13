@@ -1,0 +1,111 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Produk Admin - SenjaData{% endblock %}
+{% block subtitle %}Manajemen produk dan harga{% endblock %}
+{% block heading %}Daftar Produk{% endblock %}
+
+{% block content %}
+
+<div class="panel-card">
+    <div class="panel-head">
+        <div>
+            <h3>Produk & Harga Jual</h3>
+            <p>Daftar layanan dari konfigurasi produk SenjaData.</p>
+        </div>
+
+        <span class="badge">
+            <i class="fa-solid fa-boxes-stacked"></i>
+            Produk
+        </span>
+    </div>
+
+    <div class="panel-body">
+        {% if daftar %}
+
+            <section class="grid-stats" style="margin-top:0;margin-bottom:18px;">
+                <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+
+                    <span>Total Produk</span>
+                    <strong>{{ daftar|length }}</strong>
+                </div>
+
+                <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+
+                    <span>Status Harga</span>
+                    <strong>Aktif</strong>
+                </div>
+
+                <div class="stat-card" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+
+                    <span>Kategori</span>
+                    <strong>Multi</strong>
+                </div>
+
+                <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--glow:rgba(245,158,11,.16);">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <span>Layanan</span>
+                    <strong>Siap</strong>
+                </div>
+            </section>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kode Produk</th>
+                            <th>Nama Produk</th>
+                            <th>Harga Jual</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in daftar %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.kode }}</strong>
+                            </td>
+
+                            <td>
+                                {{ item.nama }}
+                            </td>
+
+                            <td>
+                                {{ format_uang(item.harga or 0) }}
+                            </td>
+
+                            <td>
+                                <span class="status ok">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Aktif
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                Belum ada produk yang tersedia di konfigurasi SenjaData.
+            </div>
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

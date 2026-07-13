@@ -1,0 +1,135 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Transaksi Admin - SenjaData{% endblock %}
+{% block subtitle %}Manajemen transaksi{% endblock %}
+{% block heading %}Data Transaksi{% endblock %}
+
+{% block content %}
+
+<div class="panel-card">
+    <div class="panel-head">
+        <div>
+            <h3>Semua Transaksi</h3>
+            <p>Menampilkan maksimal 200 transaksi terbaru di aplikasi SenjaData.</p>
+        </div>
+
+        <span class="badge">
+            <i class="fa-solid fa-receipt"></i>
+            Transaksi
+        </span>
+    </div>
+
+    <div class="panel-body">
+        {% if daftar %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Email</th>
+                            <th>Produk</th>
+                            <th>Kode</th>
+                            <th>Tujuan</th>
+                            <th>Status</th>
+                            <th>Harga</th>
+                            <th>Laba</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in daftar %}
+                        <tr>
+                            <td>
+                                {% if item.waktu %}
+                                    {{ item.waktu.strftime("%d/%m/%Y %H:%M") }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.email is defined and item.email %}
+                                    {{ item.email }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.nama_produk is defined and item.nama_produk %}
+                                    {{ item.nama_produk }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.kode_produk is defined and item.kode_produk %}
+                                    {{ item.kode_produk }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.tujuan is defined and item.tujuan %}
+                                    {{ item.tujuan }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.status == "Berhasil" %}
+                                    <span class="status ok">
+                                        <i class="fa-solid fa-check"></i>
+                                        Berhasil
+                                    </span>
+                                {% elif item.status == "Pending" %}
+                                    <span class="status wait">
+                                        <i class="fa-solid fa-clock"></i>
+                                        Pending
+                                    </span>
+                                {% elif item.status == "Gagal" %}
+                                    <span class="status bad">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Gagal
+                                    </span>
+                                {% else %}
+                                    <span class="status info">
+                                        {{ item.status or "-" }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.harga_jual is defined %}
+                                    {{ format_uang(item.harga_jual or 0) }}
+                                {% elif item.harga is defined %}
+                                    {{ format_uang(item.harga or 0) }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if item.laba is defined %}
+                                    {{ format_uang(item.laba or 0) }}
+                                {% else %}
+                                    Rp 0
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                Belum ada transaksi yang tercatat di sistem.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

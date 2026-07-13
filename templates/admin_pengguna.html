@@ -1,0 +1,102 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Pengguna Admin - SenjaData{% endblock %}
+{% block subtitle %}Manajemen pengguna{% endblock %}
+{% block heading %}Data Pengguna{% endblock %}
+
+{% block content %}
+
+<div class="panel-card">
+    <div class="panel-head">
+        <div>
+            <h3>Semua Pengguna</h3>
+            <p>Daftar akun pengguna yang sudah terdaftar di aplikasi SenjaData.</p>
+        </div>
+
+        <span class="badge">
+            <i class="fa-solid fa-users"></i>
+            User
+        </span>
+    </div>
+
+    <div class="panel-body">
+        {% if daftar %}
+
+            <div class="user-list" style="margin-bottom:18px;">
+                {% for user in daftar[:6] %}
+                <div class="user-item">
+                    <div class="avatar">
+                        {{ (user.nama_lengkap or "U")[:1].upper() }}
+                    </div>
+
+                    <div>
+                        <strong>
+                            {{ user.nama_lengkap or "Tanpa Nama" }}
+                        </strong>
+
+                        <span>
+                            {{ user.email or "-" }} · {{ user.nomor_hp or "-" }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama Lengkap</th>
+                            <th>Email</th>
+                            <th>Nomor HP</th>
+                            <th>Saldo</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in daftar %}
+                        <tr>
+                            <td>
+                                <strong>{{ user.nama_lengkap or "Tanpa Nama" }}</strong>
+                            </td>
+
+                            <td>
+                                {{ user.email or "-" }}
+                            </td>
+
+                            <td>
+                                {{ user.nomor_hp or "-" }}
+                            </td>
+
+                            <td>
+                                {% if user.saldo is defined %}
+                                    {{ format_uang(user.saldo or 0) }}
+                                {% else %}
+                                    Rp 0
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="status ok">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Aktif
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                Belum ada pengguna yang terdaftar di sistem SenjaData.
+            </div>
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

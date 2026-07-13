@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - SenjaData{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        :root{
+            --bg:#f4f8ff;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#64748b;
+            --line:#e2e8f0;
+            --blue:#0575e6;
+            --cyan:#00c6ff;
+            --green:#10b981;
+            --orange:#f59e0b;
+            --red:#ef4444;
+            --purple:#7c3aed;
+            --dark:#07111f;
+            --shadow:0 18px 45px rgba(15,23,42,.09);
+            --shadow-soft:0 10px 25px rgba(15,23,42,.06);
+            --radius:26px;
+        }
+
+        *{
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        html{
+            scroll-behavior:smooth;
+        }
+
+        body{
+            min-height:100vh;
+            font-family:"Segoe UI",Roboto,Arial,sans-serif;
+            color:var(--text);
+            background:
+                radial-gradient(circle at 10% -10%,rgba(0,198,255,.20),transparent 28%),
+                radial-gradient(circle at 88% 8%,rgba(5,117,230,.18),transparent 30%),
+                linear-gradient(180deg,#f8fbff 0%,#edf5ff 100%);
+            overflow-x:hidden;
+        }
+
+        a{
+            text-decoration:none;
+            color:inherit;
+        }
+
+        button,
+        input,
+        select{
+            font-family:inherit;
+        }
+
+        .admin-shell{
+            width:100%;
+            min-height:100vh;
+            display:grid;
+            grid-template-columns:290px minmax(0,1fr);
+        }
+
+        .sidebar{
+            position:sticky;
+            top:0;
+            height:100vh;
+            padding:18px;
+            background:
+                radial-gradient(circle at 40% 0%,rgba(0,198,255,.18),transparent 40%),
+                linear-gradient(180deg,#07111f 0%,#0b1728 100%);
+            color:#fff;
+            border-right:1px solid rgba(255,255,255,.08);
+            overflow-y:auto;
+        }
+
+        .brand-box{
+            display:flex;
+            align-items:center;
+            gap:13px;
+            padding:14px;
+            border-radius:24px;
+            background:rgba(255,255,255,.08);
+            border:1px solid rgba(255,255,255,.10);
+            box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+        }
+
+        .brand-logo{
+            width:52px;
+            height:52px;
+            border-radius:19px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            color:#fff;
+            font-size:24px;
+            box-shadow:0 15px 30px rgba(0,198,255,.20);
+        }
+
+        .brand-box small{
+            display:block;
+            color:#8fb3d9;
+            font-size:12px;
+            font-weight:800;
+            letter-spacing:.04em;
+            text-transform:uppercase;
+        }
+
+        .brand-box strong{
+            display:block;
+            margin-top:2px;
+            color:#fff;
+            font-size:20px;
+            font-weight:950;
+            letter-spacing:-.04em;
+        }
+
+        .side-section-title{
+            margin:24px 12px 10px;
+            color:#7da1c8;
+            font-size:11px;
+            font-weight:950;
+            letter-spacing:.12em;
+            text-transform:uppercase;
+        }
+
+        .side-menu{
+            display:grid;
+            gap:8px;
+        }
+
+        .side-link{
+            min-height:48px;
+            padding:0 13px;
+            border-radius:18px;
+            display:flex;
+            align-items:center;
+            gap:11px;
+            color:#dbeafe;
+            font-weight:850;
+            font-size:14px;
+            border:1px solid transparent;
+            transition:.18s ease;
+        }
+
+        .side-link i{
+            width:22px;
+            text-align:center;
+            color:#70d8ff;
+        }
+
+        .side-link:hover,
+        .side-link.active{
+            background:rgba(0,198,255,.12);
+            border-color:rgba(0,198,255,.20);
+            color:#fff;
+            transform:translateX(2px);
+        }
+
+        .side-footer{
+            margin-top:22px;
+            padding:14px;
+            border-radius:22px;
+            background:rgba(255,255,255,.07);
+            border:1px solid rgba(255,255,255,.10);
+            color:#a9c7e8;
+            font-size:12px;
+            line-height:1.5;
+            font-weight:700;
+        }
+
+        .main{
+            min-width:0;
+            padding:18px;
+        }
+
+        .topbar{
+            position:sticky;
+            top:0;
+            z-index:20;
+            min-height:74px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+            padding:13px 16px;
+            margin-bottom:18px;
+            border-radius:25px;
+            background:rgba(255,255,255,.82);
+            backdrop-filter:blur(18px);
+            border:1px solid rgba(226,232,240,.86);
+            box-shadow:var(--shadow-soft);
+        }
+
+        .page-title small{
+            display:block;
+            color:var(--muted);
+            font-size:12px;
+            font-weight:850;
+        }
+
+        .page-title h1{
+            margin-top:2px;
+            font-size:24px;
+            line-height:1.1;
+            font-weight:950;
+            letter-spacing:-.04em;
+        }
+
+        .top-actions{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .pill-btn{
+            min-height:44px;
+            padding:0 14px;
+            border-radius:16px;
+            border:1px solid var(--line);
+            background:#fff;
+            color:var(--text);
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:13px;
+            font-weight:900;
+            box-shadow:0 8px 18px rgba(15,23,42,.05);
+        }
+
+        .pill-btn.primary{
+            border:0;
+            color:#fff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+        }
+
+        .pill-btn.danger{
+            border:0;
+            color:#fff;
+            background:linear-gradient(135deg,#ef4444,#f97316);
+        }
+
+        .mobile-menu{
+            display:none;
+            width:44px;
+            height:44px;
+            border:0;
+            border-radius:16px;
+            color:#fff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            font-size:18px;
+        }
+
+        .hero{
+            position:relative;
+            overflow:hidden;
+            border-radius:32px;
+            padding:28px;
+            color:#fff;
+            background:
+                radial-gradient(circle at 15% 15%,rgba(255,255,255,.25),transparent 28%),
+                radial-gradient(circle at 88% 5%,rgba(0,198,255,.45),transparent 32%),
+                linear-gradient(135deg,#07111f 0%,#0a3b78 48%,#0575e6 100%);
+            box-shadow:0 24px 60px rgba(5,117,230,.22);
+        }
+
+        .hero::after{
+            content:"";
+            position:absolute;
+            right:-110px;
+            top:-100px;
+            width:280px;
+            height:280px;
+            border-radius:999px;
+            background:rgba(255,255,255,.12);
+        }
+
+        .hero-content{
+            position:relative;
+            z-index:2;
+            max-width:760px;
+        }
+
+        .hero-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 11px;
+            border-radius:999px;
+            color:#dff7ff;
+            background:rgba(255,255,255,.13);
+            border:1px solid rgba(255,255,255,.18);
+            font-size:12px;
+            font-weight:950;
+        }
+
+        .hero h2{
+            margin-top:15px;
+            max-width:700px;
+            font-size:36px;
+            line-height:1.07;
+            font-weight:950;
+            letter-spacing:-.06em;
+        }
+
+        .hero p{
+            margin-top:10px;
+            color:rgba(255,255,255,.78);
+            font-size:15px;
+            line-height:1.55;
+            font-weight:650;
+        }
+
+        .grid-stats{
+            margin-top:18px;
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:14px;
+        }
+
+        .stat-card{
+            position:relative;
+            overflow:hidden;
+            min-height:150px;
+            padding:18px;
+            border-radius:26px;
+            background:var(--card);
+            border:1px solid rgba(226,232,240,.9);
+            box-shadow:var(--shadow-soft);
+        }
+
+        .stat-card::after{
+            content:"";
+            position:absolute;
+            right:-38px;
+            bottom:-42px;
+            width:120px;
+            height:120px;
+            border-radius:999px;
+            background:var(--glow,rgba(5,117,230,.12));
+        }
+
+        .stat-icon{
+            width:50px;
+            height:50px;
+            border-radius:19px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            background:var(--grad);
+            font-size:21px;
+            box-shadow:0 12px 24px rgba(15,23,42,.12);
+        }
+
+        .stat-card span{
+            display:block;
+            margin-top:15px;
+            color:var(--muted);
+            font-size:13px;
+            font-weight:850;
+        }
+
+        .stat-card strong{
+            position:relative;
+            z-index:2;
+            display:block;
+            margin-top:5px;
+            color:var(--text);
+            font-size:29px;
+            line-height:1;
+            font-weight:950;
+            letter-spacing:-.04em;
+        }
+
+        .content-grid{
+            margin-top:18px;
+            display:grid;
+            grid-template-columns:minmax(0,1.25fr) minmax(330px,.75fr);
+            gap:18px;
+        }
+
+        .panel-card{
+            background:var(--card);
+            border:1px solid rgba(226,232,240,.95);
+            border-radius:30px;
+            box-shadow:var(--shadow-soft);
+            overflow:hidden;
+        }
+
+        .panel-head{
+            padding:18px;
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:14px;
+            border-bottom:1px solid #eef2f7;
+        }
+
+        .panel-head h3{
+            font-size:19px;
+            line-height:1.2;
+            font-weight:950;
+            letter-spacing:-.035em;
+        }
+
+        .panel-head p{
+            margin-top:4px;
+            color:var(--muted);
+            font-size:13px;
+            line-height:1.45;
+            font-weight:650;
+        }
+
+        .panel-body{
+            padding:18px;
+        }
+
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap:7px;
+            padding:8px 11px;
+            border-radius:999px;
+            background:#eff6ff;
+            color:var(--blue);
+            font-size:12px;
+            font-weight:950;
+            white-space:nowrap;
+        }
+
+        .quick-grid{
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            gap:12px;
+        }
+
+        .quick-card{
+            min-height:112px;
+            padding:15px;
+            border-radius:22px;
+            background:#f8fbff;
+            border:1px solid #e9f1fb;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            transition:.18s ease;
+        }
+
+        .quick-card:hover{
+            transform:translateY(-2px);
+            background:#eef8ff;
+            border-color:#bdeaff;
+        }
+
+        .quick-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+        }
+
+        .quick-icon{
+            width:44px;
+            height:44px;
+            border-radius:17px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            background:var(--grad);
+            box-shadow:0 10px 22px rgba(15,23,42,.11);
+        }
+
+        .quick-card strong{
+            display:block;
+            margin-top:12px;
+            font-size:15px;
+            font-weight:950;
+        }
+
+        .quick-card span{
+            display:block;
+            margin-top:3px;
+            color:var(--muted);
+            font-size:12px;
+            font-weight:650;
+            line-height:1.4;
+        }
+
+        .table-wrap{
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:separate;
+            border-spacing:0 10px;
+            min-width:720px;
+        }
+
+        th{
+            padding:0 12px 4px;
+            color:#64748b;
+            text-align:left;
+            font-size:12px;
+            font-weight:950;
+            text-transform:uppercase;
+            letter-spacing:.04em;
+        }
+
+        td{
+            padding:13px 12px;
+            background:#f8fafc;
+            border-top:1px solid #edf2f7;
+            border-bottom:1px solid #edf2f7;
+            color:#0f172a;
+            font-size:13px;
+            font-weight:750;
+            vertical-align:middle;
+        }
+
+        td:first-child{
+            border-left:1px solid #edf2f7;
+            border-radius:16px 0 0 16px;
+        }
+
+        td:last-child{
+            border-right:1px solid #edf2f7;
+            border-radius:0 16px 16px 0;
+        }
+
+        .status{
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:7px 9px;
+            border-radius:999px;
+            font-size:12px;
+            font-weight:950;
+        }
+
+        .status.ok{
+            background:#ecfdf5;
+            color:#047857;
+        }
+
+        .status.wait{
+            background:#fffbeb;
+            color:#b45309;
+        }
+
+        .status.bad{
+            background:#fef2f2;
+            color:#b91c1c;
+        }
+
+        .status.info{
+            background:#eff6ff;
+            color:#1d4ed8;
+        }
+
+        .user-list{
+            display:grid;
+            gap:10px;
+        }
+
+        .user-item{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:12px;
+            border-radius:20px;
+            background:#f8fafc;
+            border:1px solid #edf2f7;
+        }
+
+        .avatar{
+            width:44px;
+            height:44px;
+            flex:0 0 auto;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            background:linear-gradient(135deg,var(--blue),var(--cyan));
+            font-weight:950;
+        }
+
+        .user-item strong{
+            display:block;
+            font-size:14px;
+            font-weight:950;
+        }
+
+        .user-item span{
+            display:block;
+            margin-top:2px;
+            color:var(--muted);
+            font-size:12px;
+            font-weight:650;
+            word-break:break-all;
+        }
+
+        .empty-state{
+            min-height:160px;
+            border:1px dashed #cbd5e1;
+            border-radius:24px;
+            background:#f8fafc;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            color:#64748b;
+            padding:18px;
+            line-height:1.5;
+            font-size:14px;
+            font-weight:750;
+        }
+
+        .flash-wrap{
+            display:grid;
+            gap:10px;
+            margin-bottom:14px;
+        }
+
+        .alert{
+            padding:12px 14px;
+            border-radius:17px;
+            font-size:13px;
+            font-weight:850;
+            border:1px solid transparent;
+        }
+
+        .alert.success{
+            background:#ecfdf5;
+            color:#047857;
+            border-color:#a7f3d0;
+        }
+
+        .alert.danger{
+            background:#fef2f2;
+            color:#b91c1c;
+            border-color:#fecaca;
+        }
+
+        .alert.warning{
+            background:#fffbeb;
+            color:#92400e;
+            border-color:#fde68a;
+        }
+
+        .alert.info{
+            background:#eff6ff;
+            color:#1d4ed8;
+            border-color:#bfdbfe;
+        }
+
+        .mobile-backdrop{
+            display:none;
+        }
+
+        @media(max-width:980px){
+            .admin-shell{
+                grid-template-columns:1fr;
+            }
+
+            .sidebar{
+                position:fixed;
+                z-index:60;
+                left:0;
+                top:0;
+                width:286px;
+                transform:translateX(-105%);
+                transition:.22s ease;
+            }
+
+            body.sidebar-open .sidebar{
+                transform:translateX(0);
+            }
+
+            .mobile-backdrop{
+                position:fixed;
+                inset:0;
+                z-index:50;
+                background:rgba(2,6,23,.55);
+            }
+
+            body.sidebar-open .mobile-backdrop{
+                display:block;
+            }
+
+            .mobile-menu{
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+            }
+
+            .main{
+                padding:12px;
+            }
+
+            .topbar{
+                border-radius:22px;
+            }
+
+            .grid-stats{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
+            .content-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
+        @media(max-width:560px){
+            .topbar{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+
+            .top-actions{
+                width:100%;
+                display:grid;
+                grid-template-columns:1fr 1fr;
+            }
+
+            .pill-btn{
+                justify-content:center;
+            }
+
+            .hero{
+                padding:22px;
+                border-radius:27px;
+            }
+
+            .hero h2{
+                font-size:27px;
+            }
+
+            .grid-stats{
+                grid-template-columns:1fr;
+            }
+
+            .quick-grid{
+                grid-template-columns:1fr;
+            }
+
+            .page-title h1{
+                font-size:21px;
+            }
+        }
+    </style>
+
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+
+<div class="mobile-backdrop" onclick="document.body.classList.remove('sidebar-open')"></div>
+
+<div class="admin-shell">
+
+    <aside class="sidebar">
+        <div class="brand-box">
+            <div class="brand-logo">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+
+            <div>
+                <small>Admin Panel</small>
+                <strong>SenjaData</strong>
+            </div>
+        </div>
+
+        <div class="side-section-title">Navigasi</div>
+
+        <nav class="side-menu">
+            <a class="side-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">
+                <i class="fa-solid fa-gauge-high"></i>
+                Dashboard
+            </a>
+
+            <a class="side-link {% if request.endpoint == 'admin_transaksi' %}active{% endif %}" href="{{ url_for('admin_transaksi') }}">
+                <i class="fa-solid fa-receipt"></i>
+                Transaksi
+            </a>
+
+            <a class="side-link {% if request.endpoint == 'admin_pengguna' %}active{% endif %}" href="{{ url_for('admin_pengguna') }}">
+                <i class="fa-solid fa-users"></i>
+                Pengguna
+            </a>
+
+            <a class="side-link {% if request.endpoint == 'admin_produk' %}active{% endif %}" href="{{ url_for('admin_produk') }}">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                Produk
+            </a>
+        </nav>
+
+        <div class="side-section-title">Akses Cepat</div>
+
+        <nav class="side-menu">
+            <a class="side-link" href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-house"></i>
+                Lihat Website
+            </a>
+
+            <a class="side-link" href="{{ url_for('admin_logout') }}">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </nav>
+
+        <div class="side-footer">
+            <b>SenjaData Control</b><br>
+            Panel modern untuk memantau transaksi, pengguna, produk, dan performa aplikasi.
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="mobile-menu" type="button" onclick="document.body.classList.add('sidebar-open')">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="page-title">
+                    <small>{% block subtitle %}SenjaData Control Center{% endblock %}</small>
+                    <h1>{% block heading %}Dashboard Admin{% endblock %}</h1>
+                </div>
+            </div>
+
+            <div class="top-actions">
+                <a class="pill-btn" href="{{ url_for('dashboard') }}">
+                    <i class="fa-solid fa-globe"></i>
+                    Website
+                </a>
+
+                <a class="pill-btn danger" href="{{ url_for('admin_logout') }}">
+                    <i class="fa-solid fa-power-off"></i>
+                    Logout
+                </a>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-wrap">
+                    {% for kategori, pesan in messages %}
+                        <div class="alert {{ kategori }}">{{ pesan }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+</body>
+</html>
