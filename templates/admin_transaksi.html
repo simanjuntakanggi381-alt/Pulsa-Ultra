@@ -1,21 +1,136 @@
 {% extends "admin_base.html" %}
 
-{% block title %}Transaksi Admin - SenjaData{% endblock %}
-{% block subtitle %}Manajemen transaksi{% endblock %}
-{% block heading %}Data Transaksi{% endblock %}
+{% block title %}Cek Transaksi - SenjaData{% endblock %}
+{% block subtitle %}Cari, filter, dan pantau transaksi{% endblock %}
+{% block heading %}Cek Transaksi{% endblock %}
 
 {% block content %}
 
-<div class="panel-card">
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-receipt"></i>
+            Transaction Checker
+        </div>
+
+        <h2>Cek transaksi lebih cepat dari satu halaman.</h2>
+
+        <p>
+            Cari transaksi berdasarkan email, nomor tujuan, kode produk, atau nama produk.
+            Bisa juga filter berdasarkan status berhasil, pending, dan gagal.
+        </p>
+    </div>
+</section>
+
+<section class="grid-stats">
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-list-check"></i>
+        </div>
+
+        <span>Data Ditampilkan</span>
+        <strong>{{ ringkasan.total }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <span>Berhasil</span>
+        <strong>{{ ringkasan.berhasil }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#eab308);--glow:rgba(245,158,11,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-clock"></i>
+        </div>
+
+        <span>Pending</span>
+        <strong>{{ ringkasan.pending }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+
+        <span>Gagal</span>
+        <strong>{{ ringkasan.gagal }}</strong>
+    </div>
+</section>
+
+<div class="panel-card" style="margin-top:18px;">
     <div class="panel-head">
         <div>
-            <h3>Semua Transaksi</h3>
-            <p>Menampilkan maksimal 200 transaksi terbaru di aplikasi SenjaData.</p>
+            <h3>Filter Transaksi</h3>
+            <p>Gunakan kolom pencarian untuk cek transaksi tertentu.</p>
         </div>
 
         <span class="badge">
-            <i class="fa-solid fa-receipt"></i>
-            Transaksi
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Search
+        </span>
+    </div>
+
+    <div class="panel-body">
+        <form class="filter-bar" method="GET" action="{{ url_for('admin_transaksi') }}">
+            <div class="search-field">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ q or '' }}"
+                    placeholder="Cari email, nomor tujuan, kode produk, atau nama produk..."
+                >
+            </div>
+
+            <select class="filter-select" name="status">
+                <option value="">Semua Status</option>
+                <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option>
+                <option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option>
+                <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option>
+            </select>
+
+            <button class="filter-btn" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                Terapkan
+            </button>
+        </form>
+
+        {% if q or status %}
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                {% if q %}
+                    <span class="badge">
+                        Keyword: {{ q }}
+                    </span>
+                {% endif %}
+
+                {% if status %}
+                    <span class="badge orange">
+                        Status: {{ status }}
+                    </span>
+                {% endif %}
+
+                <a class="badge red" href="{{ url_for('admin_transaksi') }}">
+                    <i class="fa-solid fa-xmark"></i>
+                    Reset Filter
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Data Transaksi</h3>
+            <p>Menampilkan maksimal 300 transaksi sesuai filter yang dipilih.</p>
+        </div>
+
+        <span class="badge green">
+            <i class="fa-solid fa-database"></i>
+            {{ ringkasan.total }} Data
         </span>
     </div>
 
@@ -126,7 +241,7 @@
             </div>
         {% else %}
             <div class="empty-state">
-                Belum ada transaksi yang tercatat di sistem.
+                Tidak ada transaksi yang cocok dengan pencarian atau filter tersebut.
             </div>
         {% endif %}
     </div>

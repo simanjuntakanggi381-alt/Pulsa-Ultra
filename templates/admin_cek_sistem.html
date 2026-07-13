@@ -1,0 +1,285 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Cek Sistem - SenjaData{% endblock %}
+{% block subtitle %}Pemeriksaan database, produk, harga, dan panel{% endblock %}
+{% block heading %}Cek Sistem{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-shield-heart"></i>
+            System Health Checker
+        </div>
+
+        <h2>Cek kondisi sistem SenjaData dari satu halaman.</h2>
+
+        <p>
+            Halaman ini membantu admin melihat status database, produk, harga jual,
+            transaksi, pengguna, mutasi saldo, dan panel admin.
+        </p>
+    </div>
+</section>
+
+<section class="grid-stats">
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-database"></i>
+        </div>
+
+        <span>Total Transaksi</span>
+        <strong>{{ statistik.total_transaksi }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+
+        <span>Total Pengguna</span>
+        <strong>{{ statistik.total_pengguna }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+
+        <span>Total Produk</span>
+        <strong>{{ statistik.total_produk }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--glow:rgba(245,158,11,.16);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <span>Total Mutasi</span>
+        <strong>{{ statistik.total_mutasi }}</strong>
+    </div>
+</section>
+
+<section class="grid-stats">
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.13);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <span>Transaksi Berhasil</span>
+        <strong>{{ statistik.transaksi_sukses }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#eab308);--glow:rgba(245,158,11,.13);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-clock"></i>
+        </div>
+
+        <span>Transaksi Pending</span>
+        <strong>{{ statistik.transaksi_pending }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.13);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+
+        <span>Transaksi Gagal</span>
+        <strong>{{ statistik.transaksi_gagal }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#0f172a,#334155);--glow:rgba(15,23,42,.11);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-coins"></i>
+        </div>
+
+        <span>Total Laba</span>
+        <strong>{{ format_uang(statistik.total_laba) }}</strong>
+    </div>
+</section>
+
+<section class="content-grid">
+
+    <div class="panel-card">
+        <div class="panel-head">
+            <div>
+                <h3>Status Kesehatan Sistem</h3>
+                <p>Hasil pengecekan otomatis dari beberapa bagian penting aplikasi.</p>
+            </div>
+
+            <span class="badge green">
+                <i class="fa-solid fa-shield-heart"></i>
+                Health Check
+            </span>
+        </div>
+
+        <div class="panel-body">
+            <div class="health-list">
+                {% for key, item in cek_sistem.items() %}
+                <div class="health-item">
+                    {% if item.status == "ok" %}
+                        <div class="health-icon ok">
+                            <i class="fa-solid fa-check"></i>
+                        </div>
+                    {% elif item.status == "warning" %}
+                        <div class="health-icon warning">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    {% else %}
+                        <div class="health-icon danger">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <strong>{{ item.label }}</strong>
+                        <span>{{ item.detail }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-card">
+        <div class="panel-head">
+            <div>
+                <h3>Kesimpulan Cepat</h3>
+                <p>Ringkasan status panel SenjaData.</p>
+            </div>
+
+            <span class="badge">
+                <i class="fa-solid fa-clipboard-check"></i>
+                Summary
+            </span>
+        </div>
+
+        <div class="panel-body">
+            <div class="health-list">
+                <div class="health-item">
+                    <div class="health-icon ok">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+
+                    <div>
+                        <strong>Database Dicek</strong>
+                        <span>Koneksi database dicek menggunakan query ringan SELECT 1.</span>
+                    </div>
+                </div>
+
+                <div class="health-item">
+                    <div class="health-icon ok">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+
+                    <div>
+                        <strong>Produk & Harga Dicek</strong>
+                        <span>Jumlah produk dan harga jual diambil langsung dari konfigurasi aplikasi.</span>
+                    </div>
+                </div>
+
+                <div class="health-item">
+                    <div class="health-icon warning">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+
+                    <div>
+                        <strong>Fitur Lanjutan</strong>
+                        <span>Nanti bisa ditambah tombol refresh, export laporan, edit transaksi, dan update saldo manual.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Checklist Admin</h3>
+            <p>Bagian yang perlu dicek rutin supaya panel tetap aman dan rapi.</p>
+        </div>
+
+        <span class="badge orange">
+            <i class="fa-solid fa-list-check"></i>
+            Checklist
+        </span>
+    </div>
+
+    <div class="panel-body">
+        <div class="quick-grid">
+
+            <a class="quick-card" href="{{ url_for('admin_transaksi') }}">
+                <div class="quick-top">
+                    <div class="quick-icon" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+
+                    <span class="status info">
+                        Cek
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Cek Transaksi</strong>
+                    <span>Pastikan status transaksi berhasil, pending, dan gagal tetap terpantau.</span>
+                </div>
+            </a>
+
+            <a class="quick-card" href="{{ url_for('admin_pengguna') }}">
+                <div class="quick-top">
+                    <div class="quick-icon" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <span class="status info">
+                        Cek
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Cek Pengguna</strong>
+                    <span>Pastikan data pengguna, email, nomor HP, dan saldo tampil normal.</span>
+                </div>
+            </a>
+
+            <a class="quick-card" href="{{ url_for('admin_produk') }}">
+                <div class="quick-top">
+                    <div class="quick-icon" style="--grad:linear-gradient(135deg,#10b981,#059669);">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+
+                    <span class="status info">
+                        Cek
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Cek Produk</strong>
+                    <span>Pastikan daftar produk dan harga jual masih terbaca dari konfigurasi.</span>
+                </div>
+            </a>
+
+            <a class="quick-card" href="{{ url_for('admin_dashboard') }}">
+                <div class="quick-top">
+                    <div class="quick-icon" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);">
+                        <i class="fa-solid fa-gauge-high"></i>
+                    </div>
+
+                    <span class="status ok">
+                        Ready
+                    </span>
+                </div>
+
+                <div>
+                    <strong>Kembali Dashboard</strong>
+                    <span>Lihat ringkasan utama panel SenjaData dari halaman dashboard.</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

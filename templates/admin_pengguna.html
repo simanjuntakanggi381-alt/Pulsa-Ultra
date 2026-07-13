@@ -1,47 +1,172 @@
 {% extends "admin_base.html" %}
 
-{% block title %}Pengguna Admin - SenjaData{% endblock %}
-{% block subtitle %}Manajemen pengguna{% endblock %}
-{% block heading %}Data Pengguna{% endblock %}
+{% block title %}Cek Pengguna - SenjaData{% endblock %}
+{% block subtitle %}Cari, cek saldo, dan pantau akun pengguna{% endblock %}
+{% block heading %}Cek Pengguna{% endblock %}
 
 {% block content %}
 
-<div class="panel-card">
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-users"></i>
+            User Checker
+        </div>
+
+        <h2>Cek akun pengguna lebih rapi dan cepat.</h2>
+
+        <p>
+            Cari pengguna berdasarkan nama, email, atau nomor HP.
+            Panel ini juga menampilkan ringkasan jumlah user dan total saldo yang terlihat dari hasil pencarian.
+        </p>
+    </div>
+</section>
+
+<section class="grid-stats">
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+
+        <span>Data Pengguna</span>
+        <strong>{{ ringkasan.total }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-wallet"></i>
+        </div>
+
+        <span>Total Saldo</span>
+        <strong>{{ format_uang(ringkasan.total_saldo) }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-user-check"></i>
+        </div>
+
+        <span>Status Akun</span>
+        <strong>Aktif</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--glow:rgba(245,158,11,.16);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>
+        </div>
+
+        <span>Mode Cek</span>
+        <strong>Ready</strong>
+    </div>
+</section>
+
+<div class="panel-card" style="margin-top:18px;">
     <div class="panel-head">
         <div>
-            <h3>Semua Pengguna</h3>
-            <p>Daftar akun pengguna yang sudah terdaftar di aplikasi SenjaData.</p>
+            <h3>Filter Pengguna</h3>
+            <p>Cari user berdasarkan nama lengkap, email, atau nomor HP.</p>
         </div>
 
         <span class="badge">
-            <i class="fa-solid fa-users"></i>
-            User
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Search
+        </span>
+    </div>
+
+    <div class="panel-body">
+        <form class="filter-bar" method="GET" action="{{ url_for('admin_pengguna') }}" style="grid-template-columns:1fr auto;">
+            <div class="search-field">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ q or '' }}"
+                    placeholder="Cari nama, email, atau nomor HP pengguna..."
+                >
+            </div>
+
+            <button class="filter-btn" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                Cari User
+            </button>
+        </form>
+
+        {% if q %}
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="badge">
+                    Keyword: {{ q }}
+                </span>
+
+                <a class="badge red" href="{{ url_for('admin_pengguna') }}">
+                    <i class="fa-solid fa-xmark"></i>
+                    Reset Pencarian
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Kartu Pengguna</h3>
+            <p>Preview cepat beberapa akun pengguna yang tampil dari hasil pencarian.</p>
+        </div>
+
+        <span class="badge green">
+            <i class="fa-solid fa-id-card"></i>
+            Preview
         </span>
     </div>
 
     <div class="panel-body">
         {% if daftar %}
+            <div class="quick-grid">
+                {% for user in daftar[:8] %}
+                    <div class="quick-card">
+                        <div class="quick-top">
+                            <div class="quick-icon" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);">
+                                {{ (user.nama_lengkap or "U")[:1].upper() }}
+                            </div>
 
-            <div class="user-list" style="margin-bottom:18px;">
-                {% for user in daftar[:6] %}
-                <div class="user-item">
-                    <div class="avatar">
-                        {{ (user.nama_lengkap or "U")[:1].upper() }}
+                            <span class="status ok">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Aktif
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong>{{ user.nama_lengkap or "Tanpa Nama" }}</strong>
+                            <span>{{ user.email or "-" }}</span>
+                            <span>{{ user.nomor_hp or "-" }}</span>
+                            <span>Saldo: {{ format_uang(user.saldo or 0) }}</span>
+                        </div>
                     </div>
-
-                    <div>
-                        <strong>
-                            {{ user.nama_lengkap or "Tanpa Nama" }}
-                        </strong>
-
-                        <span>
-                            {{ user.email or "-" }} · {{ user.nomor_hp or "-" }}
-                        </span>
-                    </div>
-                </div>
                 {% endfor %}
             </div>
+        {% else %}
+            <div class="empty-state">
+                Tidak ada pengguna yang cocok dengan pencarian.
+            </div>
+        {% endif %}
+    </div>
+</div>
 
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Data Lengkap Pengguna</h3>
+            <p>Tabel lengkap akun pengguna yang terdaftar di SenjaData.</p>
+        </div>
+
+        <span class="badge green">
+            <i class="fa-solid fa-database"></i>
+            {{ ringkasan.total }} Data
+        </span>
+    </div>
+
+    <div class="panel-body">
+        {% if daftar %}
             <div class="table-wrap">
                 <table>
                     <thead>
@@ -88,13 +213,10 @@
                     </tbody>
                 </table>
             </div>
-
         {% else %}
-
             <div class="empty-state">
-                Belum ada pengguna yang terdaftar di sistem SenjaData.
+                Belum ada pengguna yang terdaftar atau tidak ada hasil dari pencarian tersebut.
             </div>
-
         {% endif %}
     </div>
 </div>
