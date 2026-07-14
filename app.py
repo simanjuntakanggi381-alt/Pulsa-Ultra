@@ -487,12 +487,25 @@ def admin_pengguna():
 @wajib_admin
 def admin_produk():
     q = request.args.get("q", "").strip().lower()
+    kategori = request.args.get("kategori", "").strip()
+
+    def kategori_produk(kode):
+        if kode.startswith("DATA_"):
+            return "Paket Data"
+        if kode.startswith(("DANA_", "GOPAY_", "OVO_", "LINKAJA_", "SHOPEEPAY_")):
+            return "E-Wallet"
+        if kode.startswith("PLN_"):
+            return "Token Listrik"
+        if kode.startswith(("VOUCHER_", "EMONEY_")):
+            return "Voucher & E-Money"
+        return "Pulsa"
 
     daftar = [
         {
             "kode": kode,
             "nama": nama,
-            "harga": HARGA_JUAL.get(kode, 0)
+            "harga": HARGA_JUAL.get(kode, 0),
+            "kategori": kategori_produk(kode)
         }
         for kode, nama in NAMA_PRODUK.items()
     ]
@@ -503,16 +516,21 @@ def admin_produk():
             if q in item["kode"].lower() or q in item["nama"].lower()
         ]
 
+    if kategori:
+        daftar = [item for item in daftar if item["kategori"] == kategori]
+
     ringkasan = {
         "total": len(daftar),
         "harga_terendah": min([x["harga"] for x in daftar], default=0),
-        "harga_tertinggi": max([x["harga"] for x in daftar], default=0)
+        "harga_tertinggi": max([x["harga"] for x in daftar], default=0),
+        "kategori": len({x["kategori"] for x in daftar})
     }
 
     return render_template(
         "admin_produk.html",
         daftar=daftar,
         q=q,
+        kategori=kategori,
         ringkasan=ringkasan,
         format_uang=format_uang
     )

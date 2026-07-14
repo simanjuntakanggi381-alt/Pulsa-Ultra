@@ -1,214 +1,110 @@
 {% extends "admin_base.html" %}
 
-{% block title %}Cek Produk - SenjaData{% endblock %}
-{% block subtitle %}Cari produk, kode layanan, dan harga jual{% endblock %}
-{% block heading %}Cek Produk{% endblock %}
+{% block title %}Produk - SenjaData{% endblock %}
+{% block subtitle %}Kelola dan periksa katalog produk yang tersedia{% endblock %}
+{% block heading %}Produk{% endblock %}
+
+{% block extra_style %}
+<style>
+    .product-hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;}
+    .product-hero .hero-content{max-width:690px;}
+    .catalog-note{position:relative;z-index:2;display:flex;align-items:center;gap:10px;padding:11px 13px;border:1px solid rgba(255,255,255,.18);border-radius:17px;background:rgba(255,255,255,.11);color:#e0f7ff;font-size:12px;font-weight:800;white-space:nowrap;}
+    .catalog-note i{font-size:17px;}
+    .filter-bar.product-filter{grid-template-columns:minmax(0,1fr) 190px auto;}
+    .filter-result{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:2px;}
+    .product-code{display:inline-flex;padding:6px 8px;border-radius:9px;background:#eef6ff;color:#155eae;font-family:Consolas,"Courier New",monospace;font-size:12px;font-weight:850;white-space:nowrap;}
+    .product-name{display:block;font-weight:900;}
+    .product-category{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:700;}
+    .price{font-size:14px;font-weight:950;white-space:nowrap;}
+    .row-number{color:#94a3b8;font-size:12px;font-weight:850;}
+    .catalog-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:0 3px;color:var(--muted);font-size:12px;font-weight:700;}
+    @media(max-width:760px){.product-hero{grid-template-columns:1fr;align-items:start;}.catalog-note{width:max-content;}.filter-bar.product-filter{grid-template-columns:1fr;}.filter-btn{width:100%;}}
+</style>
+{% endblock %}
 
 {% block content %}
-
-<section class="hero">
+<section class="hero product-hero">
     <div class="hero-content">
-        <div class="hero-badge">
-            <i class="fa-solid fa-boxes-stacked"></i>
-            Product Checker
-        </div>
-
-        <h2>Cek produk dan harga jual lebih gampang.</h2>
-
-        <p>
-            Cari layanan berdasarkan kode produk atau nama produk. Panel ini juga menampilkan
-            ringkasan jumlah produk, harga terendah, dan harga tertinggi dari hasil pencarian.
-        </p>
+        <div class="hero-badge"><i class="fa-solid fa-boxes-stacked"></i> Katalog produk</div>
+        <h2>Semua produk, harga, dan kode layanan dalam satu daftar.</h2>
+        <p>Gunakan pencarian atau kategori untuk menemukan produk dengan cepat sebelum mengecek harga dan ketersediaannya.</p>
     </div>
+    <div class="catalog-note"><i class="fa-solid fa-circle-check"></i> Harga produk aktif</div>
 </section>
 
-<section class="grid-stats">
+<section class="grid-stats" aria-label="Ringkasan katalog">
     <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
-        <div class="stat-icon">
-            <i class="fa-solid fa-box"></i>
-        </div>
-
-        <span>Produk Tampil</span>
-        <strong>{{ ringkasan.total }}</strong>
+        <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+        <span>Produk Ditampilkan</span><strong>{{ ringkasan.total }}</strong>
     </div>
-
     <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
-        <div class="stat-icon">
-            <i class="fa-solid fa-arrow-down-wide-short"></i>
-        </div>
-
-        <span>Harga Terendah</span>
-        <strong>{{ format_uang(ringkasan.harga_terendah) }}</strong>
+        <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <span>Kategori Tersedia</span><strong>{{ ringkasan.kategori }}</strong>
     </div>
-
     <div class="stat-card" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
-        <div class="stat-icon">
-            <i class="fa-solid fa-arrow-up-wide-short"></i>
-        </div>
-
-        <span>Harga Tertinggi</span>
-        <strong>{{ format_uang(ringkasan.harga_tertinggi) }}</strong>
+        <div class="stat-icon"><i class="fa-solid fa-arrow-down-wide-short"></i></div>
+        <span>Harga Terendah</span><strong>{{ format_uang(ringkasan.harga_terendah) }}</strong>
     </div>
-
     <div class="stat-card" style="--grad:linear-gradient(135deg,#f59e0b,#ea580c);--glow:rgba(245,158,11,.16);">
-        <div class="stat-icon">
-            <i class="fa-solid fa-tags"></i>
-        </div>
-
-        <span>Status Harga</span>
-        <strong>Aktif</strong>
+        <div class="stat-icon"><i class="fa-solid fa-arrow-up-wide-short"></i></div>
+        <span>Harga Tertinggi</span><strong>{{ format_uang(ringkasan.harga_tertinggi) }}</strong>
     </div>
 </section>
 
-<div class="panel-card" style="margin-top:18px;">
+<section class="panel-card" style="margin-top:18px;">
     <div class="panel-head">
-        <div>
-            <h3>Filter Produk</h3>
-            <p>Cari produk berdasarkan kode layanan atau nama layanan.</p>
-        </div>
-
-        <span class="badge">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            Search
-        </span>
+        <div><h3>Cari produk</h3><p>Masukkan kode layanan, nama produk, atau pilih kategori.</p></div>
+        <span class="badge"><i class="fa-solid fa-magnifying-glass"></i> Pencarian</span>
     </div>
-
     <div class="panel-body">
-        <form class="filter-bar" method="GET" action="{{ url_for('admin_produk') }}" style="grid-template-columns:1fr auto;">
-            <div class="search-field">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ q or '' }}"
-                    placeholder="Cari kode produk atau nama produk..."
-                >
-            </div>
-
-            <button class="filter-btn" type="submit">
-                <i class="fa-solid fa-filter"></i>
-                Cari Produk
-            </button>
-        </form>
-
-        {% if q %}
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                <span class="badge">
-                    Keyword: {{ q }}
-                </span>
-
-                <a class="badge red" href="{{ url_for('admin_produk') }}">
-                    <i class="fa-solid fa-xmark"></i>
-                    Reset Pencarian
-                </a>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-<div class="panel-card" style="margin-top:18px;">
-    <div class="panel-head">
-        <div>
-            <h3>Kartu Produk</h3>
-            <p>Preview cepat beberapa produk yang tampil dari hasil pencarian.</p>
-        </div>
-
-        <span class="badge green">
-            <i class="fa-solid fa-layer-group"></i>
-            Preview
-        </span>
-    </div>
-
-    <div class="panel-body">
-        {% if daftar %}
-            <div class="quick-grid">
-                {% for item in daftar[:8] %}
-                    <div class="quick-card">
-                        <div class="quick-top">
-                            <div class="quick-icon" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);">
-                                <i class="fa-solid fa-box"></i>
-                            </div>
-
-                            <span class="status ok">
-                                <i class="fa-solid fa-circle-check"></i>
-                                Aktif
-                            </span>
-                        </div>
-
-                        <div>
-                            <strong>{{ item.nama }}</strong>
-                            <span>Kode: {{ item.kode }}</span>
-                            <span>Harga: {{ format_uang(item.harga or 0) }}</span>
-                        </div>
-                    </div>
+        <form class="filter-bar product-filter" method="GET" action="{{ url_for('admin_produk') }}">
+            <div class="search-field"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ q or '' }}" placeholder="Contoh: TLK, DANA, token listrik..." autocomplete="off"></div>
+            <select class="filter-select" name="kategori" aria-label="Pilih kategori produk">
+                <option value="">Semua kategori</option>
+                {% for nama_kategori in ["Pulsa", "Paket Data", "E-Wallet", "Token Listrik", "Voucher & E-Money"] %}
+                <option value="{{ nama_kategori }}" {% if kategori == nama_kategori %}selected{% endif %}>{{ nama_kategori }}</option>
                 {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty-state">
-                Tidak ada produk yang cocok dengan pencarian.
-            </div>
+            </select>
+            <button class="filter-btn" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button>
+        </form>
+        {% if q or kategori %}
+        <div class="filter-result">
+            <span class="badge green"><i class="fa-solid fa-filter-circle-xmark"></i> Filter aktif</span>
+            {% if q %}<span class="badge">Pencarian: {{ q }}</span>{% endif %}
+            {% if kategori %}<span class="badge">Kategori: {{ kategori }}</span>{% endif %}
+            <a class="badge red" href="{{ url_for('admin_produk') }}"><i class="fa-solid fa-xmark"></i> Reset</a>
+        </div>
         {% endif %}
     </div>
-</div>
+</section>
 
-<div class="panel-card" style="margin-top:18px;">
+<section class="panel-card" style="margin-top:18px;">
     <div class="panel-head">
-        <div>
-            <h3>Data Lengkap Produk</h3>
-            <p>Tabel lengkap produk dan harga jual dari konfigurasi SenjaData.</p>
-        </div>
-
-        <span class="badge green">
-            <i class="fa-solid fa-database"></i>
-            {{ ringkasan.total }} Data
-        </span>
+        <div><h3>Daftar produk</h3><p>Seluruh produk yang sesuai dengan filter saat ini.</p></div>
+        <span class="badge green"><i class="fa-solid fa-database"></i> {{ ringkasan.total }} produk</span>
     </div>
-
     <div class="panel-body">
         {% if daftar %}
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Kode Produk</th>
-                            <th>Nama Produk</th>
-                            <th>Harga Jual</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for item in daftar %}
-                        <tr>
-                            <td>
-                                <strong>{{ item.kode }}</strong>
-                            </td>
-
-                            <td>
-                                {{ item.nama }}
-                            </td>
-
-                            <td>
-                                {{ format_uang(item.harga or 0) }}
-                            </td>
-
-                            <td>
-                                <span class="status ok">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    Aktif
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>No.</th><th>Produk</th><th>Kode Layanan</th><th>Harga Jual</th><th>Status</th></tr></thead>
+                <tbody>
+                    {% for item in daftar %}
+                    <tr>
+                        <td><span class="row-number">{{ loop.index }}</span></td>
+                        <td><span class="product-name">{{ item.nama }}</span><span class="product-category">{{ item.kategori }}</span></td>
+                        <td><span class="product-code">{{ item.kode }}</span></td>
+                        <td><span class="price">{{ format_uang(item.harga or 0) }}</span></td>
+                        <td><span class="status ok"><i class="fa-solid fa-circle-check"></i> Aktif</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="catalog-footer"><span>Menampilkan {{ ringkasan.total }} produk.</span><span>Gunakan kolom pencarian untuk mempersempit daftar.</span></div>
         {% else %}
-            <div class="empty-state">
-                Belum ada produk yang tersedia atau tidak ada hasil dari pencarian tersebut.
-            </div>
+        <div class="empty-state">Produk tidak ditemukan. Coba ubah kata kunci atau pilih kategori lain.</div>
         {% endif %}
     </div>
-</div>
-
+</section>
 {% endblock %}
