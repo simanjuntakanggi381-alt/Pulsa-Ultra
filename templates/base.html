@@ -138,9 +138,9 @@
         }
 
         .support-btn {
-            border: 0;
+                        border: 0;
             cursor: pointer;
-            width: 46px;
+width: 46px;
             height: 46px;
             border-radius: 16px;
             display: flex;
@@ -1672,6 +1672,24 @@
             filter: grayscale(.15);
         }
 
+        /* =========================================================
+           LIVE CHAT COMPATIBLE WITH APP.PY FINAL
+        ========================================================= */
+
+        #senjaChatFloat {
+            z-index: 99999;
+        }
+
+        #senjaChatPanel {
+            z-index: 100000;
+        }
+
+        .senja-start-button.is-loading,
+        #senjaSendBtn.is-loading {
+            opacity: .72;
+            pointer-events: none;
+        }
+
     </style>
 </head>
 
@@ -2348,6 +2366,14 @@ Ada yang bisa kami bantu hari ini?</p>
         const data = await response.json();
 
         if(!response.ok || !data.success){
+            if(response.status === 403 || response.status === 404){
+                localStorage.removeItem(STORAGE_CODE);
+                localStorage.removeItem(STORAGE_ADMIN_COUNT);
+                kodeChat = "";
+                lastAdminCount = 0;
+                showStart();
+            }
+
             throw new Error(data.message || "Gagal mengirim pesan.");
         }
 
@@ -2366,6 +2392,14 @@ Ada yang bisa kami bantu hari ini?</p>
             const data = await response.json();
 
             if(!response.ok || !data.success){
+                if(response.status === 403 || response.status === 404){
+                    localStorage.removeItem(STORAGE_CODE);
+                    localStorage.removeItem(STORAGE_ADMIN_COUNT);
+                    kodeChat = "";
+                    lastAdminCount = 0;
+                    lastSignature = "";
+                    showStart();
+                }
                 return;
             }
 
