@@ -1,0 +1,416 @@
+{% extends "cs_base.html" %}
+
+{% block title %}Dashboard CS - SenjaData{% endblock %}
+{% block subtitle %}Ringkasan live chat, transaksi, dan aktivitas member{% endblock %}
+{% block heading %}Dashboard CS{% endblock %}
+
+{% block content %}
+
+<section class="cs-hero">
+    <div class="cs-hero-content">
+        <div class="cs-hero-badge">
+            <i class="fa-solid fa-headset"></i>
+            SenjaData CS Control Center
+        </div>
+
+        <h2>Panel CS untuk bantu member, cek transaksi, dan pantau live chat.</h2>
+
+        <p>
+            Dari halaman ini CS bisa melihat ringkasan chat masuk, transaksi terbaru,
+            status transaksi, member terbaru, dan masuk cepat ke menu pengecekan.
+        </p>
+    </div>
+</section>
+
+<section class="cs-grid-stats">
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+
+        <span>Total Chat</span>
+        <strong>{{ statistik.total_chat|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-door-open"></i>
+        </div>
+
+        <span>Chat Open</span>
+        <strong>{{ statistik.chat_open|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+
+        <span>Belum Dibaca</span>
+        <strong>{{ statistik.unread_chat|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-users"></i>
+        </div>
+
+        <span>Total Member</span>
+        <strong>{{ statistik.total_member|default(0) }}</strong>
+    </div>
+</section>
+
+<section class="cs-grid-stats">
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0575e6,#2563eb);--glow:rgba(5,117,230,.14);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-receipt"></i>
+        </div>
+
+        <span>TRX Hari Ini</span>
+        <strong>{{ statistik.transaksi_hari_ini|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.14);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <span>TRX Berhasil</span>
+        <strong>{{ statistik.transaksi_berhasil|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#f59e0b,#ff8a00);--glow:rgba(255,138,0,.14);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-clock"></i>
+        </div>
+
+        <span>TRX Pending</span>
+        <strong>{{ statistik.transaksi_pending|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ef4444,#dc2626);--glow:rgba(239,68,68,.14);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </div>
+
+        <span>TRX Gagal</span>
+        <strong>{{ statistik.transaksi_gagal|default(0) }}</strong>
+    </div>
+</section>
+
+<section class="cs-content-grid">
+
+    <div class="cs-panel">
+        <div class="cs-panel-head">
+            <div>
+                <h3>Chat Terbaru</h3>
+                <p>Daftar percakapan terbaru yang masuk dari widget live chat SenjaData.</p>
+            </div>
+
+            <a class="cs-badge green" href="/cs/live-chat">
+                Buka Semua
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="cs-panel-body">
+            {% if chat_terbaru|default([]) %}
+                <div class="cs-chat-list" style="max-height:420px;">
+                    {% for chat in chat_terbaru|default([]) %}
+                        <a class="cs-chat-item" href="/cs/live-chat/{{ chat.id }}">
+                            <div class="cs-chat-avatar">
+                                {{ (chat.nama or "U")[:1].upper() }}
+                            </div>
+
+                            <div class="cs-chat-info">
+                                <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
+
+                                <span>
+                                    {{ chat.last_message or "Belum ada pesan terakhir." }}
+                                </span>
+
+                                <em class="cs-chat-time">
+                                    {{ format_waktu_chat(chat.diperbarui_pada) if format_waktu_chat is defined else "-" }}
+                                </em>
+                            </div>
+
+                            {% if chat.unread_admin and chat.unread_admin > 0 %}
+                                <div class="cs-unread">
+                                    {{ chat.unread_admin }}
+                                </div>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="cs-empty">
+                    Belum ada chat terbaru. Nanti pesan user dari aplikasi akan muncul di sini.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="cs-panel">
+        <div class="cs-panel-head">
+            <div>
+                <h3>Akses Cepat CS</h3>
+                <p>Menu penting untuk bantu user lebih cepat.</p>
+            </div>
+
+            <span class="cs-badge orange">
+                Quick Action
+            </span>
+        </div>
+
+        <div class="cs-panel-body">
+            <div class="cs-info-list">
+                <a class="cs-info-item" href="/cs/live-chat">
+                    <span>Live Chat</span>
+                    <strong>
+                        <i class="fa-solid fa-comments"></i>
+                        Buka semua chat masuk
+                    </strong>
+                </a>
+
+                <a class="cs-info-item" href="/cs/transaksi">
+                    <span>Cek Transaksi</span>
+                    <strong>
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Cari transaksi berdasarkan tanggal, status, nomor tujuan, atau member
+                    </strong>
+                </a>
+
+                <a class="cs-info-item" href="/dashboard">
+                    <span>Website</span>
+                    <strong>
+                        <i class="fa-solid fa-globe"></i>
+                        Lihat tampilan aplikasi SenjaData
+                    </strong>
+                </a>
+
+                <a class="cs-info-item" href="/cs/logout">
+                    <span>Akun CS</span>
+                    <strong>
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Keluar dari panel CS
+                    </strong>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="cs-content-grid">
+
+    <div class="cs-panel">
+        <div class="cs-panel-head">
+            <div>
+                <h3>Transaksi Terbaru</h3>
+                <p>Transaksi terakhir yang bisa dicek cepat oleh CS saat user komplain.</p>
+            </div>
+
+            <a class="cs-badge" href="/cs/transaksi">
+                Cek Detail
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="cs-panel-body">
+            {% if transaksi_terbaru|default([]) %}
+                <div class="cs-table-wrap">
+                    <table class="cs-table">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Member</th>
+                                <th>Jenis</th>
+                                <th>Nomor Tujuan</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                                <th>SN</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for trx in transaksi_terbaru|default([]) %}
+                            <tr>
+                                <td>
+                                    {{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}
+                                </td>
+
+                                <td>
+                                    {% if trx.pengguna is defined and trx.pengguna %}
+                                        {{ trx.pengguna.nama_lengkap }}
+                                    {% elif trx.email is defined %}
+                                        {{ trx.email }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ trx.jenis if trx.jenis is defined else (trx.nama_produk if trx.nama_produk is defined else "-") }}
+                                </td>
+
+                                <td>
+                                    {{ trx.nomor_tujuan if trx.nomor_tujuan is defined else (trx.tujuan if trx.tujuan is defined else "-") }}
+                                </td>
+
+                                <td>
+                                    {% if trx.jumlah is defined %}
+                                        {{ format_uang(trx.jumlah or 0) }}
+                                    {% elif trx.harga_jual is defined %}
+                                        {{ format_uang(trx.harga_jual or 0) }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if trx.status == "Berhasil" %}
+                                        <span class="cs-status ok">
+                                            <i class="fa-solid fa-check"></i>
+                                            Berhasil
+                                        </span>
+                                    {% elif trx.status == "Pending" %}
+                                        <span class="cs-status wait">
+                                            <i class="fa-solid fa-clock"></i>
+                                            Pending
+                                        </span>
+                                    {% elif trx.status == "Gagal" %}
+                                        <span class="cs-status bad">
+                                            <i class="fa-solid fa-xmark"></i>
+                                            Gagal
+                                        </span>
+                                    {% else %}
+                                        <span class="cs-status info">
+                                            {{ trx.status or "-" }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {{ trx.sn or "-" }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="cs-empty">
+                    Belum ada transaksi terbaru yang bisa ditampilkan.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="cs-panel">
+        <div class="cs-panel-head">
+            <div>
+                <h3>Balasan Cepat</h3>
+                <p>Template yang bisa dipakai CS saat membalas user.</p>
+            </div>
+
+            <span class="cs-badge dark">
+                Quick Reply
+            </span>
+        </div>
+
+        <div class="cs-panel-body">
+            <div class="cs-info-list">
+                <div class="cs-info-item">
+                    <span>Template 1</span>
+                    <strong>Halo kak, bisa kirim nomor tujuan transaksinya?</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Template 2</span>
+                    <strong>Mohon tunggu sebentar ya kak, sedang kami cek transaksinya.</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Template 3</span>
+                    <strong>Transaksi kakak sudah berhasil. Silakan cek kembali aplikasinya.</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Template 4</span>
+                    <strong>Transaksi masih pending, kami bantu pantau sampai selesai.</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Template 5</span>
+                    <strong>Silakan logout lalu login kembali untuk refresh saldo dan riwayat.</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="cs-panel">
+    <div class="cs-panel-head">
+        <div>
+            <h3>Member Terbaru</h3>
+            <p>Daftar member terbaru yang terdaftar di SenjaData.</p>
+        </div>
+
+        <span class="cs-badge green">
+            Member
+        </span>
+    </div>
+
+    <div class="cs-panel-body">
+        {% if member_terbaru|default([]) %}
+            <div class="cs-table-wrap">
+                <table class="cs-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Nomor HP</th>
+                            <th>Saldo</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for user in member_terbaru|default([]) %}
+                        <tr>
+                            <td>
+                                <strong>{{ user.nama_lengkap or "Tanpa Nama" }}</strong>
+                            </td>
+
+                            <td>
+                                {{ user.email or "-" }}
+                            </td>
+
+                            <td>
+                                {{ user.nomor_hp or "-" }}
+                            </td>
+
+                            <td>
+                                {{ format_uang(user.saldo or 0) }}
+                            </td>
+
+                            <td>
+                                <a class="cs-badge" href="/cs/member/{{ user.id }}">
+                                    Cek Member
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="cs-empty">
+                Belum ada member terbaru yang ditampilkan.
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

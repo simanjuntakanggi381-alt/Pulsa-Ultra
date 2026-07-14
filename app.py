@@ -13,7 +13,7 @@ from transaksi import cek_saldo, proses_beli
 from utils import format_uang
 from sqlalchemy import func, or_, text
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 import os
 import uuid
@@ -179,6 +179,11 @@ def cek_akses():
         "cs_live_chat_detail",
         "cs_live_chat_balas",
         "cs_live_chat_tutup",
+        "cs_live_chat_buka",
+        "cs_live_chat_catatan",
+        "cs_member_detail",
+        "cs_transaksi",
+        "cs_dashboard",
         "cs_logout",
         "api_chat_start",
         "api_chat_send",
@@ -537,7 +542,7 @@ def admin_logout():
 
 
 # =========================================================
-# LIVE CHAT PANEL TERPISAH - CS SENJADATA
+# LIVE CHAT PANEL TERPISAH - CS SENJADATA PRO
 # =========================================================
 CS_PANEL_USERNAME = os.getenv("CS_PANEL_USERNAME", "cs")
 CS_PANEL_PASSWORD = os.getenv("CS_PANEL_PASSWORD", "cs12345")
@@ -582,12 +587,176 @@ def cs_required(f):
     return wrapper
 
 
+def parse_tanggal(nilai, akhir_hari=False):
+    if not nilai:
+        return None
+
+    try:
+        tanggal = datetime.strptime(nilai, "%Y-%m-%d")
+        if akhir_hari:
+            tanggal = tanggal.replace(hour=23, minute=59, second=59)
+        return tanggal
+    except Exception:
+        return None
+
+
+def rentang_dari_request():
+    range_key = request.args.get("range", "").strip()
+    tanggal_awal = request.args.get("tanggal_awal", "").strip()
+    tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
+
+    hari_ini = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if range_key == "hari_ini":
+        return hari_ini, hari_ini + timedelta(days=1) - timedelta(seconds=1), "Hari Ini"
+
+    if range_key == "kemarin":
+        awal = hari_ini - timedelta(days=1)
+        akhir = hari_ini - timedelta(seconds=1)
+        return awal, akhir, "Kemarin"
+
+    if range_key == "7_hari":
+        return hari_ini - timedelta(days=7), datetime.utcnow(), "7 Hari"
+
+    if range_key == "30_hari":
+        return hari_ini - timedelta(days=30), datetime.utcnow(), "30 Hari"
+
+    if range_key == "bulan_ini":
+        awal = hari_ini.replace(day=1)
+        return awal, datetime.utcnow(), "Bulan Ini"
+
+    awal = parse_tanggal(tanggal_awal)
+    akhir = parse_tanggal(tanggal_akhir, akhir_hari=True)
+
+    if awal or akhir:
+        return awal, akhir, "Custom"
+
+    return None, None, "Semua"
+
+
+def filter_transaksi_query(query, q="", status="", tanggal_awal_obj=None, tanggal_akhir_obj=None):
+    if status:
+        query = query.filter(Transaksi.status == status)
+
+    if tanggal_awal_obj is not None and hasattr(Transaksi, "waktu"):
+        query = query.filter(Transaksi.waktu >= tanggal_awal_obj)
+
+    if tanggal_akhir_obj is not None and hasattr(Transaksi, "waktu"):
+        query = query.filter(Transaksi.waktu <= tanggal_akhir_obj)
+
+    if q:
+        kondisi = []
+
+        if hasattr(Transaksi, "jenis"):
+            kondisi.append(Transaksi.jenis.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "nomor_tujuan"):
+            kondisi.append(Transaksi.nomor_tujuan.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "sn"):
+            kondisi.append(Transaksi.sn.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "email"):
+            kondisi.append(Transaksi.email.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "tujuan"):
+            kondisi.append(Transaksi.tujuan.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "kode_produk"):
+            kondisi.append(Transaksi.kode_produk.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "nama_produk"):
+            kondisi.append(Transaksi.nama_produk.ilike(f"%{q}%"))
+
+        if hasattr(Transaksi, "pengguna_id"):
+            query = query.outerjoin(Pengguna, Transaksi.pengguna_id == Pengguna.id)
+            kondisi.extend([
+                Pengguna.nama_lengkap.ilike(f"%{q}%"),
+                Pengguna.email.ilike(f"%{q}%"),
+                Pengguna.nomor_hp.ilike(f"%{q}%")
+            ])
+
+        if kondisi:
+            query = query.filter(or_(*kondisi))
+
+    return query
+
+
+def ringkasan_transaksi(daftar):
+    total_nominal = 0
+
+    for trx in daftar:
+        if hasattr(trx, "jumlah"):
+            total_nominal += int(trx.jumlah or 0)
+        elif hasattr(trx, "harga_jual"):
+            total_nominal += int(trx.harga_jual or 0)
+
+    return {
+        "total": len(daftar),
+        "total_transaksi": len(daftar),
+        "berhasil": len([x for x in daftar if x.status == "Berhasil"]),
+        "pending": len([x for x in daftar if x.status == "Pending"]),
+        "gagal": len([x for x in daftar if x.status == "Gagal"]),
+        "total_nominal": total_nominal
+    }
+
+
+def cari_member_dari_chat(chat):
+    member = None
+
+    if chat.email:
+        member = Pengguna.query.filter_by(email=chat.email).first()
+
+    if not member and chat.nomor_hp:
+        member = Pengguna.query.filter_by(nomor_hp=chat.nomor_hp).first()
+
+    if not member and chat.nama:
+        member = Pengguna.query.filter(
+            Pengguna.nama_lengkap.ilike(f"%{chat.nama}%")
+        ).first()
+
+    return member
+
+
+def ambil_transaksi_member(member, q="", status="", tanggal_awal_obj=None, tanggal_akhir_obj=None, limit=20):
+    if not member:
+        return []
+
+    query = Transaksi.query
+
+    if hasattr(Transaksi, "pengguna_id"):
+        query = query.filter(Transaksi.pengguna_id == member.id)
+    elif hasattr(Transaksi, "email"):
+        query = query.filter(Transaksi.email == member.email)
+    else:
+        return []
+
+    query = filter_transaksi_query(
+        query=query,
+        q=q,
+        status=status,
+        tanggal_awal_obj=tanggal_awal_obj,
+        tanggal_akhir_obj=tanggal_akhir_obj
+    )
+
+    return query.order_by(Transaksi.waktu.desc()).limit(limit).all()
+
+
+def ambil_mutasi_member(member, limit=20):
+    if not member:
+        return []
+
+    return MutasiSaldo.query.filter_by(
+        email=member.email
+    ).order_by(MutasiSaldo.waktu.desc()).limit(limit).all()
+
+
 @app.route("/cs")
 @app.route("/cs-panel")
 @app.route("/live-chat-panel")
 def cs_index():
     if cs_sedang_login():
-        return redirect(url_for("cs_live_chat"))
+        return redirect(url_for("cs_dashboard"))
 
     return redirect(url_for("cs_login"))
 
@@ -597,7 +766,7 @@ def cs_index():
 @app.route("/live-chat-panel/login", methods=["GET", "POST"])
 def cs_login():
     if cs_sedang_login():
-        return redirect(url_for("cs_live_chat"))
+        return redirect(url_for("cs_dashboard"))
 
     if request.method == "POST":
         username = request.form.get("username", "").strip()
@@ -607,12 +776,62 @@ def cs_login():
             session["cs_login"] = True
             session["cs_username"] = username or "CS SenjaData"
             flash("✅ Berhasil masuk ke Live Chat Panel.", "success")
-            return redirect(url_for("cs_live_chat"))
+            return redirect(url_for("cs_dashboard"))
 
         flash("❌ Username atau password CS salah.", "danger")
         return redirect(url_for("cs_login"))
 
     return render_template("cs_login.html")
+
+
+@app.route("/cs/dashboard")
+@app.route("/cs-panel/dashboard")
+@app.route("/live-chat-panel/dashboard")
+@cs_required
+def cs_dashboard():
+    hari_ini = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    total_chat = ChatSession.query.count()
+    chat_open = ChatSession.query.filter_by(status="open").count()
+    unread_chat = db.session.query(func.sum(ChatSession.unread_admin)).scalar() or 0
+
+    transaksi_hari_ini = Transaksi.query.filter(Transaksi.waktu >= hari_ini).count()
+    transaksi_berhasil = Transaksi.query.filter_by(status="Berhasil").count()
+    transaksi_pending = Transaksi.query.filter_by(status="Pending").count()
+    transaksi_gagal = Transaksi.query.filter_by(status="Gagal").count()
+
+    statistik = {
+        "total_chat": total_chat,
+        "chat_open": chat_open,
+        "unread_chat": int(unread_chat or 0),
+        "total_member": Pengguna.query.count(),
+        "transaksi_hari_ini": transaksi_hari_ini,
+        "transaksi_berhasil": transaksi_berhasil,
+        "transaksi_pending": transaksi_pending,
+        "transaksi_gagal": transaksi_gagal
+    }
+
+    chat_terbaru = ChatSession.query.order_by(
+        ChatSession.diperbarui_pada.desc()
+    ).limit(8).all()
+
+    transaksi_terbaru = Transaksi.query.order_by(
+        Transaksi.waktu.desc()
+    ).limit(10).all()
+
+    member_terbaru = Pengguna.query.order_by(
+        Pengguna.id.desc()
+    ).limit(8).all()
+
+    return render_template(
+        "cs_dashboard.html",
+        statistik=statistik,
+        chat_terbaru=chat_terbaru,
+        transaksi_terbaru=transaksi_terbaru,
+        member_terbaru=member_terbaru,
+        format_waktu_chat=format_waktu_chat,
+        format_uang=format_uang
+    )
 
 
 @app.route("/cs/live-chat")
@@ -655,7 +874,8 @@ def cs_live_chat():
         ringkasan=ringkasan,
         q=q,
         status=status,
-        format_waktu_chat=format_waktu_chat
+        format_waktu_chat=format_waktu_chat,
+        format_uang=format_uang
     )
 
 
@@ -678,11 +898,46 @@ def cs_live_chat_detail(chat_id):
         chat_id=chat.id
     ).order_by(ChatMessage.waktu.asc()).all()
 
+    daftar_chat = ChatSession.query.order_by(
+        ChatSession.diperbarui_pada.desc()
+    ).limit(25).all()
+
+    member = cari_member_dari_chat(chat)
+
+    q_trx = request.args.get("q_trx", "").strip()
+    status_trx = request.args.get("status_trx", "").strip()
+    tanggal_awal = request.args.get("tanggal_awal", "").strip()
+    tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
+    tanggal_awal_obj, tanggal_akhir_obj, mode_filter = rentang_dari_request()
+
+    transaksi_member = ambil_transaksi_member(
+        member=member,
+        q=q_trx,
+        status=status_trx,
+        tanggal_awal_obj=tanggal_awal_obj,
+        tanggal_akhir_obj=tanggal_akhir_obj,
+        limit=20
+    )
+
+    mutasi_member = ambil_mutasi_member(member, limit=10)
+
+    setattr(chat, "catatan_internal", session.get(f"catatan_chat_{chat.id}", ""))
+
     return render_template(
         "cs_live_chat_detail.html",
         chat=chat,
         pesan_chat=pesan_chat,
-        format_waktu_chat=format_waktu_chat
+        daftar_chat=daftar_chat,
+        member=member,
+        transaksi_member=transaksi_member,
+        mutasi_member=mutasi_member,
+        q_trx=q_trx,
+        status_trx=status_trx,
+        tanggal_awal=tanggal_awal,
+        tanggal_akhir=tanggal_akhir,
+        mode_filter=mode_filter,
+        format_waktu_chat=format_waktu_chat,
+        format_uang=format_uang
     )
 
 
@@ -693,7 +948,7 @@ def cs_live_chat_balas(chat_id):
     chat = ChatSession.query.get_or_404(chat_id)
 
     if chat.status != "open":
-        flash("⚠️ Chat ini sudah ditutup. Buka sesi baru dari widget user jika perlu.", "warning")
+        flash("⚠️ Chat ini sudah ditutup. Buka lagi chat jika ingin membalas.", "warning")
         return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
 
     pesan = request.form.get("pesan", "").strip()
@@ -735,6 +990,111 @@ def cs_live_chat_tutup(chat_id):
 
     flash("✅ Chat berhasil ditutup.", "success")
     return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
+
+
+@app.route("/cs/live-chat/<int:chat_id>/buka", methods=["POST"])
+@cs_required
+def cs_live_chat_buka(chat_id):
+    chat = ChatSession.query.get_or_404(chat_id)
+
+    chat.status = "open"
+    chat.diperbarui_pada = datetime.utcnow()
+
+    db.session.commit()
+
+    flash("✅ Chat berhasil dibuka kembali.", "success")
+    return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
+
+
+@app.route("/cs/live-chat/<int:chat_id>/catatan", methods=["POST"])
+@cs_required
+def cs_live_chat_catatan(chat_id):
+    chat = ChatSession.query.get_or_404(chat_id)
+    catatan = request.form.get("catatan", "").strip()
+
+    if hasattr(ChatSession, "catatan_internal"):
+        chat.catatan_internal = catatan
+        db.session.commit()
+    else:
+        session[f"catatan_chat_{chat.id}"] = catatan
+
+    flash("✅ Catatan internal berhasil disimpan.", "success")
+    return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
+
+
+@app.route("/cs/member/<int:user_id>")
+@cs_required
+def cs_member_detail(user_id):
+    member = Pengguna.query.get_or_404(user_id)
+
+    q = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+    tanggal_awal = request.args.get("tanggal_awal", "").strip()
+    tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
+    tanggal_awal_obj, tanggal_akhir_obj, mode_filter = rentang_dari_request()
+
+    daftar_transaksi = ambil_transaksi_member(
+        member=member,
+        q=q,
+        status=status,
+        tanggal_awal_obj=tanggal_awal_obj,
+        tanggal_akhir_obj=tanggal_akhir_obj,
+        limit=300
+    )
+
+    daftar_mutasi = ambil_mutasi_member(member, limit=100)
+
+    ringkasan = ringkasan_transaksi(daftar_transaksi)
+    ringkasan["total_mutasi"] = len(daftar_mutasi)
+
+    return render_template(
+        "cs_member_detail.html",
+        member=member,
+        daftar_transaksi=daftar_transaksi,
+        daftar_mutasi=daftar_mutasi,
+        ringkasan=ringkasan,
+        q=q,
+        status=status,
+        tanggal_awal=tanggal_awal,
+        tanggal_akhir=tanggal_akhir,
+        mode_filter=mode_filter,
+        format_uang=format_uang
+    )
+
+
+@app.route("/cs/transaksi")
+@cs_required
+def cs_transaksi():
+    q = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+    tanggal_awal = request.args.get("tanggal_awal", "").strip()
+    tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
+    tanggal_awal_obj, tanggal_akhir_obj, mode_filter = rentang_dari_request()
+
+    query = Transaksi.query
+
+    query = filter_transaksi_query(
+        query=query,
+        q=q,
+        status=status,
+        tanggal_awal_obj=tanggal_awal_obj,
+        tanggal_akhir_obj=tanggal_akhir_obj
+    )
+
+    daftar_transaksi = query.order_by(Transaksi.waktu.desc()).limit(500).all()
+    ringkasan = ringkasan_transaksi(daftar_transaksi)
+
+    return render_template(
+        "cs_transaksi.html",
+        daftar_transaksi=daftar_transaksi,
+        ringkasan=ringkasan,
+        q=q,
+        status=status,
+        tanggal_awal=tanggal_awal,
+        tanggal_akhir=tanggal_akhir,
+        mode_filter=mode_filter,
+        format_uang=format_uang
+    )
 
 
 @app.route("/cs/logout")
@@ -794,6 +1154,9 @@ def api_chat_start():
     if kode_chat:
         chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
 
+    if chat and chat.status == "closed":
+        chat = None
+
     if not chat:
         chat = ChatSession(
             kode_chat=buat_kode_chat(),
@@ -802,7 +1165,7 @@ def api_chat_start():
             email=email,
             status="open",
             last_message=pesan_awal or "Chat dimulai",
-            unread_admin=1 if pesan_awal else 0,
+            unread_admin=0,
             unread_user=0
         )
 

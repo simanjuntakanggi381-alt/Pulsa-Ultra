@@ -1,1217 +1,247 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat CS - SenjaData</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-
-        body{
-            min-height:100vh;
-            font-family:"Segoe UI",Roboto,Arial,sans-serif;
-            color:#0f172a;
-            background:
-                radial-gradient(circle at 10% -10%,rgba(0,198,255,.20),transparent 30%),
-                radial-gradient(circle at 90% 0%,rgba(5,117,230,.18),transparent 32%),
-                linear-gradient(180deg,#f8fbff,#edf7ff);
-            overflow-x:hidden;
-        }
-
-        a{
-            color:inherit;
-            text-decoration:none;
-        }
-
-        button,
-        input,
-        select{
-            font-family:inherit;
-        }
-
-        .cs-shell{
-            width:100%;
-            min-height:100vh;
-            display:grid;
-            grid-template-columns:290px minmax(0,1fr);
-        }
-
-        .cs-sidebar{
-            position:sticky;
-            top:0;
-            height:100vh;
-            padding:18px;
-            color:#fff;
-            background:
-                radial-gradient(circle at 50% -5%,rgba(0,198,255,.22),transparent 42%),
-                linear-gradient(180deg,#07111f 0%,#0b1728 100%);
-            border-right:1px solid rgba(255,255,255,.08);
-            overflow-y:auto;
-        }
-
-        .cs-sidebar::-webkit-scrollbar{
-            width:0;
-        }
-
-        .brand-box{
-            display:flex;
-            align-items:center;
-            gap:13px;
-            padding:14px;
-            border-radius:24px;
-            background:rgba(255,255,255,.08);
-            border:1px solid rgba(255,255,255,.10);
-        }
-
-        .brand-icon{
-            width:54px;
-            height:54px;
-            border-radius:20px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            background:
-                radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 35%),
-                linear-gradient(135deg,#0575e6,#00c6ff);
-            font-size:25px;
-            box-shadow:0 16px 35px rgba(0,198,255,.22);
-        }
-
-        .brand-box small{
-            display:block;
-            color:#8fb3d9;
-            font-size:12px;
-            font-weight:900;
-            letter-spacing:.08em;
-            text-transform:uppercase;
-        }
-
-        .brand-box strong{
-            display:block;
-            margin-top:2px;
-            color:#fff;
-            font-size:21px;
-            line-height:1;
-            font-weight:950;
-            letter-spacing:-.04em;
-        }
-
-        .cs-profile{
-            margin-top:14px;
-            padding:14px;
-            border-radius:22px;
-            background:rgba(255,255,255,.065);
-            border:1px solid rgba(255,255,255,.09);
-        }
-
-        .cs-profile span{
-            display:block;
-            color:#8fb3d9;
-            font-size:12px;
-            font-weight:850;
-        }
-
-        .cs-profile strong{
-            display:block;
-            margin-top:4px;
-            color:#fff;
-            font-size:15px;
-            font-weight:950;
-        }
-
-        .online-dot{
-            display:inline-flex;
-            align-items:center;
-            gap:7px;
-            margin-top:10px;
-            padding:7px 10px;
-            border-radius:999px;
-            color:#bbf7d0;
-            background:rgba(16,185,129,.12);
-            border:1px solid rgba(16,185,129,.20);
-            font-size:12px;
-            font-weight:950;
-        }
-
-        .online-dot::before{
-            content:"";
-            width:8px;
-            height:8px;
-            border-radius:99px;
-            background:#22c55e;
-            box-shadow:0 0 0 5px rgba(34,197,94,.12);
-        }
-
-        .side-title{
-            margin:24px 12px 10px;
-            color:#7da1c8;
-            font-size:11px;
-            font-weight:950;
-            letter-spacing:.13em;
-            text-transform:uppercase;
-        }
-
-        .side-menu{
-            display:grid;
-            gap:8px;
-        }
-
-        .side-link{
-            min-height:50px;
-            padding:0 13px;
-            border-radius:18px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:11px;
-            color:#dbeafe;
-            font-weight:850;
-            font-size:14px;
-            border:1px solid transparent;
-            transition:.18s ease;
-        }
-
-        .side-left{
-            display:flex;
-            align-items:center;
-            gap:11px;
-        }
-
-        .side-link i{
-            width:22px;
-            text-align:center;
-            color:#70d8ff;
-        }
-
-        .side-link:hover,
-        .side-link.active{
-            background:rgba(0,198,255,.12);
-            border-color:rgba(0,198,255,.22);
-            color:#fff;
-            transform:translateX(2px);
-        }
-
-        .side-footer{
-            margin-top:22px;
-            padding:14px;
-            border-radius:22px;
-            background:rgba(255,255,255,.07);
-            border:1px solid rgba(255,255,255,.10);
-            color:#a9c7e8;
-            font-size:12px;
-            line-height:1.5;
-            font-weight:700;
-        }
-
-        .cs-main{
-            min-width:0;
-            padding:18px;
-        }
-
-        .topbar{
-            position:sticky;
-            top:0;
-            z-index:20;
-            min-height:76px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            gap:16px;
-            padding:13px 16px;
-            margin-bottom:18px;
-            border-radius:26px;
-            background:rgba(255,255,255,.84);
-            backdrop-filter:blur(18px);
-            border:1px solid rgba(226,232,240,.86);
-            box-shadow:0 10px 25px rgba(15,23,42,.06);
-        }
-
-        .topbar-left{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            min-width:0;
-        }
-
-        .mobile-menu{
-            display:none;
-            width:44px;
-            height:44px;
-            border:0;
-            border-radius:16px;
-            color:#fff;
-            background:linear-gradient(135deg,#0575e6,#00c6ff);
-            font-size:18px;
-            cursor:pointer;
-        }
-
-        .page-title small{
-            display:block;
-            color:#64748b;
-            font-size:12px;
-            font-weight:850;
-        }
-
-        .page-title h1{
-            margin-top:2px;
-            color:#0f172a;
-            font-size:24px;
-            line-height:1.1;
-            font-weight:950;
-            letter-spacing:-.04em;
-        }
-
-        .top-actions{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            flex-wrap:wrap;
-        }
-
-        .pill-btn{
-            min-height:44px;
-            padding:0 14px;
-            border-radius:16px;
-            border:1px solid #e2e8f0;
-            background:#fff;
-            color:#0f172a;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:8px;
-            font-size:13px;
-            font-weight:900;
-            box-shadow:0 8px 18px rgba(15,23,42,.05);
-        }
-
-        .pill-btn.primary{
-            border:0;
-            color:#fff;
-            background:linear-gradient(135deg,#0575e6,#00c6ff);
-        }
-
-        .pill-btn.danger{
-            border:0;
-            color:#fff;
-            background:linear-gradient(135deg,#ef4444,#f97316);
-        }
-
-        .hero{
-            position:relative;
-            overflow:hidden;
-            border-radius:34px;
-            padding:30px;
-            color:#fff;
-            background:
-                radial-gradient(circle at 15% 15%,rgba(255,255,255,.25),transparent 28%),
-                radial-gradient(circle at 88% 5%,rgba(0,198,255,.45),transparent 32%),
-                linear-gradient(135deg,#07111f 0%,#0a3b78 48%,#0575e6 100%);
-            box-shadow:0 26px 70px rgba(5,117,230,.24);
-        }
-
-        .hero::after{
-            content:"";
-            position:absolute;
-            right:-110px;
-            top:-100px;
-            width:280px;
-            height:280px;
-            border-radius:999px;
-            background:rgba(255,255,255,.12);
-        }
-
-        .hero-content{
-            position:relative;
-            z-index:2;
-            max-width:820px;
-        }
-
-        .hero-badge{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:8px 12px;
-            border-radius:999px;
-            color:#dff7ff;
-            background:rgba(255,255,255,.13);
-            border:1px solid rgba(255,255,255,.18);
-            font-size:12px;
-            font-weight:950;
-        }
-
-        .hero h2{
-            margin-top:15px;
-            max-width:760px;
-            font-size:38px;
-            line-height:1.06;
-            font-weight:950;
-            letter-spacing:-.065em;
-        }
-
-        .hero p{
-            margin-top:11px;
-            max-width:720px;
-            color:rgba(255,255,255,.80);
-            font-size:15px;
-            line-height:1.6;
-            font-weight:650;
-        }
-
-        .grid-stats{
-            margin-top:18px;
-            display:grid;
-            grid-template-columns:repeat(4,minmax(0,1fr));
-            gap:14px;
-        }
-
-        .stat-card{
-            position:relative;
-            overflow:hidden;
-            min-height:150px;
-            padding:18px;
-            border-radius:28px;
-            background:#fff;
-            border:1px solid rgba(226,232,240,.92);
-            box-shadow:0 10px 25px rgba(15,23,42,.06);
-        }
-
-        .stat-card::after{
-            content:"";
-            position:absolute;
-            right:-38px;
-            bottom:-42px;
-            width:125px;
-            height:125px;
-            border-radius:999px;
-            background:var(--glow,rgba(5,117,230,.12));
-        }
-
-        .stat-icon{
-            width:52px;
-            height:52px;
-            border-radius:20px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            background:var(--grad);
-            font-size:22px;
-            box-shadow:0 12px 24px rgba(15,23,42,.12);
-        }
-
-        .stat-card span{
-            display:block;
-            margin-top:15px;
-            color:#64748b;
-            font-size:13px;
-            font-weight:850;
-        }
-
-        .stat-card strong{
-            position:relative;
-            z-index:2;
-            display:block;
-            margin-top:5px;
-            color:#0f172a;
-            font-size:29px;
-            line-height:1;
-            font-weight:950;
-            letter-spacing:-.04em;
-        }
-
-        .panel-card{
-            margin-top:18px;
-            background:#fff;
-            border:1px solid rgba(226,232,240,.95);
-            border-radius:30px;
-            box-shadow:0 10px 25px rgba(15,23,42,.06);
-            overflow:hidden;
-        }
-
-        .panel-head{
-            padding:18px;
-            display:flex;
-            align-items:flex-start;
-            justify-content:space-between;
-            gap:14px;
-            border-bottom:1px solid #eef2f7;
-        }
-
-        .panel-head h3{
-            color:#0f172a;
-            font-size:19px;
-            line-height:1.2;
-            font-weight:950;
-            letter-spacing:-.035em;
-        }
-
-        .panel-head p{
-            margin-top:4px;
-            color:#64748b;
-            font-size:13px;
-            line-height:1.45;
-            font-weight:650;
-        }
-
-        .panel-body{
-            padding:18px;
-        }
-
-        .badge{
-            display:inline-flex;
-            align-items:center;
-            gap:7px;
-            padding:8px 11px;
-            border-radius:999px;
-            background:#eff6ff;
-            color:#0575e6;
-            font-size:12px;
-            font-weight:950;
-            white-space:nowrap;
-        }
-
-        .badge.green{
-            background:#ecfdf5;
-            color:#047857;
-        }
-
-        .badge.orange{
-            background:#fffbeb;
-            color:#b45309;
-        }
-
-        .badge.red{
-            background:#fef2f2;
-            color:#b91c1c;
-        }
-
-        .filter-bar{
-            display:grid;
-            grid-template-columns:1fr auto auto;
-            gap:10px;
-            margin-bottom:16px;
-        }
-
-        .search-field{
-            position:relative;
-        }
-
-        .search-field i{
-            position:absolute;
-            left:15px;
-            top:50%;
-            transform:translateY(-50%);
-            color:#64748b;
-        }
-
-        .search-field input,
-        .filter-select{
-            width:100%;
-            min-height:48px;
-            border:1px solid #e2e8f0;
-            border-radius:17px;
-            background:#f8fafc;
-            color:#0f172a;
-            outline:none;
-            font-size:14px;
-            font-weight:750;
-        }
-
-        .search-field input{
-            padding:0 14px 0 42px;
-        }
-
-        .filter-select{
-            padding:0 13px;
-        }
-
-        .filter-btn{
-            min-height:48px;
-            border:0;
-            border-radius:17px;
-            padding:0 16px;
-            color:#fff;
-            background:linear-gradient(135deg,#0575e6,#00c6ff);
-            font-size:14px;
-            font-weight:950;
-            cursor:pointer;
-            box-shadow:0 12px 24px rgba(5,117,230,.16);
-        }
-
-        .chat-list{
-            display:grid;
-            gap:12px;
-        }
-
-        .chat-item{
-            position:relative;
-            overflow:hidden;
-            display:grid;
-            grid-template-columns:auto minmax(0,1fr) auto;
-            align-items:center;
-            gap:14px;
-            padding:14px;
-            border-radius:24px;
-            background:#f8fafc;
-            border:1px solid #e8eef7;
-            transition:.18s ease;
-        }
-
-        .chat-item:hover{
-            transform:translateY(-2px);
-            background:#eef8ff;
-            border-color:#bdeaff;
-        }
-
-        .chat-avatar{
-            width:56px;
-            height:56px;
-            border-radius:21px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            font-size:21px;
-            font-weight:950;
-            background:
-                radial-gradient(circle at 30% 15%,rgba(255,255,255,.35),transparent 32%),
-                linear-gradient(135deg,#0575e6,#00c6ff);
-            box-shadow:0 12px 24px rgba(5,117,230,.18);
-        }
-
-        .chat-main{
-            min-width:0;
-        }
-
-        .chat-name-row{
-            display:flex;
-            align-items:center;
-            gap:8px;
-            flex-wrap:wrap;
-            margin-bottom:3px;
-        }
-
-        .chat-name-row strong{
-            color:#0f172a;
-            font-size:15px;
-            font-weight:950;
-        }
-
-        .chat-code{
-            display:inline-flex;
-            align-items:center;
-            gap:5px;
-            padding:5px 8px;
-            border-radius:999px;
-            background:#eff6ff;
-            color:#0575e6;
-            font-size:11px;
-            font-weight:950;
-        }
-
-        .status{
-            display:inline-flex;
-            align-items:center;
-            gap:6px;
-            padding:7px 9px;
-            border-radius:999px;
-            font-size:12px;
-            font-weight:950;
-            white-space:nowrap;
-        }
-
-        .status.ok{
-            background:#ecfdf5;
-            color:#047857;
-        }
-
-        .status.info{
-            background:#eff6ff;
-            color:#1d4ed8;
-        }
-
-        .status.wait{
-            background:#fffbeb;
-            color:#b45309;
-        }
-
-        .status.bad{
-            background:#fef2f2;
-            color:#b91c1c;
-        }
-
-        .chat-meta{
-            display:flex;
-            align-items:center;
-            gap:8px;
-            flex-wrap:wrap;
-            margin-bottom:5px;
-            color:#64748b;
-            font-size:12px;
-            font-weight:750;
-        }
-
-        .chat-message{
-            color:#334155;
-            font-size:13px;
-            font-weight:750;
-            line-height:1.45;
-            white-space:nowrap;
-            overflow:hidden;
-            text-overflow:ellipsis;
-            max-width:720px;
-        }
-
-        .chat-actions{
-            display:flex;
-            flex-direction:column;
-            align-items:flex-end;
-            gap:8px;
-        }
-
-        .chat-open-btn{
-            min-height:42px;
-            padding:0 14px;
-            border-radius:15px;
-            color:#fff;
-            background:linear-gradient(135deg,#0575e6,#00c6ff);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            gap:7px;
-            font-size:13px;
-            font-weight:950;
-            box-shadow:0 12px 24px rgba(5,117,230,.16);
-        }
-
-        .chat-unread{
-            min-width:24px;
-            height:24px;
-            padding:0 8px;
-            border-radius:999px;
-            background:#ef4444;
-            color:#fff;
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            font-size:11px;
-            font-weight:950;
-            box-shadow:0 8px 16px rgba(239,68,68,.20);
-        }
-
-        .empty-state{
-            min-height:190px;
-            border:1px dashed #cbd5e1;
-            border-radius:24px;
-            background:#f8fafc;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            text-align:center;
-            color:#64748b;
-            padding:18px;
-            line-height:1.5;
-            font-size:14px;
-            font-weight:750;
-        }
-
-        .empty-inner i{
-            width:72px;
-            height:72px;
-            border-radius:28px;
-            margin:0 auto 12px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:#fff;
-            font-size:30px;
-            background:linear-gradient(135deg,#0575e6,#00c6ff);
-            box-shadow:0 16px 32px rgba(5,117,230,.18);
-        }
-
-        .empty-inner strong{
-            display:block;
-            color:#0f172a;
-            font-size:18px;
-            font-weight:950;
-        }
-
-        .empty-inner span{
-            display:block;
-            margin-top:6px;
-            color:#64748b;
-            font-size:14px;
-            font-weight:700;
-        }
-
-        .flash-wrap{
-            display:grid;
-            gap:10px;
-            margin-bottom:14px;
-        }
-
-        .alert{
-            padding:12px 14px;
-            border-radius:17px;
-            font-size:13px;
-            font-weight:850;
-            border:1px solid transparent;
-        }
-
-        .alert.success{
-            background:#ecfdf5;
-            color:#047857;
-            border-color:#a7f3d0;
-        }
-
-        .alert.danger{
-            background:#fef2f2;
-            color:#b91c1c;
-            border-color:#fecaca;
-        }
-
-        .alert.warning{
-            background:#fffbeb;
-            color:#92400e;
-            border-color:#fde68a;
-        }
-
-        .alert.info{
-            background:#eff6ff;
-            color:#1d4ed8;
-            border-color:#bfdbfe;
-        }
-
-        .mobile-backdrop{
-            display:none;
-        }
-
-        @media(max-width:980px){
-            .cs-shell{
-                grid-template-columns:1fr;
-            }
-
-            .cs-sidebar{
-                position:fixed;
-                z-index:60;
-                left:0;
-                top:0;
-                width:292px;
-                transform:translateX(-105%);
-                transition:.22s ease;
-            }
-
-            body.sidebar-open .cs-sidebar{
-                transform:translateX(0);
-            }
-
-            .mobile-backdrop{
-                position:fixed;
-                inset:0;
-                z-index:50;
-                background:rgba(2,6,23,.55);
-            }
-
-            body.sidebar-open .mobile-backdrop{
-                display:block;
-            }
-
-            .mobile-menu{
-                display:inline-flex;
-                align-items:center;
-                justify-content:center;
-            }
-
-            .cs-main{
-                padding:12px;
-            }
-
-            .grid-stats{
-                grid-template-columns:repeat(2,minmax(0,1fr));
-            }
-        }
-
-        @media(max-width:720px){
-            .chat-item{
-                grid-template-columns:auto minmax(0,1fr);
-            }
-
-            .chat-actions{
-                grid-column:1 / -1;
-                align-items:stretch;
-            }
-
-            .chat-open-btn{
-                width:100%;
-            }
-
-            .chat-message{
-                white-space:normal;
-            }
-        }
-
-        @media(max-width:640px){
-            .filter-bar{
-                grid-template-columns:1fr;
-            }
-        }
-
-        @media(max-width:560px){
-            .topbar{
-                align-items:flex-start;
-                flex-direction:column;
-            }
-
-            .top-actions{
-                width:100%;
-                display:grid;
-                grid-template-columns:1fr 1fr;
-            }
-
-            .pill-btn{
-                justify-content:center;
-            }
-
-            .hero{
-                padding:22px;
-                border-radius:27px;
-            }
-
-            .hero h2{
-                font-size:27px;
-            }
-
-            .grid-stats{
-                grid-template-columns:1fr;
-            }
-
-            .page-title h1{
-                font-size:21px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-<div class="mobile-backdrop" onclick="document.body.classList.remove('sidebar-open')"></div>
-
-<div class="cs-shell">
-
-    <aside class="cs-sidebar">
-        <div class="brand-box">
-            <div class="brand-icon">
-                <i class="fa-solid fa-headset"></i>
-            </div>
-
+{% extends "cs_base.html" %}
+
+{% block title %}Live Chat CS - SenjaData{% endblock %}
+{% block subtitle %}Pantau semua percakapan user dari aplikasi SenjaData{% endblock %}
+{% block heading %}Live Chat Masuk{% endblock %}
+
+{% block content %}
+
+<section class="cs-hero">
+    <div class="cs-hero-content">
+        <div class="cs-hero-badge">
+            <i class="fa-solid fa-comments"></i>
+            Live Chat Queue
+        </div>
+
+        <h2>Semua pesan user masuk ke sini, CS tinggal pilih dan balas.</h2>
+
+        <p>
+            Halaman ini dipakai untuk memantau chat masuk, melihat status open/closed,
+            mencari user berdasarkan nama, kontak, kode chat, atau pesan terakhir.
+        </p>
+    </div>
+</section>
+
+<section class="cs-grid-stats">
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+
+        <span>Total Chat Tampil</span>
+        <strong>{{ ringkasan.total|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-door-open"></i>
+        </div>
+
+        <span>Chat Open</span>
+        <strong>{{ ringkasan.open|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#64748b,#0f172a);--glow:rgba(15,23,42,.12);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <span>Chat Closed</span>
+        <strong>{{ ringkasan.closed|default(0) }}</strong>
+    </div>
+
+    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
+        <div class="cs-stat-icon">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+
+        <span>Belum Dibaca</span>
+        <strong>{{ ringkasan.unread|default(0) }}</strong>
+    </div>
+</section>
+
+<section class="cs-content-grid">
+
+    <div class="cs-panel">
+        <div class="cs-panel-head">
             <div>
-                <small>Live Chat Panel</small>
-                <strong>SenjaData CS</strong>
+                <h3>Filter Chat</h3>
+                <p>Cari chat berdasarkan nama, kontak, kode chat, atau isi pesan terakhir.</p>
             </div>
+
+            <span class="cs-badge">
+                <i class="fa-solid fa-filter"></i>
+                Filter
+            </span>
         </div>
 
-        <div class="cs-profile">
-            <span>Masuk sebagai</span>
-            <strong>{{ session.get("cs_username", "CS SenjaData") }}</strong>
-            <div class="online-dot">CS Online</div>
-        </div>
+        <div class="cs-panel-body">
+            <form class="cs-filter" method="GET" action="/cs/live-chat">
+                <div class="cs-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ q|default('') }}"
+                        placeholder="Cari nama, nomor HP, email, kode chat, atau pesan..."
+                    >
+                </div>
 
-        <div class="side-title">Navigasi</div>
+                <select class="cs-select" name="status">
+                    <option value="">Semua Status</option>
+                    <option value="open" {% if status == "open" %}selected{% endif %}>Open</option>
+                    <option value="closed" {% if status == "closed" %}selected{% endif %}>Closed</option>
+                </select>
 
-        <nav class="side-menu">
-            <a class="side-link active" href="{{ url_for('cs_live_chat') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-comments"></i>
-                    Live Chat
-                </span>
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
-
-            <a class="side-link" href="{{ url_for('dashboard') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-house"></i>
-                    Website
-                </span>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-            <a class="side-link" href="{{ url_for('admin_login') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-user-shield"></i>
-                    Admin Utama
-                </span>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-            <a class="side-link" href="{{ url_for('cs_logout') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Logout CS
-                </span>
-                <i class="fa-solid fa-chevron-right"></i>
-            </a>
-        </nav>
-
-        <div class="side-footer">
-            <b>Panel CS Terpisah</b><br>
-            Halaman ini khusus untuk menerima dan membalas live chat user SenjaData.
-        </div>
-    </aside>
-
-    <main class="cs-main">
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="mobile-menu" type="button" onclick="document.body.classList.add('sidebar-open')">
-                    <i class="fa-solid fa-bars"></i>
+                <button class="cs-filter-btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Cari
                 </button>
 
-                <div class="page-title">
-                    <small>Customer Service Center</small>
-                    <h1>Live Chat Masuk</h1>
-                </div>
-            </div>
-
-            <div class="top-actions">
-                <a class="pill-btn primary" href="{{ url_for('cs_live_chat') }}">
-                    <i class="fa-solid fa-rotate-right"></i>
-                    Refresh
+                <a class="cs-filter-btn" href="/cs/live-chat" style="background:linear-gradient(135deg,#64748b,#0f172a);">
+                    Reset
                 </a>
+            </form>
 
-                <a class="pill-btn" href="{{ url_for('dashboard') }}">
-                    <i class="fa-solid fa-globe"></i>
-                    Website
-                </a>
+            {% if q or status %}
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    {% if q %}
+                        <span class="cs-badge">
+                            Keyword: {{ q }}
+                        </span>
+                    {% endif %}
 
-                <a class="pill-btn danger" href="{{ url_for('cs_logout') }}">
-                    <i class="fa-solid fa-power-off"></i>
-                    Logout
-                </a>
-            </div>
-        </header>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-wrap">
-                    {% for kategori, pesan in messages %}
-                        <div class="alert {{ kategori }}">{{ pesan }}</div>
-                    {% endfor %}
+                    {% if status %}
+                        <span class="cs-badge orange">
+                            Status: {{ status }}
+                        </span>
+                    {% endif %}
                 </div>
             {% endif %}
-        {% endwith %}
+        </div>
+    </div>
 
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <i class="fa-solid fa-comments"></i>
-                    Live Chat Center
-                </div>
-
-                <h2>Panel khusus untuk membalas chat pengguna SenjaData.</h2>
-
-                <p>
-                    Chat dari website atau APK akan masuk ke sini. CS bisa cek pesan masuk,
-                    buka percakapan, membalas user, dan menutup chat yang sudah selesai.
-                </p>
-            </div>
-        </section>
-
-        <section class="grid-stats">
-            <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-comments"></i>
-                </div>
-
-                <span>Total Chat Tampil</span>
-                <strong>{{ ringkasan.total }}</strong>
+    <div class="cs-panel">
+        <div class="cs-panel-head">
+            <div>
+                <h3>Panduan CS</h3>
+                <p>Alur cepat saat user menghubungi live chat.</p>
             </div>
 
-            <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-door-open"></i>
-                </div>
-
-                <span>Chat Open</span>
-                <strong>{{ ringkasan.open }}</strong>
-            </div>
-
-            <div class="stat-card" style="--grad:linear-gradient(135deg,#64748b,#0f172a);--glow:rgba(15,23,42,.12);">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-
-                <span>Chat Closed</span>
-                <strong>{{ ringkasan.closed }}</strong>
-            </div>
-
-            <div class="stat-card" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-bell"></i>
-                </div>
-
-                <span>Belum Dibaca</span>
-                <strong>{{ ringkasan.unread }}</strong>
-            </div>
-        </section>
-
-        <div class="panel-card">
-            <div class="panel-head">
-                <div>
-                    <h3>Filter Chat</h3>
-                    <p>Cari chat berdasarkan nama, nomor HP, email, kode chat, atau pesan terakhir.</p>
-                </div>
-
-                <span class="badge">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Search
-                </span>
-            </div>
-
-            <div class="panel-body">
-                <form class="filter-bar" method="GET" action="{{ url_for('cs_live_chat') }}">
-                    <div class="search-field">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input
-                            type="text"
-                            name="q"
-                            value="{{ q or '' }}"
-                            placeholder="Cari nama, nomor HP, email, kode chat, atau pesan..."
-                        >
-                    </div>
-
-                    <select class="filter-select" name="status">
-                        <option value="">Semua Status</option>
-                        <option value="open" {% if status == "open" %}selected{% endif %}>Open</option>
-                        <option value="closed" {% if status == "closed" %}selected{% endif %}>Closed</option>
-                    </select>
-
-                    <button class="filter-btn" type="submit">
-                        <i class="fa-solid fa-filter"></i>
-                        Terapkan
-                    </button>
-                </form>
-
-                {% if q or status %}
-                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                        {% if q %}
-                            <span class="badge">Keyword: {{ q }}</span>
-                        {% endif %}
-
-                        {% if status %}
-                            <span class="badge orange">Status: {{ status }}</span>
-                        {% endif %}
-
-                        <a class="badge red" href="{{ url_for('cs_live_chat') }}">
-                            <i class="fa-solid fa-xmark"></i>
-                            Reset Filter
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
+            <span class="cs-badge orange">
+                SOP
+            </span>
         </div>
 
-        <div class="panel-card">
-            <div class="panel-head">
-                <div>
-                    <h3>Daftar Chat Masuk</h3>
-                    <p>Menampilkan maksimal 200 chat terbaru berdasarkan update terakhir.</p>
+        <div class="cs-panel-body">
+            <div class="cs-info-list">
+                <div class="cs-info-item">
+                    <span>Langkah 1</span>
+                    <strong>Buka chat user, baca kendalanya sampai jelas.</strong>
                 </div>
 
-                <span class="badge green">
-                    <i class="fa-solid fa-database"></i>
-                    {{ ringkasan.total }} Data
-                </span>
+                <div class="cs-info-item">
+                    <span>Langkah 2</span>
+                    <strong>Cek nomor HP, email, atau transaksi user dari panel kanan.</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Langkah 3</span>
+                    <strong>Gunakan quick reply supaya balasan lebih cepat dan rapi.</strong>
+                </div>
+
+                <div class="cs-info-item">
+                    <span>Langkah 4</span>
+                    <strong>Tutup chat kalau masalah user sudah selesai dibantu.</strong>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="panel-body">
-                {% if daftar_chat %}
-                    <div class="chat-list">
-                        {% for chat in daftar_chat %}
-                        <div class="chat-item">
-                            <div class="chat-avatar">
-                                {{ (chat.nama or "U")[:1].upper() }}
-                            </div>
+</section>
 
-                            <div class="chat-main">
-                                <div class="chat-name-row">
-                                    <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
+<section class="cs-panel">
+    <div class="cs-panel-head">
+        <div>
+            <h3>Daftar Chat Masuk</h3>
+            <p>Menampilkan chat terbaru berdasarkan update terakhir.</p>
+        </div>
 
-                                    <span class="chat-code">
-                                        <i class="fa-solid fa-hashtag"></i>
-                                        {{ chat.kode_chat }}
+        <span class="cs-badge green">
+            <i class="fa-solid fa-database"></i>
+            {{ ringkasan.total|default(0) }} Data
+        </span>
+    </div>
+
+    <div class="cs-panel-body">
+        {% if daftar_chat|default([]) %}
+            <div class="cs-chat-list" style="max-height:none;">
+                {% for chat in daftar_chat|default([]) %}
+                    <a class="cs-chat-item" href="/cs/live-chat/{{ chat.id }}">
+                        <div class="cs-chat-avatar">
+                            {{ (chat.nama or "U")[:1].upper() }}
+                        </div>
+
+                        <div class="cs-chat-info">
+                            <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
+
+                            <span>
+                                {{ chat.last_message or "Belum ada pesan terakhir." }}
+                            </span>
+
+                            <em class="cs-chat-time">
+                                {% if format_waktu_chat is defined %}
+                                    {{ format_waktu_chat(chat.diperbarui_pada) }}
+                                {% elif chat.diperbarui_pada %}
+                                    {{ chat.diperbarui_pada.strftime("%d/%m/%Y %H:%M") }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </em>
+
+                            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px;">
+                                {% if chat.status == "open" %}
+                                    <span class="cs-status ok">
+                                        <i class="fa-solid fa-circle"></i>
+                                        Open
                                     </span>
-
-                                    {% if chat.status == "open" %}
-                                        <span class="status ok">
-                                            <i class="fa-solid fa-circle"></i>
-                                            Open
-                                        </span>
-                                    {% else %}
-                                        <span class="status info">
-                                            <i class="fa-solid fa-lock"></i>
-                                            Closed
-                                        </span>
-                                    {% endif %}
-                                </div>
-
-                                <div class="chat-meta">
-                                    <span>
-                                        <i class="fa-solid fa-phone"></i>
-                                        {{ chat.nomor_hp or "-" }}
-                                    </span>
-
-                                    <span>
-                                        <i class="fa-solid fa-envelope"></i>
-                                        {{ chat.email or "-" }}
-                                    </span>
-
-                                    <span>
-                                        <i class="fa-solid fa-clock"></i>
-                                        {{ format_waktu_chat(chat.diperbarui_pada) }}
-                                    </span>
-                                </div>
-
-                                <div class="chat-message">
-                                    {{ chat.last_message or "Belum ada pesan terakhir." }}
-                                </div>
-                            </div>
-
-                            <div class="chat-actions">
-                                {% if chat.unread_admin and chat.unread_admin > 0 %}
-                                    <span class="chat-unread">
-                                        {{ chat.unread_admin }}
+                                {% else %}
+                                    <span class="cs-status info">
+                                        <i class="fa-solid fa-lock"></i>
+                                        Closed
                                     </span>
                                 {% endif %}
 
-                                <a class="chat-open-btn" href="{{ url_for('cs_live_chat_detail', chat_id=chat.id) }}">
-                                    <i class="fa-solid fa-comments"></i>
-                                    Buka Chat
-                                </a>
+                                {% if chat.nomor_hp %}
+                                    <span class="cs-badge">
+                                        <i class="fa-solid fa-phone"></i>
+                                        {{ chat.nomor_hp }}
+                                    </span>
+                                {% endif %}
+
+                                {% if chat.email %}
+                                    <span class="cs-badge dark">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {{ chat.email }}
+                                    </span>
+                                {% endif %}
                             </div>
                         </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="empty-state">
-                        <div class="empty-inner">
-                            <i class="fa-solid fa-comments"></i>
-                            <strong>Belum ada chat masuk</strong>
-                            <span>Nanti kalau user mulai chat dari APK atau website, pesannya akan muncul di sini.</span>
-                        </div>
-                    </div>
-                {% endif %}
+
+                        {% if chat.unread_admin and chat.unread_admin > 0 %}
+                            <div class="cs-unread">
+                                {{ chat.unread_admin }}
+                            </div>
+                        {% endif %}
+                    </a>
+                {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <div class="cs-empty">
+                Belum ada chat masuk. Nanti kalau user klik “Butuh Bantuan? Chat dengan kami”, pesannya akan muncul di sini.
+            </div>
+        {% endif %}
+    </div>
+</section>
 
-    </main>
-
-</div>
-
-</body>
-</html>
+{% endblock %}
