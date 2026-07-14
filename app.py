@@ -1312,21 +1312,25 @@ def api_chat_start():
     ).strip()
 
     chat = None
+    chat_baru = False
 
     if kode_chat:
         chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
 
+    # Kalau chat lama sudah ditutup, buat sesi chat baru.
     if chat and chat.status == "closed":
         chat = None
 
     if not chat:
+        chat_baru = True
+
         chat = ChatSession(
             kode_chat=buat_kode_chat(),
             nama=nama or "Pengguna SenjaData",
             nomor_hp=nomor_hp,
             email=email,
             status="open",
-            last_message=pesan_awal or "Chat dimulai",
+            last_message="Selamat datang di SenjaData 👋",
             unread_admin=0,
             unread_user=0
         )
@@ -1334,8 +1338,30 @@ def api_chat_start():
         db.session.add(chat)
         db.session.commit()
 
+        # Bot sambutan otomatis.
+        pesan_bot = ChatMessage(
+            chat_id=chat.id,
+            pengirim="admin",
+            pesan=(
+                "Selamat datang di SenjaData 👋\n"
+                "Ada yang bisa kami bantu hari ini?\n\n"
+                "Silakan tulis kendala atau pertanyaan kamu di sini ya. "
+                "CS SenjaData akan membantu secepatnya."
+            ),
+            dibaca_admin=True,
+            dibaca_user=False
+        )
+
+        chat.last_message = "Selamat datang di SenjaData 👋"
+        chat.unread_user = int(chat.unread_user or 0) + 1
+        chat.diperbarui_pada = datetime.utcnow()
+
+        db.session.add(pesan_bot)
+        db.session.commit()
+
+    # Kalau member langsung isi pesan pertama dari form widget.
     if pesan_awal:
-        pesan_baru = ChatMessage(
+        pesan_member = ChatMessage(
             chat_id=chat.id,
             pengirim="user",
             pesan=pesan_awal,
@@ -1348,7 +1374,7 @@ def api_chat_start():
         chat.status = "open"
         chat.diperbarui_pada = datetime.utcnow()
 
-        db.session.add(pesan_baru)
+        db.session.add(pesan_member)
         db.session.commit()
 
     return jsonify({
@@ -1357,8 +1383,10 @@ def api_chat_start():
         "kode_chat": chat.kode_chat,
         "chat_id": chat.id,
         "nama": chat.nama,
-        "status": chat.status
+        "status": chat.status,
+        "chat_baru": chat_baru
     })
+
 
 
 @app.route("/api/chat/send", methods=["POST"])
