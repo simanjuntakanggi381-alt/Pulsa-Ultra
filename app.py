@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from config import (
     SECRET_KEY,
     SQLALCHEMY_DATABASE_URI,
@@ -8,7 +8,7 @@ from config import (
     BATAS_SALDO_INGAT,
     AKUN_ADMIN
 )
-from models import db, Transaksi, Pengguna, MutasiSaldo
+from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
 from utils import format_uang
 from sqlalchemy import func, or_, text
@@ -16,6 +16,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from functools import wraps
 import os
+import uuid
 
 
 app = Flask(__name__)
@@ -171,7 +172,14 @@ def cek_akses():
         "admin_transaksi",
         "admin_pengguna",
         "admin_produk",
-        "admin_cek_sistem"
+        "admin_cek_sistem",
+        "admin_live_chat",
+        "admin_live_chat_detail",
+        "admin_live_chat_reply",
+        "admin_live_chat_close",
+        "api_chat_start",
+        "api_chat_send",
+        "api_chat_messages"
     ]
 
     if request.endpoint in halaman_bebas:
@@ -523,6 +531,342 @@ def admin_logout():
     session.clear()
     flash("✅ Berhasil keluar dari panel admin.", "success")
     return redirect(url_for("admin_login"))
+
+
+# =========================================================
+# LIVE CHAT SENJADATA
+# =========================================================
+def buat_kode_chat():
+    return "CHAT-" + uuid.uuid4().hex[:12].upper()
+
+
+def format_waktu_chat(waktu):
+    if not waktu:
+        return "-"
+    return waktu.strftime("%d/%m/%Y %H:%M")
+
+
+def serialize_chat_message(item):
+    return {
+        "id": item.id,
+        "pengirim": item.pengirim,
+        "pesan": item.pesan,
+        "waktu": format_waktu_chat(item.waktu),
+        "dibaca_admin": bool(item.dibaca_admin),
+        "dibaca_user": bool(item.dibaca_user)
+    }
+
+
+@app.route("/admin/live-chat")
+@wajib_admin
+def admin_live_chat():
+    q = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+
+    query = ChatSession.query
+
+    if q:
+        query = query.filter(
+            or_(
+                ChatSession.kode_chat.ilike(f"%{q}%"),
+                ChatSession.nama.ilike(f"%{q}%"),
+                ChatSession.nomor_hp.ilike(f"%{q}%"),
+                ChatSession.email.ilike(f"%{q}%"),
+                ChatSession.last_message.ilike(f"%{q}%")
+            )
+        )
+
+    if status:
+        query = query.filter_by(status=status)
+
+    daftar_chat = query.order_by(ChatSession.diperbarui_pada.desc()).limit(200).all()
+
+    ringkasan = {
+        "total": len(daftar_chat),
+        "open": len([x for x in daftar_chat if x.status == "open"]),
+        "closed": len([x for x in daftar_chat if x.status == "closed"]),
+        "unread": sum([int(x.unread_admin or 0) for x in daftar_chat])
+    }
+
+    return render_template(
+        "admin_live_chat.html",
+        daftar_chat=daftar_chat,
+        ringkasan=ringkasan,
+        q=q,
+        status=status,
+        format_waktu_chat=format_waktu_chat
+    )
+
+
+@app.route("/admin/live-chat/<int:chat_id>")
+@wajib_admin
+def admin_live_chat_detail(chat_id):
+    chat = ChatSession.query.get_or_404(chat_id)
+
+    ChatMessage.query.filter_by(
+        chat_id=chat.id,
+        pengirim="user",
+        dibaca_admin=False
+    ).update({"dibaca_admin": True})
+
+    chat.unread_admin = 0
+    db.session.commit()
+
+    pesan_chat = ChatMessage.query.filter_by(chat_id=chat.id).order_by(ChatMessage.waktu.asc()).all()
+
+    return render_template(
+        "admin_live_chat_detail.html",
+        chat=chat,
+        pesan_chat=pesan_chat,
+        format_waktu_chat=format_waktu_chat
+    )
+
+
+@app.route("/admin/live-chat/<int:chat_id>/balas", methods=["POST"])
+@wajib_admin
+def admin_live_chat_reply(chat_id):
+    chat = ChatSession.query.get_or_404(chat_id)
+
+    pesan = request.form.get("pesan", "").strip()
+
+    if not pesan:
+        flash("⚠️ Pesan balasan tidak boleh kosong.", "warning")
+        return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
+
+    chat.status = "open"
+    chat.last_message = pesan
+    chat.unread_user = int(chat.unread_user or 0) + 1
+    chat.diperbarui_pada = datetime.utcnow()
+
+    pesan_baru = ChatMessage(
+        chat_id=chat.id,
+        pengirim="admin",
+        pesan=pesan,
+        dibaca_admin=True,
+        dibaca_user=False
+    )
+
+    db.session.add(pesan_baru)
+    db.session.commit()
+
+    flash("✅ Balasan berhasil dikirim.", "success")
+    return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
+
+
+@app.route("/admin/live-chat/<int:chat_id>/tutup", methods=["POST"])
+@wajib_admin
+def admin_live_chat_close(chat_id):
+    chat = ChatSession.query.get_or_404(chat_id)
+    chat.status = "closed"
+    chat.diperbarui_pada = datetime.utcnow()
+    db.session.commit()
+
+    flash("✅ Chat berhasil ditutup.", "success")
+    return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
+
+
+@app.route("/api/chat/start", methods=["POST"])
+def api_chat_start():
+    data_json = request.get_json(silent=True) or {}
+
+    nama = (
+        data_json.get("nama")
+        or request.form.get("nama")
+        or session.get("nama")
+        or "Pengguna SenjaData"
+    ).strip()
+
+    nomor_hp = (
+        data_json.get("nomor_hp")
+        or request.form.get("nomor_hp")
+        or ""
+    ).strip()
+
+    email = (
+        data_json.get("email")
+        or request.form.get("email")
+        or session.get("email")
+        or ""
+    ).strip()
+
+    pesan_awal = (
+        data_json.get("pesan")
+        or request.form.get("pesan")
+        or ""
+    ).strip()
+
+    kode_chat = (
+        data_json.get("kode_chat")
+        or request.form.get("kode_chat")
+        or ""
+    ).strip()
+
+    chat = None
+
+    if kode_chat:
+        chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
+
+    if not chat:
+        chat = ChatSession(
+            kode_chat=buat_kode_chat(),
+            nama=nama or "Pengguna SenjaData",
+            nomor_hp=nomor_hp,
+            email=email,
+            status="open",
+            last_message=pesan_awal or "Chat dimulai",
+            unread_admin=1 if pesan_awal else 0,
+            unread_user=0
+        )
+
+        db.session.add(chat)
+        db.session.commit()
+
+    if pesan_awal:
+        pesan_baru = ChatMessage(
+            chat_id=chat.id,
+            pengirim="user",
+            pesan=pesan_awal,
+            dibaca_admin=False,
+            dibaca_user=True
+        )
+
+        chat.last_message = pesan_awal
+        chat.unread_admin = int(chat.unread_admin or 0) + 1
+        chat.status = "open"
+        chat.diperbarui_pada = datetime.utcnow()
+
+        db.session.add(pesan_baru)
+        db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Chat berhasil dimulai.",
+        "kode_chat": chat.kode_chat,
+        "chat_id": chat.id,
+        "nama": chat.nama,
+        "status": chat.status
+    })
+
+
+@app.route("/api/chat/send", methods=["POST"])
+def api_chat_send():
+    data_json = request.get_json(silent=True) or {}
+
+    kode_chat = (
+        data_json.get("kode_chat")
+        or request.form.get("kode_chat")
+        or ""
+    ).strip()
+
+    pesan = (
+        data_json.get("pesan")
+        or request.form.get("pesan")
+        or ""
+    ).strip()
+
+    pengirim = (
+        data_json.get("pengirim")
+        or request.form.get("pengirim")
+        or "user"
+    ).strip().lower()
+
+    if pengirim not in ["user", "admin"]:
+        pengirim = "user"
+
+    if not kode_chat:
+        return jsonify({
+            "success": False,
+            "message": "Kode chat tidak ditemukan."
+        }), 400
+
+    if not pesan:
+        return jsonify({
+            "success": False,
+            "message": "Pesan tidak boleh kosong."
+        }), 400
+
+    chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
+
+    if not chat:
+        return jsonify({
+            "success": False,
+            "message": "Sesi chat tidak ditemukan."
+        }), 404
+
+    chat.status = "open"
+    chat.last_message = pesan
+    chat.diperbarui_pada = datetime.utcnow()
+
+    if pengirim == "user":
+        chat.unread_admin = int(chat.unread_admin or 0) + 1
+        dibaca_admin = False
+        dibaca_user = True
+    else:
+        chat.unread_user = int(chat.unread_user or 0) + 1
+        dibaca_admin = True
+        dibaca_user = False
+
+    pesan_baru = ChatMessage(
+        chat_id=chat.id,
+        pengirim=pengirim,
+        pesan=pesan,
+        dibaca_admin=dibaca_admin,
+        dibaca_user=dibaca_user
+    )
+
+    db.session.add(pesan_baru)
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Pesan berhasil dikirim.",
+        "kode_chat": chat.kode_chat,
+        "data": serialize_chat_message(pesan_baru)
+    })
+
+
+@app.route("/api/chat/messages/<kode_chat>")
+def api_chat_messages(kode_chat):
+    mode = request.args.get("mode", "user").strip().lower()
+
+    chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
+
+    if not chat:
+        return jsonify({
+            "success": False,
+            "message": "Sesi chat tidak ditemukan.",
+            "messages": []
+        }), 404
+
+    if mode == "admin":
+        ChatMessage.query.filter_by(
+            chat_id=chat.id,
+            pengirim="user",
+            dibaca_admin=False
+        ).update({"dibaca_admin": True})
+        chat.unread_admin = 0
+    else:
+        ChatMessage.query.filter_by(
+            chat_id=chat.id,
+            pengirim="admin",
+            dibaca_user=False
+        ).update({"dibaca_user": True})
+        chat.unread_user = 0
+
+    db.session.commit()
+
+    pesan_chat = ChatMessage.query.filter_by(chat_id=chat.id).order_by(ChatMessage.waktu.asc()).all()
+
+    return jsonify({
+        "success": True,
+        "kode_chat": chat.kode_chat,
+        "chat_id": chat.id,
+        "nama": chat.nama,
+        "status": chat.status,
+        "unread_admin": chat.unread_admin,
+        "unread_user": chat.unread_user,
+        "messages": [serialize_chat_message(item) for item in pesan_chat]
+    })
 
 
 # =========================================================
