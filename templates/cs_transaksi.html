@@ -1,108 +1,42 @@
 {% extends "cs_base.html" %}
 
-{% block title %}Cek Transaksi CS - SenjaData{% endblock %}
-{% block subtitle %}Cari transaksi berdasarkan tanggal, status, member, dan nomor tujuan{% endblock %}
-{% block heading %}Cek Transaksi{% endblock %}
+{% block title %}Transaksi Member - SenjaData{% endblock %}
+{% block heading %}All Transaksi Member{% endblock %}
+{% block subtitle %}Riwayat transaksi semua member lengkap dengan tanggal, produk, tujuan, status, biaya, dan SN.{% endblock %}
 
 {% block content %}
 
-<section class="cs-hero">
-    <div class="cs-hero-content">
-        <div class="cs-hero-badge">
-            <i class="fa-solid fa-magnifying-glass-chart"></i>
-            Transaction Support Checker
-        </div>
-
-        <h2>Cek semua transaksi member dari satu halaman CS.</h2>
-
-        <p>
-            Gunakan halaman ini untuk mencari transaksi berdasarkan tanggal, status,
-            nama member, email, nomor HP, nomor tujuan, jenis layanan, atau SN transaksi.
-        </p>
-    </div>
-</section>
-
-<section class="cs-grid-stats">
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-database"></i>
-        </div>
-
-        <span>Total Data Tampil</span>
+<section class="cs-stats">
+    <div class="cs-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
+        <i class="fa-solid fa-database"></i>
+        <span>Total Tampil</span>
         <strong>{{ ringkasan.total|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-circle-check"></i>
-        </div>
-
-        <span>Berhasil</span>
+    <div class="cs-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Success</span>
         <strong>{{ ringkasan.berhasil|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#f59e0b,#ff8a00);--glow:rgba(255,138,0,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-clock"></i>
-        </div>
-
+    <div class="cs-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;">
+        <i class="fa-solid fa-clock"></i>
         <span>Pending</span>
         <strong>{{ ringkasan.pending|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ef4444,#dc2626);--glow:rgba(239,68,68,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-circle-xmark"></i>
-        </div>
-
-        <span>Gagal</span>
+    <div class="cs-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span>Failed</span>
         <strong>{{ ringkasan.gagal|default(0) }}</strong>
     </div>
 </section>
 
-<section class="cs-grid-stats">
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#7c3aed,#4f46e5);--glow:rgba(124,58,237,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-coins"></i>
-        </div>
-
-        <span>Total Nominal</span>
-        <strong>{{ format_uang(ringkasan.total_nominal|default(0)) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0f172a,#334155);--glow:rgba(15,23,42,.12);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-calendar-day"></i>
-        </div>
-
-        <span>Mode Filter</span>
-        <strong>{{ mode_filter|default("Semua") }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ff7a18,#ff9f1c);--glow:rgba(255,138,0,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-headset"></i>
-        </div>
-
-        <span>Support Mode</span>
-        <strong>CS</strong>
-    </div>
-
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#06b6d4,#0284c7);--glow:rgba(6,182,212,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-filter"></i>
-        </div>
-
-        <span>Status Cek</span>
-        <strong>Ready</strong>
-    </div>
-</section>
-
-<section class="cs-panel">
-    <div class="cs-panel-head">
+<section class="cs-card" style="margin-bottom:14px;">
+    <div class="cs-card-head">
         <div>
             <h3>Filter Transaksi</h3>
-            <p>Cari transaksi berdasarkan keyword, status, dan rentang tanggal.</p>
+            <p>Filter transaksi berdasarkan member, nomor tujuan, produk, status, dan tanggal.</p>
         </div>
 
         <span class="cs-badge">
@@ -111,7 +45,7 @@
         </span>
     </div>
 
-    <div class="cs-panel-body">
+    <div class="cs-card-body">
         <form class="cs-filter" method="GET" action="/cs/transaksi">
             <div class="cs-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -119,7 +53,7 @@
                     type="text"
                     name="q"
                     value="{{ q|default('') }}"
-                    placeholder="Cari nama, email, nomor HP, nomor tujuan, jenis, atau SN..."
+                    placeholder="semua member / email / no tujuan / SN"
                 >
             </div>
 
@@ -138,23 +72,23 @@
             >
 
             <select class="cs-select" name="status">
-                <option value="">Semua Status</option>
-                <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option>
-                <option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option>
-                <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option>
+                <option value="">semua status</option>
+                <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>success</option>
+                <option value="Pending" {% if status == "Pending" %}selected{% endif %}>pending</option>
+                <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>failed</option>
             </select>
 
-            <button class="cs-filter-btn" type="submit">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                Cari
+            <button class="cs-btn primary" type="submit">
+                <i class="fa-solid fa-check"></i>
+                Terapkan
             </button>
 
-            <a class="cs-filter-btn" href="/cs/transaksi" style="background:linear-gradient(135deg,#64748b,#0f172a);">
+            <a class="cs-btn" href="/cs/transaksi">
                 Reset
             </a>
         </form>
 
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+        <div class="cs-filter-row">
             <a class="cs-badge" href="/cs/transaksi?range=hari_ini">
                 Hari Ini
             </a>
@@ -180,16 +114,16 @@
             </a>
 
             <a class="cs-badge green" href="/cs/transaksi?status=Berhasil">
-                Berhasil
+                Success
             </a>
 
             <a class="cs-badge red" href="/cs/transaksi?status=Gagal">
-                Gagal
+                Failed
             </a>
         </div>
 
         {% if q or tanggal_awal or tanggal_akhir or status %}
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+            <div class="cs-filter-row">
                 {% if q %}
                     <span class="cs-badge">
                         Keyword: {{ q }}
@@ -218,146 +152,101 @@
     </div>
 </section>
 
-<section class="cs-content-grid">
+<section class="cs-card">
+    <div class="cs-card-head">
+        <div>
+            <h3>Data Transaksi Member</h3>
+            <p>Semua kolom penting dibuat jelas untuk kebutuhan CS saat cek komplain member.</p>
+        </div>
 
-    <div class="cs-panel">
-        <div class="cs-panel-head">
-            <div>
-                <h3>Tips Cek Transaksi</h3>
-                <p>Gunakan pola ini supaya komplain user lebih cepat diselesaikan.</p>
-            </div>
-
-            <span class="cs-badge orange">
-                SOP
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <span class="cs-badge green">
+                {{ ringkasan.total|default(0) }} Data
             </span>
-        </div>
-
-        <div class="cs-panel-body">
-            <div class="cs-info-list">
-                <div class="cs-info-item">
-                    <span>Jika user bilang pulsa belum masuk</span>
-                    <strong>Cari nomor tujuan atau nomor HP user, lalu cek status dan SN transaksi.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Jika user bilang saldo berkurang</span>
-                    <strong>Cek riwayat transaksi hari ini dan cocokkan jumlah transaksi.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Jika transaksi pending</span>
-                    <strong>Balas user bahwa transaksi sedang dipantau dan minta tunggu proses.</strong>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="cs-panel">
-        <div class="cs-panel-head">
-            <div>
-                <h3>Quick Reply CS</h3>
-                <p>Template balasan cepat saat mengecek transaksi.</p>
-            </div>
 
             <span class="cs-badge dark">
-                Template
+                Per page 500
             </span>
         </div>
-
-        <div class="cs-panel-body">
-            <div class="cs-info-list">
-                <div class="cs-info-item">
-                    <span>Balasan 1</span>
-                    <strong>Halo kak, boleh kirim nomor tujuan transaksinya?</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Balasan 2</span>
-                    <strong>Mohon tunggu sebentar ya kak, sedang kami cek transaksinya.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Balasan 3</span>
-                    <strong>Transaksi sudah berhasil, silakan cek kembali layanan tujuan.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Balasan 4</span>
-                    <strong>Transaksi masih pending, kami bantu pantau sampai statusnya selesai.</strong>
-                </div>
-            </div>
-        </div>
     </div>
 
-</section>
-
-<section class="cs-panel">
-    <div class="cs-panel-head">
-        <div>
-            <h3>Data Transaksi</h3>
-            <p>Daftar transaksi sesuai filter yang dipilih oleh CS.</p>
-        </div>
-
-        <span class="cs-badge green">
-            <i class="fa-solid fa-database"></i>
-            {{ ringkasan.total|default(0) }} Data
-        </span>
-    </div>
-
-    <div class="cs-panel-body">
+    <div class="cs-table-wrap">
         {% if daftar_transaksi|default([]) %}
-            <div class="cs-table-wrap">
-                <table class="cs-table">
-                    <thead>
-                        <tr>
-                            <th>Waktu</th>
-                            <th>Member</th>
-                            <th>Email / HP</th>
-                            <th>Jenis</th>
-                            <th>Nomor Tujuan</th>
-                            <th>Jumlah</th>
-                            <th>Status</th>
-                            <th>SN</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
+            <table class="cs-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Waktu</th>
+                        <th>Member</th>
+                        <th>Ref ID</th>
+                        <th>Produk</th>
+                        <th>Tujuan</th>
+                        <th>Qty / Nominal</th>
+                        <th>Status</th>
+                        <th>Biaya</th>
+                        <th>Keterangan / SN</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-                    <tbody>
-                        {% for trx in daftar_transaksi|default([]) %}
+                <tbody>
+                    {% for trx in daftar_transaksi|default([]) %}
                         <tr>
                             <td>
-                                {{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}
+                                {{ loop.index }}
+                            </td>
+
+                            <td>
+                                {% if trx.waktu %}
+                                    {{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
 
                             <td>
                                 {% if trx.pengguna is defined and trx.pengguna %}
-                                    <strong>{{ trx.pengguna.nama_lengkap }}</strong>
-                                {% elif trx.nama_lengkap is defined %}
-                                    <strong>{{ trx.nama_lengkap }}</strong>
-                                {% elif trx.email is defined %}
+                                    <strong>{{ trx.pengguna.email }}</strong><br>
+                                    <small>
+                                        {{ trx.pengguna.nama_lengkap }}
+                                        ·
+                                        {{ trx.pengguna.nomor_hp }}
+                                    </small>
+                                {% elif trx.email is defined and trx.email %}
                                     <strong>{{ trx.email }}</strong>
                                 {% else %}
-                                    -
+                                    <span class="muted">-</span>
                                 {% endif %}
                             </td>
 
                             <td>
-                                {% if trx.pengguna is defined and trx.pengguna %}
-                                    {{ trx.pengguna.email }}<br>
-                                    <small>{{ trx.pengguna.nomor_hp }}</small>
-                                {% elif trx.email is defined %}
-                                    {{ trx.email }}
+                                {% if trx.id is defined %}
+                                    trx-{{ trx.id }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </td>
 
                             <td>
-                                {{ trx.jenis if trx.jenis is defined else (trx.nama_produk if trx.nama_produk is defined else "-") }}
+                                {% if trx.jenis is defined and trx.jenis %}
+                                    {{ trx.jenis }}
+                                {% elif trx.nama_produk is defined and trx.nama_produk %}
+                                    {{ trx.nama_produk }}
+                                {% elif trx.kode_produk is defined and trx.kode_produk %}
+                                    {{ trx.kode_produk }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
 
                             <td>
-                                {{ trx.nomor_tujuan if trx.nomor_tujuan is defined else (trx.tujuan if trx.tujuan is defined else "-") }}
+                                {% if trx.nomor_tujuan is defined and trx.nomor_tujuan %}
+                                    {{ trx.nomor_tujuan }}
+                                {% elif trx.tujuan is defined and trx.tujuan %}
+                                    {{ trx.tujuan }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
 
                             <td>
@@ -374,17 +263,17 @@
                                 {% if trx.status == "Berhasil" %}
                                     <span class="cs-status ok">
                                         <i class="fa-solid fa-check"></i>
-                                        Berhasil
+                                        success
                                     </span>
                                 {% elif trx.status == "Pending" %}
                                     <span class="cs-status wait">
                                         <i class="fa-solid fa-clock"></i>
-                                        Pending
+                                        pending
                                     </span>
                                 {% elif trx.status == "Gagal" %}
                                     <span class="cs-status bad">
                                         <i class="fa-solid fa-xmark"></i>
-                                        Gagal
+                                        failed
                                     </span>
                                 {% else %}
                                     <span class="cs-status info">
@@ -394,30 +283,45 @@
                             </td>
 
                             <td>
-                                {{ trx.sn or "-" }}
+                                {% if trx.harga_modal is defined and trx.harga_modal %}
+                                    {{ format_uang(trx.harga_modal or 0) }}
+                                {% elif trx.jumlah is defined %}
+                                    {{ format_uang(trx.jumlah or 0) }}
+                                {% elif trx.harga_jual is defined %}
+                                    {{ format_uang(trx.harga_jual or 0) }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+
+                            <td style="min-width:280px;">
+                                {% if trx.sn %}
+                                    {{ trx.sn }}
+                                {% else %}
+                                    <span class="muted">-</span>
+                                {% endif %}
                             </td>
 
                             <td>
                                 {% if trx.pengguna is defined and trx.pengguna %}
                                     <a class="cs-badge" href="/cs/member/{{ trx.pengguna.id }}">
-                                        Cek Member
+                                        Detail
                                     </a>
                                 {% elif trx.pengguna_id is defined and trx.pengguna_id %}
                                     <a class="cs-badge" href="/cs/member/{{ trx.pengguna_id }}">
-                                        Cek Member
+                                        Detail
                                     </a>
                                 {% else %}
                                     <span class="cs-badge dark">-</span>
                                 {% endif %}
                             </td>
                         </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <div class="cs-empty">
-                Tidak ada transaksi yang cocok dengan filter tersebut.
+            <div class="cs-empty" style="margin:14px;">
+                Tidak ada transaksi yang cocok dengan filter ini.
             </div>
         {% endif %}
     </div>

@@ -1,213 +1,21 @@
 {% extends "cs_base.html" %}
 
 {% block title %}Detail Live Chat - SenjaData{% endblock %}
-{% block subtitle %}Percakapan user, detail member, transaksi, dan mutasi saldo{% endblock %}
-{% block heading %}Detail Live Chat{% endblock %}
-
-{% block extra_style %}
-<style>
-    .cs-member-mini{
-        display:flex;
-        align-items:center;
-        gap:12px;
-        padding:14px;
-        border-radius:22px;
-        background:#f8fafc;
-        border:1px solid #edf2f7;
-        margin-bottom:14px;
-    }
-
-    .cs-member-avatar{
-        width:54px;
-        height:54px;
-        border-radius:20px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#fff;
-        background:linear-gradient(135deg,#0575e6,#00c6ff);
-        font-weight:950;
-        font-size:20px;
-        flex:0 0 auto;
-    }
-
-    .cs-member-mini strong{
-        display:block;
-        color:#0f172a;
-        font-size:15px;
-        font-weight:950;
-        line-height:1.2;
-    }
-
-    .cs-member-mini span{
-        display:block;
-        margin-top:3px;
-        color:#64748b;
-        font-size:12px;
-        font-weight:750;
-        word-break:break-word;
-    }
-
-    .cs-quick-note{
-        display:grid;
-        gap:10px;
-    }
-
-    .cs-note-form{
-        display:grid;
-        gap:10px;
-    }
-
-    .cs-note-save{
-        min-height:46px;
-        border:0;
-        border-radius:17px;
-        color:#fff;
-        background:linear-gradient(135deg,#ff7a18,#ff9f1c);
-        font-size:14px;
-        font-weight:950;
-        box-shadow:0 12px 24px rgba(255,122,24,.18);
-    }
-
-    .cs-side-scroll{
-        max-height:calc(100vh - 220px);
-        overflow-y:auto;
-        padding-right:4px;
-    }
-
-    .cs-side-scroll::-webkit-scrollbar{
-        width:6px;
-    }
-
-    .cs-side-scroll::-webkit-scrollbar-thumb{
-        background:#cbd5e1;
-        border-radius:999px;
-    }
-
-    .cs-trx-mini{
-        display:grid;
-        gap:10px;
-    }
-
-    .cs-trx-item{
-        padding:12px;
-        border-radius:18px;
-        background:#f8fafc;
-        border:1px solid #edf2f7;
-    }
-
-    .cs-trx-top{
-        display:flex;
-        align-items:flex-start;
-        justify-content:space-between;
-        gap:10px;
-        margin-bottom:7px;
-    }
-
-    .cs-trx-top strong{
-        color:#0f172a;
-        font-size:13px;
-        line-height:1.3;
-        font-weight:950;
-    }
-
-    .cs-trx-item span{
-        display:block;
-        color:#64748b;
-        font-size:12px;
-        line-height:1.45;
-        font-weight:700;
-        word-break:break-word;
-    }
-
-    .cs-trx-item b{
-        color:#0f172a;
-        font-weight:950;
-    }
-
-    .cs-close-chat-btn{
-        width:100%;
-        min-height:46px;
-        border:0;
-        border-radius:17px;
-        color:#fff;
-        background:linear-gradient(135deg,#ef4444,#f97316);
-        font-size:14px;
-        font-weight:950;
-        box-shadow:0 12px 24px rgba(239,68,68,.16);
-    }
-
-    .cs-open-chat-btn{
-        width:100%;
-        min-height:46px;
-        border:0;
-        border-radius:17px;
-        color:#fff;
-        background:linear-gradient(135deg,#10b981,#059669);
-        font-size:14px;
-        font-weight:950;
-        box-shadow:0 12px 24px rgba(16,185,129,.16);
-    }
-
-    .cs-detail-filter{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-        margin-bottom:10px;
-    }
-
-    .cs-detail-filter .cs-input,
-    .cs-detail-filter .cs-select{
-        min-height:44px;
-        border-radius:15px;
-        font-size:13px;
-    }
-
-    .cs-detail-filter button{
-        grid-column:1 / -1;
-        min-height:44px;
-        border:0;
-        border-radius:15px;
-        color:#fff;
-        background:linear-gradient(135deg,#0575e6,#00c6ff);
-        font-size:13px;
-        font-weight:950;
-    }
-
-    @media(max-width:1180px){
-        .cs-side-scroll{
-            max-height:none;
-        }
-    }
-</style>
-{% endblock %}
+{% block heading %}Live Chat Detail{% endblock %}
+{% block subtitle %}Member di kiri, percakapan di kanan, detail transaksi member langsung tersedia.{% endblock %}
 
 {% block content %}
 
-<section class="cs-hero">
-    <div class="cs-hero-content">
-        <div class="cs-hero-badge">
-            <i class="fa-solid fa-comment-dots"></i>
-            Live Chat Detail
-        </div>
+<section class="cs-live-shell">
 
-        <h2>Baca chat, balas user, dan cek transaksi member dari satu halaman.</h2>
-
-        <p>
-            Halaman ini membantu CS melihat percakapan, profil member, transaksi terakhir,
-            mutasi saldo, dan catatan internal supaya support lebih cepat dan rapi.
-        </p>
-    </div>
-</section>
-
-<section class="cs-chat-layout">
-
-    <!-- KOLOM KIRI: DAFTAR CHAT -->
-    <aside class="cs-panel">
-        <div class="cs-panel-head">
+    <!-- =====================================================
+         KIRI: DAFTAR MEMBER / CHAT
+    ====================================================== -->
+    <aside class="cs-card cs-member-pane">
+        <div class="cs-card-head">
             <div>
-                <h3>Chat Masuk</h3>
-                <p>Daftar chat terbaru.</p>
+                <h3>Member / Chat</h3>
+                <p>Daftar chat terbaru dari user.</p>
             </div>
 
             <a class="cs-badge" href="/cs/live-chat">
@@ -215,41 +23,59 @@
             </a>
         </div>
 
-        <div class="cs-panel-body">
+        <div class="cs-member-list">
             {% if daftar_chat|default([]) %}
-                <div class="cs-chat-list">
-                    {% for item_chat in daftar_chat|default([]) %}
-                        <a class="cs-chat-item {% if chat and item_chat.id == chat.id %}active{% endif %}" href="/cs/live-chat/{{ item_chat.id }}">
-                            <div class="cs-chat-avatar">
-                                {{ (item_chat.nama or "U")[:1].upper() }}
+                {% for item_chat in daftar_chat|default([]) %}
+                    <a class="cs-chat-user-item {% if chat and item_chat.id == chat.id %}active{% endif %}" href="/cs/live-chat/{{ item_chat.id }}">
+                        <div class="cs-avatar">
+                            {{ (item_chat.nama or "U")[:1].upper() }}
+                        </div>
+
+                        <div class="cs-user-meta">
+                            <strong>
+                                {{ item_chat.nama or "Pengguna SenjaData" }}
+                            </strong>
+
+                            <span>
+                                {{ item_chat.last_message or "Belum ada pesan terakhir." }}
+                            </span>
+
+                            <span>
+                                {% if item_chat.nomor_hp %}
+                                    {{ item_chat.nomor_hp }}
+                                {% elif item_chat.email %}
+                                    {{ item_chat.email }}
+                                {% else %}
+                                    {{ item_chat.kode_chat }}
+                                {% endif %}
+                            </span>
+
+                            <em>
+                                {% if format_waktu_chat is defined %}
+                                    {{ format_waktu_chat(item_chat.diperbarui_pada) }}
+                                {% elif item_chat.diperbarui_pada %}
+                                    {{ item_chat.diperbarui_pada.strftime("%d/%m/%Y, %H:%M:%S") }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </em>
+
+                            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;">
+                                {% if item_chat.status == "open" %}
+                                    <span class="cs-status ok">open</span>
+                                {% else %}
+                                    <span class="cs-status info">closed</span>
+                                {% endif %}
                             </div>
+                        </div>
 
-                            <div class="cs-chat-info">
-                                <strong>{{ item_chat.nama or "Pengguna SenjaData" }}</strong>
-
-                                <span>
-                                    {{ item_chat.last_message or "Belum ada pesan terakhir." }}
-                                </span>
-
-                                <em class="cs-chat-time">
-                                    {% if format_waktu_chat is defined %}
-                                        {{ format_waktu_chat(item_chat.diperbarui_pada) }}
-                                    {% elif item_chat.diperbarui_pada %}
-                                        {{ item_chat.diperbarui_pada.strftime("%d/%m/%Y %H:%M") }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </em>
+                        {% if item_chat.unread_admin and item_chat.unread_admin > 0 %}
+                            <div class="cs-unread">
+                                {{ item_chat.unread_admin }}
                             </div>
-
-                            {% if item_chat.unread_admin and item_chat.unread_admin > 0 %}
-                                <div class="cs-unread">
-                                    {{ item_chat.unread_admin }}
-                                </div>
-                            {% endif %}
-                        </a>
-                    {% endfor %}
-                </div>
+                        {% endif %}
+                    </a>
+                {% endfor %}
             {% else %}
                 <div class="cs-empty">
                     Belum ada daftar chat lain.
@@ -258,11 +84,15 @@
         </div>
     </aside>
 
-    <!-- KOLOM TENGAH: ROOM CHAT -->
-    <section class="cs-chat-room">
+    <!-- =====================================================
+         KANAN: ROOM CHAT
+    ====================================================== -->
+    <section class="cs-card cs-chat-pane">
+
+        <!-- HEADER CHAT -->
         <div class="cs-chat-head">
-            <div class="cs-chat-user">
-                <div class="cs-chat-avatar">
+            <div class="cs-chat-person">
+                <div class="cs-avatar">
                     {{ (chat.nama or "U")[:1].upper() }}
                 </div>
 
@@ -272,397 +102,366 @@
                         {{ chat.nomor_hp or "-" }}
                         ·
                         {{ chat.email or "-" }}
+                        ·
+                        {{ chat.kode_chat }}
                     </p>
                 </div>
             </div>
 
-            {% if chat.status == "open" %}
-                <span class="cs-status ok">
-                    <i class="fa-solid fa-circle"></i>
-                    Open
-                </span>
-            {% else %}
-                <span class="cs-status info">
-                    <i class="fa-solid fa-lock"></i>
-                    Closed
-                </span>
-            {% endif %}
-        </div>
+            <div class="cs-chat-actions">
+                {% if chat.status == "open" %}
+                    <span class="cs-status ok">
+                        <i class="fa-solid fa-circle"></i>
+                        open
+                    </span>
 
-        <div class="cs-messages" id="csMessagesBox">
-            {% if pesan_chat|default([]) %}
-                {% for pesan in pesan_chat|default([]) %}
-                    <div class="cs-msg-row {% if pesan.pengirim == 'admin' %}admin{% else %}user{% endif %}">
-                        <div class="cs-msg">
-                            <small>
-                                {% if pesan.pengirim == "admin" %}
-                                    CS SenjaData
-                                {% else %}
-                                    {{ chat.nama or "User" }}
-                                {% endif %}
-                            </small>
-
-                            <p>{{ pesan.pesan }}</p>
-
-                            <time>
-                                {% if format_waktu_chat is defined %}
-                                    {{ format_waktu_chat(pesan.waktu) }}
-                                {% elif pesan.waktu %}
-                                    {{ pesan.waktu.strftime("%d/%m/%Y %H:%M") }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </time>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="cs-empty">
-                    Belum ada pesan dalam percakapan ini.
-                </div>
-            {% endif %}
-        </div>
-
-        {% if chat.status == "open" %}
-            <div class="cs-reply-box">
-                <div class="cs-quick-replies">
-                    <button type="button" class="cs-quick-btn" data-reply="Halo kak, bisa dibantu. Boleh kirim nomor tujuan transaksinya?">
-                        Minta nomor tujuan
-                    </button>
-
-                    <button type="button" class="cs-quick-btn" data-reply="Mohon tunggu sebentar ya kak, sedang kami cek transaksinya.">
-                        Sedang dicek
-                    </button>
-
-                    <button type="button" class="cs-quick-btn" data-reply="Transaksi kakak sudah berhasil. Silakan cek kembali aplikasi atau saldo tujuan.">
-                        Transaksi berhasil
-                    </button>
-
-                    <button type="button" class="cs-quick-btn" data-reply="Transaksi masih pending ya kak, kami bantu pantau sampai statusnya selesai.">
-                        Pending
-                    </button>
-
-                    <button type="button" class="cs-quick-btn" data-reply="Silakan logout lalu login kembali untuk refresh saldo dan riwayat transaksi.">
-                        Refresh akun
-                    </button>
-                </div>
-
-                <form class="cs-reply-form" method="POST" action="/cs/live-chat/{{ chat.id }}/balas">
-                    <textarea id="csReplyInput" name="pesan" placeholder="Tulis balasan CS di sini..." required></textarea>
-
-                    <button type="submit" aria-label="Kirim balasan">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        {% else %}
-            <div class="cs-reply-box">
-                <div class="cs-empty">
-                    Chat ini sudah ditutup. CS tidak bisa mengirim balasan baru.
-                </div>
-            </div>
-        {% endif %}
-    </section>
-
-    <!-- KOLOM KANAN: MEMBER + TRANSAKSI + NOTE -->
-    <aside class="cs-side-scroll">
-
-        <!-- DETAIL MEMBER -->
-        <div class="cs-panel">
-            <div class="cs-panel-head">
-                <div>
-                    <h3>Detail Member</h3>
-                    <p>Data member yang cocok dari kontak chat.</p>
-                </div>
-
-                <span class="cs-badge green">
-                    Member
-                </span>
-            </div>
-
-            <div class="cs-panel-body">
-                {% if member %}
-                    <div class="cs-member-mini">
-                        <div class="cs-member-avatar">
-                            {{ (member.nama_lengkap or "M")[:1].upper() }}
-                        </div>
-
-                        <div>
-                            <strong>{{ member.nama_lengkap or "Tanpa Nama" }}</strong>
-                            <span>{{ member.email or "-" }}</span>
-                            <span>{{ member.nomor_hp or "-" }}</span>
-                        </div>
-                    </div>
-
-                    <div class="cs-info-list">
-                        <div class="cs-info-item">
-                            <span>Saldo Member</span>
-                            <strong>{{ format_uang(member.saldo or 0) }}</strong>
-                        </div>
-
-                        <div class="cs-info-item">
-                            <span>ID Member</span>
-                            <strong>#{{ member.id }}</strong>
-                        </div>
-
-                        <div class="cs-info-item">
-                            <span>Aksi</span>
-                            <strong>
-                                <a class="cs-badge" href="/cs/member/{{ member.id }}">
-                                    Cek Detail Member
-                                </a>
-                            </strong>
-                        </div>
-                    </div>
+                    <form method="POST" action="/cs/live-chat/{{ chat.id }}/tutup">
+                        <button class="cs-btn red" type="submit" onclick="return confirm('Tutup chat ini bro?')">
+                            <i class="fa-solid fa-lock"></i>
+                            Tutup
+                        </button>
+                    </form>
                 {% else %}
-                    <div class="cs-empty">
-                        Belum ditemukan member yang cocok dari nomor HP atau email chat ini.
-                    </div>
+                    <span class="cs-status info">
+                        <i class="fa-solid fa-lock"></i>
+                        closed
+                    </span>
+
+                    <form method="POST" action="/cs/live-chat/{{ chat.id }}/buka">
+                        <button class="cs-btn primary" type="submit">
+                            <i class="fa-solid fa-lock-open"></i>
+                            Buka
+                        </button>
+                    </form>
                 {% endif %}
             </div>
         </div>
 
-        <!-- FILTER TRANSAKSI MEMBER -->
-        <div class="cs-panel">
-            <div class="cs-panel-head">
-                <div>
-                    <h3>Cek Transaksi</h3>
-                    <p>Filter transaksi member berdasarkan tanggal dan status.</p>
+        <!-- BODY CHAT: PESAN + DETAIL MEMBER -->
+        <div class="cs-chat-body">
+
+            <!-- TENGAH: ISI PERCAKAPAN -->
+            <div class="cs-message-area">
+                <div class="cs-chat-messages" id="csMessagesBox">
+                    {% if pesan_chat|default([]) %}
+                        {% for pesan in pesan_chat|default([]) %}
+                            <div class="cs-msg-row {% if pesan.pengirim == 'admin' %}admin{% else %}user{% endif %}">
+                                <div class="cs-msg">
+                                    <small>
+                                        {% if pesan.pengirim == "admin" %}
+                                            CS SenjaData
+                                        {% else %}
+                                            {{ chat.nama or "User" }}
+                                        {% endif %}
+                                    </small>
+
+                                    <p>{{ pesan.pesan }}</p>
+
+                                    <time>
+                                        {% if format_waktu_chat is defined %}
+                                            {{ format_waktu_chat(pesan.waktu) }}
+                                        {% elif pesan.waktu %}
+                                            {{ pesan.waktu.strftime("%d/%m/%Y, %H:%M:%S") }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </time>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="cs-empty">
+                            Belum ada pesan dalam percakapan ini.
+                        </div>
+                    {% endif %}
                 </div>
 
-                <span class="cs-badge orange">
-                    TRX
-                </span>
+                <!-- BALASAN CS -->
+                <div class="cs-reply">
+                    {% if chat.status == "open" %}
+                        <div class="cs-quick">
+                            <button type="button" data-reply="Halo kak, bisa dibantu. Boleh kirim nomor tujuan transaksinya?">
+                                Minta nomor
+                            </button>
+
+                            <button type="button" data-reply="Mohon tunggu sebentar ya kak, sedang kami cek transaksinya.">
+                                Sedang dicek
+                            </button>
+
+                            <button type="button" data-reply="Transaksi kakak sudah berhasil. Silakan cek kembali aplikasi atau layanan tujuan.">
+                                Berhasil
+                            </button>
+
+                            <button type="button" data-reply="Transaksi masih pending ya kak, kami bantu pantau sampai statusnya selesai.">
+                                Pending
+                            </button>
+
+                            <button type="button" data-reply="Silakan logout lalu login kembali untuk refresh saldo dan riwayat transaksi.">
+                                Refresh akun
+                            </button>
+                        </div>
+
+                        <form class="cs-reply-form" method="POST" action="/cs/live-chat/{{ chat.id }}/balas">
+                            <textarea id="csReplyInput" name="pesan" placeholder="Tulis balasan CS..." required></textarea>
+
+                            <button type="submit" aria-label="Kirim balasan">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="cs-empty" style="min-height:74px;">
+                            Chat ini sudah ditutup. Klik tombol buka jika ingin membalas lagi.
+                        </div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="cs-panel-body">
-                <form class="cs-detail-filter" method="GET" action="/cs/live-chat/{{ chat.id }}">
-                    <input
-                        class="cs-input"
-                        type="date"
-                        name="tanggal_awal"
-                        value="{{ tanggal_awal|default('') }}"
-                    >
+            <!-- KANAN DALAM ROOM: DETAIL MEMBER / TRANSAKSI -->
+            <aside class="cs-side-detail">
 
-                    <input
-                        class="cs-input"
-                        type="date"
-                        name="tanggal_akhir"
-                        value="{{ tanggal_akhir|default('') }}"
-                    >
+                <!-- DETAIL MEMBER -->
+                <div class="cs-side-block">
+                    <h4>
+                        <i class="fa-solid fa-user"></i>
+                        Detail Member
+                    </h4>
 
-                    <select class="cs-select" name="status_trx">
-                        <option value="">Semua Status</option>
-                        <option value="Berhasil" {% if status_trx == "Berhasil" %}selected{% endif %}>Berhasil</option>
-                        <option value="Pending" {% if status_trx == "Pending" %}selected{% endif %}>Pending</option>
-                        <option value="Gagal" {% if status_trx == "Gagal" %}selected{% endif %}>Gagal</option>
-                    </select>
+                    {% if member %}
+                        <div class="cs-info-list">
+                            <div class="cs-info-item">
+                                <span>Nama Member</span>
+                                <strong>{{ member.nama_lengkap or "-" }}</strong>
+                            </div>
 
-                    <input
-                        class="cs-input"
-                        type="text"
-                        name="q_trx"
-                        value="{{ q_trx|default('') }}"
-                        placeholder="Cari nomor / jenis"
-                    >
+                            <div class="cs-info-item">
+                                <span>Email</span>
+                                <strong>{{ member.email or "-" }}</strong>
+                            </div>
 
-                    <button type="submit">
+                            <div class="cs-info-item">
+                                <span>Nomor HP</span>
+                                <strong>{{ member.nomor_hp or "-" }}</strong>
+                            </div>
+
+                            <div class="cs-info-item">
+                                <span>Saldo</span>
+                                <strong>{{ format_uang(member.saldo or 0) }}</strong>
+                            </div>
+
+                            <a class="cs-btn primary" href="/cs/member/{{ member.id }}" style="width:100%;">
+                                <i class="fa-solid fa-user-check"></i>
+                                Cek Detail Member
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="cs-empty" style="min-height:95px;">
+                            Member belum cocok dari nomor HP atau email chat ini.
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- FILTER TRANSAKSI MEMBER -->
+                <div class="cs-side-block">
+                    <h4>
                         <i class="fa-solid fa-filter"></i>
-                        Terapkan Filter
-                    </button>
-                </form>
+                        Filter TRX Member
+                    </h4>
 
-                {% if member %}
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <form method="GET" action="/cs/live-chat/{{ chat.id }}" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <input
+                            class="cs-input"
+                            type="date"
+                            name="tanggal_awal"
+                            value="{{ tanggal_awal|default('') }}"
+                        >
+
+                        <input
+                            class="cs-input"
+                            type="date"
+                            name="tanggal_akhir"
+                            value="{{ tanggal_akhir|default('') }}"
+                        >
+
+                        <select class="cs-select" name="status_trx">
+                            <option value="">Semua</option>
+                            <option value="Berhasil" {% if status_trx == "Berhasil" %}selected{% endif %}>success</option>
+                            <option value="Pending" {% if status_trx == "Pending" %}selected{% endif %}>pending</option>
+                            <option value="Gagal" {% if status_trx == "Gagal" %}selected{% endif %}>failed</option>
+                        </select>
+
+                        <input
+                            class="cs-input"
+                            type="text"
+                            name="q_trx"
+                            value="{{ q_trx|default('') }}"
+                            placeholder="Nomor / jenis / SN"
+                        >
+
+                        <button class="cs-btn primary" type="submit" style="grid-column:1/-1;">
+                            <i class="fa-solid fa-check"></i>
+                            Terapkan Filter
+                        </button>
+                    </form>
+
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
                         <a class="cs-badge" href="/cs/live-chat/{{ chat.id }}?range=hari_ini">
                             Hari ini
                         </a>
 
                         <a class="cs-badge" href="/cs/live-chat/{{ chat.id }}?range=7_hari">
-                            7 Hari
+                            7 hari
                         </a>
 
                         <a class="cs-badge" href="/cs/live-chat/{{ chat.id }}?range=30_hari">
-                            30 Hari
+                            30 hari
                         </a>
 
                         <a class="cs-badge" href="/cs/live-chat/{{ chat.id }}?range=bulan_ini">
                             Bulan ini
                         </a>
                     </div>
-                {% endif %}
+                </div>
 
-                {% if transaksi_member|default([]) %}
-                    <div class="cs-trx-mini">
-                        {% for trx in transaksi_member|default([]) %}
-                            <div class="cs-trx-item">
-                                <div class="cs-trx-top">
+                <!-- TRANSAKSI TERAKHIR -->
+                <div class="cs-side-block">
+                    <h4>
+                        <i class="fa-solid fa-receipt"></i>
+                        Transaksi Terakhir
+                    </h4>
+
+                    {% if transaksi_member|default([]) %}
+                        <div class="cs-mini-trx">
+                            {% for trx in transaksi_member|default([]) %}
+                                <div class="cs-mini-trx-item">
                                     <strong>
-                                        {{ trx.jenis if trx.jenis is defined else (trx.nama_produk if trx.nama_produk is defined else "Transaksi") }}
+                                        {% if trx.jenis is defined and trx.jenis %}
+                                            {{ trx.jenis }}
+                                        {% elif trx.nama_produk is defined and trx.nama_produk %}
+                                            {{ trx.nama_produk }}
+                                        {% else %}
+                                            Transaksi
+                                        {% endif %}
+                                        ·
+                                        {% if trx.jumlah is defined %}
+                                            {{ format_uang(trx.jumlah or 0) }}
+                                        {% elif trx.harga_jual is defined %}
+                                            {{ format_uang(trx.harga_jual or 0) }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
                                     </strong>
 
-                                    {% if trx.status == "Berhasil" %}
-                                        <span class="cs-status ok">Berhasil</span>
-                                    {% elif trx.status == "Pending" %}
-                                        <span class="cs-status wait">Pending</span>
-                                    {% elif trx.status == "Gagal" %}
-                                        <span class="cs-status bad">Gagal</span>
-                                    {% else %}
-                                        <span class="cs-status info">{{ trx.status or "-" }}</span>
-                                    {% endif %}
+                                    <span>
+                                        Tujuan:
+                                        {% if trx.nomor_tujuan is defined and trx.nomor_tujuan %}
+                                            {{ trx.nomor_tujuan }}
+                                        {% elif trx.tujuan is defined and trx.tujuan %}
+                                            {{ trx.tujuan }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+
+                                    <span>
+                                        Waktu:
+                                        {% if trx.waktu %}
+                                            {{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+
+                                    <span>
+                                        Status:
+                                        {% if trx.status == "Berhasil" %}
+                                            <b style="color:#bbf7d0;">success</b>
+                                        {% elif trx.status == "Pending" %}
+                                            <b style="color:#ffe0a8;">pending</b>
+                                        {% elif trx.status == "Gagal" %}
+                                            <b style="color:#ffdce1;">failed</b>
+                                        {% else %}
+                                            <b>{{ trx.status or "-" }}</b>
+                                        {% endif %}
+                                    </span>
+
+                                    <span>
+                                        SN:
+                                        {{ trx.sn or "-" }}
+                                    </span>
                                 </div>
-
-                                <span>
-                                    <b>Tanggal:</b>
-                                    {{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}
-                                </span>
-
-                                <span>
-                                    <b>Nomor:</b>
-                                    {{ trx.nomor_tujuan if trx.nomor_tujuan is defined else (trx.tujuan if trx.tujuan is defined else "-") }}
-                                </span>
-
-                                <span>
-                                    <b>Jumlah:</b>
-                                    {% if trx.jumlah is defined %}
-                                        {{ format_uang(trx.jumlah or 0) }}
-                                    {% elif trx.harga_jual is defined %}
-                                        {{ format_uang(trx.harga_jual or 0) }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </span>
-
-                                <span>
-                                    <b>SN:</b>
-                                    {{ trx.sn or "-" }}
-                                </span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="cs-empty">
-                        Belum ada transaksi yang cocok dengan filter ini.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- MUTASI SALDO -->
-        <div class="cs-panel">
-            <div class="cs-panel-head">
-                <div>
-                    <h3>Mutasi Saldo</h3>
-                    <p>Riwayat saldo member terkait chat.</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="cs-empty" style="min-height:95px;">
+                            Belum ada transaksi yang cocok.
+                        </div>
+                    {% endif %}
                 </div>
 
-                <span class="cs-badge">
-                    Saldo
-                </span>
-            </div>
+                <!-- MUTASI SALDO -->
+                <div class="cs-side-block">
+                    <h4>
+                        <i class="fa-solid fa-wallet"></i>
+                        Mutasi Saldo
+                    </h4>
 
-            <div class="cs-panel-body">
-                {% if mutasi_member|default([]) %}
-                    <div class="cs-trx-mini">
-                        {% for mutasi in mutasi_member|default([]) %}
-                            <div class="cs-trx-item">
-                                <div class="cs-trx-top">
-                                    <strong>{{ mutasi.jenis or "-" }}</strong>
+                    {% if mutasi_member|default([]) %}
+                        <div class="cs-mini-trx">
+                            {% for mutasi in mutasi_member|default([]) %}
+                                <div class="cs-mini-trx-item">
+                                    <strong>
+                                        {{ mutasi.jenis or "-" }}
+                                        ·
+                                        {{ format_uang(mutasi.nominal or 0) }}
+                                    </strong>
 
-                                    {% if mutasi.jenis == "Masuk" %}
-                                        <span class="cs-status ok">Masuk</span>
-                                    {% else %}
-                                        <span class="cs-status wait">{{ mutasi.jenis or "-" }}</span>
-                                    {% endif %}
+                                    <span>
+                                        {{ mutasi.keterangan or "-" }}
+                                    </span>
+
+                                    <span>
+                                        {% if mutasi.waktu %}
+                                            {{ mutasi.waktu.strftime("%d/%m/%Y, %H:%M:%S") }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
                                 </div>
-
-                                <span>
-                                    <b>Tanggal:</b>
-                                    {{ mutasi.waktu.strftime("%d/%m/%Y %H:%M") if mutasi.waktu else "-" }}
-                                </span>
-
-                                <span>
-                                    <b>Nominal:</b>
-                                    {{ format_uang(mutasi.nominal or 0) }}
-                                </span>
-
-                                <span>
-                                    <b>Keterangan:</b>
-                                    {{ mutasi.keterangan or "-" }}
-                                </span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="cs-empty">
-                        Belum ada mutasi saldo member yang cocok.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- CATATAN INTERNAL -->
-        <div class="cs-panel">
-            <div class="cs-panel-head">
-                <div>
-                    <h3>Catatan Internal</h3>
-                    <p>Catatan CS, tidak terlihat oleh user.</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="cs-empty" style="min-height:95px;">
+                            Belum ada mutasi saldo.
+                        </div>
+                    {% endif %}
                 </div>
 
-                <span class="cs-badge dark">
-                    Private
-                </span>
-            </div>
+                <!-- CATATAN INTERNAL -->
+                <div class="cs-side-block">
+                    <h4>
+                        <i class="fa-solid fa-note-sticky"></i>
+                        Catatan Internal
+                    </h4>
 
-            <div class="cs-panel-body">
-                <form class="cs-note-form" method="POST" action="/cs/live-chat/{{ chat.id }}/catatan">
-                    <textarea
-                        class="cs-note-box"
-                        name="catatan"
-                        placeholder="Contoh: User komplain pulsa belum masuk. Sudah dicek status pending, follow up 10 menit."
-                    >{{ chat.catatan_internal if chat.catatan_internal is defined and chat.catatan_internal else '' }}</textarea>
+                    <form method="POST" action="/cs/live-chat/{{ chat.id }}/catatan" style="display:grid;gap:8px;">
+                        <textarea
+                            class="cs-input"
+                            name="catatan"
+                            style="height:115px;padding-top:10px;resize:vertical;"
+                            placeholder="Catatan CS, tidak tampil ke user..."
+                        >{{ chat.catatan_internal if chat.catatan_internal is defined and chat.catatan_internal else '' }}</textarea>
 
-                    <button class="cs-note-save" type="submit">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        Simpan Catatan
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <!-- AKSI CHAT -->
-        <div class="cs-panel">
-            <div class="cs-panel-head">
-                <div>
-                    <h3>Aksi Chat</h3>
-                    <p>Kelola status percakapan user.</p>
-                </div>
-
-                <span class="cs-badge red">
-                    Action
-                </span>
-            </div>
-
-            <div class="cs-panel-body">
-                {% if chat.status == "open" %}
-                    <form method="POST" action="/cs/live-chat/{{ chat.id }}/tutup">
-                        <button class="cs-close-chat-btn" type="submit" onclick="return confirm('Tutup chat ini?')">
-                            <i class="fa-solid fa-lock"></i>
-                            Tutup Chat
+                        <button class="cs-btn orange" type="submit">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Simpan Catatan
                         </button>
                     </form>
-                {% else %}
-                    <form method="POST" action="/cs/live-chat/{{ chat.id }}/buka">
-                        <button class="cs-open-chat-btn" type="submit">
-                            <i class="fa-solid fa-lock-open"></i>
-                            Buka Lagi Chat
-                        </button>
-                    </form>
-                {% endif %}
-            </div>
-        </div>
+                </div>
 
-    </aside>
+            </aside>
+
+        </div>
+    </section>
 
 </section>
 
@@ -670,19 +469,18 @@
 
 {% block extra_script %}
 <script>
-    const csMessagesBox = document.getElementById("csMessagesBox");
+    const box = document.getElementById("csMessagesBox");
 
-    if(csMessagesBox){
-        csMessagesBox.scrollTop = csMessagesBox.scrollHeight;
+    if(box){
+        box.scrollTop = box.scrollHeight;
     }
 
-    document.querySelectorAll(".cs-quick-btn").forEach(function(button){
-        button.addEventListener("click", function(){
-            const reply = this.getAttribute("data-reply") || "";
+    document.querySelectorAll(".cs-quick button").forEach(function(btn){
+        btn.addEventListener("click", function(){
             const input = document.getElementById("csReplyInput");
 
             if(input){
-                input.value = reply;
+                input.value = this.getAttribute("data-reply") || "";
                 input.focus();
             }
         });

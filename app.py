@@ -557,7 +557,7 @@ def format_waktu_chat(waktu):
         return "-"
 
     try:
-        return waktu.strftime("%d/%m/%Y %H:%M")
+        return waktu.strftime("%d/%m/%Y, %H:%M:%S")
     except Exception:
         return "-"
 
@@ -593,8 +593,10 @@ def parse_tanggal(nilai, akhir_hari=False):
 
     try:
         tanggal = datetime.strptime(nilai, "%Y-%m-%d")
+
         if akhir_hari:
             tanggal = tanggal.replace(hour=23, minute=59, second=59)
+
         return tanggal
     except Exception:
         return None
@@ -608,7 +610,9 @@ def rentang_dari_request():
     hari_ini = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
 
     if range_key == "hari_ini":
-        return hari_ini, hari_ini + timedelta(days=1) - timedelta(seconds=1), "Hari Ini"
+        awal = hari_ini
+        akhir = hari_ini + timedelta(days=1) - timedelta(seconds=1)
+        return awal, akhir, "Hari Ini"
 
     if range_key == "kemarin":
         awal = hari_ini - timedelta(days=1)
@@ -616,14 +620,19 @@ def rentang_dari_request():
         return awal, akhir, "Kemarin"
 
     if range_key == "7_hari":
-        return hari_ini - timedelta(days=7), datetime.utcnow(), "7 Hari"
+        awal = hari_ini - timedelta(days=7)
+        akhir = datetime.utcnow()
+        return awal, akhir, "7 Hari"
 
     if range_key == "30_hari":
-        return hari_ini - timedelta(days=30), datetime.utcnow(), "30 Hari"
+        awal = hari_ini - timedelta(days=30)
+        akhir = datetime.utcnow()
+        return awal, akhir, "30 Hari"
 
     if range_key == "bulan_ini":
         awal = hari_ini.replace(day=1)
-        return awal, datetime.utcnow(), "Bulan Ini"
+        akhir = datetime.utcnow()
+        return awal, akhir, "Bulan Ini"
 
     awal = parse_tanggal(tanggal_awal)
     akhir = parse_tanggal(tanggal_akhir, akhir_hari=True)
@@ -635,6 +644,9 @@ def rentang_dari_request():
 
 
 def filter_transaksi_query(query, q="", status="", tanggal_awal_obj=None, tanggal_akhir_obj=None):
+    q = (q or "").strip()
+    status = (status or "").strip()
+
     if status:
         query = query.filter(Transaksi.status == status)
 
@@ -670,6 +682,7 @@ def filter_transaksi_query(query, q="", status="", tanggal_awal_obj=None, tangga
 
         if hasattr(Transaksi, "pengguna_id"):
             query = query.outerjoin(Pengguna, Transaksi.pengguna_id == Pengguna.id)
+
             kondisi.extend([
                 Pengguna.nama_lengkap.ilike(f"%{q}%"),
                 Pengguna.email.ilike(f"%{q}%"),
@@ -775,6 +788,7 @@ def cs_login():
         if username.lower() == str(CS_PANEL_USERNAME).lower() and password == str(CS_PANEL_PASSWORD):
             session["cs_login"] = True
             session["cs_username"] = username or "CS SenjaData"
+
             flash("✅ Berhasil masuk ke Live Chat Panel.", "success")
             return redirect(url_for("cs_dashboard"))
 
@@ -857,7 +871,9 @@ def cs_live_chat():
     if status:
         query = query.filter_by(status=status)
 
-    daftar_chat = query.order_by(ChatSession.diperbarui_pada.desc()).limit(200).all()
+    daftar_chat = query.order_by(
+        ChatSession.diperbarui_pada.desc()
+    ).limit(200).all()
 
     semua_chat = ChatSession.query.all()
 
@@ -921,6 +937,8 @@ def cs_live_chat_detail(chat_id):
 
     mutasi_member = ambil_mutasi_member(member, limit=10)
 
+    # Catatan internal aman tanpa migrasi database.
+    # Kalau nanti model ChatSession punya kolom catatan_internal, otomatis bisa dipakai.
     setattr(chat, "catatan_internal", session.get(f"catatan_chat_{chat.id}", ""))
 
     return render_template(
@@ -1081,7 +1099,10 @@ def cs_transaksi():
         tanggal_akhir_obj=tanggal_akhir_obj
     )
 
-    daftar_transaksi = query.order_by(Transaksi.waktu.desc()).limit(500).all()
+    daftar_transaksi = query.order_by(
+        Transaksi.waktu.desc()
+    ).limit(500).all()
+
     ringkasan = ringkasan_transaksi(daftar_transaksi)
 
     return render_template(
@@ -1154,6 +1175,7 @@ def api_chat_start():
     if kode_chat:
         chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
 
+    # Kalau chat lama sudah ditutup, user akan dibuatkan sesi baru.
     if chat and chat.status == "closed":
         chat = None
 

@@ -1,228 +1,162 @@
 {% extends "cs_base.html" %}
 
 {% block title %}Live Chat CS - SenjaData{% endblock %}
-{% block subtitle %}Pantau semua percakapan user dari aplikasi SenjaData{% endblock %}
-{% block heading %}Live Chat Masuk{% endblock %}
+{% block heading %}Live Chat Member{% endblock %}
+{% block subtitle %}Member di samping kiri, ruang chat di sebelah kanan.{% endblock %}
 
 {% block content %}
 
-<section class="cs-hero">
-    <div class="cs-hero-content">
-        <div class="cs-hero-badge">
-            <i class="fa-solid fa-comments"></i>
-            Live Chat Queue
-        </div>
-
-        <h2>Semua pesan user masuk ke sini, CS tinggal pilih dan balas.</h2>
-
-        <p>
-            Halaman ini dipakai untuk memantau chat masuk, melihat status open/closed,
-            mencari user berdasarkan nama, kontak, kode chat, atau pesan terakhir.
-        </p>
-    </div>
-</section>
-
-<section class="cs-grid-stats">
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-comments"></i>
-        </div>
-
-        <span>Total Chat Tampil</span>
+<section class="cs-stats">
+    <div class="cs-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
+        <i class="fa-solid fa-comments"></i>
+        <span>Total Chat</span>
         <strong>{{ ringkasan.total|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-door-open"></i>
-        </div>
-
-        <span>Chat Open</span>
+    <div class="cs-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
+        <i class="fa-solid fa-door-open"></i>
+        <span>Open</span>
         <strong>{{ ringkasan.open|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#64748b,#0f172a);--glow:rgba(15,23,42,.12);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-lock"></i>
-        </div>
-
-        <span>Chat Closed</span>
+    <div class="cs-stat" style="--glow:rgba(148,163,184,.13);--icon:#94a3b8;">
+        <i class="fa-solid fa-lock"></i>
+        <span>Closed</span>
         <strong>{{ ringkasan.closed|default(0) }}</strong>
     </div>
 
-    <div class="cs-stat" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
-        <div class="cs-stat-icon">
-            <i class="fa-solid fa-bell"></i>
-        </div>
-
-        <span>Belum Dibaca</span>
+    <div class="cs-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
+        <i class="fa-solid fa-bell"></i>
+        <span>Unread</span>
         <strong>{{ ringkasan.unread|default(0) }}</strong>
     </div>
 </section>
 
-<section class="cs-content-grid">
-
-    <div class="cs-panel">
-        <div class="cs-panel-head">
-            <div>
-                <h3>Filter Chat</h3>
-                <p>Cari chat berdasarkan nama, kontak, kode chat, atau isi pesan terakhir.</p>
-            </div>
-
-            <span class="cs-badge">
-                <i class="fa-solid fa-filter"></i>
-                Filter
-            </span>
-        </div>
-
-        <div class="cs-panel-body">
-            <form class="cs-filter" method="GET" action="/cs/live-chat">
-                <div class="cs-search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input
-                        type="text"
-                        name="q"
-                        value="{{ q|default('') }}"
-                        placeholder="Cari nama, nomor HP, email, kode chat, atau pesan..."
-                    >
-                </div>
-
-                <select class="cs-select" name="status">
-                    <option value="">Semua Status</option>
-                    <option value="open" {% if status == "open" %}selected{% endif %}>Open</option>
-                    <option value="closed" {% if status == "closed" %}selected{% endif %}>Closed</option>
-                </select>
-
-                <button class="cs-filter-btn" type="submit">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Cari
-                </button>
-
-                <a class="cs-filter-btn" href="/cs/live-chat" style="background:linear-gradient(135deg,#64748b,#0f172a);">
-                    Reset
-                </a>
-            </form>
-
-            {% if q or status %}
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    {% if q %}
-                        <span class="cs-badge">
-                            Keyword: {{ q }}
-                        </span>
-                    {% endif %}
-
-                    {% if status %}
-                        <span class="cs-badge orange">
-                            Status: {{ status }}
-                        </span>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <div class="cs-panel">
-        <div class="cs-panel-head">
-            <div>
-                <h3>Panduan CS</h3>
-                <p>Alur cepat saat user menghubungi live chat.</p>
-            </div>
-
-            <span class="cs-badge orange">
-                SOP
-            </span>
-        </div>
-
-        <div class="cs-panel-body">
-            <div class="cs-info-list">
-                <div class="cs-info-item">
-                    <span>Langkah 1</span>
-                    <strong>Buka chat user, baca kendalanya sampai jelas.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Langkah 2</span>
-                    <strong>Cek nomor HP, email, atau transaksi user dari panel kanan.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Langkah 3</span>
-                    <strong>Gunakan quick reply supaya balasan lebih cepat dan rapi.</strong>
-                </div>
-
-                <div class="cs-info-item">
-                    <span>Langkah 4</span>
-                    <strong>Tutup chat kalau masalah user sudah selesai dibantu.</strong>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-
-<section class="cs-panel">
-    <div class="cs-panel-head">
+<section class="cs-card" style="margin-bottom:14px;">
+    <div class="cs-card-head">
         <div>
-            <h3>Daftar Chat Masuk</h3>
-            <p>Menampilkan chat terbaru berdasarkan update terakhir.</p>
+            <h3>Filter Live Chat</h3>
+            <p>Cari member berdasarkan nama, nomor HP, email, kode chat, atau pesan terakhir.</p>
         </div>
 
-        <span class="cs-badge green">
-            <i class="fa-solid fa-database"></i>
-            {{ ringkasan.total|default(0) }} Data
+        <span class="cs-badge">
+            <i class="fa-solid fa-filter"></i>
+            Filter
         </span>
     </div>
 
-    <div class="cs-panel-body">
-        {% if daftar_chat|default([]) %}
-            <div class="cs-chat-list" style="max-height:none;">
+    <div class="cs-card-body">
+        <form class="cs-filter" method="GET" action="/cs/live-chat" style="grid-template-columns:1fr 180px auto auto;">
+            <div class="cs-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ q|default('') }}"
+                    placeholder="Cari nama, email, nomor HP, kode chat, atau pesan..."
+                >
+            </div>
+
+            <select class="cs-select" name="status">
+                <option value="">semua status</option>
+                <option value="open" {% if status == "open" %}selected{% endif %}>open</option>
+                <option value="closed" {% if status == "closed" %}selected{% endif %}>closed</option>
+            </select>
+
+            <button class="cs-btn primary" type="submit">
+                <i class="fa-solid fa-check"></i>
+                Terapkan
+            </button>
+
+            <a class="cs-btn" href="/cs/live-chat">
+                Reset
+            </a>
+        </form>
+
+        {% if q or status %}
+            <div class="cs-filter-row">
+                {% if q %}
+                    <span class="cs-badge">
+                        Keyword: {{ q }}
+                    </span>
+                {% endif %}
+
+                {% if status %}
+                    <span class="cs-badge orange">
+                        Status: {{ status }}
+                    </span>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="cs-live-shell">
+
+    <!-- KIRI: DAFTAR MEMBER / CHAT -->
+    <aside class="cs-card cs-member-pane">
+        <div class="cs-card-head">
+            <div>
+                <h3>Member / Chat Masuk</h3>
+                <p>Klik member untuk membuka ruang percakapan.</p>
+            </div>
+
+            <span class="cs-badge green">
+                {{ ringkasan.total|default(0) }} Data
+            </span>
+        </div>
+
+        <div class="cs-member-list">
+            {% if daftar_chat|default([]) %}
                 {% for chat in daftar_chat|default([]) %}
-                    <a class="cs-chat-item" href="/cs/live-chat/{{ chat.id }}">
-                        <div class="cs-chat-avatar">
+                    <a class="cs-chat-user-item" href="/cs/live-chat/{{ chat.id }}">
+                        <div class="cs-avatar">
                             {{ (chat.nama or "U")[:1].upper() }}
                         </div>
 
-                        <div class="cs-chat-info">
-                            <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
+                        <div class="cs-user-meta">
+                            <strong>
+                                {{ chat.nama or "Pengguna SenjaData" }}
+                            </strong>
 
                             <span>
                                 {{ chat.last_message or "Belum ada pesan terakhir." }}
                             </span>
 
-                            <em class="cs-chat-time">
+                            <span>
+                                {% if chat.nomor_hp %}
+                                    {{ chat.nomor_hp }}
+                                {% elif chat.email %}
+                                    {{ chat.email }}
+                                {% else %}
+                                    {{ chat.kode_chat }}
+                                {% endif %}
+                            </span>
+
+                            <em>
                                 {% if format_waktu_chat is defined %}
                                     {{ format_waktu_chat(chat.diperbarui_pada) }}
                                 {% elif chat.diperbarui_pada %}
-                                    {{ chat.diperbarui_pada.strftime("%d/%m/%Y %H:%M") }}
+                                    {{ chat.diperbarui_pada.strftime("%d/%m/%Y, %H:%M:%S") }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </em>
 
-                            <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:8px;">
+                            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;">
                                 {% if chat.status == "open" %}
                                     <span class="cs-status ok">
-                                        <i class="fa-solid fa-circle"></i>
-                                        Open
+                                        open
                                     </span>
                                 {% else %}
                                     <span class="cs-status info">
-                                        <i class="fa-solid fa-lock"></i>
-                                        Closed
+                                        closed
                                     </span>
                                 {% endif %}
 
-                                {% if chat.nomor_hp %}
-                                    <span class="cs-badge">
-                                        <i class="fa-solid fa-phone"></i>
-                                        {{ chat.nomor_hp }}
-                                    </span>
-                                {% endif %}
-
-                                {% if chat.email %}
+                                {% if chat.kode_chat %}
                                     <span class="cs-badge dark">
-                                        <i class="fa-solid fa-envelope"></i>
-                                        {{ chat.email }}
+                                        {{ chat.kode_chat }}
                                     </span>
                                 {% endif %}
                             </div>
@@ -235,13 +169,125 @@
                         {% endif %}
                     </a>
                 {% endfor %}
+            {% else %}
+                <div class="cs-empty">
+                    Belum ada live chat masuk. Nanti saat user klik tombol bantuan di website, datanya muncul di sini.
+                </div>
+            {% endif %}
+        </div>
+    </aside>
+
+    <!-- KANAN: TEMPAT CHAT -->
+    <section class="cs-card cs-chat-pane">
+        <div class="cs-chat-head">
+            <div class="cs-chat-person">
+                <div class="cs-avatar">
+                    <i class="fa-solid fa-comment-dots"></i>
+                </div>
+
+                <div>
+                    <h3>Pilih Member / Chat</h3>
+                    <p>Ruang chat akan tampil di sini setelah CS memilih salah satu member di sebelah kiri.</p>
+                </div>
             </div>
-        {% else %}
-            <div class="cs-empty">
-                Belum ada chat masuk. Nanti kalau user klik “Butuh Bantuan? Chat dengan kami”, pesannya akan muncul di sini.
+
+            <div class="cs-chat-actions">
+                <span class="cs-status info">
+                    standby
+                </span>
             </div>
-        {% endif %}
-    </div>
+        </div>
+
+        <div class="cs-chat-body" style="grid-template-columns:1fr;">
+            <div style="
+                min-height:0;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                padding:22px;
+                background:
+                    radial-gradient(circle at 30% 0%,rgba(19,214,255,.08),transparent 34%),
+                    #080f1e;
+            ">
+                <div style="
+                    width:min(520px,100%);
+                    text-align:center;
+                    padding:34px;
+                    border-radius:22px;
+                    background:linear-gradient(180deg,#0d182d,#09101f);
+                    border:1px solid var(--line);
+                    box-shadow:0 20px 45px rgba(0,0,0,.25);
+                ">
+                    <div style="
+                        width:74px;
+                        height:74px;
+                        margin:0 auto 16px;
+                        border-radius:24px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        background:linear-gradient(135deg,#126bff,#13d6ff);
+                        box-shadow:0 18px 38px rgba(18,107,255,.28);
+                        font-size:30px;
+                        color:#fff;
+                    ">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+
+                    <h2 style="
+                        color:#fff;
+                        font-size:22px;
+                        line-height:1.2;
+                        font-weight:950;
+                        letter-spacing:-.04em;
+                        margin-bottom:10px;
+                    ">
+                        Pilih chat dari daftar kiri
+                    </h2>
+
+                    <p style="
+                        color:var(--muted);
+                        font-size:13px;
+                        line-height:1.65;
+                        font-weight:750;
+                        max-width:420px;
+                        margin:0 auto 18px;
+                    ">
+                        Setelah CS memilih salah satu member, halaman detail akan menampilkan percakapan,
+                        detail member, transaksi terakhir, mutasi saldo, dan catatan internal.
+                    </p>
+
+                    <div style="
+                        display:flex;
+                        gap:8px;
+                        flex-wrap:wrap;
+                        justify-content:center;
+                    ">
+                        <span class="cs-badge">
+                            <i class="fa-solid fa-comments"></i>
+                            Live Chat
+                        </span>
+
+                        <span class="cs-badge green">
+                            <i class="fa-solid fa-user"></i>
+                            Member Info
+                        </span>
+
+                        <span class="cs-badge orange">
+                            <i class="fa-solid fa-receipt"></i>
+                            Cek TRX
+                        </span>
+
+                        <span class="cs-badge dark">
+                            <i class="fa-solid fa-note-sticky"></i>
+                            Catatan CS
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </section>
 
 {% endblock %}
