@@ -1203,48 +1203,42 @@
             <strong>Senja<span>Data</span></strong>
         </div>
 
-        <div class="cs-menu-title">Dashboard</div>
+        <div class="cs-menu-title">Utama</div>
 
         <nav class="cs-nav">
             <a class="cs-nav-link {% if request.path.startswith('/cs/dashboard') %}active{% endif %}" href="/cs/dashboard">
-                <span class="cs-nav-left">
-                    <i class="fa-solid fa-chart-line"></i>
-                    Dashboard
-                </span>
+                <span class="cs-nav-left"><i class="fa-solid fa-table-columns"></i>Dashboard</span>
             </a>
         </nav>
 
-        <div class="cs-menu-title">Support</div>
+        <div class="cs-menu-title">Transaksi</div>
 
         <nav class="cs-nav">
-            <a class="cs-nav-link {% if request.path.startswith('/cs/live-chat') %}active{% endif %}" href="/cs/live-chat">
-                <span class="cs-nav-left">
-                    <i class="fa-solid fa-comments"></i>
-                    Live Chat
-                </span>
-                <span class="cs-nav-badge">ON</span>
+            <a class="cs-nav-link {% if request.path.startswith('/cs/transaksi-provider') %}active{% endif %}" href="/cs/transaksi-provider">
+                <span class="cs-nav-left"><i class="fa-solid fa-server"></i>Transaksi Provider</span>
+                <span class="cs-nav-badge">API</span>
             </a>
 
-            <a class="cs-nav-link {% if request.path.startswith('/cs/transaksi') %}active{% endif %}" href="/cs/transaksi">
-                <span class="cs-nav-left">
-                    <i class="fa-solid fa-receipt"></i>
-                    Transaksi
-                </span>
+            <a class="cs-nav-link {% if request.path == '/cs/transaksi' %}active{% endif %}" href="/cs/transaksi">
+                <span class="cs-nav-left"><i class="fa-solid fa-receipt"></i>Transaksi Member</span>
             </a>
 
             <div class="cs-sub-menu">
-                <a class="cs-sub-link {% if request.path.startswith('/cs/transaksi') %}active{% endif %}" href="/cs/transaksi">
-                    Transaksi Member
-                </a>
-
-                <a class="cs-sub-link" href="/cs/transaksi?status=Pending">
-                    Transaksi Pending
-                </a>
-
-                <a class="cs-sub-link" href="/cs/transaksi?range=hari_ini">
-                    Transaksi Hari Ini
-                </a>
+                <a class="cs-sub-link" href="/cs/transaksi?status=Pending">Transaksi Pending</a>
+                <a class="cs-sub-link" href="/cs/transaksi?range=hari_ini">Transaksi Hari Ini</a>
             </div>
+        </nav>
+
+        <div class="cs-menu-title">Member & Support</div>
+
+        <nav class="cs-nav">
+            <a class="cs-nav-link {% if request.path == '/cs/member' %}active{% endif %}" href="/cs/member">
+                <span class="cs-nav-left"><i class="fa-solid fa-users"></i>Member</span>
+            </a>
+            <a class="cs-nav-link {% if request.path.startswith('/cs/live-chat') %}active{% endif %}" href="/cs/live-chat">
+                <span class="cs-nav-left"><i class="fa-solid fa-comments"></i>Live Chat</span>
+                <span class="cs-nav-badge">ON</span>
+            </a>
         </nav>
 
         <div class="cs-menu-title">Audit</div>

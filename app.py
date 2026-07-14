@@ -6,7 +6,8 @@ from config import (
     NAMA_PRODUK,
     HARGA_JUAL,
     BATAS_SALDO_INGAT,
-    AKUN_ADMIN
+    AKUN_ADMIN,
+    SERVER_API_URL
 )
 from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
@@ -15,6 +16,7 @@ from sqlalchemy import func, or_, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
+from urllib.parse import urlparse
 import os
 import uuid
 
@@ -182,7 +184,9 @@ def cek_akses():
         "cs_live_chat_buka",
         "cs_live_chat_catatan",
         "cs_member_detail",
+        "cs_member_list",
         "cs_transaksi",
+        "cs_transaksi_provider",
         "cs_dashboard",
         "cs_logout",
         "api_chat_start",
@@ -1131,6 +1135,64 @@ def cs_transaksi():
         tanggal_awal=tanggal_awal,
         tanggal_akhir=tanggal_akhir,
         mode_filter=mode_filter,
+        view_mode="member",
+        format_uang=format_uang
+    )
+
+
+@app.route("/cs/transaksi-provider")
+@cs_required
+def cs_transaksi_provider():
+    q = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+    tanggal_awal = request.args.get("tanggal_awal", "").strip()
+    tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
+    tanggal_awal_obj, tanggal_akhir_obj, mode_filter = rentang_dari_request()
+
+    query = filter_transaksi_query(
+        query=Transaksi.query,
+        q=q,
+        status=status,
+        tanggal_awal_obj=tanggal_awal_obj,
+        tanggal_akhir_obj=tanggal_akhir_obj
+    )
+    daftar_transaksi = query.order_by(Transaksi.waktu.desc()).limit(500).all()
+    gateway = urlparse(SERVER_API_URL).netloc or "Gateway API"
+
+    return render_template(
+        "cs_transaksi.html",
+        daftar_transaksi=daftar_transaksi,
+        ringkasan=ringkasan_transaksi(daftar_transaksi),
+        q=q,
+        status=status,
+        tanggal_awal=tanggal_awal,
+        tanggal_akhir=tanggal_akhir,
+        mode_filter=mode_filter,
+        view_mode="provider",
+        gateway_label=gateway,
+        format_uang=format_uang
+    )
+
+
+@app.route("/cs/member")
+@cs_required
+def cs_member_list():
+    q = request.args.get("q", "").strip()
+    query = Pengguna.query
+
+    if q:
+        query = query.filter(or_(
+            Pengguna.nama_lengkap.ilike(f"%{q}%"),
+            Pengguna.email.ilike(f"%{q}%"),
+            Pengguna.nomor_hp.ilike(f"%{q}%")
+        ))
+
+    daftar_member = query.order_by(Pengguna.id.desc()).limit(500).all()
+    return render_template(
+        "cs_member.html",
+        daftar_member=daftar_member,
+        q=q,
+        total_saldo=sum(int(member.saldo or 0) for member in daftar_member),
         format_uang=format_uang
     )
 

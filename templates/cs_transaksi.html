@@ -1,8 +1,8 @@
 {% extends "cs_base.html" %}
 
-{% block title %}Transaksi Member - SenjaData{% endblock %}
-{% block heading %}Transaksi Member{% endblock %}
-{% block subtitle %}Cari, verifikasi, dan tindak lanjuti transaksi member{% endblock %}
+{% block title %}{% if view_mode == "provider" %}Transaksi Provider{% else %}Transaksi Member{% endif %} - SenjaData{% endblock %}
+{% block heading %}{% if view_mode == "provider" %}Transaksi Provider{% else %}Transaksi Member{% endif %}{% endblock %}
+{% block subtitle %}{% if view_mode == "provider" %}Pantau transaksi yang diproses melalui gateway API{% else %}Cari, verifikasi, dan tindak lanjuti transaksi member{% endif %}{% endblock %}
 
 {% block extra_style %}
 <style>
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-<section class="trx-intro"><div><small><i class="fa-solid fa-circle"></i> Monitoring transaksi</small><h2>Periksa transaksi member dengan cepat dan tepat.</h2><p>Gunakan pencarian, rentang waktu, dan status untuk menemukan transaksi saat member membutuhkan bantuan.</p></div><a class="trx-intro-action" href="/cs/transaksi?status=Pending"><i class="fa-solid fa-clock"></i> {{ ringkasan.pending|default(0) }} transaksi pending</a></section>
+<section class="trx-intro"><div><small><i class="fa-solid fa-circle"></i> {% if view_mode == "provider" %}Monitoring gateway{% else %}Monitoring transaksi{% endif %}</small><h2>{% if view_mode == "provider" %}Pantau transaksi yang masuk ke gateway API.{% else %}Periksa transaksi member dengan cepat dan tepat.{% endif %}</h2><p>{% if view_mode == "provider" %}Gateway aktif: {{ gateway_label or "Gateway API" }}. Data provider per transaksi belum disimpan oleh sistem saat ini.{% else %}Gunakan pencarian, rentang waktu, dan status untuk menemukan transaksi saat member membutuhkan bantuan.{% endif %}</p></div><a class="trx-intro-action" href="{% if view_mode == 'provider' %}/cs/transaksi-provider?status=Pending{% else %}/cs/transaksi?status=Pending{% endif %}"><i class="fa-solid fa-clock"></i> {{ ringkasan.pending|default(0) }} transaksi pending</a></section>
 
 <section class="cs-stats" aria-label="Ringkasan transaksi">
     <div class="cs-stat trx-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;"><i class="fa-solid fa-database"></i><span>Data Ditampilkan</span><strong>{{ ringkasan.total|default(0) }}</strong><small>Hasil sesuai filter saat ini</small></div>
@@ -26,20 +26,20 @@
 <section class="cs-card filter-panel">
     <div class="cs-card-head"><div><h3>Filter transaksi</h3><p>Cari berdasarkan data member, tujuan, produk, atau nomor serial.</p></div><span class="cs-badge"><i class="fa-solid fa-sliders"></i> Pencarian</span></div>
     <div class="cs-card-body">
-        <form class="transaction-filter" method="GET" action="/cs/transaksi">
+        <form class="transaction-filter" method="GET" action="{% if view_mode == 'provider' %}/cs/transaksi-provider{% else %}/cs/transaksi{% endif %}">
             <div class="cs-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ q|default('') }}" placeholder="Email, nama, nomor tujuan, produk, atau SN" autocomplete="off"></div>
             <input class="cs-input" type="date" name="tanggal_awal" value="{{ tanggal_awal|default('') }}" aria-label="Tanggal awal">
             <input class="cs-input" type="date" name="tanggal_akhir" value="{{ tanggal_akhir|default('') }}" aria-label="Tanggal akhir">
             <select class="cs-select" name="status"><option value="">Semua status</option><option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option><option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option><option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option></select>
-            <button class="cs-btn primary" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button><a class="cs-btn" href="/cs/transaksi">Reset</a>
+            <button class="cs-btn primary" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button><a class="cs-btn" href="{% if view_mode == 'provider' %}/cs/transaksi-provider{% else %}/cs/transaksi{% endif %}">Reset</a>
         </form>
-        <nav class="quick-filter" aria-label="Filter cepat"><span class="quick-filter-label">Rentang cepat:</span><a href="/cs/transaksi?range=hari_ini">Hari ini</a><a href="/cs/transaksi?range=kemarin">Kemarin</a><a href="/cs/transaksi?range=7_hari">7 hari</a><a href="/cs/transaksi?range=30_hari">30 hari</a><a href="/cs/transaksi?range=bulan_ini">Bulan ini</a><span class="quick-filter-label">Status:</span><a class="pending" href="/cs/transaksi?status=Pending">Pending</a><a class="success" href="/cs/transaksi?status=Berhasil">Berhasil</a><a class="failed" href="/cs/transaksi?status=Gagal">Gagal</a></nav>
+        {% set transaksi_url = '/cs/transaksi-provider' if view_mode == 'provider' else '/cs/transaksi' %}<nav class="quick-filter" aria-label="Filter cepat"><span class="quick-filter-label">Rentang cepat:</span><a href="{{ transaksi_url }}?range=hari_ini">Hari ini</a><a href="{{ transaksi_url }}?range=kemarin">Kemarin</a><a href="{{ transaksi_url }}?range=7_hari">7 hari</a><a href="{{ transaksi_url }}?range=30_hari">30 hari</a><a href="{{ transaksi_url }}?range=bulan_ini">Bulan ini</a><span class="quick-filter-label">Status:</span><a class="pending" href="{{ transaksi_url }}?status=Pending">Pending</a><a class="success" href="{{ transaksi_url }}?status=Berhasil">Berhasil</a><a class="failed" href="{{ transaksi_url }}?status=Gagal">Gagal</a></nav>
         {% if q or tanggal_awal or tanggal_akhir or status %}<div class="active-filters"><span class="cs-badge orange"><i class="fa-solid fa-filter"></i> Filter aktif</span>{% if q %}<span class="cs-badge">Pencarian: {{ q }}</span>{% endif %}{% if tanggal_awal %}<span class="cs-badge">Dari: {{ tanggal_awal }}</span>{% endif %}{% if tanggal_akhir %}<span class="cs-badge">Sampai: {{ tanggal_akhir }}</span>{% endif %}{% if status %}<span class="cs-badge">Status: {{ status }}</span>{% endif %}</div>{% endif %}
     </div>
 </section>
 
 <section class="cs-card">
-    <div class="cs-card-head"><div><h3>Daftar transaksi</h3><p>Gunakan nomor referensi dan serial number untuk membantu pengecekan transaksi.</p></div><span class="cs-badge green"><i class="fa-solid fa-list"></i> {{ ringkasan.total|default(0) }} data</span></div>
+    <div class="cs-card-head"><div><h3>{% if view_mode == "provider" %}Log transaksi gateway{% else %}Daftar transaksi{% endif %}</h3><p>Gunakan nomor referensi dan serial number untuk membantu pengecekan transaksi.</p></div><span class="cs-badge green"><i class="fa-solid fa-list"></i> {{ ringkasan.total|default(0) }} data</span></div>
     {% if daftar_transaksi|default([]) %}<div class="trx-caption"><span>Menampilkan maksimal 500 transaksi terbaru sesuai filter.</span><span>Mode: <strong>{{ mode_filter|default('semua transaksi') }}</strong></span></div>{% endif %}
     <div class="cs-table-wrap">
         {% if daftar_transaksi|default([]) %}<table class="cs-table trx-table"><thead><tr><th>No.</th><th>Waktu</th><th>Member</th><th>Referensi</th><th>Produk</th><th>Tujuan</th><th>Nominal</th><th>Status</th><th>SN / Keterangan</th><th></th></tr></thead><tbody>
