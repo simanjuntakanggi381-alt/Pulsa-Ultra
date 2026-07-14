@@ -138,6 +138,8 @@
         }
 
         .support-btn {
+            border: 0;
+            cursor: pointer;
             width: 46px;
             height: 46px;
             border-radius: 16px;
@@ -1574,6 +1576,102 @@
             }
         }
 
+        /* =========================================================
+           LIVE CHAT FINAL TOUCH - NATURAL SENJADATA
+        ========================================================= */
+
+        .senja-chat-panel {
+            border-radius: 22px !important;
+        }
+
+        .senja-chat-header {
+            min-height: 72px !important;
+            background:
+                radial-gradient(circle at 16% 0%, rgba(255,255,255,.25), transparent 32%),
+                linear-gradient(135deg, #ff7a18, #ff9f1c) !important;
+            border-bottom: 0 !important;
+        }
+
+        .senja-chat-title strong,
+        .senja-chat-title span {
+            color: #ffffff !important;
+        }
+
+        .senja-chat-title span::before {
+            background: #22c55e !important;
+            box-shadow: 0 0 0 4px rgba(34,197,94,.18);
+        }
+
+        .senja-chat-close {
+            color: #ffffff !important;
+            background: rgba(255,255,255,.18) !important;
+        }
+
+        .senja-chat-body {
+            background:
+                radial-gradient(circle at 10% 0%, rgba(255,122,24,.09), transparent 28%),
+                #fffaf5 !important;
+        }
+
+        .senja-chat-bubble-box p {
+            font-weight: 760 !important;
+        }
+
+        .senja-chat-card {
+            border-color: rgba(255,159,28,.16) !important;
+            box-shadow: 0 14px 28px rgba(15,23,42,.07) !important;
+        }
+
+        .senja-field input,
+        .senja-field textarea,
+        .senja-chat-input {
+            background: #fff !important;
+            border-color: #eadfd4 !important;
+        }
+
+        .senja-field input:focus,
+        .senja-field textarea:focus,
+        .senja-chat-input:focus {
+            border-color: #ff9f1c !important;
+            box-shadow: 0 0 0 5px rgba(255,159,28,.14) !important;
+        }
+
+        .senja-chat-typing {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            border-bottom-left-radius: 7px;
+            background: #ffffff;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 7px 18px rgba(15,23,42,.06);
+        }
+
+        .senja-chat-typing i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff9f1c;
+            opacity: .45;
+            animation: senjaTyping 1.1s infinite ease-in-out;
+        }
+
+        .senja-chat-typing i:nth-child(2) { animation-delay: .15s; }
+        .senja-chat-typing i:nth-child(3) { animation-delay: .30s; }
+
+        @keyframes senjaTyping {
+            0%, 100% { transform: translateY(0); opacity: .35; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        .senja-start-button.is-loading,
+        .senja-send-form button.is-loading {
+            opacity: .72;
+            pointer-events: none;
+            filter: grayscale(.15);
+        }
+
     </style>
 </head>
 
@@ -1587,9 +1685,9 @@
         </a>
 
         <div class="header-right">
-            <a href="https://wa.me/6283153214390" target="_blank" rel="noopener noreferrer" class="support-btn" title="Bantuan">
+            <button type="button" class="support-btn" id="headerChatButton" title="Bantuan">
                 <i class="fa-solid fa-headset"></i>
-            </a>
+            </button>
 
             {% if sudah_login|default(false) %}
                 <a href="{{ url_for('profil') }}" class="masuk-btn">Profil</a>
@@ -1779,14 +1877,14 @@
                     <div class="senja-chat-avatar">👩🏻‍💻</div>
 
                     <div class="senja-chat-bubble-box">
-                        <p>Bisa dibantu untuk transaksi atau kendala aplikasi kak?</p>
+                        <p>Selamat datang di SenjaData 👋<br>Ada yang bisa kami bantu hari ini?</p>
                         <time>Baru saja</time>
                     </div>
                 </div>
 
                 <form class="senja-chat-card" id="senjaStartForm">
-                    <h4>Mari mulai chat. Isi beberapa data dulu.</h4>
-                    <p>CS SenjaData akan membalas pesan kamu dari panel live chat.</p>
+                    <h4>Mulai chat dengan CS SenjaData</h4>
+                    <p>Tulis kendala kamu di bawah. CS akan membalas langsung dari panel live chat.</p>
 
                     <div class="senja-field">
                         <label>Nama</label>
@@ -1799,12 +1897,12 @@
                     </div>
 
                     <div class="senja-field">
-                        <label>Masalah</label>
-                        <textarea id="senjaChatMasalah" placeholder="Tulis kendala Anda..." required></textarea>
+                        <label>Pesan pertama</label>
+                        <textarea id="senjaChatMasalah" placeholder="Contoh: Kak, transaksi saya belum masuk..." required></textarea>
                     </div>
 
-                    <button class="senja-start-button" type="submit">
-                        Lanjutkan ke chat
+                    <button class="senja-start-button" type="submit" id="senjaStartBtn">
+                        Mulai Chat
                     </button>
                 </form>
             </div>
@@ -1815,7 +1913,7 @@
                 <form class="senja-send-form" id="senjaSendForm">
                     <textarea class="senja-chat-input" id="senjaChatInput" placeholder="Tulis pesan..." required></textarea>
 
-                    <button type="submit" aria-label="Kirim pesan">
+                    <button type="submit" id="senjaSendBtn" aria-label="Kirim pesan">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </form>
@@ -1928,34 +2026,15 @@ function lihatSandi(id, tombol) {
                 el.style.setProperty("pointer-events", "none", "important");
             });
         });
-
-        document.querySelectorAll("a, button, div").forEach(function(el){
-            if(el.closest("#senjaChatFloat") || el.closest("#senjaChatPanel")){
-                return;
-            }
-
-            const text = (el.innerText || el.textContent || "").trim().toLowerCase();
-            const cls = (el.className || "").toString().toLowerCase();
-            const st = window.getComputedStyle(el);
-
-            const looksFloating = st.position === "fixed" || cls.includes("float") || cls.includes("chat") || cls.includes("bantuan");
-            const looksChatText = text.includes("chat kami") || text.includes("chat dengan kami") || text.includes("whatsapp");
-
-            if(looksFloating && looksChatText){
-                el.style.setProperty("display", "none", "important");
-                el.style.setProperty("visibility", "hidden", "important");
-                el.style.setProperty("opacity", "0", "important");
-                el.style.setProperty("pointer-events", "none", "important");
-            }
-        });
     }
 
     hideOldChats();
-    setTimeout(hideOldChats, 700);
+    setTimeout(hideOldChats, 600);
     setInterval(hideOldChats, 2500);
 
     const floatBox = document.getElementById("senjaChatFloat");
     const button = document.getElementById("senjaChatButton");
+    const headerButton = document.getElementById("headerChatButton");
     const panel = document.getElementById("senjaChatPanel");
     const closeBtn = document.getElementById("senjaChatClose");
     const startArea = document.getElementById("senjaStartArea");
@@ -1969,14 +2048,22 @@ function lihatSandi(id, tombol) {
     const kontakInput = document.getElementById("senjaChatKontak");
     const masalahInput = document.getElementById("senjaChatMasalah");
     const chatInput = document.getElementById("senjaChatInput");
+    const startBtn = document.getElementById("senjaStartBtn");
+    const sendBtn = document.getElementById("senjaSendBtn");
 
     if(!floatBox || !button || !panel || !closeBtn || !startArea || !roomArea || !startForm || !sendForm || !messagesBox){
         return;
     }
 
-    let kodeChat = localStorage.getItem("senjadata_orange_chat_code") || "";
-    let lastAdminCount = Number(localStorage.getItem("senjadata_orange_admin_count") || "0");
+    const STORAGE_CODE = "senjadata_orange_chat_code";
+    const STORAGE_ADMIN_COUNT = "senjadata_orange_admin_count";
+    const STORAGE_LEFT = "senjadata_orange_float_left";
+    const STORAGE_TOP = "senjadata_orange_float_top";
+
+    let kodeChat = localStorage.getItem(STORAGE_CODE) || "";
+    let lastAdminCount = Number(localStorage.getItem(STORAGE_ADMIN_COUNT) || "0");
     let polling = null;
+    let lastSignature = "";
 
     let dragging = false;
     let moved = false;
@@ -2009,14 +2096,14 @@ function lihatSandi(id, tombol) {
         floatBox.style.bottom = "auto";
 
         if(save){
-            localStorage.setItem("senjadata_orange_float_left", String(finalLeft));
-            localStorage.setItem("senjadata_orange_float_top", String(finalTop));
+            localStorage.setItem(STORAGE_LEFT, String(finalLeft));
+            localStorage.setItem(STORAGE_TOP, String(finalTop));
         }
     }
 
     function setDefaultFloat(){
-        const savedLeft = numberOrNull(localStorage.getItem("senjadata_orange_float_left"));
-        const savedTop = numberOrNull(localStorage.getItem("senjadata_orange_float_top"));
+        const savedLeft = numberOrNull(localStorage.getItem(STORAGE_LEFT));
+        const savedTop = numberOrNull(localStorage.getItem(STORAGE_TOP));
 
         if(savedLeft !== null && savedTop !== null){
             setFloatPosition(savedLeft, savedTop, false);
@@ -2024,10 +2111,11 @@ function lihatSandi(id, tombol) {
         }
 
         const rect = floatBox.getBoundingClientRect();
-        const left = window.innerWidth - rect.width - 12;
-        const top = window.innerHeight - rect.height - 106;
-
-        setFloatPosition(left, top, false);
+        setFloatPosition(
+            window.innerWidth - rect.width - 12,
+            window.innerHeight - rect.height - 106,
+            false
+        );
     }
 
     setTimeout(setDefaultFloat, 250);
@@ -2093,6 +2181,26 @@ function lihatSandi(id, tombol) {
     button.addEventListener("pointerup", stopDrag);
     button.addEventListener("pointercancel", stopDrag);
 
+    function escapeHtml(text){
+        const div = document.createElement("div");
+        div.textContent = text || "";
+        return div.innerHTML;
+    }
+
+    function scrollBottom(){
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    function showRoom(){
+        startArea.style.display = "none";
+        roomArea.classList.add("active");
+    }
+
+    function showStart(){
+        startArea.style.display = "block";
+        roomArea.classList.remove("active");
+    }
+
     function openPanel(){
         if(Date.now() < suppressClickUntil){
             return;
@@ -2109,6 +2217,8 @@ function lihatSandi(id, tombol) {
             showRoom();
             loadMessages();
             startPolling();
+        }else{
+            showStart();
         }
     }
 
@@ -2117,64 +2227,68 @@ function lihatSandi(id, tombol) {
         panel.setAttribute("aria-hidden", "true");
     }
 
-    function showRoom(){
-        startArea.style.display = "none";
-        roomArea.classList.add("active");
+    function renderWelcome(){
+        messagesBox.innerHTML = `
+            <div class="senja-msg-row admin">
+                <div class="senja-msg">
+                    <small>CS SenjaData</small>
+                    <p>Selamat datang di SenjaData 👋
+Ada yang bisa kami bantu hari ini?</p>
+                    <time>Baru saja</time>
+                </div>
+            </div>
+        `;
     }
 
-    function showStart(){
-        startArea.style.display = "block";
-        roomArea.classList.remove("active");
-    }
-
-    function escapeHtml(text){
-        const div = document.createElement("div");
-        div.textContent = text || "";
-        return div.innerHTML;
-    }
-
-    function scrollBottom(){
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+    function renderTyping(){
+        const typing = document.createElement("div");
+        typing.className = "senja-msg-row admin";
+        typing.id = "senjaTypingRow";
+        typing.innerHTML = `
+            <div class="senja-chat-typing" aria-label="CS sedang mengetik">
+                <i></i><i></i><i></i>
+            </div>
+        `;
+        messagesBox.appendChild(typing);
+        scrollBottom();
     }
 
     function renderMessages(messages){
-        messagesBox.innerHTML = "";
+        const signature = (messages || []).map(function(item){
+            return item.id + ":" + item.pengirim + ":" + item.pesan;
+        }).join("|");
+
+        if(signature === lastSignature){
+            return;
+        }
+
+        lastSignature = signature;
 
         if(!messages || messages.length === 0){
-            messagesBox.innerHTML = `
-                <div class="senja-msg-row admin">
-                    <div class="senja-msg">
-                        <small>CS SenjaData</small>
-                        <p>Halo, silakan tulis pesan kamu. CS akan membalas secepatnya.</p>
-                        <time>Baru saja</time>
-                    </div>
-                </div>
-            `;
+            renderWelcome();
+            scrollBottom();
             return;
         }
 
         let adminCount = 0;
 
-        messages.forEach(function(item){
+        messagesBox.innerHTML = messages.map(function(item){
             const sender = item.pengirim === "admin" ? "admin" : "user";
 
             if(sender === "admin"){
                 adminCount++;
             }
 
-            const row = document.createElement("div");
-            row.className = "senja-msg-row " + sender;
-
-            row.innerHTML = `
-                <div class="senja-msg">
-                    <small>${sender === "admin" ? "CS SenjaData" : "Kamu"}</small>
-                    <p>${escapeHtml(item.pesan)}</p>
-                    <time>${escapeHtml(item.waktu || "")}</time>
+            return `
+                <div class="senja-msg-row ${sender}">
+                    <div class="senja-msg">
+                        <small>${sender === "admin" ? "CS SenjaData" : "Kamu"}</small>
+                        <p>${escapeHtml(item.pesan || "")}</p>
+                        <time>${escapeHtml(item.waktu || "")}</time>
+                    </div>
                 </div>
             `;
-
-            messagesBox.appendChild(row);
-        });
+        }).join("");
 
         const panelOpen = panel.classList.contains("is-open");
 
@@ -2184,7 +2298,7 @@ function lihatSandi(id, tombol) {
         }
 
         lastAdminCount = adminCount;
-        localStorage.setItem("senjadata_orange_admin_count", String(lastAdminCount));
+        localStorage.setItem(STORAGE_ADMIN_COUNT, String(lastAdminCount));
 
         scrollBottom();
     }
@@ -2203,11 +2317,16 @@ function lihatSandi(id, tombol) {
         }
 
         kodeChat = data.kode_chat;
-        localStorage.setItem("senjadata_orange_chat_code", kodeChat);
+        localStorage.setItem(STORAGE_CODE, kodeChat);
 
         showRoom();
-        await loadMessages();
-        startPolling();
+        renderWelcome();
+        renderTyping();
+
+        setTimeout(async function(){
+            await loadMessages();
+            startPolling();
+        }, 450);
     }
 
     async function sendMessage(pesan){
@@ -2241,7 +2360,9 @@ function lihatSandi(id, tombol) {
         }
 
         try{
-            const response = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user");
+            const response = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user&ts=" + Date.now(), {
+                cache: "no-store"
+            });
             const data = await response.json();
 
             if(!response.ok || !data.success){
@@ -2263,10 +2384,15 @@ function lihatSandi(id, tombol) {
             if(kodeChat){
                 loadMessages();
             }
-        }, 4000);
+        }, 3500);
     }
 
     button.addEventListener("click", openPanel);
+
+    if(headerButton){
+        headerButton.addEventListener("click", openPanel);
+    }
+
     closeBtn.addEventListener("click", closePanel);
 
     startForm.addEventListener("submit", async function(e){
@@ -2277,13 +2403,18 @@ function lihatSandi(id, tombol) {
         const masalah = masalahInput.value.trim();
 
         if(!masalah){
-            alert("Masalah / pesan wajib diisi bro.");
+            alert("Pesan wajib diisi dulu bro.");
             return;
         }
 
         const isEmail = kontak.includes("@");
 
         try{
+            if(startBtn){
+                startBtn.classList.add("is-loading");
+                startBtn.textContent = "Membuka chat...";
+            }
+
             await startChat({
                 nama: nama,
                 nomor_hp: isEmail ? "" : kontak,
@@ -2294,6 +2425,11 @@ function lihatSandi(id, tombol) {
             masalahInput.value = "";
         }catch(err){
             alert(err.message);
+        }finally{
+            if(startBtn){
+                startBtn.classList.remove("is-loading");
+                startBtn.textContent = "Mulai Chat";
+            }
         }
     });
 
@@ -2307,10 +2443,25 @@ function lihatSandi(id, tombol) {
         }
 
         try{
+            if(sendBtn){
+                sendBtn.classList.add("is-loading");
+            }
+
             chatInput.value = "";
             await sendMessage(pesan);
         }catch(err){
             alert(err.message);
+        }finally{
+            if(sendBtn){
+                sendBtn.classList.remove("is-loading");
+            }
+        }
+    });
+
+    chatInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter" && !e.shiftKey){
+            e.preventDefault();
+            sendForm.requestSubmit();
         }
     });
 
@@ -2321,6 +2472,7 @@ function lihatSandi(id, tombol) {
 
     if(kodeChat){
         showRoom();
+        loadMessages();
         startPolling();
     }else{
         showStart();
