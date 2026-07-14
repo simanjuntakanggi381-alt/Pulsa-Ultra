@@ -1048,19 +1048,37 @@
             }
         }
 
+
         /* =========================================================
-           LIVE CHAT WIDGET SENJADATA
+           SENJADATA CS LIVE CHAT - FIXED WIDGET
+           Nyambung ke panel CS: /cs/login
         ========================================================= */
-        .sd-chat-widget {
+
+        /* Sembunyikan tombol bantuan lama / chat lama */
+        .bantuan-float,
+        .tombol-bantuan,
+        .sd-chat-widget,
+        .chat-kami,
+        .chat-kami-btn,
+        .floating-chat,
+        .old-chat-widget {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .sjc-widget {
             position: fixed;
             right: max(14px, calc((100vw - 560px) / 2 + 14px));
             bottom: 104px;
-            z-index: 250;
+            z-index: 9999;
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
         }
 
-        .sd-chat-toggle {
-            min-height: 56px;
+        .sjc-toggle {
+            position: relative;
+            min-height: 58px;
             border: 0;
             border-radius: 999px;
             padding: 0 1rem;
@@ -1070,30 +1088,43 @@
             gap: .55rem;
             color: #ffffff;
             background:
-                radial-gradient(circle at 25% 15%, rgba(255,255,255,.32), transparent 34%),
+                radial-gradient(circle at 28% 18%, rgba(255,255,255,.34), transparent 36%),
                 linear-gradient(135deg, #007ae6, #00c6ff);
-            box-shadow: 0 14px 30px rgba(0, 122, 230, .32);
+            box-shadow: 0 16px 34px rgba(0, 122, 230, .34);
+            font-size: .92rem;
             font-weight: 950;
-            font-size: .9rem;
             cursor: pointer;
             transition: .2s ease;
         }
 
-        .sd-chat-toggle:hover {
+        .sjc-toggle:hover {
             transform: translateY(-2px);
             filter: brightness(1.04);
         }
 
-        .sd-chat-toggle i {
+        .sjc-toggle i {
             font-size: 1.25rem;
         }
 
-        .sd-chat-notif {
+        .sjc-dot {
+            position: absolute;
+            top: -4px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 0 5px rgba(34,197,94,.18);
+        }
+
+        .sjc-notif {
             position: absolute;
             top: -5px;
             right: -4px;
-            width: 20px;
+            min-width: 20px;
             height: 20px;
+            padding: 0 6px;
             border-radius: 999px;
             background: #ef4444;
             color: #ffffff;
@@ -1106,31 +1137,31 @@
             box-shadow: 0 8px 16px rgba(239,68,68,.25);
         }
 
-        .sd-chat-panel {
+        .sjc-panel {
             position: absolute;
             right: 0;
-            bottom: 70px;
-            width: min(360px, calc(100vw - 24px));
-            height: 560px;
-            max-height: calc(100vh - 135px);
-            border-radius: 28px;
-            overflow: hidden;
-            background: #ffffff;
-            border: 1px solid rgba(226,232,240,.95);
-            box-shadow: 0 24px 70px rgba(15,23,42,.25);
+            bottom: 72px;
+            width: min(370px, calc(100vw - 24px));
+            height: 570px;
+            max-height: calc(100vh - 130px);
             display: none;
             flex-direction: column;
+            overflow: hidden;
+            border-radius: 30px;
+            background: #ffffff;
+            border: 1px solid rgba(226,232,240,.95);
+            box-shadow: 0 26px 75px rgba(15,23,42,.28);
         }
 
-        .sd-chat-panel.active {
+        .sjc-panel.active {
             display: flex;
-            animation: sdChatIn .22s ease-out;
+            animation: sjcIn .22s ease-out;
         }
 
-        @keyframes sdChatIn {
+        @keyframes sjcIn {
             from {
                 opacity: 0;
-                transform: translateY(12px) scale(.98);
+                transform: translateY(14px) scale(.98);
             }
             to {
                 opacity: 1;
@@ -1138,80 +1169,76 @@
             }
         }
 
-        .sd-chat-head {
+        .sjc-head {
             position: relative;
             overflow: hidden;
             padding: 1rem;
             color: #ffffff;
             background:
-                radial-gradient(circle at 20% 0%, rgba(255,255,255,.30), transparent 32%),
+                radial-gradient(circle at 20% 0%, rgba(255,255,255,.32), transparent 33%),
                 linear-gradient(135deg, #007ae6, #00c6ff);
         }
 
-        .sd-chat-head::after {
+        .sjc-head::after {
             content: "";
             position: absolute;
-            right: -42px;
-            top: -48px;
-            width: 132px;
-            height: 132px;
+            right: -48px;
+            top: -52px;
+            width: 140px;
+            height: 140px;
             border-radius: 999px;
-            background: rgba(255,255,255,.15);
+            background: rgba(255,255,255,.14);
         }
 
-        .sd-chat-head-top {
+        .sjc-head-top {
             position: relative;
             z-index: 2;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: .7rem;
+            gap: .75rem;
         }
 
-        .sd-chat-brand {
+        .sjc-brand {
             display: flex;
             align-items: center;
             gap: .7rem;
             min-width: 0;
         }
 
-        .sd-chat-brand-icon {
-            width: 46px;
-            height: 46px;
-            border-radius: 17px;
+        .sjc-brand-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255,255,255,.20);
-            border: 1px solid rgba(255,255,255,.24);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.20);
+            border: 1px solid rgba(255,255,255,.26);
             font-size: 1.2rem;
             flex: 0 0 auto;
         }
 
-        .sd-chat-brand small {
+        .sjc-brand small {
             display: block;
-            color: rgba(255,255,255,.78);
-            font-size: .72rem;
+            color: rgba(255,255,255,.75);
+            font-size: .7rem;
             line-height: 1;
-            font-weight: 900;
-            letter-spacing: .05em;
+            font-weight: 950;
+            letter-spacing: .08em;
             text-transform: uppercase;
         }
 
-        .sd-chat-brand strong {
+        .sjc-brand strong {
             display: block;
-            margin-top: .24rem;
+            margin-top: .25rem;
             color: #ffffff;
             font-size: 1rem;
             line-height: 1.1;
             font-weight: 950;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .sd-chat-close {
+        .sjc-close {
             width: 38px;
             height: 38px;
             border: 0;
@@ -1225,7 +1252,7 @@
             font-size: 1.05rem;
         }
 
-        .sd-chat-subtitle {
+        .sjc-subtitle {
             position: relative;
             z-index: 2;
             margin-top: .75rem;
@@ -1235,7 +1262,7 @@
             line-height: 1.45;
         }
 
-        .sd-chat-body {
+        .sjc-body {
             flex: 1;
             min-height: 0;
             display: flex;
@@ -1245,25 +1272,25 @@
                 #f8fafc;
         }
 
-        .sd-chat-intro {
+        .sjc-intro {
             padding: 1rem;
             display: block;
         }
 
-        .sd-chat-intro.hide {
+        .sjc-intro.hide {
             display: none;
         }
 
-        .sd-chat-welcome {
+        .sjc-welcome {
             padding: .95rem;
             border-radius: 22px;
             background: #ffffff;
             border: 1px solid #e8eef7;
             box-shadow: 0 10px 24px rgba(15,23,42,.05);
-            margin-bottom: .8rem;
+            margin-bottom: .85rem;
         }
 
-        .sd-chat-welcome strong {
+        .sjc-welcome strong {
             display: block;
             color: #0f172a;
             font-size: .96rem;
@@ -1272,7 +1299,7 @@
             margin-bottom: .35rem;
         }
 
-        .sd-chat-welcome span {
+        .sjc-welcome span {
             display: block;
             color: #64748b;
             font-size: .82rem;
@@ -1280,20 +1307,20 @@
             line-height: 1.45;
         }
 
-        .sd-chat-field {
-            margin-bottom: .7rem;
+        .sjc-field {
+            margin-bottom: .72rem;
         }
 
-        .sd-chat-field label {
+        .sjc-field label {
             display: block;
-            margin-bottom: .32rem;
+            margin-bottom: .34rem;
             color: #334155;
             font-size: .78rem;
             font-weight: 950;
         }
 
-        .sd-chat-field input,
-        .sd-chat-field textarea {
+        .sjc-field input,
+        .sjc-field textarea {
             width: 100%;
             min-height: 48px;
             border: 2px solid #e2e8f0;
@@ -1304,24 +1331,23 @@
             padding: 0 .82rem;
             font-size: .9rem;
             font-weight: 750;
-            transition: .18s ease;
         }
 
-        .sd-chat-field textarea {
+        .sjc-field textarea {
             min-height: 90px;
             resize: none;
             padding-top: .72rem;
             line-height: 1.45;
         }
 
-        .sd-chat-field input:focus,
-        .sd-chat-field textarea:focus {
+        .sjc-field input:focus,
+        .sjc-field textarea:focus,
+        .sjc-input:focus {
             border-color: #007ae6;
             box-shadow: 0 0 0 5px rgba(0,122,230,.10);
         }
 
-        .sd-chat-start-btn,
-        .sd-chat-send-btn {
+        .sjc-start-btn {
             width: 100%;
             min-height: 50px;
             border: 0;
@@ -1338,67 +1364,76 @@
             gap: .5rem;
         }
 
-        .sd-chat-room {
+        .sjc-note {
+            margin-top: .65rem;
+            color: #64748b;
+            font-size: .72rem;
+            line-height: 1.4;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .sjc-room {
             display: none;
             min-height: 0;
             flex: 1;
             flex-direction: column;
         }
 
-        .sd-chat-room.active {
+        .sjc-room.active {
             display: flex;
         }
 
-        .sd-chat-messages {
+        .sjc-messages {
             flex: 1;
             min-height: 0;
             overflow-y: auto;
             padding: .9rem;
         }
 
-        .sd-chat-messages::-webkit-scrollbar {
+        .sjc-messages::-webkit-scrollbar {
             width: 6px;
         }
 
-        .sd-chat-messages::-webkit-scrollbar-thumb {
+        .sjc-messages::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border-radius: 999px;
         }
 
-        .sd-chat-msg-row {
+        .sjc-row {
             display: flex;
             margin-bottom: .65rem;
         }
 
-        .sd-chat-msg-row.user {
+        .sjc-row.user {
             justify-content: flex-end;
         }
 
-        .sd-chat-msg-row.admin {
+        .sjc-row.admin {
             justify-content: flex-start;
         }
 
-        .sd-chat-msg {
+        .sjc-msg {
             max-width: 82%;
             padding: .68rem .78rem;
             border-radius: 18px;
             box-shadow: 0 8px 18px rgba(15,23,42,.06);
         }
 
-        .sd-chat-msg-row.user .sd-chat-msg {
+        .sjc-row.user .sjc-msg {
             color: #ffffff;
             background: linear-gradient(135deg, #007ae6, #00c6ff);
             border-bottom-right-radius: 7px;
         }
 
-        .sd-chat-msg-row.admin .sd-chat-msg {
+        .sjc-row.admin .sjc-msg {
             color: #0f172a;
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-bottom-left-radius: 7px;
         }
 
-        .sd-chat-msg small {
+        .sjc-msg small {
             display: block;
             opacity: .70;
             font-size: .66rem;
@@ -1408,7 +1443,7 @@
             margin-bottom: .25rem;
         }
 
-        .sd-chat-msg p {
+        .sjc-msg p {
             margin: 0;
             font-size: .86rem;
             line-height: 1.45;
@@ -1417,7 +1452,7 @@
             word-break: break-word;
         }
 
-        .sd-chat-msg time {
+        .sjc-msg time {
             display: block;
             margin-top: .32rem;
             opacity: .68;
@@ -1425,7 +1460,7 @@
             font-weight: 800;
         }
 
-        .sd-chat-form {
+        .sjc-send-form {
             padding: .75rem;
             background: #ffffff;
             border-top: 1px solid #e2e8f0;
@@ -1434,7 +1469,7 @@
             gap: .55rem;
         }
 
-        .sd-chat-form textarea {
+        .sjc-input {
             width: 100%;
             min-height: 48px;
             max-height: 120px;
@@ -1450,12 +1485,7 @@
             line-height: 1.35;
         }
 
-        .sd-chat-form textarea:focus {
-            background: #ffffff;
-            border-color: #007ae6;
-        }
-
-        .sd-chat-form button {
+        .sjc-send-form button {
             width: 48px;
             min-height: 48px;
             border: 0;
@@ -1467,33 +1497,24 @@
             cursor: pointer;
         }
 
-        .sd-chat-small-note {
-            margin-top: .65rem;
-            color: #64748b;
-            font-size: .72rem;
-            line-height: 1.4;
-            font-weight: 700;
-            text-align: center;
-        }
-
         @media (max-width: 560px) {
-            .sd-chat-widget {
+            .sjc-widget {
                 right: 12px;
                 bottom: 104px;
             }
 
-            .sd-chat-toggle {
-                width: 56px;
-                height: 56px;
+            .sjc-toggle {
+                width: 58px;
+                height: 58px;
                 padding: 0;
-                border-radius: 20px;
+                border-radius: 21px;
             }
 
-            .sd-chat-toggle span {
+            .sjc-toggle span {
                 display: none;
             }
 
-            .sd-chat-panel {
+            .sjc-panel {
                 position: fixed;
                 left: 10px;
                 right: 10px;
@@ -1674,6 +1695,95 @@
         {% endif %}
     </nav>
 
+
+    <!-- LIVE CHAT SENJADATA - TERHUBUNG KE PANEL CS -->
+    <div class="sjc-widget" id="sjcWidget">
+        <div class="sjc-panel" id="sjcPanel">
+            <div class="sjc-head">
+                <div class="sjc-head-top">
+                    <div class="sjc-brand">
+                        <div class="sjc-brand-icon">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+
+                        <div>
+                            <small>CS Online</small>
+                            <strong>Bantuan SenjaData</strong>
+                        </div>
+                    </div>
+
+                    <button class="sjc-close" type="button" id="sjcClose" aria-label="Tutup live chat">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="sjc-subtitle">
+                    Tulis pesan kamu di sini. Pesan akan masuk ke panel CS SenjaData.
+                </div>
+            </div>
+
+            <div class="sjc-body">
+                <div class="sjc-intro" id="sjcIntro">
+                    <div class="sjc-welcome">
+                        <strong>Halo 👋 Butuh bantuan?</strong>
+                        <span>Isi data singkat, lalu CS SenjaData akan membalas dari panel live chat.</span>
+                    </div>
+
+                    <form id="sjcStartForm">
+                        <div class="sjc-field">
+                            <label>Nama</label>
+                            <input type="text" id="sjcNama" value="{{ nama_pengguna|default('') }}" placeholder="Nama kamu" required>
+                        </div>
+
+                        <div class="sjc-field">
+                            <label>Nomor HP</label>
+                            <input type="tel" id="sjcNomor" value="{{ pengguna_login.nomor_hp if pengguna_login else '' }}" placeholder="Contoh: 08123456789">
+                        </div>
+
+                        <div class="sjc-field">
+                            <label>Email</label>
+                            <input type="email" id="sjcEmail" value="{{ email_pengguna|default('') }}" placeholder="Email opsional">
+                        </div>
+
+                        <div class="sjc-field">
+                            <label>Pesan</label>
+                            <textarea id="sjcPesanAwal" placeholder="Tulis pertanyaan kamu..." required></textarea>
+                        </div>
+
+                        <button class="sjc-start-btn" type="submit">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            Mulai Chat
+                        </button>
+
+                        <div class="sjc-note">
+                            Terhubung ke panel CS: <b>/cs/live-chat</b>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="sjc-room" id="sjcRoom">
+                    <div class="sjc-messages" id="sjcMessages"></div>
+
+                    <form class="sjc-send-form" id="sjcSendForm">
+                        <textarea class="sjc-input" id="sjcInput" placeholder="Tulis pesan..." required></textarea>
+
+                        <button type="submit" aria-label="Kirim pesan">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <button class="sjc-toggle" type="button" id="sjcToggle">
+            <i class="fa-solid fa-headset"></i>
+            <span>CS Online</span>
+            <b class="sjc-dot"></b>
+        </button>
+
+        <div class="sjc-notif" id="sjcNotif">1</div>
+    </div>
+
 </div>
 
 <script>
@@ -1756,64 +1866,59 @@ function lihatSandi(id, tombol) {
 </script>
 
 
+
 <script>
 (function(){
-    const chatPanel = document.getElementById("sdChatPanel");
-    const chatToggle = document.getElementById("sdChatToggle");
-    const chatClose = document.getElementById("sdChatClose");
-    const chatIntro = document.getElementById("sdChatIntro");
-    const chatRoom = document.getElementById("sdChatRoom");
-    const startForm = document.getElementById("sdChatStartForm");
-    const sendForm = document.getElementById("sdChatSendForm");
-    const messagesBox = document.getElementById("sdChatMessages");
-    const notif = document.getElementById("sdChatNotif");
+    const panel = document.getElementById("sjcPanel");
+    const toggle = document.getElementById("sjcToggle");
+    const closeBtn = document.getElementById("sjcClose");
+    const intro = document.getElementById("sjcIntro");
+    const room = document.getElementById("sjcRoom");
+    const startForm = document.getElementById("sjcStartForm");
+    const sendForm = document.getElementById("sjcSendForm");
+    const box = document.getElementById("sjcMessages");
+    const notif = document.getElementById("sjcNotif");
 
-    const namaInput = document.getElementById("sdChatNama");
-    const nomorInput = document.getElementById("sdChatNomor");
-    const emailInput = document.getElementById("sdChatEmail");
-    const pesanAwalInput = document.getElementById("sdChatPesanAwal");
-    const chatInput = document.getElementById("sdChatInput");
+    const namaInput = document.getElementById("sjcNama");
+    const nomorInput = document.getElementById("sjcNomor");
+    const emailInput = document.getElementById("sjcEmail");
+    const pesanAwalInput = document.getElementById("sjcPesanAwal");
+    const input = document.getElementById("sjcInput");
 
-    let kodeChat = localStorage.getItem("senjadata_kode_chat") || "";
-    let lastAdminCount = 0;
+    if(!panel || !toggle || !closeBtn || !intro || !room || !startForm || !sendForm || !box){
+        return;
+    }
+
+    let kodeChat = localStorage.getItem("senjadata_cs_kode_chat") || "";
+    let lastAdminCount = Number(localStorage.getItem("senjadata_cs_admin_count") || "0");
     let polling = null;
 
-    function openChat(){
-        if(!chatPanel) return;
+    function bukaPanel(){
+        panel.classList.add("active");
 
-        chatPanel.classList.add("active");
-        chatPanel.setAttribute("aria-hidden", "false");
-
-        if(notif) notif.style.display = "none";
+        if(notif){
+            notif.style.display = "none";
+        }
 
         if(kodeChat){
             tampilkanRoom();
             loadMessages();
-            startPolling();
+            mulaiPolling();
         }
     }
 
-    function closeChat(){
-        if(!chatPanel) return;
-
-        chatPanel.classList.remove("active");
-        chatPanel.setAttribute("aria-hidden", "true");
+    function tutupPanel(){
+        panel.classList.remove("active");
     }
 
     function tampilkanRoom(){
-        if(chatIntro) chatIntro.classList.add("hide");
-        if(chatRoom) chatRoom.classList.add("active");
+        intro.classList.add("hide");
+        room.classList.add("active");
     }
 
     function tampilkanIntro(){
-        if(chatIntro) chatIntro.classList.remove("hide");
-        if(chatRoom) chatRoom.classList.remove("active");
-    }
-
-    function scrollBottom(){
-        if(messagesBox){
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-        }
+        intro.classList.remove("hide");
+        room.classList.remove("active");
     }
 
     function escapeHtml(text){
@@ -1822,17 +1927,19 @@ function lihatSandi(id, tombol) {
         return div.innerHTML;
     }
 
-    function renderMessages(messages){
-        if(!messagesBox) return;
+    function scrollBawah(){
+        box.scrollTop = box.scrollHeight;
+    }
 
-        messagesBox.innerHTML = "";
+    function renderMessages(messages){
+        box.innerHTML = "";
 
         if(!messages || messages.length === 0){
-            messagesBox.innerHTML = `
-                <div class="sd-chat-msg-row admin">
-                    <div class="sd-chat-msg">
-                        <small>Admin SenjaData</small>
-                        <p>Halo, silakan tulis pesan kamu. Admin akan membalas secepatnya.</p>
+            box.innerHTML = `
+                <div class="sjc-row admin">
+                    <div class="sjc-msg">
+                        <small>CS SenjaData</small>
+                        <p>Halo, silakan tulis pesan kamu. CS akan membalas secepatnya.</p>
                         <time>Baru saja</time>
                     </div>
                 </div>
@@ -1842,69 +1949,70 @@ function lihatSandi(id, tombol) {
 
         let adminCount = 0;
 
-        messages.forEach((item) => {
+        messages.forEach(item => {
             const pengirim = item.pengirim === "admin" ? "admin" : "user";
-            if(pengirim === "admin") adminCount++;
+
+            if(pengirim === "admin"){
+                adminCount++;
+            }
 
             const row = document.createElement("div");
-            row.className = "sd-chat-msg-row " + pengirim;
+            row.className = "sjc-row " + pengirim;
 
             row.innerHTML = `
-                <div class="sd-chat-msg">
-                    <small>${pengirim === "admin" ? "Admin SenjaData" : "Kamu"}</small>
+                <div class="sjc-msg">
+                    <small>${pengirim === "admin" ? "CS SenjaData" : "Kamu"}</small>
                     <p>${escapeHtml(item.pesan)}</p>
                     <time>${escapeHtml(item.waktu || "")}</time>
                 </div>
             `;
 
-            messagesBox.appendChild(row);
+            box.appendChild(row);
         });
 
-        const panelOpen = chatPanel && chatPanel.classList.contains("active");
+        const sedangBuka = panel.classList.contains("active");
 
-        if(!panelOpen && adminCount > lastAdminCount && notif){
+        if(!sedangBuka && adminCount > lastAdminCount && notif){
             notif.style.display = "flex";
             notif.textContent = String(adminCount - lastAdminCount);
         }
 
         lastAdminCount = adminCount;
-        scrollBottom();
+        localStorage.setItem("senjadata_cs_admin_count", String(lastAdminCount));
+
+        scrollBawah();
     }
 
-    async function startChat(payload){
-        const response = await fetch("/api/chat/start", {
+    async function mulaiChat(payload){
+        const res = await fetch("/api/chat/start", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if(!response.ok || !data.success){
+        if(!res.ok || !data.success){
             throw new Error(data.message || "Gagal memulai chat.");
         }
 
         kodeChat = data.kode_chat;
-        localStorage.setItem("senjadata_kode_chat", kodeChat);
+        localStorage.setItem("senjadata_cs_kode_chat", kodeChat);
 
         tampilkanRoom();
         await loadMessages();
-        startPolling();
+        mulaiPolling();
     }
 
-    async function sendMessage(pesan){
+    async function kirimPesan(pesan){
         if(!kodeChat){
             tampilkanIntro();
             return;
         }
 
-        const response = await fetch("/api/chat/send", {
+        const res = await fetch("/api/chat/send", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 kode_chat: kodeChat,
                 pesan: pesan,
@@ -1912,9 +2020,9 @@ function lihatSandi(id, tombol) {
             })
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if(!response.ok || !data.success){
+        if(!res.ok || !data.success){
             throw new Error(data.message || "Gagal mengirim pesan.");
         }
 
@@ -1922,88 +2030,303 @@ function lihatSandi(id, tombol) {
     }
 
     async function loadMessages(){
-        if(!kodeChat) return;
+        if(!kodeChat){
+            return;
+        }
 
         try{
-            const response = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user");
-            const data = await response.json();
+            const res = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user");
+            const data = await res.json();
 
-            if(!response.ok || !data.success){
+            if(!res.ok || !data.success){
                 return;
             }
 
             renderMessages(data.messages || []);
-        }catch(error){
-            console.warn("Gagal mengambil pesan live chat:", error.message);
+        }catch(err){
+            console.warn("Live chat gagal load:", err.message);
         }
     }
 
-    function startPolling(){
-        if(polling) clearInterval(polling);
+    function mulaiPolling(){
+        if(polling){
+            clearInterval(polling);
+        }
 
         polling = setInterval(() => {
             if(kodeChat){
                 loadMessages();
             }
-        }, 4500);
+        }, 4000);
     }
 
-    if(chatToggle){
-        chatToggle.addEventListener("click", openChat);
-    }
+    toggle.addEventListener("click", bukaPanel);
+    closeBtn.addEventListener("click", tutupPanel);
 
-    if(chatClose){
-        chatClose.addEventListener("click", closeChat);
-    }
+    startForm.addEventListener("submit", async function(e){
+        e.preventDefault();
 
-    if(startForm){
-        startForm.addEventListener("submit", async function(e){
-            e.preventDefault();
+        const nama = namaInput.value.trim() || "Pengguna SenjaData";
+        const nomor_hp = nomorInput.value.trim();
+        const email = emailInput.value.trim();
+        const pesan = pesanAwalInput.value.trim();
 
-            const nama = (namaInput && namaInput.value.trim()) || "Pengguna SenjaData";
-            const nomor_hp = (nomorInput && nomorInput.value.trim()) || "";
-            const email = (emailInput && emailInput.value.trim()) || "";
-            const pesan = (pesanAwalInput && pesanAwalInput.value.trim()) || "";
+        if(!pesan){
+            alert("Pesan wajib diisi bro.");
+            return;
+        }
 
-            if(!pesan){
-                alert("Pesan wajib diisi bro.");
-                return;
-            }
+        try{
+            await mulaiChat({ nama, nomor_hp, email, pesan });
+            pesanAwalInput.value = "";
+        }catch(err){
+            alert(err.message);
+        }
+    });
 
-            try{
-                await startChat({ nama, nomor_hp, email, pesan });
-                pesanAwalInput.value = "";
-            }catch(error){
-                alert(error.message);
-            }
-        });
-    }
+    sendForm.addEventListener("submit", async function(e){
+        e.preventDefault();
 
-    if(sendForm){
-        sendForm.addEventListener("submit", async function(e){
-            e.preventDefault();
+        const pesan = input.value.trim();
 
-            const pesan = (chatInput && chatInput.value.trim()) || "";
+        if(!pesan){
+            return;
+        }
 
-            if(!pesan){
-                return;
-            }
-
-            try{
-                chatInput.value = "";
-                await sendMessage(pesan);
-            }catch(error){
-                alert(error.message);
-            }
-        });
-    }
+        try{
+            input.value = "";
+            await kirimPesan(pesan);
+        }catch(err){
+            alert(err.message);
+        }
+    });
 
     if(kodeChat){
         tampilkanRoom();
-        startPolling();
+        mulaiPolling();
     }else{
         tampilkanIntro();
     }
+})();
+</script>
+
+
+<!-- =========================================================
+     FIX LIVE CHAT SENJADATA: NGAMBANG + BISA DIGESER
+     Tempel otomatis dibuat dari base terbaru
+========================================================= -->
+<style>
+    /* Paksa tombol bantuan lama hilang */
+    .bantuan-float,
+    .tombol-bantuan,
+    .sd-chat-widget,
+    .chat-kami,
+    .chat-kami-btn,
+    .floating-chat,
+    .old-chat-widget,
+    .wa-floating,
+    .whatsapp-floating,
+    .btn-chat,
+    .chat-button {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* Widget CS baru dibuat lebih ke kanan dan tidak ganggu */
+    .sjc-widget {
+        position: fixed !important;
+        right: 4px !important;
+        bottom: 108px !important;
+        left: auto !important;
+        top: auto !important;
+        z-index: 99999 !important;
+        touch-action: none !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+    }
+
+    .sjc-widget.sjc-dragging {
+        transition: none !important;
+    }
+
+    .sjc-toggle {
+        cursor: grab !important;
+        box-shadow: 0 14px 32px rgba(0,122,230,.28) !important;
+    }
+
+    .sjc-widget.sjc-dragging .sjc-toggle {
+        cursor: grabbing !important;
+        transform: scale(.98) !important;
+    }
+
+    .sjc-panel {
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    @media (max-width: 560px) {
+        .sjc-widget {
+            right: 4px !important;
+            bottom: 108px !important;
+        }
+
+        .sjc-panel {
+            position: fixed !important;
+            left: 10px !important;
+            right: 10px !important;
+            bottom: 96px !important;
+            width: auto !important;
+            height: min(570px, calc(100vh - 118px)) !important;
+            max-height: calc(100vh - 118px) !important;
+            border-radius: 26px !important;
+        }
+    }
+</style>
+
+<script>
+(function(){
+    const widget = document.getElementById("sjcWidget");
+    const toggle = document.getElementById("sjcToggle");
+    const panel = document.getElementById("sjcPanel");
+
+    if(!widget || !toggle){
+        return;
+    }
+
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+    let suppressClickUntil = 0;
+
+    function clamp(value, min, max){
+        return Math.max(min, Math.min(value, max));
+    }
+
+    function safeNumber(value){
+        const num = Number(value);
+        return Number.isFinite(num) ? num : null;
+    }
+
+    function setPosition(left, top, save){
+        const rect = widget.getBoundingClientRect();
+        const maxLeft = Math.max(4, window.innerWidth - rect.width - 4);
+        const maxTop = Math.max(72, window.innerHeight - rect.height - 96);
+
+        const finalLeft = clamp(left, 4, maxLeft);
+        const finalTop = clamp(top, 72, maxTop);
+
+        widget.style.left = finalLeft + "px";
+        widget.style.top = finalTop + "px";
+        widget.style.right = "auto";
+        widget.style.bottom = "auto";
+
+        if(save){
+            localStorage.setItem("senjadata_chat_float_left", String(finalLeft));
+            localStorage.setItem("senjadata_chat_float_top", String(finalTop));
+        }
+    }
+
+    function setDefaultPosition(){
+        const savedLeft = safeNumber(localStorage.getItem("senjadata_chat_float_left"));
+        const savedTop = safeNumber(localStorage.getItem("senjadata_chat_float_top"));
+
+        if(savedLeft !== null && savedTop !== null){
+            setPosition(savedLeft, savedTop, false);
+            return;
+        }
+
+        const rect = widget.getBoundingClientRect();
+
+        /* Default: agak ke kanan, di atas bottom nav */
+        const defaultLeft = window.innerWidth - rect.width - 4;
+        const defaultTop = window.innerHeight - rect.height - 108;
+
+        setPosition(defaultLeft, defaultTop, false);
+    }
+
+    setTimeout(setDefaultPosition, 250);
+
+    toggle.addEventListener("pointerdown", function(e){
+        if(panel && panel.classList.contains("active")){
+            return;
+        }
+
+        dragging = true;
+        moved = false;
+
+        const rect = widget.getBoundingClientRect();
+
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = rect.left;
+        startTop = rect.top;
+
+        widget.classList.add("sjc-dragging");
+
+        try{
+            toggle.setPointerCapture(e.pointerId);
+        }catch(err){}
+    });
+
+    toggle.addEventListener("pointermove", function(e){
+        if(!dragging){
+            return;
+        }
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        if(Math.abs(dx) > 5 || Math.abs(dy) > 5){
+            moved = true;
+        }
+
+        if(moved){
+            setPosition(startLeft + dx, startTop + dy, false);
+        }
+    });
+
+    function stopDrag(e){
+        if(!dragging){
+            return;
+        }
+
+        dragging = false;
+        widget.classList.remove("sjc-dragging");
+
+        try{
+            toggle.releasePointerCapture(e.pointerId);
+        }catch(err){}
+
+        if(moved){
+            const rect = widget.getBoundingClientRect();
+            setPosition(rect.left, rect.top, true);
+
+            suppressClickUntil = Date.now() + 350;
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+
+    toggle.addEventListener("pointerup", stopDrag);
+    toggle.addEventListener("pointercancel", stopDrag);
+
+    toggle.addEventListener("click", function(e){
+        if(Date.now() < suppressClickUntil){
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        }
+    }, true);
+
+    window.addEventListener("resize", function(){
+        const rect = widget.getBoundingClientRect();
+        setPosition(rect.left, rect.top, true);
+    });
 })();
 </script>
 
