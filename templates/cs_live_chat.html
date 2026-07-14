@@ -1,785 +1,101 @@
 {% extends "cs_base.html" %}
 
 {% block title %}Live Chat CS - SenjaData{% endblock %}
-{% block heading %}Live Chat Member{% endblock %}
-{% block subtitle %}Pantau chat masuk secara otomatis, member di kiri dan ruang kerja CS di kanan.{% endblock %}
+{% block heading %}Live Chat{% endblock %}
+{% block subtitle %}Kelola percakapan member dan antrean pesan yang masuk{% endblock %}
 
 {% block extra_style %}
 <style>
-    /* =====================================================
-       LIVE CHAT LIST - FINAL BAGUS + AUTO REFRESH
-    ===================================================== */
-
-    .cs-live-shell{
-        grid-template-columns: 380px minmax(0, 1fr) !important;
-        height: calc(100vh - 92px);
-        min-height: 680px;
-    }
-
-    .cs-member-pane{
-        background:
-            radial-gradient(circle at 0% 0%,rgba(19,214,255,.10),transparent 34%),
-            linear-gradient(180deg,#0d182d,#09101f);
-    }
-
-    .cs-member-list{
-        gap:10px;
-        padding:12px;
-    }
-
-    .cs-chat-user-item{
-        position:relative;
-        overflow:hidden;
-        padding:13px;
-        border-radius:18px;
-        background:
-            radial-gradient(circle at 100% 0%,rgba(19,214,255,.08),transparent 34%),
-            #071020;
-        border:1px solid rgba(29,42,68,.95);
-        box-shadow:0 12px 28px rgba(0,0,0,.18);
-    }
-
-    .cs-chat-user-item::before{
-        content:"";
-        position:absolute;
-        left:0;
-        top:0;
-        bottom:0;
-        width:3px;
-        background:transparent;
-        transition:.18s ease;
-    }
-
-    .cs-chat-user-item:hover,
-    .cs-chat-user-item.active{
-        transform:translateY(-1px);
-        border-color:rgba(19,214,255,.55);
-        background:
-            radial-gradient(circle at 100% 0%,rgba(19,214,255,.14),transparent 34%),
-            linear-gradient(90deg,rgba(19,214,255,.10),rgba(18,107,255,.04));
-    }
-
-    .cs-chat-user-item:hover::before,
-    .cs-chat-user-item.active::before{
-        background:#13d6ff;
-        box-shadow:0 0 18px rgba(19,214,255,.75);
-    }
-
-    .cs-avatar{
-        box-shadow:0 14px 28px rgba(18,107,255,.24);
-    }
-
-    .cs-user-meta strong{
-        font-size:14px;
-    }
-
-    .cs-user-meta span{
-        max-width:230px;
-    }
-
-    .cs-chat-preview-grid{
-        height:100%;
-        display:grid;
-        grid-template-rows:auto 1fr;
-        min-height:0;
-    }
-
-    .cs-chat-welcome{
-        min-height:0;
-        height:100%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:24px;
-        background:
-            radial-gradient(circle at 30% 0%,rgba(19,214,255,.10),transparent 34%),
-            radial-gradient(circle at 90% 100%,rgba(18,107,255,.08),transparent 30%),
-            #080f1e;
-    }
-
-    .cs-welcome-card{
-        width:min(680px,100%);
-        padding:34px;
-        border-radius:26px;
-        text-align:center;
-        background:
-            radial-gradient(circle at 50% 0%,rgba(19,214,255,.12),transparent 38%),
-            linear-gradient(180deg,#0d182d,#09101f);
-        border:1px solid var(--line);
-        box-shadow:0 28px 70px rgba(0,0,0,.30);
-    }
-
-    .cs-welcome-icon{
-        width:82px;
-        height:82px;
-        margin:0 auto 16px;
-        border-radius:28px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        background:linear-gradient(135deg,#126bff,#13d6ff);
-        box-shadow:0 20px 46px rgba(18,107,255,.32);
-        font-size:34px;
-        color:#fff;
-    }
-
-    .cs-welcome-card h2{
-        color:#fff;
-        font-size:28px;
-        line-height:1.12;
-        font-weight:950;
-        letter-spacing:-.05em;
-        margin-bottom:10px;
-    }
-
-    .cs-welcome-card p{
-        color:var(--muted);
-        font-size:14px;
-        line-height:1.65;
-        font-weight:750;
-        max-width:520px;
-        margin:0 auto 20px;
-    }
-
-    .cs-live-feature{
-        display:grid;
-        grid-template-columns:repeat(4,minmax(0,1fr));
-        gap:10px;
-        margin-top:18px;
-    }
-
-    .cs-live-feature-item{
-        padding:13px 10px;
-        border-radius:16px;
-        background:#071020;
-        border:1px solid var(--line);
-    }
-
-    .cs-live-feature-item i{
-        display:block;
-        margin-bottom:8px;
-        color:#13d6ff;
-        font-size:18px;
-    }
-
-    .cs-live-feature-item strong{
-        display:block;
-        color:#fff;
-        font-size:12px;
-        font-weight:950;
-        line-height:1.25;
-    }
-
-    .cs-live-topline{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:10px;
-        flex-wrap:wrap;
-        padding:12px 14px;
-        border-bottom:1px solid var(--line);
-        background:linear-gradient(90deg,rgba(19,214,255,.08),rgba(18,107,255,.03));
-    }
-
-    .cs-live-topline-left{
-        display:flex;
-        align-items:center;
-        gap:10px;
-        min-width:0;
-    }
-
-    .cs-live-pulse{
-        width:12px;
-        height:12px;
-        border-radius:50%;
-        background:#19c37d;
-        box-shadow:0 0 0 6px rgba(25,195,125,.12), 0 0 18px rgba(25,195,125,.55);
-        flex:0 0 auto;
-    }
-
-    .cs-live-topline strong{
-        display:block;
-        color:#fff;
-        font-size:14px;
-        font-weight:950;
-    }
-
-    .cs-live-topline span{
-        display:block;
-        color:var(--muted);
-        font-size:11px;
-        font-weight:800;
-        margin-top:3px;
-    }
-
-    .cs-mini-live-list{
-        display:grid;
-        gap:8px;
-        margin-top:18px;
-        text-align:left;
-    }
-
-    .cs-mini-live-row{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:10px;
-        padding:11px 12px;
-        border-radius:15px;
-        background:#071020;
-        border:1px solid var(--line);
-    }
-
-    .cs-mini-live-row strong{
-        color:#fff;
-        font-size:12px;
-        font-weight:950;
-    }
-
-    .cs-mini-live-row span{
-        color:var(--muted);
-        font-size:11px;
-        font-weight:800;
-    }
-
-    .cs-auto-refresh-badge{
-        display:inline-flex;
-        align-items:center;
-        gap:7px;
-        padding:7px 10px;
-        border-radius:999px;
-        background:rgba(25,195,125,.12);
-        color:#bbf7d0;
-        border:1px solid rgba(25,195,125,.25);
-        font-size:11px;
-        font-weight:950;
-        white-space:nowrap;
-    }
-
-    .cs-auto-refresh-badge i{
-        animation:csSpin 1.8s linear infinite;
-    }
-
-    @keyframes csSpin{
-        to{transform:rotate(360deg);}
-    }
-
-    @media(max-width:1180px){
-        .cs-live-shell{
-            grid-template-columns:330px minmax(0,1fr) !important;
-        }
-
-        .cs-live-feature{
-            grid-template-columns:repeat(2,minmax(0,1fr));
-        }
-    }
-
-    @media(max-width:980px){
-        .cs-live-shell{
-            grid-template-columns:1fr !important;
-            height:auto;
-            min-height:0;
-        }
-
-        .cs-member-list{
-            max-height:380px;
-        }
-
-        .cs-chat-pane{
-            min-height:520px;
-        }
-    }
-
-    @media(max-width:620px){
-        .cs-welcome-card{
-            padding:24px;
-        }
-
-        .cs-welcome-card h2{
-            font-size:22px;
-        }
-
-        .cs-live-feature{
-            grid-template-columns:1fr;
-        }
-    }
+    .live-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;margin-bottom:14px;padding:19px 20px;border:1px solid rgba(19,214,255,.19);border-radius:21px;background:radial-gradient(circle at 82% 0%,rgba(19,214,255,.14),transparent 31%),linear-gradient(125deg,#0d1d38,#091323 67%);}
+    .live-summary-kicker{display:flex;align-items:center;gap:7px;color:#88ebff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}.live-summary-kicker i{font-size:9px;color:#19c37d;}.live-summary h2{margin-top:8px;color:#fff;font-size:23px;line-height:1.2;font-weight:950;letter-spacing:-.035em;}.live-summary p{margin-top:5px;color:#9aabc2;font-size:13px;font-weight:700;line-height:1.5;}
+    .live-sync{display:inline-flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid rgba(25,195,125,.25);border-radius:999px;background:rgba(25,195,125,.1);color:#baf7d5;font-size:11px;font-weight:900;white-space:nowrap;}.live-sync i{color:#30dd94;animation:sync-spin 1.8s linear infinite;}@keyframes sync-spin{to{transform:rotate(360deg)}}
+    .live-stat small{display:block;margin-top:5px;color:#6f8099;font-size:11px;font-weight:700;}.cs-stat.live-stat{min-height:112px;}
+    .live-filter{margin-bottom:14px;}.live-filter .cs-card-body{padding:14px;}.live-filter-form{display:grid;grid-template-columns:minmax(0,1fr) 170px auto auto;gap:9px;}.live-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;}
+    .cs-live-shell{grid-template-columns:370px minmax(0,1fr)!important;height:calc(100vh - 286px);min-height:620px;}.cs-member-pane{background:linear-gradient(180deg,#0c172b,#09101e);}.cs-member-pane .cs-card-head{padding:15px;}.cs-member-list{gap:7px;padding:9px;}.queue-count{display:inline-flex;align-items:center;gap:6px;color:#8fa1ba;font-size:11px;font-weight:800;}.queue-count b{color:#fff;font-size:12px;}
+    .chat-entry{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px;border:1px solid var(--line);border-radius:15px;background:#071020;transition:.16s ease;}.chat-entry:hover{border-color:rgba(19,214,255,.48);background:linear-gradient(90deg,rgba(19,214,255,.09),#071020);}.chat-entry .cs-avatar{width:42px;height:42px;border-radius:14px;font-size:14px;}.chat-entry-main{min-width:0;}.chat-entry-main strong{display:block;color:#fff;font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.chat-entry-main p{margin-top:3px;color:#98a8be;font-size:11px;line-height:1.35;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.chat-entry-main small{display:block;margin-top:4px;color:#697b94;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.chat-entry-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}.chat-entry-side time{color:#70819a;font-size:10px;font-weight:800;white-space:nowrap;}.chat-unread{min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;border-radius:50px;background:#ff4d5e;color:#fff;font-size:10px;font-weight:950;}
+    .cs-chat-preview-grid{height:100%;display:grid;grid-template-rows:auto 1fr;min-height:0;}.workspace-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(19,214,255,.08),rgba(18,107,255,.02));}.workspace-status{display:flex;align-items:center;gap:9px;min-width:0;}.workspace-dot{width:9px;height:9px;flex:0 0 auto;border-radius:50%;background:#19c37d;box-shadow:0 0 0 5px rgba(25,195,125,.1);}.workspace-status strong{display:block;color:#fff;font-size:13px;font-weight:900;}.workspace-status span{display:block;margin-top:3px;color:#7f90a8;font-size:10px;font-weight:750;}.workspace-bar .cs-btn{min-height:35px;padding:0 11px;font-size:11px;}
+    .workspace-empty{display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at 28% 2%,rgba(19,214,255,.08),transparent 28%),#080f1e;}.workspace-card{width:min(570px,100%);padding:28px;text-align:center;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#0c172b,#09111f);box-shadow:0 25px 50px rgba(0,0,0,.2);}.workspace-icon{width:66px;height:66px;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;border-radius:22px;background:linear-gradient(135deg,#126bff,#13d6ff);color:#fff;font-size:26px;box-shadow:0 15px 32px rgba(18,107,255,.27);}.workspace-card h3{color:#fff;font-size:21px;font-weight:950;letter-spacing:-.03em;}.workspace-card p{max-width:420px;margin:8px auto 0;color:#95a6bc;font-size:13px;line-height:1.55;font-weight:700;}.workspace-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px;text-align:left;}.workspace-step{padding:11px;border:1px solid var(--line);border-radius:13px;background:#071020;}.workspace-step i{color:#6bdbff;font-size:15px;}.workspace-step strong{display:block;margin-top:7px;color:#fff;font-size:11px;font-weight:900;}.workspace-step span{display:block;margin-top:3px;color:#7789a1;font-size:10px;line-height:1.35;font-weight:700;}
+    @media(max-width:980px){.cs-live-shell{grid-template-columns:1fr!important;height:auto;min-height:0;}.cs-member-list{max-height:400px;}.cs-chat-pane{min-height:520px;}.live-summary{grid-template-columns:1fr;}.live-sync{width:max-content;}.live-filter-form{grid-template-columns:1fr 1fr;}}
+    @media(max-width:620px){.live-summary{padding:17px;}.live-summary h2{font-size:20px;}.live-filter-form{grid-template-columns:1fr;}.live-filter-form .cs-btn{width:100%;justify-content:center;}.chat-entry{grid-template-columns:42px minmax(0,1fr);}.chat-entry-side{grid-column:2;flex-direction:row;align-items:center;}.workspace-card{padding:22px 16px;}.workspace-steps{grid-template-columns:1fr;}.workspace-step{display:flex;align-items:center;gap:10px;}.workspace-step strong{margin-top:0;}.workspace-step span{display:none;}}
 </style>
 {% endblock %}
 
 {% block content %}
-
-<section class="cs-stats">
-    <div class="cs-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
-        <i class="fa-solid fa-comments"></i>
-        <span>Total Chat</span>
-        <strong id="csTotalChat">{{ ringkasan.total|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
-        <i class="fa-solid fa-door-open"></i>
-        <span>Open</span>
-        <strong id="csOpenChat">{{ ringkasan.open|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(148,163,184,.13);--icon:#94a3b8;">
-        <i class="fa-solid fa-lock"></i>
-        <span>Closed</span>
-        <strong id="csClosedChat">{{ ringkasan.closed|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
-        <i class="fa-solid fa-bell"></i>
-        <span>Unread</span>
-        <strong id="csUnreadChat">{{ ringkasan.unread|default(0) }}</strong>
-    </div>
+<section class="live-summary">
+    <div><div class="live-summary-kicker"><i class="fa-solid fa-circle"></i> Live chat aktif</div><h2>Kelola antrean chat tanpa kehilangan pesan penting.</h2><p>Ada {{ ringkasan.unread|default(0) }} pesan belum dibaca dari {{ ringkasan.open|default(0) }} percakapan yang masih aktif.</p></div>
+    <span class="live-sync"><i class="fa-solid fa-arrows-rotate"></i> Update otomatis setiap 2,5 detik</span>
 </section>
 
-<section class="cs-card" style="margin-bottom:14px;">
-    <div class="cs-card-head">
-        <div>
-            <h3>Filter Live Chat</h3>
-            <p>Cari member berdasarkan nama, nomor HP, email, kode chat, atau pesan terakhir.</p>
-        </div>
+<section class="cs-stats" aria-label="Ringkasan live chat">
+    <div class="cs-stat live-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;"><i class="fa-solid fa-comments"></i><span>Total Chat</span><strong id="csTotalChat">{{ ringkasan.total|default(0) }}</strong><small>Chat sesuai filter saat ini</small></div>
+    <div class="cs-stat live-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;"><i class="fa-solid fa-door-open"></i><span>Masih Aktif</span><strong id="csOpenChat">{{ ringkasan.open|default(0) }}</strong><small>Belum ditutup oleh CS</small></div>
+    <div class="cs-stat live-stat" style="--glow:rgba(148,163,184,.13);--icon:#94a3b8;"><i class="fa-solid fa-lock"></i><span>Selesai</span><strong id="csClosedChat">{{ ringkasan.closed|default(0) }}</strong><small>Chat yang sudah ditutup</small></div>
+    <div class="cs-stat live-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;"><i class="fa-solid fa-bell"></i><span>Belum Dibaca</span><strong id="csUnreadChat">{{ ringkasan.unread|default(0) }}</strong><small>Perlu respons dari CS</small></div>
+</section>
 
-        <span class="cs-auto-refresh-badge">
-            <i class="fa-solid fa-rotate"></i>
-            Auto Refresh Aktif
-        </span>
-    </div>
-
-    <div class="cs-card-body">
-        <form class="cs-filter" method="GET" action="/cs/live-chat" style="grid-template-columns:1fr 180px auto auto;">
-            <div class="cs-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ q|default('') }}"
-                    placeholder="Cari nama, email, nomor HP, kode chat, atau pesan..."
-                >
-            </div>
-
-            <select class="cs-select" name="status">
-                <option value="">semua status</option>
-                <option value="open" {% if status == "open" %}selected{% endif %}>open</option>
-                <option value="closed" {% if status == "closed" %}selected{% endif %}>closed</option>
-            </select>
-
-            <button class="cs-btn primary" type="submit">
-                <i class="fa-solid fa-check"></i>
-                Terapkan
-            </button>
-
-            <a class="cs-btn" href="/cs/live-chat">
-                Reset
-            </a>
-        </form>
-
-        {% if q or status %}
-            <div class="cs-filter-row">
-                {% if q %}
-                    <span class="cs-badge">
-                        Keyword: {{ q }}
-                    </span>
-                {% endif %}
-
-                {% if status %}
-                    <span class="cs-badge orange">
-                        Status: {{ status }}
-                    </span>
-                {% endif %}
-            </div>
-        {% endif %}
-    </div>
+<section class="cs-card live-filter">
+    <div class="cs-card-head"><div><h3>Temukan percakapan</h3><p>Cari berdasarkan nama, kontak, kode chat, atau isi pesan terakhir.</p></div><span class="queue-count"><b id="csListCount">{{ ringkasan.total|default(0) }}</b> percakapan</span></div>
+    <div class="cs-card-body"><form class="live-filter-form" method="GET" action="/cs/live-chat"><div class="cs-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ q|default('') }}" placeholder="Cari nama, email, nomor, kode chat..." autocomplete="off"></div><select class="cs-select" name="status"><option value="">Semua status</option><option value="open" {% if status == "open" %}selected{% endif %}>Masih aktif</option><option value="closed" {% if status == "closed" %}selected{% endif %}>Sudah selesai</option></select><button class="cs-btn primary" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button><a class="cs-btn" href="/cs/live-chat">Reset</a></form>{% if q or status %}<div class="live-filter-row"><span class="cs-badge orange"><i class="fa-solid fa-filter"></i> Filter aktif</span>{% if q %}<span class="cs-badge">Pencarian: {{ q }}</span>{% endif %}{% if status %}<span class="cs-badge">Status: {{ status }}</span>{% endif %}</div>{% endif %}</div>
 </section>
 
 <section class="cs-live-shell">
-
-    <!-- KIRI: DAFTAR MEMBER / CHAT -->
     <aside class="cs-card cs-member-pane">
-        <div class="cs-card-head">
-            <div>
-                <h3>Member / Chat Masuk</h3>
-                <p>Daftar ini otomatis update tanpa reload.</p>
-            </div>
-
-            <span class="cs-badge green" id="csListCount">
-                {{ ringkasan.total|default(0) }} Data
-            </span>
-        </div>
-
-        <div class="cs-member-list" id="csMemberList" data-active-id="">
-            {% if daftar_chat|default([]) %}
-                {% for chat in daftar_chat|default([]) %}
-                    <a class="cs-chat-user-item" href="/cs/live-chat/{{ chat.id }}">
-                        <div class="cs-avatar">
-                            {{ (chat.nama or "U")[:1].upper() }}
-                        </div>
-
-                        <div class="cs-user-meta">
-                            <strong>
-                                {{ chat.nama or "Pengguna SenjaData" }}
-                            </strong>
-
-                            <span>
-                                {{ chat.last_message or "Belum ada pesan terakhir." }}
-                            </span>
-
-                            <span>
-                                {% if chat.nomor_hp %}
-                                    {{ chat.nomor_hp }}
-                                {% elif chat.email %}
-                                    {{ chat.email }}
-                                {% else %}
-                                    {{ chat.kode_chat }}
-                                {% endif %}
-                            </span>
-
-                            <em>
-                                {% if format_waktu_chat is defined %}
-                                    {{ format_waktu_chat(chat.diperbarui_pada) }}
-                                {% elif chat.diperbarui_pada %}
-                                    {{ chat.diperbarui_pada.strftime("%d/%m/%Y, %H:%M:%S") }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </em>
-
-                            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;">
-                                {% if chat.status == "open" %}
-                                    <span class="cs-status ok">
-                                        open
-                                    </span>
-                                {% else %}
-                                    <span class="cs-status info">
-                                        closed
-                                    </span>
-                                {% endif %}
-
-                                {% if chat.kode_chat %}
-                                    <span class="cs-badge dark">
-                                        {{ chat.kode_chat }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        {% if chat.unread_admin and chat.unread_admin > 0 %}
-                            <div class="cs-unread">
-                                {{ chat.unread_admin }}
-                            </div>
-                        {% endif %}
-                    </a>
-                {% endfor %}
-            {% else %}
-                <div class="cs-empty">
-                    Belum ada live chat masuk. Nanti saat user klik tombol bantuan di website, datanya muncul di sini.
-                </div>
-            {% endif %}
+        <div class="cs-card-head"><div><h3>Antrean percakapan</h3><p>Pesan terbaru berada di urutan atas.</p></div><span class="cs-badge green">Live</span></div>
+        <div class="cs-member-list" id="csMemberList">
+            {% if daftar_chat|default([]) %}{% for chat in daftar_chat|default([]) %}
+            <a class="chat-entry" href="/cs/live-chat/{{ chat.id }}"><div class="cs-avatar">{{ (chat.nama or "U")[:1].upper() }}</div><div class="chat-entry-main"><strong>{{ chat.nama or "Pengguna SenjaData" }}</strong><p>{{ chat.last_message or "Belum ada pesan terakhir." }}</p><small>{% if chat.nomor_hp %}{{ chat.nomor_hp }}{% elif chat.email %}{{ chat.email }}{% else %}{{ chat.kode_chat }}{% endif %}</small></div><div class="chat-entry-side"><span class="cs-status {% if chat.status == 'open' %}ok{% else %}info{% endif %}">{% if chat.status == "open" %}Aktif{% else %}Selesai{% endif %}</span>{% if chat.unread_admin and chat.unread_admin > 0 %}<span class="chat-unread">{{ chat.unread_admin }}</span>{% endif %}<time>{% if format_waktu_chat is defined %}{{ format_waktu_chat(chat.diperbarui_pada) }}{% elif chat.diperbarui_pada %}{{ chat.diperbarui_pada.strftime("%d/%m %H:%M") }}{% else %}-{% endif %}</time></div></a>
+            {% endfor %}{% else %}<div class="cs-empty">Belum ada live chat masuk. Percakapan dari member akan muncul di sini.</div>{% endif %}
         </div>
     </aside>
 
-    <!-- KANAN: TEMPAT CHAT -->
     <section class="cs-card cs-chat-pane">
-        <div class="cs-chat-head">
-            <div class="cs-chat-person">
-                <div class="cs-avatar">
-                    <i class="fa-solid fa-comment-dots"></i>
-                </div>
-
-                <div>
-                    <h3>Pilih Member / Chat</h3>
-                    <p>Ruang chat akan tampil di sini setelah CS memilih salah satu member di sebelah kiri.</p>
-                </div>
-            </div>
-
-            <div class="cs-chat-actions">
-                <span class="cs-status info">
-                    standby
-                </span>
-            </div>
-        </div>
-
-        <div class="cs-chat-preview-grid">
-            <div class="cs-live-topline">
-                <div class="cs-live-topline-left">
-                    <span class="cs-live-pulse"></span>
-
-                    <div>
-                        <strong>Live Chat Monitor Aktif</strong>
-                        <span id="csLastRefreshText">Menunggu update terbaru...</span>
-                    </div>
-                </div>
-
-                <a class="cs-btn primary" href="/cs/live-chat">
-                    <i class="fa-solid fa-rotate"></i>
-                    Refresh Manual
-                </a>
-            </div>
-
-            <div class="cs-chat-welcome">
-                <div class="cs-welcome-card">
-                    <div class="cs-welcome-icon">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-
-                    <h2>Pilih chat dari daftar kiri</h2>
-
-                    <p>
-                        Saat member mengirim pesan baru, daftar kiri akan otomatis update.
-                        Klik nama member untuk membuka room percakapan, lalu CS bisa balas langsung dari halaman detail.
-                    </p>
-
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
-                        <span class="cs-badge">
-                            <i class="fa-solid fa-comments"></i>
-                            Live Chat
-                        </span>
-
-                        <span class="cs-badge green">
-                            <i class="fa-solid fa-bolt"></i>
-                            Auto Update
-                        </span>
-
-                        <span class="cs-badge orange">
-                            <i class="fa-solid fa-receipt"></i>
-                            Cek TRX
-                        </span>
-
-                        <span class="cs-badge dark">
-                            <i class="fa-solid fa-keyboard"></i>
-                            Enter to Send
-                        </span>
-                    </div>
-
-                    <div class="cs-live-feature">
-                        <div class="cs-live-feature-item">
-                            <i class="fa-solid fa-user-clock"></i>
-                            <strong>Chat masuk otomatis terlihat</strong>
-                        </div>
-
-                        <div class="cs-live-feature-item">
-                            <i class="fa-solid fa-bell"></i>
-                            <strong>Unread tampil jelas</strong>
-                        </div>
-
-                        <div class="cs-live-feature-item">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <strong>Filter member cepat</strong>
-                        </div>
-
-                        <div class="cs-live-feature-item">
-                            <i class="fa-solid fa-receipt"></i>
-                            <strong>Cek transaksi via detail</strong>
-                        </div>
-                    </div>
-
-                    <div class="cs-mini-live-list" id="csMiniLiveList">
-                        {% if daftar_chat|default([]) %}
-                            {% for chat in daftar_chat[:3] %}
-                                <a class="cs-mini-live-row" href="/cs/live-chat/{{ chat.id }}">
-                                    <div>
-                                        <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
-                                        <span>{{ chat.last_message or "Belum ada pesan terakhir." }}</span>
-                                    </div>
-
-                                    {% if chat.status == "open" %}
-                                        <span class="cs-status ok">open</span>
-                                    {% else %}
-                                        <span class="cs-status info">closed</span>
-                                    {% endif %}
-                                </a>
-                            {% endfor %}
-                        {% else %}
-                            <div class="cs-mini-live-row">
-                                <div>
-                                    <strong>Belum ada chat</strong>
-                                    <span>Menunggu member menghubungi CS.</span>
-                                </div>
-                                <span class="cs-status info">standby</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="cs-chat-preview-grid"><div class="workspace-bar"><div class="workspace-status"><i class="workspace-dot"></i><div><strong>Ruang kerja CS</strong><span id="csLastRefreshText">Menyiapkan data percakapan terbaru...</span></div></div><a class="cs-btn primary" href="/cs/live-chat"><i class="fa-solid fa-rotate"></i> Muat ulang</a></div><div class="workspace-empty"><div class="workspace-card"><div class="workspace-icon"><i class="fa-solid fa-headset"></i></div><h3>Pilih percakapan dari antrean</h3><p>Detail percakapan, riwayat pesan, data member, dan tindakan untuk membalas akan dibuka setelah Anda memilih salah satu chat di sebelah kiri.</p><div class="workspace-steps"><div class="workspace-step"><i class="fa-solid fa-message"></i><div><strong>Baca pesan</strong><span>Pahami kebutuhan member.</span></div></div><div class="workspace-step"><i class="fa-solid fa-receipt"></i><div><strong>Verifikasi</strong><span>Cek transaksi bila diperlukan.</span></div></div><div class="workspace-step"><i class="fa-solid fa-reply"></i><div><strong>Balas & selesai</strong><span>Berikan informasi yang jelas.</span></div></div></div></div></div></div>
     </section>
-
 </section>
-
 {% endblock %}
 
 {% block extra_script %}
 <script>
-(function(){
-    const memberList = document.getElementById("csMemberList");
-    const miniList = document.getElementById("csMiniLiveList");
-
-    const totalEl = document.getElementById("csTotalChat");
-    const openEl = document.getElementById("csOpenChat");
-    const closedEl = document.getElementById("csClosedChat");
-    const unreadEl = document.getElementById("csUnreadChat");
-    const countEl = document.getElementById("csListCount");
+(() => {
+    const list = document.getElementById("csMemberList");
+    const totals = { total: document.getElementById("csTotalChat"), open: document.getElementById("csOpenChat"), closed: document.getElementById("csClosedChat"), unread: document.getElementById("csUnreadChat") };
+    const count = document.getElementById("csListCount");
     const refreshText = document.getElementById("csLastRefreshText");
+    let previousUnread = Number(totals.unread?.textContent || 0);
+    if (!list) return;
 
-    if(!memberList){
-        return;
-    }
+    const escapeHtml = (value) => { const el = document.createElement("div"); el.textContent = value || ""; return el.innerHTML; };
+    const contact = (chat) => chat.nomor_hp || chat.email || chat.kode_chat || "-";
 
-    let lastUnreadTotal = Number((unreadEl && unreadEl.textContent) || 0);
-
-    function escapeHtml(text){
-        const div = document.createElement("div");
-        div.textContent = text || "";
-        return div.innerHTML;
-    }
-
-    function setText(el, value){
-        if(el){
-            el.textContent = value;
-        }
-    }
-
-    function renderChatList(chats){
-        if(!chats || chats.length === 0){
-            memberList.innerHTML = `
-                <div class="cs-empty">
-                    Belum ada live chat masuk. Nanti saat user klik tombol bantuan di website, datanya muncul di sini.
-                </div>
-            `;
-
-            return;
-        }
-
-        memberList.innerHTML = chats.map(function(chat){
-            const kontak = chat.nomor_hp || chat.email || chat.kode_chat || "-";
-            const statusClass = chat.status === "open" ? "ok" : "info";
+    function render(chats) {
+        if (!chats?.length) { list.innerHTML = '<div class="cs-empty">Belum ada live chat masuk. Percakapan dari member akan muncul di sini.</div>'; return; }
+        list.innerHTML = chats.map((chat) => {
+            const open = chat.status === "open";
             const unread = Number(chat.unread_admin || 0);
-
-            return `
-                <a class="cs-chat-user-item" href="/cs/live-chat/${chat.id}">
-                    <div class="cs-avatar">
-                        ${escapeHtml((chat.nama || "U").slice(0,1).toUpperCase())}
-                    </div>
-
-                    <div class="cs-user-meta">
-                        <strong>${escapeHtml(chat.nama || "Pengguna SenjaData")}</strong>
-                        <span>${escapeHtml(chat.last_message || "Belum ada pesan terakhir.")}</span>
-                        <span>${escapeHtml(kontak)}</span>
-                        <em>${escapeHtml(chat.diperbarui_pada || "-")}</em>
-
-                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;">
-                            <span class="cs-status ${statusClass}">
-                                ${escapeHtml(chat.status || "open")}
-                            </span>
-
-                            <span class="cs-badge dark">
-                                ${escapeHtml(chat.kode_chat || "-")}
-                            </span>
-                        </div>
-                    </div>
-
-                    ${unread > 0 ? `<div class="cs-unread">${unread}</div>` : ""}
-                </a>
-            `;
+            return `<a class="chat-entry" href="/cs/live-chat/${chat.id}"><div class="cs-avatar">${escapeHtml((chat.nama || "U").slice(0, 1).toUpperCase())}</div><div class="chat-entry-main"><strong>${escapeHtml(chat.nama || "Pengguna SenjaData")}</strong><p>${escapeHtml(chat.last_message || "Belum ada pesan terakhir.")}</p><small>${escapeHtml(contact(chat))}</small></div><div class="chat-entry-side"><span class="cs-status ${open ? "ok" : "info"}">${open ? "Aktif" : "Selesai"}</span>${unread ? `<span class="chat-unread">${unread}</span>` : ""}<time>${escapeHtml(chat.diperbarui_pada || "-")}</time></div></a>`;
         }).join("");
     }
 
-    function renderMiniList(chats){
-        if(!miniList){
-            return;
-        }
-
-        const topChats = (chats || []).slice(0,3);
-
-        if(topChats.length === 0){
-            miniList.innerHTML = `
-                <div class="cs-mini-live-row">
-                    <div>
-                        <strong>Belum ada chat</strong>
-                        <span>Menunggu member menghubungi CS.</span>
-                    </div>
-                    <span class="cs-status info">standby</span>
-                </div>
-            `;
-
-            return;
-        }
-
-        miniList.innerHTML = topChats.map(function(chat){
-            const statusClass = chat.status === "open" ? "ok" : "info";
-
-            return `
-                <a class="cs-mini-live-row" href="/cs/live-chat/${chat.id}">
-                    <div>
-                        <strong>${escapeHtml(chat.nama || "Pengguna SenjaData")}</strong>
-                        <span>${escapeHtml(chat.last_message || "Belum ada pesan terakhir.")}</span>
-                    </div>
-
-                    <span class="cs-status ${statusClass}">
-                        ${escapeHtml(chat.status || "open")}
-                    </span>
-                </a>
-            `;
-        }).join("");
+    function updateSummary(summary) {
+        if (!summary) return;
+        Object.entries(totals).forEach(([key, el]) => { if (el) el.textContent = summary[key] || 0; });
+        if (count) count.textContent = summary.total || 0;
+        const unread = Number(summary.unread || 0);
+        document.title = unread ? `(${unread}) Live Chat CS - SenjaData` : "Live Chat CS - SenjaData";
+        previousUnread = unread;
     }
 
-    function updateRingkasan(ringkasan){
-        if(!ringkasan){
-            return;
-        }
-
-        setText(totalEl, ringkasan.total || 0);
-        setText(openEl, ringkasan.open || 0);
-        setText(closedEl, ringkasan.closed || 0);
-        setText(unreadEl, ringkasan.unread || 0);
-        setText(countEl, (ringkasan.total || 0) + " Data");
-
-        const unreadNow = Number(ringkasan.unread || 0);
-
-        if(unreadNow > lastUnreadTotal){
-            document.title = "(" + unreadNow + ") Live Chat CS - SenjaData";
-        }else if(unreadNow === 0){
-            document.title = "Live Chat CS - SenjaData";
-        }
-
-        lastUnreadTotal = unreadNow;
-    }
-
-    async function refreshChatList(){
-        try{
-            const params = new URLSearchParams(window.location.search);
-            params.set("ts", Date.now());
-
-            const response = await fetch("/api/cs/chats?" + params.toString(), {
-                cache: "no-store"
-            });
-
+    async function refresh() {
+        try {
+            const params = new URLSearchParams(location.search); params.set("ts", Date.now());
+            const response = await fetch(`/api/cs/chats?${params}`, { cache: "no-store" });
             const data = await response.json();
-
-            if(!response.ok || !data.success){
-                if(refreshText){
-                    refreshText.textContent = "Auto update menunggu endpoint /api/cs/chats aktif.";
-                }
-                return;
-            }
-
-            renderChatList(data.chats || []);
-            renderMiniList(data.chats || []);
-            updateRingkasan(data.ringkasan || {});
-
-            if(refreshText){
-                refreshText.textContent = "Update terakhir: " + new Date().toLocaleTimeString("id-ID");
-            }
-        }catch(error){
-            if(refreshText){
-                refreshText.textContent = "Gagal auto update: " + error.message;
-            }
-        }
+            if (!response.ok || !data.success) throw new Error("data belum tersedia");
+            render(data.chats || []); updateSummary(data.ringkasan || {});
+            if (refreshText) refreshText.textContent = `Terakhir diperbarui ${new Date().toLocaleTimeString("id-ID")}`;
+        } catch (error) { if (refreshText) refreshText.textContent = "Pembaruan otomatis sedang mencoba kembali..."; }
     }
-
-    refreshChatList();
-    setInterval(refreshChatList, 2500);
+    refresh(); setInterval(refresh, 2500);
 })();
 </script>
 {% endblock %}
