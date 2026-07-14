@@ -138,9 +138,9 @@
         }
 
         .support-btn {
-                        border: 0;
+            border: 0;
             cursor: pointer;
-width: 46px;
+            width: 46px;
             height: 46px;
             border-radius: 16px;
             display: flex;
@@ -1673,15 +1673,44 @@ width: 46px;
         }
 
         /* =========================================================
-           LIVE CHAT COMPATIBLE WITH APP.PY FINAL
+           FINAL LIVE CHAT CLEAN FIX
+           Hapus widget lama Chat Kami, sisakan SenjaData chat saja
         ========================================================= */
 
+        body .bantuan-float:not(#senjaChatFloat),
+        body .tombol-bantuan,
+        body .old-chat-widget,
+        body .wa-floating,
+        body .whatsapp-floating,
+        body .chat-kami,
+        body .chat-kami-btn,
+        body .floating-chat:not(#senjaChatFloat),
+        body .btn-chat:not(#senjaChatButton),
+        body .chat-button:not(#senjaChatButton) {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
         #senjaChatFloat {
-            z-index: 99999;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            z-index: 2147483647 !important;
         }
 
         #senjaChatPanel {
-            z-index: 100000;
+            z-index: 2147483647 !important;
+        }
+
+        #senjaChatPanel.is-open {
+            display: flex !important;
+        }
+
+        .senja-chat-bubble-box p {
+            font-weight: 800 !important;
         }
 
         .senja-start-button.is-loading,
@@ -1895,7 +1924,7 @@ width: 46px;
                     <div class="senja-chat-avatar">👩🏻‍💻</div>
 
                     <div class="senja-chat-bubble-box">
-                        <p>Selamat datang di SenjaData 👋<br>Ada yang bisa kami bantu hari ini?</p>
+                        <p>Selamat datang di SenjaData 👋</p>
                         <time>Baru saja</time>
                     </div>
                 </div>
@@ -2034,6 +2063,10 @@ function lihatSandi(id, tombol) {
 
         selectors.forEach(function(sel){
             document.querySelectorAll(sel).forEach(function(el){
+                if(el.id === "senjaChatFloat" || el.id === "senjaChatPanel" || el.id === "senjaChatButton"){
+                    return;
+                }
+
                 if(el.closest("#senjaChatFloat") || el.closest("#senjaChatPanel")){
                     return;
                 }
@@ -2044,11 +2077,42 @@ function lihatSandi(id, tombol) {
                 el.style.setProperty("pointer-events", "none", "important");
             });
         });
+
+        document.querySelectorAll("a, button, div, section").forEach(function(el){
+            if(el.id === "senjaChatFloat" || el.id === "senjaChatPanel" || el.id === "senjaChatButton"){
+                return;
+            }
+
+            if(el.closest("#senjaChatFloat") || el.closest("#senjaChatPanel")){
+                return;
+            }
+
+            const text = (el.innerText || el.textContent || "").trim().toLowerCase();
+            const cls = (el.className || "").toString().toLowerCase();
+            const style = window.getComputedStyle(el);
+
+            const isFixed = style.position === "fixed";
+            const looksChatClass = cls.includes("chat") || cls.includes("bantuan") || cls.includes("wa") || cls.includes("whatsapp");
+            const looksOldChatText = text.includes("chat kami") || text.includes("butuh bantuan") || text.includes("whatsapp");
+
+            if((isFixed || looksChatClass) && looksOldChatText){
+                el.style.setProperty("display", "none", "important");
+                el.style.setProperty("visibility", "hidden", "important");
+                el.style.setProperty("opacity", "0", "important");
+                el.style.setProperty("pointer-events", "none", "important");
+            }
+        });
     }
 
     hideOldChats();
-    setTimeout(hideOldChats, 600);
-    setInterval(hideOldChats, 2500);
+    setTimeout(hideOldChats, 300);
+    setTimeout(hideOldChats, 900);
+    setInterval(hideOldChats, 1500);
+
+    try{
+        const observer = new MutationObserver(hideOldChats);
+        observer.observe(document.body, { childList: true, subtree: true });
+    }catch(err){}
 
     const floatBox = document.getElementById("senjaChatFloat");
     const button = document.getElementById("senjaChatButton");
@@ -2250,8 +2314,15 @@ function lihatSandi(id, tombol) {
             <div class="senja-msg-row admin">
                 <div class="senja-msg">
                     <small>CS SenjaData</small>
-                    <p>Selamat datang di SenjaData 👋
-Ada yang bisa kami bantu hari ini?</p>
+                    <p>Selamat datang di SenjaData 👋</p>
+                    <time>Baru saja</time>
+                </div>
+            </div>
+
+            <div class="senja-msg-row admin">
+                <div class="senja-msg">
+                    <small>CS SenjaData</small>
+                    <p>Ada yang bisa kami bantu hari ini?</p>
                     <time>Baru saja</time>
                 </div>
             </div>
@@ -2338,7 +2409,13 @@ Ada yang bisa kami bantu hari ini?</p>
         localStorage.setItem(STORAGE_CODE, kodeChat);
 
         showRoom();
-        renderWelcome();
+
+        if(data.messages && data.messages.length){
+            renderMessages(data.messages);
+        }else{
+            renderWelcome();
+        }
+
         renderTyping();
 
         setTimeout(async function(){
@@ -2366,14 +2443,6 @@ Ada yang bisa kami bantu hari ini?</p>
         const data = await response.json();
 
         if(!response.ok || !data.success){
-            if(response.status === 403 || response.status === 404){
-                localStorage.removeItem(STORAGE_CODE);
-                localStorage.removeItem(STORAGE_ADMIN_COUNT);
-                kodeChat = "";
-                lastAdminCount = 0;
-                showStart();
-            }
-
             throw new Error(data.message || "Gagal mengirim pesan.");
         }
 

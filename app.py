@@ -580,7 +580,6 @@ def format_waktu_chat(waktu):
         return "-"
 
     try:
-        # Database memakai UTC. Tampilan user/CS dibuat WIB supaya lebih cocok dipakai di Indonesia.
         waktu_wib = waktu + timedelta(hours=7)
         return waktu_wib.strftime("%d/%m/%Y, %H:%M:%S")
     except Exception:
@@ -599,21 +598,19 @@ def serialize_chat_message(item):
 
 
 BOT_NAMA = "CS SenjaData"
-BOT_WELCOME_TEXT = (
-    "Selamat datang di SenjaData 👋\\n"
-    "Ada yang bisa kami bantu hari ini?\\n\\n"
-    "Silakan tulis kendala atau pertanyaan kamu di sini ya. "
-    "CS SenjaData akan membantu secepatnya."
-)
+BOT_WELCOME_MESSAGES = [
+    "Selamat datang di SenjaData 👋",
+    "Ada yang bisa kami bantu hari ini?"
+]
 
 
 def tambah_bot_welcome(chat):
     """
     Membuat pesan sambutan otomatis sekali saja untuk setiap sesi chat.
-    Aman dipanggil berulang, tidak akan membuat pesan bot dobel.
+    Pesan bot dibuat pendek dan rapi, tidak panjang.
     """
     if not chat:
-        return None
+        return []
 
     pesan_sudah_ada = ChatMessage.query.filter(
         ChatMessage.chat_id == chat.id,
@@ -622,24 +619,28 @@ def tambah_bot_welcome(chat):
     ).first()
 
     if pesan_sudah_ada:
-        return pesan_sudah_ada
+        return []
 
-    pesan_bot = ChatMessage(
-        chat_id=chat.id,
-        pengirim="admin",
-        pesan=BOT_WELCOME_TEXT,
-        dibaca_admin=True,
-        dibaca_user=False
-    )
+    pesan_bot_list = []
 
-    chat.last_message = "Selamat datang di SenjaData 👋"
-    chat.unread_user = int(chat.unread_user or 0) + 1
+    for isi_pesan in BOT_WELCOME_MESSAGES:
+        pesan_bot = ChatMessage(
+            chat_id=chat.id,
+            pengirim="admin",
+            pesan=isi_pesan,
+            dibaca_admin=True,
+            dibaca_user=False
+        )
+        db.session.add(pesan_bot)
+        pesan_bot_list.append(pesan_bot)
+
+    chat.last_message = BOT_WELCOME_MESSAGES[-1]
+    chat.unread_user = int(chat.unread_user or 0) + len(pesan_bot_list)
     chat.diperbarui_pada = datetime.utcnow()
 
-    db.session.add(pesan_bot)
     db.session.commit()
 
-    return pesan_bot
+    return pesan_bot_list
 
 
 def cs_sedang_login():
@@ -1365,7 +1366,6 @@ def api_chat_start():
     if kode_chat:
         chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
 
-    # Kalau chat lama sudah ditutup, user akan dapat sesi baru.
     if chat and chat.status == "closed":
         chat = None
 
@@ -1390,7 +1390,6 @@ def api_chat_start():
         tambah_bot_welcome(chat)
 
     else:
-        # Update data ringan kalau user melengkapi kontak dari widget.
         if nama and nama != "Pengguna SenjaData":
             chat.nama = nama
 
@@ -1404,10 +1403,8 @@ def api_chat_start():
         chat.diperbarui_pada = datetime.utcnow()
         db.session.commit()
 
-        # Pastikan chat lama yang belum punya bot tetap dapat sambutan.
         tambah_bot_welcome(chat)
 
-    # Kalau member langsung isi pesan pertama dari form widget.
     if pesan_awal:
         pesan_member = ChatMessage(
             chat_id=chat.id,
@@ -1439,8 +1436,6 @@ def api_chat_start():
         "chat_baru": chat_baru,
         "messages": [serialize_chat_message(item) for item in pesan_chat]
     })
-
-
 
 
 @app.route("/api/chat/send", methods=["POST"])
@@ -1536,8 +1531,6 @@ def api_chat_send():
     })
 
 
-
-
 @app.route("/api/chat/messages/<kode_chat>")
 def api_chat_messages(kode_chat):
     mode = request.args.get("mode", "user").strip().lower()
@@ -1551,7 +1544,6 @@ def api_chat_messages(kode_chat):
             "messages": []
         }), 404
 
-    # Pastikan setiap chat punya pesan bot sambutan.
     tambah_bot_welcome(chat)
 
     if mode == "admin":
@@ -1614,8 +1606,6 @@ def api_chat_reset():
         "success": True,
         "message": "Reset chat diizinkan."
     })
-
-
 
 
 @app.route("/api/cs/chats")
