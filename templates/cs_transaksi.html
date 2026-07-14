@@ -1,330 +1,60 @@
 {% extends "cs_base.html" %}
 
 {% block title %}Transaksi Member - SenjaData{% endblock %}
-{% block heading %}All Transaksi Member{% endblock %}
-{% block subtitle %}Riwayat transaksi semua member lengkap dengan tanggal, produk, tujuan, status, biaya, dan SN.{% endblock %}
+{% block heading %}Transaksi Member{% endblock %}
+{% block subtitle %}Cari, verifikasi, dan tindak lanjuti transaksi member{% endblock %}
+
+{% block extra_style %}
+<style>
+    .trx-intro{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;margin-bottom:14px;padding:20px;border:1px solid rgba(19,214,255,.18);border-radius:21px;background:radial-gradient(circle at 88% 0%,rgba(19,214,255,.14),transparent 29%),linear-gradient(125deg,#0e1e39,#091323 68%);}.trx-intro small{display:flex;align-items:center;gap:7px;color:#87eaff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}.trx-intro small i{color:#21d98c;font-size:9px;}.trx-intro h2{margin-top:8px;color:#fff;font-size:24px;line-height:1.2;font-weight:950;letter-spacing:-.035em;}.trx-intro p{margin-top:5px;color:#9aabc1;font-size:13px;line-height:1.5;font-weight:700;}.trx-intro-action{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid rgba(255,159,28,.25);border-radius:12px;background:rgba(255,159,28,.1);color:#ffc36d;font-size:12px;font-weight:900;white-space:nowrap;}
+    .cs-stat.trx-stat{min-height:113px;}.cs-stat.trx-stat small{display:block;margin-top:5px;color:#6f8099;font-size:11px;font-weight:700;}.filter-panel{margin-bottom:14px;}.filter-panel .cs-card-body{padding:14px;}.transaction-filter{display:grid;grid-template-columns:minmax(220px,1fr) 150px 150px 145px auto auto;gap:9px;}.quick-filter{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;}.quick-filter-label{margin-right:3px;color:#71829a;font-size:11px;font-weight:850;}.quick-filter a{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#071020;color:#9eb0c8;font-size:11px;font-weight:850;transition:.16s ease;}.quick-filter a:hover{border-color:rgba(19,214,255,.45);color:#fff;}.quick-filter a.pending{color:#ffba5b;border-color:rgba(255,159,28,.22);}.quick-filter a.success{color:#77e6b5;border-color:rgba(25,195,125,.22);}.quick-filter a.failed{color:#ff8793;border-color:rgba(255,77,94,.22);}.active-filters{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}
+    .trx-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px 12px;color:#71829a;font-size:11px;font-weight:750;}.trx-caption strong{color:#9ee5ff;}.trx-table .no{color:#71829a;font-size:11px;font-weight:850;}.trx-table .time{display:block;color:#c5d1e0;font-size:11px;font-weight:800;white-space:nowrap;}.trx-table .member{display:block;max-width:160px;color:#fff;font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .member-meta{display:block;max-width:160px;margin-top:3px;color:#71839c;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .ref{display:inline-flex;padding:5px 7px;border-radius:8px;background:#0a1930;color:#7cddff;font-family:Consolas,"Courier New",monospace;font-size:10px;font-weight:800;white-space:nowrap;}.trx-table .product{display:block;max-width:190px;color:#dce8f8;font-size:12px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .destination{font-family:Consolas,"Courier New",monospace;color:#bcd1ea;font-size:11px;font-weight:800;white-space:nowrap;}.trx-table .amount{color:#fff;font-size:12px;font-weight:950;white-space:nowrap;}.trx-table .sn{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9bacbf;font-family:Consolas,"Courier New",monospace;font-size:10px;font-weight:700;}.trx-table .member-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid rgba(19,214,255,.22);border-radius:9px;background:#0c2038;color:#99e9ff;font-size:11px;font-weight:850;}.trx-table .member-btn:hover{border-color:rgba(19,214,255,.5);color:#fff;}
+    @media(max-width:1180px){.transaction-filter{grid-template-columns:minmax(220px,1fr) 150px 150px 145px;}.transaction-filter .cs-btn{width:100%;justify-content:center;}}@media(max-width:740px){.trx-intro{grid-template-columns:1fr;}.trx-intro-action{width:max-content;}.transaction-filter{grid-template-columns:1fr 1fr;}.transaction-filter .cs-search{grid-column:1/-1;}}@media(max-width:500px){.trx-intro{padding:17px;}.trx-intro h2{font-size:20px;}.transaction-filter{grid-template-columns:1fr;}.transaction-filter .cs-search{grid-column:auto;}.quick-filter-label{width:100%;}}
+</style>
+{% endblock %}
 
 {% block content %}
+<section class="trx-intro"><div><small><i class="fa-solid fa-circle"></i> Monitoring transaksi</small><h2>Periksa transaksi member dengan cepat dan tepat.</h2><p>Gunakan pencarian, rentang waktu, dan status untuk menemukan transaksi saat member membutuhkan bantuan.</p></div><a class="trx-intro-action" href="/cs/transaksi?status=Pending"><i class="fa-solid fa-clock"></i> {{ ringkasan.pending|default(0) }} transaksi pending</a></section>
 
-<section class="cs-stats">
-    <div class="cs-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
-        <i class="fa-solid fa-database"></i>
-        <span>Total Tampil</span>
-        <strong>{{ ringkasan.total|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Success</span>
-        <strong>{{ ringkasan.berhasil|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;">
-        <i class="fa-solid fa-clock"></i>
-        <span>Pending</span>
-        <strong>{{ ringkasan.pending|default(0) }}</strong>
-    </div>
-
-    <div class="cs-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
-        <i class="fa-solid fa-circle-xmark"></i>
-        <span>Failed</span>
-        <strong>{{ ringkasan.gagal|default(0) }}</strong>
-    </div>
+<section class="cs-stats" aria-label="Ringkasan transaksi">
+    <div class="cs-stat trx-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;"><i class="fa-solid fa-database"></i><span>Data Ditampilkan</span><strong>{{ ringkasan.total|default(0) }}</strong><small>Hasil sesuai filter saat ini</small></div>
+    <div class="cs-stat trx-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;"><i class="fa-solid fa-circle-check"></i><span>Berhasil</span><strong>{{ ringkasan.berhasil|default(0) }}</strong><small>Transaksi selesai diproses</small></div>
+    <div class="cs-stat trx-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;"><i class="fa-solid fa-clock"></i><span>Pending</span><strong>{{ ringkasan.pending|default(0) }}</strong><small>Perlu dicek atau ditindaklanjuti</small></div>
+    <div class="cs-stat trx-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;"><i class="fa-solid fa-circle-xmark"></i><span>Gagal</span><strong>{{ ringkasan.gagal|default(0) }}</strong><small>Verifikasi jika ada laporan member</small></div>
 </section>
 
-<section class="cs-card" style="margin-bottom:14px;">
-    <div class="cs-card-head">
-        <div>
-            <h3>Filter Transaksi</h3>
-            <p>Filter transaksi berdasarkan member, nomor tujuan, produk, status, dan tanggal.</p>
-        </div>
-
-        <span class="cs-badge">
-            <i class="fa-solid fa-filter"></i>
-            Filter
-        </span>
-    </div>
-
+<section class="cs-card filter-panel">
+    <div class="cs-card-head"><div><h3>Filter transaksi</h3><p>Cari berdasarkan data member, tujuan, produk, atau nomor serial.</p></div><span class="cs-badge"><i class="fa-solid fa-sliders"></i> Pencarian</span></div>
     <div class="cs-card-body">
-        <form class="cs-filter" method="GET" action="/cs/transaksi">
-            <div class="cs-search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                    type="text"
-                    name="q"
-                    value="{{ q|default('') }}"
-                    placeholder="semua member / email / no tujuan / SN"
-                >
-            </div>
-
-            <input
-                class="cs-input"
-                type="date"
-                name="tanggal_awal"
-                value="{{ tanggal_awal|default('') }}"
-            >
-
-            <input
-                class="cs-input"
-                type="date"
-                name="tanggal_akhir"
-                value="{{ tanggal_akhir|default('') }}"
-            >
-
-            <select class="cs-select" name="status">
-                <option value="">semua status</option>
-                <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>success</option>
-                <option value="Pending" {% if status == "Pending" %}selected{% endif %}>pending</option>
-                <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>failed</option>
-            </select>
-
-            <button class="cs-btn primary" type="submit">
-                <i class="fa-solid fa-check"></i>
-                Terapkan
-            </button>
-
-            <a class="cs-btn" href="/cs/transaksi">
-                Reset
-            </a>
+        <form class="transaction-filter" method="GET" action="/cs/transaksi">
+            <div class="cs-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ q|default('') }}" placeholder="Email, nama, nomor tujuan, produk, atau SN" autocomplete="off"></div>
+            <input class="cs-input" type="date" name="tanggal_awal" value="{{ tanggal_awal|default('') }}" aria-label="Tanggal awal">
+            <input class="cs-input" type="date" name="tanggal_akhir" value="{{ tanggal_akhir|default('') }}" aria-label="Tanggal akhir">
+            <select class="cs-select" name="status"><option value="">Semua status</option><option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option><option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option><option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option></select>
+            <button class="cs-btn primary" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button><a class="cs-btn" href="/cs/transaksi">Reset</a>
         </form>
-
-        <div class="cs-filter-row">
-            <a class="cs-badge" href="/cs/transaksi?range=hari_ini">
-                Hari Ini
-            </a>
-
-            <a class="cs-badge" href="/cs/transaksi?range=kemarin">
-                Kemarin
-            </a>
-
-            <a class="cs-badge" href="/cs/transaksi?range=7_hari">
-                7 Hari
-            </a>
-
-            <a class="cs-badge" href="/cs/transaksi?range=30_hari">
-                30 Hari
-            </a>
-
-            <a class="cs-badge" href="/cs/transaksi?range=bulan_ini">
-                Bulan Ini
-            </a>
-
-            <a class="cs-badge orange" href="/cs/transaksi?status=Pending">
-                Pending
-            </a>
-
-            <a class="cs-badge green" href="/cs/transaksi?status=Berhasil">
-                Success
-            </a>
-
-            <a class="cs-badge red" href="/cs/transaksi?status=Gagal">
-                Failed
-            </a>
-        </div>
-
-        {% if q or tanggal_awal or tanggal_akhir or status %}
-            <div class="cs-filter-row">
-                {% if q %}
-                    <span class="cs-badge">
-                        Keyword: {{ q }}
-                    </span>
-                {% endif %}
-
-                {% if tanggal_awal %}
-                    <span class="cs-badge">
-                        Dari: {{ tanggal_awal }}
-                    </span>
-                {% endif %}
-
-                {% if tanggal_akhir %}
-                    <span class="cs-badge">
-                        Sampai: {{ tanggal_akhir }}
-                    </span>
-                {% endif %}
-
-                {% if status %}
-                    <span class="cs-badge orange">
-                        Status: {{ status }}
-                    </span>
-                {% endif %}
-            </div>
-        {% endif %}
+        <nav class="quick-filter" aria-label="Filter cepat"><span class="quick-filter-label">Rentang cepat:</span><a href="/cs/transaksi?range=hari_ini">Hari ini</a><a href="/cs/transaksi?range=kemarin">Kemarin</a><a href="/cs/transaksi?range=7_hari">7 hari</a><a href="/cs/transaksi?range=30_hari">30 hari</a><a href="/cs/transaksi?range=bulan_ini">Bulan ini</a><span class="quick-filter-label">Status:</span><a class="pending" href="/cs/transaksi?status=Pending">Pending</a><a class="success" href="/cs/transaksi?status=Berhasil">Berhasil</a><a class="failed" href="/cs/transaksi?status=Gagal">Gagal</a></nav>
+        {% if q or tanggal_awal or tanggal_akhir or status %}<div class="active-filters"><span class="cs-badge orange"><i class="fa-solid fa-filter"></i> Filter aktif</span>{% if q %}<span class="cs-badge">Pencarian: {{ q }}</span>{% endif %}{% if tanggal_awal %}<span class="cs-badge">Dari: {{ tanggal_awal }}</span>{% endif %}{% if tanggal_akhir %}<span class="cs-badge">Sampai: {{ tanggal_akhir }}</span>{% endif %}{% if status %}<span class="cs-badge">Status: {{ status }}</span>{% endif %}</div>{% endif %}
     </div>
 </section>
 
 <section class="cs-card">
-    <div class="cs-card-head">
-        <div>
-            <h3>Data Transaksi Member</h3>
-            <p>Semua kolom penting dibuat jelas untuk kebutuhan CS saat cek komplain member.</p>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <span class="cs-badge green">
-                {{ ringkasan.total|default(0) }} Data
-            </span>
-
-            <span class="cs-badge dark">
-                Per page 500
-            </span>
-        </div>
-    </div>
-
+    <div class="cs-card-head"><div><h3>Daftar transaksi</h3><p>Gunakan nomor referensi dan serial number untuk membantu pengecekan transaksi.</p></div><span class="cs-badge green"><i class="fa-solid fa-list"></i> {{ ringkasan.total|default(0) }} data</span></div>
+    {% if daftar_transaksi|default([]) %}<div class="trx-caption"><span>Menampilkan maksimal 500 transaksi terbaru sesuai filter.</span><span>Mode: <strong>{{ mode_filter|default('semua transaksi') }}</strong></span></div>{% endif %}
     <div class="cs-table-wrap">
-        {% if daftar_transaksi|default([]) %}
-            <table class="cs-table">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Waktu</th>
-                        <th>Member</th>
-                        <th>Ref ID</th>
-                        <th>Produk</th>
-                        <th>Tujuan</th>
-                        <th>Qty / Nominal</th>
-                        <th>Status</th>
-                        <th>Biaya</th>
-                        <th>Keterangan / SN</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for trx in daftar_transaksi|default([]) %}
-                        <tr>
-                            <td>
-                                {{ loop.index }}
-                            </td>
-
-                            <td>
-                                {% if trx.waktu %}
-                                    {{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.pengguna is defined and trx.pengguna %}
-                                    <strong>{{ trx.pengguna.email }}</strong><br>
-                                    <small>
-                                        {{ trx.pengguna.nama_lengkap }}
-                                        ·
-                                        {{ trx.pengguna.nomor_hp }}
-                                    </small>
-                                {% elif trx.email is defined and trx.email %}
-                                    <strong>{{ trx.email }}</strong>
-                                {% else %}
-                                    <span class="muted">-</span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.id is defined %}
-                                    trx-{{ trx.id }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.jenis is defined and trx.jenis %}
-                                    {{ trx.jenis }}
-                                {% elif trx.nama_produk is defined and trx.nama_produk %}
-                                    {{ trx.nama_produk }}
-                                {% elif trx.kode_produk is defined and trx.kode_produk %}
-                                    {{ trx.kode_produk }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.nomor_tujuan is defined and trx.nomor_tujuan %}
-                                    {{ trx.nomor_tujuan }}
-                                {% elif trx.tujuan is defined and trx.tujuan %}
-                                    {{ trx.tujuan }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.jumlah is defined %}
-                                    {{ format_uang(trx.jumlah or 0) }}
-                                {% elif trx.harga_jual is defined %}
-                                    {{ format_uang(trx.harga_jual or 0) }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.status == "Berhasil" %}
-                                    <span class="cs-status ok">
-                                        <i class="fa-solid fa-check"></i>
-                                        success
-                                    </span>
-                                {% elif trx.status == "Pending" %}
-                                    <span class="cs-status wait">
-                                        <i class="fa-solid fa-clock"></i>
-                                        pending
-                                    </span>
-                                {% elif trx.status == "Gagal" %}
-                                    <span class="cs-status bad">
-                                        <i class="fa-solid fa-xmark"></i>
-                                        failed
-                                    </span>
-                                {% else %}
-                                    <span class="cs-status info">
-                                        {{ trx.status or "-" }}
-                                    </span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.harga_modal is defined and trx.harga_modal %}
-                                    {{ format_uang(trx.harga_modal or 0) }}
-                                {% elif trx.jumlah is defined %}
-                                    {{ format_uang(trx.jumlah or 0) }}
-                                {% elif trx.harga_jual is defined %}
-                                    {{ format_uang(trx.harga_jual or 0) }}
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-
-                            <td style="min-width:280px;">
-                                {% if trx.sn %}
-                                    {{ trx.sn }}
-                                {% else %}
-                                    <span class="muted">-</span>
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                {% if trx.pengguna is defined and trx.pengguna %}
-                                    <a class="cs-badge" href="/cs/member/{{ trx.pengguna.id }}">
-                                        Detail
-                                    </a>
-                                {% elif trx.pengguna_id is defined and trx.pengguna_id %}
-                                    <a class="cs-badge" href="/cs/member/{{ trx.pengguna_id }}">
-                                        Detail
-                                    </a>
-                                {% else %}
-                                    <span class="cs-badge dark">-</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="cs-empty" style="margin:14px;">
-                Tidak ada transaksi yang cocok dengan filter ini.
-            </div>
-        {% endif %}
+        {% if daftar_transaksi|default([]) %}<table class="cs-table trx-table"><thead><tr><th>No.</th><th>Waktu</th><th>Member</th><th>Referensi</th><th>Produk</th><th>Tujuan</th><th>Nominal</th><th>Status</th><th>SN / Keterangan</th><th></th></tr></thead><tbody>
+            {% for trx in daftar_transaksi|default([]) %}<tr>
+                <td><span class="no">{{ loop.index }}</span></td><td><span class="time">{{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}</span></td>
+                <td>{% if trx.pengguna is defined and trx.pengguna %}<span class="member">{{ trx.pengguna.nama_lengkap or trx.pengguna.email }}</span><span class="member-meta">{{ trx.pengguna.email }} · {{ trx.pengguna.nomor_hp or "-" }}</span>{% elif trx.email is defined and trx.email %}<span class="member">{{ trx.email }}</span>{% else %}-{% endif %}</td>
+                <td><span class="ref">trx-{{ trx.id if trx.id is defined else "-" }}</span></td>
+                <td><span class="product">{% if trx.jenis is defined and trx.jenis %}{{ trx.jenis }}{% elif trx.nama_produk is defined and trx.nama_produk %}{{ trx.nama_produk }}{% elif trx.kode_produk is defined and trx.kode_produk %}{{ trx.kode_produk }}{% else %}-{% endif %}</span></td>
+                <td><span class="destination">{{ trx.nomor_tujuan if trx.nomor_tujuan is defined and trx.nomor_tujuan else (trx.tujuan if trx.tujuan is defined and trx.tujuan else "-") }}</span></td>
+                <td><span class="amount">{% if trx.jumlah is defined %}{{ format_uang(trx.jumlah or 0) }}{% elif trx.harga_jual is defined %}{{ format_uang(trx.harga_jual or 0) }}{% else %}-{% endif %}</span></td>
+                <td>{% if trx.status == "Berhasil" %}<span class="cs-status ok"><i class="fa-solid fa-check"></i> Berhasil</span>{% elif trx.status == "Pending" %}<span class="cs-status wait"><i class="fa-solid fa-clock"></i> Pending</span>{% elif trx.status == "Gagal" %}<span class="cs-status bad"><i class="fa-solid fa-xmark"></i> Gagal</span>{% else %}<span class="cs-status info">{{ trx.status or "-" }}</span>{% endif %}</td>
+                <td><span class="sn">{{ trx.sn or "-" }}</span></td>
+                <td>{% if trx.pengguna is defined and trx.pengguna %}<a class="member-btn" href="/cs/member/{{ trx.pengguna.id }}">Member <i class="fa-solid fa-chevron-right"></i></a>{% elif trx.pengguna_id is defined and trx.pengguna_id %}<a class="member-btn" href="/cs/member/{{ trx.pengguna_id }}">Member <i class="fa-solid fa-chevron-right"></i></a>{% else %}-{% endif %}</td>
+            </tr>{% endfor %}
+        </tbody></table>{% else %}<div class="cs-empty" style="margin:14px;">Tidak ada transaksi yang cocok. Ubah kata kunci atau rentang waktu lalu coba lagi.</div>{% endif %}
     </div>
 </section>
-
 {% endblock %}
