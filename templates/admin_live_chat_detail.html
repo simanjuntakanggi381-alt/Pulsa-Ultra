@@ -1,0 +1,586 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Detail Live Chat - SenjaData{% endblock %}
+{% block subtitle %}Balas percakapan pengguna secara langsung{% endblock %}
+{% block heading %}Detail Chat{% endblock %}
+
+{% block extra_style %}
+<style>
+    .chat-detail-layout{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 340px;
+        gap:18px;
+        align-items:start;
+    }
+
+    .chat-room{
+        background:#fff;
+        border:1px solid rgba(226,232,240,.95);
+        border-radius:30px;
+        box-shadow:0 10px 25px rgba(15,23,42,.06);
+        overflow:hidden;
+    }
+
+    .chat-room-head{
+        padding:18px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:14px;
+        border-bottom:1px solid #eef2f7;
+        background:
+            radial-gradient(circle at 0% 0%,rgba(0,198,255,.12),transparent 30%),
+            #fff;
+    }
+
+    .chat-user-box{
+        display:flex;
+        align-items:center;
+        gap:13px;
+        min-width:0;
+    }
+
+    .chat-avatar-lg{
+        width:58px;
+        height:58px;
+        flex:0 0 auto;
+        border-radius:22px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        font-size:22px;
+        font-weight:950;
+        background:
+            radial-gradient(circle at 30% 15%,rgba(255,255,255,.35),transparent 32%),
+            linear-gradient(135deg,#0575e6,#00c6ff);
+        box-shadow:0 14px 28px rgba(5,117,230,.18);
+    }
+
+    .chat-user-info{
+        min-width:0;
+    }
+
+    .chat-user-info h3{
+        color:#0f172a;
+        font-size:20px;
+        line-height:1.15;
+        font-weight:950;
+        letter-spacing:-.04em;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+    .chat-user-info p{
+        margin-top:4px;
+        color:#64748b;
+        font-size:13px;
+        font-weight:750;
+        line-height:1.45;
+    }
+
+    .chat-head-actions{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+        justify-content:flex-end;
+    }
+
+    .chat-head-btn{
+        min-height:42px;
+        padding:0 13px;
+        border-radius:15px;
+        border:1px solid #e2e8f0;
+        background:#fff;
+        color:#0f172a;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:7px;
+        font-size:13px;
+        font-weight:900;
+        cursor:pointer;
+    }
+
+    .chat-head-btn.red{
+        border:0;
+        color:#fff;
+        background:linear-gradient(135deg,#ef4444,#f97316);
+        box-shadow:0 12px 24px rgba(239,68,68,.15);
+    }
+
+    .chat-messages{
+        height:560px;
+        overflow-y:auto;
+        padding:18px;
+        background:
+            radial-gradient(circle at 20% 0%,rgba(0,198,255,.08),transparent 25%),
+            linear-gradient(180deg,#f8fbff,#f3f7ff);
+    }
+
+    .chat-messages::-webkit-scrollbar{
+        width:8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb{
+        background:#cbd5e1;
+        border-radius:999px;
+    }
+
+    .message-row{
+        display:flex;
+        margin-bottom:12px;
+    }
+
+    .message-row.user{
+        justify-content:flex-start;
+    }
+
+    .message-row.admin{
+        justify-content:flex-end;
+    }
+
+    .message-bubble{
+        max-width:75%;
+        padding:12px 14px;
+        border-radius:20px;
+        box-shadow:0 8px 18px rgba(15,23,42,.06);
+    }
+
+    .message-row.user .message-bubble{
+        background:#fff;
+        border:1px solid #e2e8f0;
+        color:#0f172a;
+        border-bottom-left-radius:8px;
+    }
+
+    .message-row.admin .message-bubble{
+        background:linear-gradient(135deg,#0575e6,#00c6ff);
+        color:#fff;
+        border-bottom-right-radius:8px;
+    }
+
+    .message-sender{
+        display:block;
+        margin-bottom:5px;
+        font-size:11px;
+        font-weight:950;
+        opacity:.75;
+        text-transform:uppercase;
+        letter-spacing:.04em;
+    }
+
+    .message-text{
+        font-size:14px;
+        line-height:1.55;
+        font-weight:700;
+        white-space:pre-wrap;
+        word-break:break-word;
+    }
+
+    .message-time{
+        display:block;
+        margin-top:7px;
+        font-size:11px;
+        font-weight:800;
+        opacity:.65;
+    }
+
+    .reply-box{
+        padding:16px;
+        border-top:1px solid #e2e8f0;
+        background:#fff;
+    }
+
+    .reply-form{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:10px;
+        align-items:end;
+    }
+
+    .reply-form textarea{
+        width:100%;
+        min-height:58px;
+        max-height:160px;
+        resize:vertical;
+        border:2px solid #e2e8f0;
+        border-radius:20px;
+        padding:14px 15px;
+        outline:none;
+        color:#0f172a;
+        background:#f8fafc;
+        font-size:14px;
+        font-weight:750;
+        line-height:1.45;
+    }
+
+    .reply-form textarea:focus{
+        background:#fff;
+        border-color:#0575e6;
+        box-shadow:0 0 0 5px rgba(5,117,230,.10);
+    }
+
+    .reply-form button{
+        min-height:58px;
+        padding:0 18px;
+        border:0;
+        border-radius:20px;
+        color:#fff;
+        background:linear-gradient(135deg,#0575e6,#00c6ff);
+        font-size:14px;
+        font-weight:950;
+        cursor:pointer;
+        box-shadow:0 14px 28px rgba(5,117,230,.18);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+    }
+
+    .info-panel{
+        display:grid;
+        gap:18px;
+    }
+
+    .info-card{
+        background:#fff;
+        border:1px solid rgba(226,232,240,.95);
+        border-radius:30px;
+        box-shadow:0 10px 25px rgba(15,23,42,.06);
+        overflow:hidden;
+    }
+
+    .info-card-head{
+        padding:16px;
+        border-bottom:1px solid #eef2f7;
+    }
+
+    .info-card-head h3{
+        color:#0f172a;
+        font-size:17px;
+        font-weight:950;
+        letter-spacing:-.03em;
+    }
+
+    .info-card-head p{
+        margin-top:4px;
+        color:#64748b;
+        font-size:13px;
+        line-height:1.45;
+        font-weight:650;
+    }
+
+    .info-card-body{
+        padding:16px;
+    }
+
+    .info-list{
+        display:grid;
+        gap:10px;
+    }
+
+    .info-item{
+        padding:12px;
+        border-radius:18px;
+        background:#f8fafc;
+        border:1px solid #edf2f7;
+    }
+
+    .info-item span{
+        display:block;
+        color:#64748b;
+        font-size:12px;
+        font-weight:850;
+    }
+
+    .info-item strong{
+        display:block;
+        margin-top:4px;
+        color:#0f172a;
+        font-size:14px;
+        line-height:1.4;
+        font-weight:950;
+        word-break:break-word;
+    }
+
+    .danger-action{
+        width:100%;
+        min-height:46px;
+        border:0;
+        border-radius:17px;
+        color:#fff;
+        background:linear-gradient(135deg,#ef4444,#f97316);
+        font-size:14px;
+        font-weight:950;
+        cursor:pointer;
+        box-shadow:0 12px 24px rgba(239,68,68,.15);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+    }
+
+    .back-action{
+        width:100%;
+        min-height:46px;
+        border-radius:17px;
+        color:#0575e6;
+        background:#eff6ff;
+        border:1px solid #bfdbfe;
+        font-size:14px;
+        font-weight:950;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+        margin-bottom:10px;
+    }
+
+    @media(max-width:980px){
+        .chat-detail-layout{
+            grid-template-columns:1fr;
+        }
+
+        .chat-messages{
+            height:480px;
+        }
+    }
+
+    @media(max-width:620px){
+        .chat-room-head{
+            align-items:flex-start;
+            flex-direction:column;
+        }
+
+        .chat-head-actions{
+            width:100%;
+            justify-content:stretch;
+        }
+
+        .chat-head-btn{
+            flex:1;
+        }
+
+        .message-bubble{
+            max-width:92%;
+        }
+
+        .reply-form{
+            grid-template-columns:1fr;
+        }
+
+        .reply-form button{
+            width:100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-comment-dots"></i>
+            Chat Detail
+        </div>
+
+        <h2>Balas pesan pengguna langsung dari panel admin.</h2>
+
+        <p>
+            Baca percakapan, cek data pengguna chat, lalu kirim balasan admin secara cepat.
+        </p>
+    </div>
+</section>
+
+<div class="chat-detail-layout" style="margin-top:18px;">
+
+    <section class="chat-room">
+        <div class="chat-room-head">
+            <div class="chat-user-box">
+                <div class="chat-avatar-lg">
+                    {{ (chat.nama or "U")[:1].upper() }}
+                </div>
+
+                <div class="chat-user-info">
+                    <h3>{{ chat.nama or "Pengguna SenjaData" }}</h3>
+                    <p>
+                        {{ chat.nomor_hp or "-" }} · {{ chat.email or "-" }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="chat-head-actions">
+                {% if chat.status == "open" %}
+                    <span class="status ok">
+                        <i class="fa-solid fa-circle"></i>
+                        Open
+                    </span>
+                {% else %}
+                    <span class="status info">
+                        <i class="fa-solid fa-lock"></i>
+                        Closed
+                    </span>
+                {% endif %}
+
+                <a class="chat-head-btn" href="{{ url_for('admin_live_chat') }}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Kembali
+                </a>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            {% if pesan_chat %}
+                {% for item in pesan_chat %}
+                    <div class="message-row {% if item.pengirim == 'admin' %}admin{% else %}user{% endif %}">
+                        <div class="message-bubble">
+                            <span class="message-sender">
+                                {% if item.pengirim == "admin" %}
+                                    Admin SenjaData
+                                {% else %}
+                                    {{ chat.nama or "User" }}
+                                {% endif %}
+                            </span>
+
+                            <div class="message-text">{{ item.pesan }}</div>
+
+                            <span class="message-time">
+                                {{ format_waktu_chat(item.waktu) }}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    Belum ada pesan di percakapan ini.
+                </div>
+            {% endif %}
+        </div>
+
+        {% if chat.status == "open" %}
+            <div class="reply-box">
+                <form class="reply-form" method="POST" action="{{ url_for('admin_live_chat_balas', chat_id=chat.id) }}">
+                    <textarea name="pesan" placeholder="Tulis balasan admin di sini..." required></textarea>
+
+                    <button type="submit">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Kirim
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="reply-box">
+                <div class="empty-state" style="min-height:90px;">
+                    Chat ini sudah ditutup. Admin tidak bisa mengirim balasan baru.
+                </div>
+            </div>
+        {% endif %}
+    </section>
+
+    <aside class="info-panel">
+
+        <div class="info-card">
+            <div class="info-card-head">
+                <h3>Info Chat</h3>
+                <p>Detail sesi live chat pengguna.</p>
+            </div>
+
+            <div class="info-card-body">
+                <div class="info-list">
+                    <div class="info-item">
+                        <span>Kode Chat</span>
+                        <strong>{{ chat.kode_chat }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Nama</span>
+                        <strong>{{ chat.nama or "-" }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Nomor HP</span>
+                        <strong>{{ chat.nomor_hp or "-" }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Email</span>
+                        <strong>{{ chat.email or "-" }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Dibuat Pada</span>
+                        <strong>{{ format_waktu_chat(chat.dibuat_pada) }}</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Update Terakhir</span>
+                        <strong>{{ format_waktu_chat(chat.diperbarui_pada) }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-head">
+                <h3>Aksi Chat</h3>
+                <p>Kelola status percakapan ini.</p>
+            </div>
+
+            <div class="info-card-body">
+                <a class="back-action" href="{{ url_for('admin_live_chat') }}">
+                    <i class="fa-solid fa-list"></i>
+                    Daftar Chat
+                </a>
+
+                {% if chat.status == "open" %}
+                    <form method="POST" action="{{ url_for('admin_live_chat_tutup', chat_id=chat.id) }}">
+                        <button class="danger-action" type="submit" onclick="return confirm('Tutup chat ini?')">
+                            <i class="fa-solid fa-lock"></i>
+                            Tutup Chat
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="empty-state" style="min-height:90px;">
+                        Percakapan sudah berstatus closed.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-head">
+                <h3>Catatan</h3>
+                <p>Informasi penggunaan live chat.</p>
+            </div>
+
+            <div class="info-card-body">
+                <div class="info-list">
+                    <div class="info-item">
+                        <span>Tips</span>
+                        <strong>Balas pesan dengan singkat, jelas, dan gunakan bahasa yang ramah.</strong>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Status</span>
+                        <strong>Gunakan Tutup Chat kalau masalah user sudah selesai.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</div>
+
+<script>
+    const chatMessages = document.getElementById("chatMessages");
+    if(chatMessages){
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+</script>
+
+{% endblock %}

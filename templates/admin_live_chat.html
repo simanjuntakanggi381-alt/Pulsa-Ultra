@@ -1,0 +1,412 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Live Chat Admin - SenjaData{% endblock %}
+{% block subtitle %}Pantau pesan masuk dari pengguna aplikasi{% endblock %}
+{% block heading %}Live Chat{% endblock %}
+
+{% block extra_style %}
+<style>
+    .chat-layout{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:18px;
+    }
+
+    .chat-status-card{
+        position:relative;
+        overflow:hidden;
+        border-radius:30px;
+        background:#fff;
+        border:1px solid rgba(226,232,240,.95);
+        box-shadow:0 10px 25px rgba(15,23,42,.06);
+        padding:18px;
+    }
+
+    .chat-status-card::after{
+        content:"";
+        position:absolute;
+        right:-50px;
+        bottom:-55px;
+        width:150px;
+        height:150px;
+        border-radius:999px;
+        background:rgba(0,198,255,.12);
+    }
+
+    .chat-list{
+        display:grid;
+        gap:12px;
+    }
+
+    .chat-item{
+        position:relative;
+        overflow:hidden;
+        display:grid;
+        grid-template-columns:auto minmax(0,1fr) auto;
+        align-items:center;
+        gap:14px;
+        padding:14px;
+        border-radius:24px;
+        background:#f8fafc;
+        border:1px solid #e8eef7;
+        transition:.18s ease;
+    }
+
+    .chat-item:hover{
+        transform:translateY(-2px);
+        background:#eef8ff;
+        border-color:#bdeaff;
+    }
+
+    .chat-avatar{
+        width:54px;
+        height:54px;
+        border-radius:20px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        font-size:20px;
+        font-weight:950;
+        background:
+            radial-gradient(circle at 30% 15%,rgba(255,255,255,.35),transparent 32%),
+            linear-gradient(135deg,#0575e6,#00c6ff);
+        box-shadow:0 12px 24px rgba(5,117,230,.18);
+    }
+
+    .chat-main{
+        min-width:0;
+    }
+
+    .chat-name-row{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+        margin-bottom:3px;
+    }
+
+    .chat-name-row strong{
+        color:#0f172a;
+        font-size:15px;
+        font-weight:950;
+    }
+
+    .chat-code{
+        display:inline-flex;
+        align-items:center;
+        gap:5px;
+        padding:5px 8px;
+        border-radius:999px;
+        background:#eff6ff;
+        color:#0575e6;
+        font-size:11px;
+        font-weight:950;
+    }
+
+    .chat-meta{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+        margin-bottom:5px;
+        color:#64748b;
+        font-size:12px;
+        font-weight:750;
+    }
+
+    .chat-message{
+        color:#334155;
+        font-size:13px;
+        font-weight:750;
+        line-height:1.45;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        max-width:720px;
+    }
+
+    .chat-actions{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-end;
+        gap:8px;
+    }
+
+    .chat-open-btn{
+        min-height:42px;
+        padding:0 14px;
+        border-radius:15px;
+        color:#fff;
+        background:linear-gradient(135deg,#0575e6,#00c6ff);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:7px;
+        font-size:13px;
+        font-weight:950;
+        box-shadow:0 12px 24px rgba(5,117,230,.16);
+    }
+
+    .chat-unread{
+        min-width:24px;
+        height:24px;
+        padding:0 8px;
+        border-radius:999px;
+        background:#ef4444;
+        color:#fff;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        font-size:11px;
+        font-weight:950;
+        box-shadow:0 8px 16px rgba(239,68,68,.20);
+    }
+
+    .chat-empty-icon{
+        width:72px;
+        height:72px;
+        border-radius:28px;
+        margin:0 auto 12px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#fff;
+        font-size:30px;
+        background:linear-gradient(135deg,#0575e6,#00c6ff);
+        box-shadow:0 16px 32px rgba(5,117,230,.18);
+    }
+
+    @media(max-width:720px){
+        .chat-item{
+            grid-template-columns:auto minmax(0,1fr);
+        }
+
+        .chat-actions{
+            grid-column:1 / -1;
+            align-items:stretch;
+        }
+
+        .chat-open-btn{
+            width:100%;
+        }
+
+        .chat-message{
+            white-space:normal;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fa-solid fa-comments"></i>
+            Live Chat Center
+        </div>
+
+        <h2>Kelola pesan masuk dari pengguna SenjaData.</h2>
+
+        <p>
+            Semua chat dari aplikasi atau website akan masuk ke halaman ini.
+            Admin bisa buka percakapan, membaca pesan user, membalas, dan menutup sesi chat.
+        </p>
+    </div>
+</section>
+
+<section class="grid-stats">
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#0575e6,#00c6ff);--glow:rgba(0,198,255,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+
+        <span>Total Chat</span>
+        <strong>{{ ringkasan.total }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#10b981,#059669);--glow:rgba(16,185,129,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-door-open"></i>
+        </div>
+
+        <span>Chat Terbuka</span>
+        <strong>{{ ringkasan.open }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#64748b,#0f172a);--glow:rgba(15,23,42,.12);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <span>Chat Ditutup</span>
+        <strong>{{ ringkasan.closed }}</strong>
+    </div>
+
+    <div class="stat-card" style="--grad:linear-gradient(135deg,#ef4444,#f97316);--glow:rgba(239,68,68,.15);">
+        <div class="stat-icon">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+
+        <span>Belum Dibaca</span>
+        <strong>{{ ringkasan.unread }}</strong>
+    </div>
+</section>
+
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Filter Live Chat</h3>
+            <p>Cari chat berdasarkan nama, nomor HP, email, kode chat, atau isi pesan terakhir.</p>
+        </div>
+
+        <span class="badge">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            Search
+        </span>
+    </div>
+
+    <div class="panel-body">
+        <form class="filter-bar" method="GET" action="{{ url_for('admin_live_chat') }}">
+            <div class="search-field">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ q or '' }}"
+                    placeholder="Cari nama, nomor HP, email, kode chat, atau pesan..."
+                >
+            </div>
+
+            <select class="filter-select" name="status">
+                <option value="">Semua Status</option>
+                <option value="open" {% if status == "open" %}selected{% endif %}>Open</option>
+                <option value="closed" {% if status == "closed" %}selected{% endif %}>Closed</option>
+            </select>
+
+            <button class="filter-btn" type="submit">
+                <i class="fa-solid fa-filter"></i>
+                Terapkan
+            </button>
+        </form>
+
+        {% if q or status %}
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                {% if q %}
+                    <span class="badge">Keyword: {{ q }}</span>
+                {% endif %}
+
+                {% if status %}
+                    <span class="badge orange">Status: {{ status }}</span>
+                {% endif %}
+
+                <a class="badge red" href="{{ url_for('admin_live_chat') }}">
+                    <i class="fa-solid fa-xmark"></i>
+                    Reset Filter
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="panel-card" style="margin-top:18px;">
+    <div class="panel-head">
+        <div>
+            <h3>Daftar Chat Masuk</h3>
+            <p>Menampilkan maksimal 200 chat terbaru berdasarkan waktu update terakhir.</p>
+        </div>
+
+        <span class="badge green">
+            <i class="fa-solid fa-database"></i>
+            {{ ringkasan.total }} Data
+        </span>
+    </div>
+
+    <div class="panel-body">
+        {% if daftar_chat %}
+            <div class="chat-list">
+                {% for chat in daftar_chat %}
+                <div class="chat-item">
+                    <div class="chat-avatar">
+                        {{ (chat.nama or "U")[:1].upper() }}
+                    </div>
+
+                    <div class="chat-main">
+                        <div class="chat-name-row">
+                            <strong>{{ chat.nama or "Pengguna SenjaData" }}</strong>
+
+                            <span class="chat-code">
+                                <i class="fa-solid fa-hashtag"></i>
+                                {{ chat.kode_chat }}
+                            </span>
+
+                            {% if chat.status == "open" %}
+                                <span class="status ok">
+                                    <i class="fa-solid fa-circle"></i>
+                                    Open
+                                </span>
+                            {% else %}
+                                <span class="status info">
+                                    <i class="fa-solid fa-lock"></i>
+                                    Closed
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="chat-meta">
+                            <span>
+                                <i class="fa-solid fa-phone"></i>
+                                {{ chat.nomor_hp or "-" }}
+                            </span>
+
+                            <span>
+                                <i class="fa-solid fa-envelope"></i>
+                                {{ chat.email or "-" }}
+                            </span>
+
+                            <span>
+                                <i class="fa-solid fa-clock"></i>
+                                {{ format_waktu_chat(chat.diperbarui_pada) }}
+                            </span>
+                        </div>
+
+                        <div class="chat-message">
+                            {{ chat.last_message or "Belum ada pesan terakhir." }}
+                        </div>
+                    </div>
+
+                    <div class="chat-actions">
+                        {% if chat.unread_admin and chat.unread_admin > 0 %}
+                            <span class="chat-unread">
+                                {{ chat.unread_admin }}
+                            </span>
+                        {% endif %}
+
+                        <a class="chat-open-btn" href="{{ url_for('admin_live_chat_detail', chat_id=chat.id) }}">
+                            <i class="fa-solid fa-comments"></i>
+                            Buka Chat
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state" style="display:block;">
+                <div class="chat-empty-icon">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+
+                <strong style="display:block;color:#0f172a;font-size:18px;font-weight:950;">
+                    Belum ada chat masuk
+                </strong>
+
+                <span style="display:block;margin-top:6px;color:#64748b;font-size:14px;font-weight:700;">
+                    Nanti kalau user mulai chat dari APK atau website, pesannya akan muncul di sini.
+                </span>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
