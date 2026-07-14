@@ -1,60 +1,1189 @@
 {% extends "cs_base.html" %}
 
-{% block title %}{% if view_mode == "provider" %}Transaksi Provider{% else %}Transaksi Member{% endif %} - SenjaData{% endblock %}
-{% block heading %}{% if view_mode == "provider" %}Transaksi Provider{% else %}Transaksi Member{% endif %}{% endblock %}
-{% block subtitle %}{% if view_mode == "provider" %}Pantau transaksi yang diproses melalui gateway API{% else %}Cari, verifikasi, dan tindak lanjuti transaksi member{% endif %}{% endblock %}
+{% block title %}Transaksi Member - SenjaData{% endblock %}
+{% block heading %}Transaksi Member{% endblock %}
+{% block subtitle %}Pusat pengecekan transaksi member, status, nomor tujuan, SN, dan riwayat bantuan CS{% endblock %}
 
 {% block extra_style %}
 <style>
-    .trx-intro{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;margin-bottom:14px;padding:20px;border:1px solid rgba(19,214,255,.18);border-radius:21px;background:radial-gradient(circle at 88% 0%,rgba(19,214,255,.14),transparent 29%),linear-gradient(125deg,#0e1e39,#091323 68%);}.trx-intro small{display:flex;align-items:center;gap:7px;color:#87eaff;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;}.trx-intro small i{color:#21d98c;font-size:9px;}.trx-intro h2{margin-top:8px;color:#fff;font-size:24px;line-height:1.2;font-weight:950;letter-spacing:-.035em;}.trx-intro p{margin-top:5px;color:#9aabc1;font-size:13px;line-height:1.5;font-weight:700;}.trx-intro-action{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid rgba(255,159,28,.25);border-radius:12px;background:rgba(255,159,28,.1);color:#ffc36d;font-size:12px;font-weight:900;white-space:nowrap;}
-    .cs-stat.trx-stat{min-height:113px;}.cs-stat.trx-stat small{display:block;margin-top:5px;color:#6f8099;font-size:11px;font-weight:700;}.filter-panel{margin-bottom:14px;}.filter-panel .cs-card-body{padding:14px;}.transaction-filter{display:grid;grid-template-columns:minmax(220px,1fr) 150px 150px 145px auto auto;gap:9px;}.quick-filter{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;}.quick-filter-label{margin-right:3px;color:#71829a;font-size:11px;font-weight:850;}.quick-filter a{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#071020;color:#9eb0c8;font-size:11px;font-weight:850;transition:.16s ease;}.quick-filter a:hover{border-color:rgba(19,214,255,.45);color:#fff;}.quick-filter a.pending{color:#ffba5b;border-color:rgba(255,159,28,.22);}.quick-filter a.success{color:#77e6b5;border-color:rgba(25,195,125,.22);}.quick-filter a.failed{color:#ff8793;border-color:rgba(255,77,94,.22);}.active-filters{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}
-    .trx-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 14px 12px;color:#71829a;font-size:11px;font-weight:750;}.trx-caption strong{color:#9ee5ff;}.trx-table .no{color:#71829a;font-size:11px;font-weight:850;}.trx-table .time{display:block;color:#c5d1e0;font-size:11px;font-weight:800;white-space:nowrap;}.trx-table .member{display:block;max-width:160px;color:#fff;font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .member-meta{display:block;max-width:160px;margin-top:3px;color:#71839c;font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .ref{display:inline-flex;padding:5px 7px;border-radius:8px;background:#0a1930;color:#7cddff;font-family:Consolas,"Courier New",monospace;font-size:10px;font-weight:800;white-space:nowrap;}.trx-table .product{display:block;max-width:190px;color:#dce8f8;font-size:12px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.trx-table .destination{font-family:Consolas,"Courier New",monospace;color:#bcd1ea;font-size:11px;font-weight:800;white-space:nowrap;}.trx-table .amount{color:#fff;font-size:12px;font-weight:950;white-space:nowrap;}.trx-table .sn{display:block;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9bacbf;font-family:Consolas,"Courier New",monospace;font-size:10px;font-weight:700;}.trx-table .member-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid rgba(19,214,255,.22);border-radius:9px;background:#0c2038;color:#99e9ff;font-size:11px;font-weight:850;}.trx-table .member-btn:hover{border-color:rgba(19,214,255,.5);color:#fff;}
-    @media(max-width:1180px){.transaction-filter{grid-template-columns:minmax(220px,1fr) 150px 150px 145px;}.transaction-filter .cs-btn{width:100%;justify-content:center;}}@media(max-width:740px){.trx-intro{grid-template-columns:1fr;}.trx-intro-action{width:max-content;}.transaction-filter{grid-template-columns:1fr 1fr;}.transaction-filter .cs-search{grid-column:1/-1;}}@media(max-width:500px){.trx-intro{padding:17px;}.trx-intro h2{font-size:20px;}.transaction-filter{grid-template-columns:1fr;}.transaction-filter .cs-search{grid-column:auto;}.quick-filter-label{width:100%;}}
+    /* =====================================================
+       TRANSAKSI MEMBER - DIFFERENT STYLE FROM PROVIDER
+    ===================================================== */
+
+    .member-trx-page{
+        display:grid;
+        gap:14px;
+    }
+
+    .member-trx-hero{
+        position:relative;
+        overflow:hidden;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 310px;
+        gap:16px;
+        padding:18px;
+        border-radius:22px;
+        border:1px solid rgba(19,214,255,.18);
+        background:
+            radial-gradient(circle at 8% 0%,rgba(19,214,255,.14),transparent 34%),
+            radial-gradient(circle at 100% 10%,rgba(25,195,125,.10),transparent 36%),
+            linear-gradient(135deg,#0e1d36,#081020 72%);
+        box-shadow:0 18px 45px rgba(0,0,0,.22);
+    }
+
+    .member-trx-hero::after{
+        content:"";
+        position:absolute;
+        width:240px;
+        height:240px;
+        right:-100px;
+        top:-120px;
+        border-radius:999px;
+        background:rgba(19,214,255,.10);
+    }
+
+    .member-trx-title{
+        position:relative;
+        z-index:2;
+    }
+
+    .member-trx-title small{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        min-height:28px;
+        padding:0 10px;
+        border-radius:999px;
+        background:rgba(25,195,125,.10);
+        border:1px solid rgba(25,195,125,.20);
+        color:#bbf7d0;
+        font-size:11px;
+        font-weight:950;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+    }
+
+    .member-trx-title small i{
+        color:#19c37d;
+        font-size:9px;
+    }
+
+    .member-trx-title h2{
+        margin-top:12px;
+        color:#fff;
+        font-size:27px;
+        line-height:1.12;
+        font-weight:950;
+        letter-spacing:-.05em;
+    }
+
+    .member-trx-title p{
+        margin-top:8px;
+        max-width:760px;
+        color:#9aabc1;
+        font-size:13px;
+        line-height:1.6;
+        font-weight:750;
+    }
+
+    .member-trx-side{
+        position:relative;
+        z-index:2;
+        display:grid;
+        gap:10px;
+        align-content:start;
+    }
+
+    .member-trx-date-card{
+        padding:13px;
+        border-radius:17px;
+        background:rgba(7,16,32,.72);
+        border:1px solid rgba(19,214,255,.18);
+    }
+
+    .member-trx-date-card span{
+        display:block;
+        color:#7f93ad;
+        font-size:10px;
+        font-weight:950;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+    }
+
+    .member-trx-date-card strong{
+        display:block;
+        margin-top:6px;
+        color:#fff;
+        font-size:15px;
+        line-height:1.35;
+        font-weight:950;
+    }
+
+    .member-trx-date-card small{
+        display:block;
+        margin-top:4px;
+        color:#13d6ff;
+        font-size:11px;
+        font-weight:850;
+    }
+
+    .member-trx-side-actions{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+    }
+
+    .member-trx-side-actions a{
+        min-height:38px;
+        border-radius:13px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:7px;
+        font-size:11px;
+        font-weight:950;
+        border:1px solid var(--line);
+        background:#071020;
+        color:#dbeafe;
+    }
+
+    .member-trx-side-actions a.pending{
+        border-color:rgba(255,159,28,.26);
+        color:#ffe0a8;
+        background:rgba(255,159,28,.09);
+    }
+
+    .member-trx-side-actions a.success{
+        border-color:rgba(25,195,125,.26);
+        color:#bbf7d0;
+        background:rgba(25,195,125,.09);
+    }
+
+    .member-trx-stats{
+        display:grid;
+        grid-template-columns:repeat(5,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .member-trx-stat{
+        position:relative;
+        overflow:hidden;
+        min-height:108px;
+        padding:14px;
+        border-radius:18px;
+        background:
+            radial-gradient(circle at 100% 0%,var(--glow,rgba(19,214,255,.12)),transparent 48%),
+            linear-gradient(180deg,#0d182d,#09101f);
+        border:1px solid var(--line);
+        box-shadow:0 14px 32px rgba(0,0,0,.18);
+    }
+
+    .member-trx-stat i{
+        float:right;
+        color:var(--icon,#13d6ff);
+        font-size:18px;
+        opacity:.92;
+    }
+
+    .member-trx-stat span{
+        display:block;
+        color:#8193ad;
+        font-size:10px;
+        font-weight:950;
+        text-transform:uppercase;
+        letter-spacing:.06em;
+    }
+
+    .member-trx-stat strong{
+        display:block;
+        margin-top:12px;
+        color:#fff;
+        font-size:23px;
+        line-height:1;
+        font-weight:950;
+        letter-spacing:-.04em;
+    }
+
+    .member-trx-stat small{
+        display:block;
+        margin-top:7px;
+        color:#6f8099;
+        font-size:10px;
+        line-height:1.35;
+        font-weight:750;
+    }
+
+    .member-filter-card{
+        overflow:hidden;
+        border-radius:18px;
+        border:1px solid var(--line);
+        background:
+            radial-gradient(circle at 0% 0%,rgba(19,214,255,.07),transparent 34%),
+            linear-gradient(180deg,#0c1629,#0a1222);
+        box-shadow:0 14px 32px rgba(0,0,0,.18);
+    }
+
+    .member-filter-head{
+        padding:13px 14px;
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:12px;
+        border-bottom:1px solid var(--line);
+    }
+
+    .member-filter-head h3{
+        color:#fff;
+        font-size:14px;
+        font-weight:950;
+        letter-spacing:-.02em;
+    }
+
+    .member-filter-head p{
+        margin-top:4px;
+        color:#8396b0;
+        font-size:11px;
+        font-weight:750;
+        line-height:1.45;
+    }
+
+    .member-filter-badge{
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        min-height:31px;
+        padding:0 10px;
+        border-radius:999px;
+        background:rgba(19,214,255,.10);
+        border:1px solid rgba(19,214,255,.22);
+        color:#cfefff;
+        font-size:10px;
+        font-weight:950;
+        white-space:nowrap;
+    }
+
+    .member-filter-body{
+        padding:14px;
+    }
+
+    .member-filter-form{
+        display:grid;
+        grid-template-columns:minmax(260px,1.3fr) 155px 155px 155px auto auto;
+        gap:9px;
+        align-items:center;
+    }
+
+    .member-filter-form .cs-search input,
+    .member-filter-form .cs-input,
+    .member-filter-form .cs-select{
+        min-height:42px;
+        border-radius:14px;
+        font-size:12px;
+    }
+
+    .member-filter-form .cs-btn{
+        min-height:42px;
+        border-radius:14px;
+        font-size:12px;
+    }
+
+    .member-quick-row{
+        display:flex;
+        align-items:center;
+        gap:7px;
+        flex-wrap:wrap;
+        margin-top:12px;
+    }
+
+    .member-quick-label{
+        color:#71829a;
+        font-size:11px;
+        font-weight:900;
+        margin-right:2px;
+    }
+
+    .member-quick-row a{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        min-height:31px;
+        padding:0 10px;
+        border-radius:999px;
+        border:1px solid var(--line);
+        background:#071020;
+        color:#9eb0c8;
+        font-size:10px;
+        font-weight:950;
+        transition:.16s ease;
+    }
+
+    .member-quick-row a:hover{
+        border-color:rgba(19,214,255,.45);
+        color:#fff;
+        transform:translateY(-1px);
+    }
+
+    .member-quick-row a.pending{
+        color:#ffe0a8;
+        border-color:rgba(255,159,28,.26);
+    }
+
+    .member-quick-row a.success{
+        color:#bbf7d0;
+        border-color:rgba(25,195,125,.26);
+    }
+
+    .member-quick-row a.failed{
+        color:#ffdce1;
+        border-color:rgba(255,77,94,.26);
+    }
+
+    .member-active-filter{
+        display:flex;
+        gap:7px;
+        flex-wrap:wrap;
+        margin-top:12px;
+        padding-top:12px;
+        border-top:1px solid var(--line);
+    }
+
+    .member-active-filter span{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:6px 9px;
+        border-radius:999px;
+        background:#0b1b31;
+        border:1px solid rgba(19,214,255,.18);
+        color:#a9dff0;
+        font-size:10px;
+        font-weight:850;
+    }
+
+    .member-trx-layout{
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 320px;
+        gap:14px;
+    }
+
+    .member-table-card{
+        overflow:hidden;
+        border:1px solid var(--line);
+        border-radius:18px;
+        background:
+            radial-gradient(circle at 0% 0%,rgba(19,214,255,.055),transparent 28%),
+            #090f1d;
+        box-shadow:0 18px 45px rgba(0,0,0,.22);
+    }
+
+    .member-table-head{
+        min-height:64px;
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:12px;
+        flex-wrap:wrap;
+        padding:14px;
+        border-bottom:1px solid var(--line);
+        background:linear-gradient(90deg,rgba(19,214,255,.07),rgba(18,107,255,.03));
+    }
+
+    .member-table-head h3{
+        color:#fff;
+        font-size:15px;
+        font-weight:950;
+        letter-spacing:-.02em;
+    }
+
+    .member-table-head p{
+        margin-top:5px;
+        color:#8396b0;
+        font-size:11px;
+        font-weight:750;
+        line-height:1.45;
+    }
+
+    .member-table-actions{
+        display:flex;
+        gap:7px;
+        flex-wrap:wrap;
+    }
+
+    .member-table-wrap{
+        overflow:auto;
+        max-height:calc(100vh - 350px);
+        min-height:360px;
+    }
+
+    .member-table{
+        width:100%;
+        min-width:1160px;
+        border-collapse:collapse;
+    }
+
+    .member-table th{
+        position:sticky;
+        top:0;
+        z-index:2;
+        padding:12px 10px;
+        background:linear-gradient(90deg,#102340,#0a1b31);
+        border-bottom:1px solid #1e3555;
+        color:#c5d9ef;
+        text-align:left;
+        font-size:10px;
+        font-weight:950;
+        text-transform:uppercase;
+        letter-spacing:.03em;
+        white-space:nowrap;
+    }
+
+    .member-table td{
+        padding:13px 10px;
+        border-bottom:1px solid #172238;
+        color:#c7d4e3;
+        font-size:11px;
+        font-weight:750;
+        vertical-align:middle;
+    }
+
+    .member-table tbody tr:nth-child(even) td{
+        background:rgba(255,255,255,.012);
+    }
+
+    .member-table tbody tr:hover td{
+        background:rgba(19,214,255,.045);
+    }
+
+    .member-no{
+        color:#7f93ad;
+        font-size:11px;
+        font-weight:950;
+    }
+
+    .member-time{
+        display:block;
+        color:#d8e6f5;
+        font-size:11px;
+        font-weight:900;
+        white-space:nowrap;
+    }
+
+    .member-name{
+        display:block;
+        max-width:170px;
+        color:#fff;
+        font-size:12px;
+        font-weight:950;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+    .member-meta{
+        display:block;
+        max-width:170px;
+        margin-top:3px;
+        color:#71839c;
+        font-size:10px;
+        font-weight:750;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+    .member-ref{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:5px 7px;
+        border-radius:8px;
+        background:#0a1930;
+        border:1px solid rgba(19,214,255,.12);
+        color:#7cddff;
+        font-family:Consolas,"Courier New",monospace;
+        font-size:10px;
+        font-weight:850;
+        white-space:nowrap;
+    }
+
+    .member-product{
+        display:block;
+        max-width:210px;
+        color:#e5edf7;
+        font-size:12px;
+        font-weight:900;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+    .member-destination{
+        font-family:Consolas,"Courier New",monospace;
+        color:#bcd1ea;
+        font-size:11px;
+        font-weight:900;
+        white-space:nowrap;
+    }
+
+    .member-amount{
+        color:#fff;
+        font-size:12px;
+        font-weight:950;
+        white-space:nowrap;
+    }
+
+    .member-sn{
+        display:block;
+        max-width:260px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        color:#9bacbf;
+        font-family:Consolas,"Courier New",monospace;
+        font-size:10px;
+        font-weight:750;
+    }
+
+    .member-action-btn{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+        min-height:30px;
+        padding:0 10px;
+        border:1px solid rgba(19,214,255,.22);
+        border-radius:10px;
+        background:#0c2038;
+        color:#99e9ff;
+        font-size:11px;
+        font-weight:900;
+        white-space:nowrap;
+    }
+
+    .member-action-btn:hover{
+        border-color:rgba(19,214,255,.50);
+        color:#fff;
+    }
+
+    .member-side-panel{
+        display:grid;
+        gap:14px;
+        align-content:start;
+    }
+
+    .member-side-card{
+        padding:14px;
+        border-radius:18px;
+        border:1px solid var(--line);
+        background:
+            radial-gradient(circle at 100% 0%,rgba(19,214,255,.07),transparent 36%),
+            linear-gradient(180deg,#0d182d,#09101f);
+        box-shadow:0 14px 32px rgba(0,0,0,.18);
+    }
+
+    .member-side-card h4{
+        color:#fff;
+        font-size:13px;
+        font-weight:950;
+        margin-bottom:10px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+
+    .member-side-card h4 i{
+        color:#13d6ff;
+    }
+
+    .member-side-list{
+        display:grid;
+        gap:8px;
+    }
+
+    .member-side-item{
+        padding:10px;
+        border-radius:13px;
+        border:1px solid var(--line);
+        background:#071020;
+    }
+
+    .member-side-item span{
+        display:block;
+        color:#71839c;
+        font-size:10px;
+        font-weight:900;
+        text-transform:uppercase;
+        letter-spacing:.04em;
+    }
+
+    .member-side-item strong{
+        display:block;
+        margin-top:5px;
+        color:#fff;
+        font-size:12px;
+        line-height:1.35;
+        font-weight:950;
+    }
+
+    .member-empty{
+        min-height:360px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:#8292a8;
+        font-size:12px;
+        font-weight:800;
+        padding:24px;
+    }
+
+    @media(max-width:1280px){
+        .member-trx-layout{
+            grid-template-columns:1fr;
+        }
+
+        .member-side-panel{
+            grid-template-columns:repeat(3,minmax(0,1fr));
+        }
+    }
+
+    @media(max-width:1100px){
+        .member-trx-hero{
+            grid-template-columns:1fr;
+        }
+
+        .member-trx-side{
+            grid-template-columns:1fr 1fr;
+        }
+
+        .member-trx-stats{
+            grid-template-columns:repeat(3,minmax(0,1fr));
+        }
+
+        .member-filter-form{
+            grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+
+        .member-filter-form .cs-search{
+            grid-column:1 / -1;
+        }
+    }
+
+    @media(max-width:740px){
+        .member-trx-stats{
+            grid-template-columns:1fr;
+        }
+
+        .member-trx-side,
+        .member-side-panel{
+            grid-template-columns:1fr;
+        }
+
+        .member-filter-form{
+            grid-template-columns:1fr;
+        }
+
+        .member-filter-head{
+            display:grid;
+        }
+
+        .member-trx-title h2{
+            font-size:22px;
+        }
+
+        .member-table-wrap{
+            max-height:none;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="trx-intro"><div><small><i class="fa-solid fa-circle"></i> {% if view_mode == "provider" %}Monitoring gateway{% else %}Monitoring transaksi{% endif %}</small><h2>{% if view_mode == "provider" %}Pantau transaksi yang masuk ke gateway API.{% else %}Periksa transaksi member dengan cepat dan tepat.{% endif %}</h2><p>{% if view_mode == "provider" %}Gateway aktif: {{ gateway_label or "Gateway API" }}. Data provider per transaksi belum disimpan oleh sistem saat ini.{% else %}Gunakan pencarian, rentang waktu, dan status untuk menemukan transaksi saat member membutuhkan bantuan.{% endif %}</p></div><a class="trx-intro-action" href="{% if view_mode == 'provider' %}/cs/transaksi-provider?status=Pending{% else %}/cs/transaksi?status=Pending{% endif %}"><i class="fa-solid fa-clock"></i> {{ ringkasan.pending|default(0) }} transaksi pending</a></section>
 
-<section class="cs-stats" aria-label="Ringkasan transaksi">
-    <div class="cs-stat trx-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;"><i class="fa-solid fa-database"></i><span>Data Ditampilkan</span><strong>{{ ringkasan.total|default(0) }}</strong><small>Hasil sesuai filter saat ini</small></div>
-    <div class="cs-stat trx-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;"><i class="fa-solid fa-circle-check"></i><span>Berhasil</span><strong>{{ ringkasan.berhasil|default(0) }}</strong><small>Transaksi selesai diproses</small></div>
-    <div class="cs-stat trx-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;"><i class="fa-solid fa-clock"></i><span>Pending</span><strong>{{ ringkasan.pending|default(0) }}</strong><small>Perlu dicek atau ditindaklanjuti</small></div>
-    <div class="cs-stat trx-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;"><i class="fa-solid fa-circle-xmark"></i><span>Gagal</span><strong>{{ ringkasan.gagal|default(0) }}</strong><small>Verifikasi jika ada laporan member</small></div>
+{% set ns = namespace(total=0, berhasil=0, pending=0, gagal=0, total_nominal=0) %}
+
+{% for trx in daftar_transaksi|default([]) %}
+    {% set ns.total = ns.total + 1 %}
+
+    {% if trx.status == "Berhasil" %}
+        {% set ns.berhasil = ns.berhasil + 1 %}
+    {% elif trx.status == "Pending" %}
+        {% set ns.pending = ns.pending + 1 %}
+    {% elif trx.status == "Gagal" %}
+        {% set ns.gagal = ns.gagal + 1 %}
+    {% endif %}
+
+    {% if trx.jumlah is defined %}
+        {% set ns.total_nominal = ns.total_nominal + (trx.jumlah or 0) %}
+    {% elif trx.harga_jual is defined %}
+        {% set ns.total_nominal = ns.total_nominal + (trx.harga_jual or 0) %}
+    {% endif %}
+{% endfor %}
+
+<section class="member-trx-page">
+
+    <section class="member-trx-hero">
+        <div class="member-trx-title">
+            <small>
+                <i class="fa-solid fa-circle"></i>
+                Member Transaction Center
+            </small>
+
+            <h2>Periksa transaksi member lebih cepat, jelas, dan rapi.</h2>
+
+            <p>
+                Halaman ini khusus untuk CS saat membantu member. Cari transaksi berdasarkan
+                nama, email, nomor HP, nomor tujuan, produk, status, tanggal, atau SN.
+            </p>
+        </div>
+
+        <div class="member-trx-side">
+            <div class="member-trx-date-card">
+                <span>Tanggal Hari Ini</span>
+                <strong id="memberTodayText">Memuat tanggal...</strong>
+                <small id="memberTimeText">Live time</small>
+            </div>
+
+            <div class="member-trx-side-actions">
+                <a class="pending" href="/cs/transaksi?status=Pending">
+                    <i class="fa-solid fa-clock"></i>
+                    Pending
+                </a>
+
+                <a class="success" href="/cs/transaksi?status=Berhasil">
+                    <i class="fa-solid fa-check"></i>
+                    Berhasil
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="member-trx-stats">
+        <div class="member-trx-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
+            <i class="fa-solid fa-database"></i>
+            <span>Total Data</span>
+            <strong>{{ ns.total }}</strong>
+            <small>Data sesuai filter saat ini</small>
+        </div>
+
+        <div class="member-trx-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Berhasil</span>
+            <strong>{{ ns.berhasil }}</strong>
+            <small>Transaksi selesai</small>
+        </div>
+
+        <div class="member-trx-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;">
+            <i class="fa-solid fa-clock"></i>
+            <span>Pending</span>
+            <strong>{{ ns.pending }}</strong>
+            <small>Perlu dipantau CS</small>
+        </div>
+
+        <div class="member-trx-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <span>Gagal</span>
+            <strong>{{ ns.gagal }}</strong>
+            <small>Perlu verifikasi</small>
+        </div>
+
+        <div class="member-trx-stat" style="--glow:rgba(124,58,237,.13);--icon:#a78bfa;">
+            <i class="fa-solid fa-coins"></i>
+            <span>Total Nominal</span>
+            <strong>{{ format_uang(ns.total_nominal) }}</strong>
+            <small>Akumulasi hasil filter</small>
+        </div>
+    </section>
+
+    <section class="member-filter-card">
+        <div class="member-filter-head">
+            <div>
+                <h3>Filter Transaksi Member</h3>
+                <p>Cari data member, nomor tujuan, produk, SN, status, dan rentang tanggal.</p>
+            </div>
+
+            <span class="member-filter-badge">
+                <i class="fa-solid fa-sliders"></i>
+                Pencarian CS
+            </span>
+        </div>
+
+        <div class="member-filter-body">
+            <form class="member-filter-form" method="GET" action="/cs/transaksi">
+                <div class="cs-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="search"
+                        name="q"
+                        value="{{ q|default('') }}"
+                        placeholder="Cari email, nama, nomor HP, nomor tujuan, produk, atau SN"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <input
+                    class="cs-input"
+                    type="date"
+                    name="tanggal_awal"
+                    value="{{ tanggal_awal|default('') }}"
+                    aria-label="Tanggal awal"
+                >
+
+                <input
+                    class="cs-input"
+                    type="date"
+                    name="tanggal_akhir"
+                    value="{{ tanggal_akhir|default('') }}"
+                    aria-label="Tanggal akhir"
+                >
+
+                <select class="cs-select" name="status">
+                    <option value="">Semua status</option>
+                    <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option>
+                    <option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option>
+                    <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option>
+                </select>
+
+                <button class="cs-btn primary" type="submit">
+                    <i class="fa-solid fa-filter"></i>
+                    Filter
+                </button>
+
+                <a class="cs-btn" href="/cs/transaksi">
+                    Reset
+                </a>
+            </form>
+
+            <nav class="member-quick-row" aria-label="Filter cepat transaksi member">
+                <span class="member-quick-label">Tanggal:</span>
+
+                <a href="/cs/transaksi?range=hari_ini">
+                    <i class="fa-solid fa-calendar-day"></i>
+                    Hari ini
+                </a>
+
+                <a href="/cs/transaksi?range=kemarin">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Kemarin
+                </a>
+
+                <a href="/cs/transaksi?range=7_hari">
+                    <i class="fa-solid fa-calendar-week"></i>
+                    7 hari
+                </a>
+
+                <a href="/cs/transaksi?range=30_hari">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    30 hari
+                </a>
+
+                <a href="/cs/transaksi?range=bulan_ini">
+                    <i class="fa-solid fa-calendar"></i>
+                    Bulan ini
+                </a>
+
+                <span class="member-quick-label">Status:</span>
+
+                <a class="pending" href="/cs/transaksi?status=Pending">
+                    Pending
+                </a>
+
+                <a class="success" href="/cs/transaksi?status=Berhasil">
+                    Berhasil
+                </a>
+
+                <a class="failed" href="/cs/transaksi?status=Gagal">
+                    Gagal
+                </a>
+            </nav>
+
+            {% if q or tanggal_awal or tanggal_akhir or status %}
+                <div class="member-active-filter">
+                    <span>
+                        <i class="fa-solid fa-filter"></i>
+                        Filter aktif
+                    </span>
+
+                    {% if q %}
+                        <span>Pencarian: {{ q }}</span>
+                    {% endif %}
+
+                    {% if tanggal_awal %}
+                        <span>Dari: {{ tanggal_awal }}</span>
+                    {% endif %}
+
+                    {% if tanggal_akhir %}
+                        <span>Sampai: {{ tanggal_akhir }}</span>
+                    {% endif %}
+
+                    {% if status %}
+                        <span>Status: {{ status }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="member-trx-layout">
+
+        <div class="member-table-card">
+            <div class="member-table-head">
+                <div>
+                    <h3>Daftar Transaksi Member</h3>
+                    <p>Gunakan Ref ID dan SN untuk membantu pengecekan saat member menghubungi CS.</p>
+                </div>
+
+                <div class="member-table-actions">
+                    <span class="cs-badge green">{{ ns.total }} data</span>
+                    <span class="cs-badge orange">{{ ns.pending }} pending</span>
+                    <span class="cs-badge dark">{{ mode_filter|default("Semua") }}</span>
+                </div>
+            </div>
+
+            <div class="member-table-wrap">
+                {% if daftar_transaksi|default([]) %}
+                    <table class="member-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Waktu</th>
+                                <th>Member</th>
+                                <th>Ref ID</th>
+                                <th>Produk</th>
+                                <th>Tujuan</th>
+                                <th>Nominal</th>
+                                <th>Status</th>
+                                <th>SN / Keterangan</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for trx in daftar_transaksi|default([]) %}
+                                <tr>
+                                    <td>
+                                        <span class="member-no">{{ loop.index }}</span>
+                                    </td>
+
+                                    <td>
+                                        <span class="member-time">
+                                            {{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if trx.pengguna is defined and trx.pengguna %}
+                                            <span class="member-name">
+                                                {{ trx.pengguna.nama_lengkap or trx.pengguna.email }}
+                                            </span>
+
+                                            <span class="member-meta">
+                                                {{ trx.pengguna.email }}
+                                                ·
+                                                {{ trx.pengguna.nomor_hp or "-" }}
+                                            </span>
+                                        {% elif trx.email is defined and trx.email %}
+                                            <span class="member-name">{{ trx.email }}</span>
+                                        {% else %}
+                                            <span class="muted">-</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <span class="member-ref">
+                                            <i class="fa-solid fa-hashtag"></i>
+                                            trx-{{ trx.id if trx.id is defined else "-" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="member-product">
+                                            {% if trx.jenis is defined and trx.jenis %}
+                                                {{ trx.jenis }}
+                                            {% elif trx.nama_produk is defined and trx.nama_produk %}
+                                                {{ trx.nama_produk }}
+                                            {% elif trx.kode_produk is defined and trx.kode_produk %}
+                                                {{ trx.kode_produk }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="member-destination">
+                                            {{ trx.nomor_tujuan if trx.nomor_tujuan is defined and trx.nomor_tujuan else (trx.tujuan if trx.tujuan is defined and trx.tujuan else "-") }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="member-amount">
+                                            {% if trx.jumlah is defined %}
+                                                {{ format_uang(trx.jumlah or 0) }}
+                                            {% elif trx.harga_jual is defined %}
+                                                {{ format_uang(trx.harga_jual or 0) }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if trx.status == "Berhasil" %}
+                                            <span class="cs-status ok">
+                                                <i class="fa-solid fa-check"></i>
+                                                Berhasil
+                                            </span>
+                                        {% elif trx.status == "Pending" %}
+                                            <span class="cs-status wait">
+                                                <i class="fa-solid fa-clock"></i>
+                                                Pending
+                                            </span>
+                                        {% elif trx.status == "Gagal" %}
+                                            <span class="cs-status bad">
+                                                <i class="fa-solid fa-xmark"></i>
+                                                Gagal
+                                            </span>
+                                        {% else %}
+                                            <span class="cs-status info">
+                                                {{ trx.status or "-" }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <span class="member-sn">
+                                            {{ trx.sn or "-" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if trx.pengguna is defined and trx.pengguna %}
+                                            <a class="member-action-btn" href="/cs/member/{{ trx.pengguna.id }}">
+                                                Member
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </a>
+                                        {% elif trx.pengguna_id is defined and trx.pengguna_id %}
+                                            <a class="member-action-btn" href="/cs/member/{{ trx.pengguna_id }}">
+                                                Member
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </a>
+                                        {% else %}
+                                            <span class="muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="member-empty">
+                        Tidak ada transaksi yang cocok. Ubah kata kunci, status, atau rentang waktu lalu coba lagi.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <aside class="member-side-panel">
+            <div class="member-side-card">
+                <h4>
+                    <i class="fa-solid fa-headset"></i>
+                    Panduan CS
+                </h4>
+
+                <div class="member-side-list">
+                    <div class="member-side-item">
+                        <span>Jika pulsa belum masuk</span>
+                        <strong>Cari nomor tujuan, cek status, lalu lihat SN transaksi.</strong>
+                    </div>
+
+                    <div class="member-side-item">
+                        <span>Jika saldo berkurang</span>
+                        <strong>Cocokkan nominal transaksi dengan riwayat member.</strong>
+                    </div>
+
+                    <div class="member-side-item">
+                        <span>Jika pending</span>
+                        <strong>Balas member bahwa transaksi sedang dipantau CS.</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="member-side-card">
+                <h4>
+                    <i class="fa-solid fa-reply"></i>
+                    Quick Reply
+                </h4>
+
+                <div class="member-side-list">
+                    <div class="member-side-item">
+                        <span>Balasan cepat</span>
+                        <strong>Halo kak, boleh kirim nomor tujuan transaksinya?</strong>
+                    </div>
+
+                    <div class="member-side-item">
+                        <span>Balasan cepat</span>
+                        <strong>Mohon tunggu sebentar ya kak, sedang kami cek transaksinya.</strong>
+                    </div>
+
+                    <div class="member-side-item">
+                        <span>Balasan cepat</span>
+                        <strong>Transaksi sudah berhasil, silakan cek kembali layanan tujuan.</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="member-side-card">
+                <h4>
+                    <i class="fa-solid fa-calendar-day"></i>
+                    Cek Harian
+                </h4>
+
+                <div class="member-side-list">
+                    <a class="member-side-item" href="/cs/transaksi?range=hari_ini">
+                        <span>Hari ini</span>
+                        <strong>Lihat transaksi member hari ini</strong>
+                    </a>
+
+                    <a class="member-side-item" href="/cs/transaksi?status=Pending">
+                        <span>Pending</span>
+                        <strong>Pantau semua transaksi pending</strong>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+    </section>
+
 </section>
 
-<section class="cs-card filter-panel">
-    <div class="cs-card-head"><div><h3>Filter transaksi</h3><p>Cari berdasarkan data member, tujuan, produk, atau nomor serial.</p></div><span class="cs-badge"><i class="fa-solid fa-sliders"></i> Pencarian</span></div>
-    <div class="cs-card-body">
-        <form class="transaction-filter" method="GET" action="{% if view_mode == 'provider' %}/cs/transaksi-provider{% else %}/cs/transaksi{% endif %}">
-            <div class="cs-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ q|default('') }}" placeholder="Email, nama, nomor tujuan, produk, atau SN" autocomplete="off"></div>
-            <input class="cs-input" type="date" name="tanggal_awal" value="{{ tanggal_awal|default('') }}" aria-label="Tanggal awal">
-            <input class="cs-input" type="date" name="tanggal_akhir" value="{{ tanggal_akhir|default('') }}" aria-label="Tanggal akhir">
-            <select class="cs-select" name="status"><option value="">Semua status</option><option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>Berhasil</option><option value="Pending" {% if status == "Pending" %}selected{% endif %}>Pending</option><option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>Gagal</option></select>
-            <button class="cs-btn primary" type="submit"><i class="fa-solid fa-filter"></i> Terapkan</button><a class="cs-btn" href="{% if view_mode == 'provider' %}/cs/transaksi-provider{% else %}/cs/transaksi{% endif %}">Reset</a>
-        </form>
-        {% set transaksi_url = '/cs/transaksi-provider' if view_mode == 'provider' else '/cs/transaksi' %}<nav class="quick-filter" aria-label="Filter cepat"><span class="quick-filter-label">Rentang cepat:</span><a href="{{ transaksi_url }}?range=hari_ini">Hari ini</a><a href="{{ transaksi_url }}?range=kemarin">Kemarin</a><a href="{{ transaksi_url }}?range=7_hari">7 hari</a><a href="{{ transaksi_url }}?range=30_hari">30 hari</a><a href="{{ transaksi_url }}?range=bulan_ini">Bulan ini</a><span class="quick-filter-label">Status:</span><a class="pending" href="{{ transaksi_url }}?status=Pending">Pending</a><a class="success" href="{{ transaksi_url }}?status=Berhasil">Berhasil</a><a class="failed" href="{{ transaksi_url }}?status=Gagal">Gagal</a></nav>
-        {% if q or tanggal_awal or tanggal_akhir or status %}<div class="active-filters"><span class="cs-badge orange"><i class="fa-solid fa-filter"></i> Filter aktif</span>{% if q %}<span class="cs-badge">Pencarian: {{ q }}</span>{% endif %}{% if tanggal_awal %}<span class="cs-badge">Dari: {{ tanggal_awal }}</span>{% endif %}{% if tanggal_akhir %}<span class="cs-badge">Sampai: {{ tanggal_akhir }}</span>{% endif %}{% if status %}<span class="cs-badge">Status: {{ status }}</span>{% endif %}</div>{% endif %}
-    </div>
-</section>
+{% endblock %}
 
-<section class="cs-card">
-    <div class="cs-card-head"><div><h3>{% if view_mode == "provider" %}Log transaksi gateway{% else %}Daftar transaksi{% endif %}</h3><p>Gunakan nomor referensi dan serial number untuk membantu pengecekan transaksi.</p></div><span class="cs-badge green"><i class="fa-solid fa-list"></i> {{ ringkasan.total|default(0) }} data</span></div>
-    {% if daftar_transaksi|default([]) %}<div class="trx-caption"><span>Menampilkan maksimal 500 transaksi terbaru sesuai filter.</span><span>Mode: <strong>{{ mode_filter|default('semua transaksi') }}</strong></span></div>{% endif %}
-    <div class="cs-table-wrap">
-        {% if daftar_transaksi|default([]) %}<table class="cs-table trx-table"><thead><tr><th>No.</th><th>Waktu</th><th>Member</th><th>Referensi</th><th>Produk</th><th>Tujuan</th><th>Nominal</th><th>Status</th><th>SN / Keterangan</th><th></th></tr></thead><tbody>
-            {% for trx in daftar_transaksi|default([]) %}<tr>
-                <td><span class="no">{{ loop.index }}</span></td><td><span class="time">{{ trx.waktu.strftime("%d/%m/%Y %H:%M") if trx.waktu else "-" }}</span></td>
-                <td>{% if trx.pengguna is defined and trx.pengguna %}<span class="member">{{ trx.pengguna.nama_lengkap or trx.pengguna.email }}</span><span class="member-meta">{{ trx.pengguna.email }} · {{ trx.pengguna.nomor_hp or "-" }}</span>{% elif trx.email is defined and trx.email %}<span class="member">{{ trx.email }}</span>{% else %}-{% endif %}</td>
-                <td><span class="ref">trx-{{ trx.id if trx.id is defined else "-" }}</span></td>
-                <td><span class="product">{% if trx.jenis is defined and trx.jenis %}{{ trx.jenis }}{% elif trx.nama_produk is defined and trx.nama_produk %}{{ trx.nama_produk }}{% elif trx.kode_produk is defined and trx.kode_produk %}{{ trx.kode_produk }}{% else %}-{% endif %}</span></td>
-                <td><span class="destination">{{ trx.nomor_tujuan if trx.nomor_tujuan is defined and trx.nomor_tujuan else (trx.tujuan if trx.tujuan is defined and trx.tujuan else "-") }}</span></td>
-                <td><span class="amount">{% if trx.jumlah is defined %}{{ format_uang(trx.jumlah or 0) }}{% elif trx.harga_jual is defined %}{{ format_uang(trx.harga_jual or 0) }}{% else %}-{% endif %}</span></td>
-                <td>{% if trx.status == "Berhasil" %}<span class="cs-status ok"><i class="fa-solid fa-check"></i> Berhasil</span>{% elif trx.status == "Pending" %}<span class="cs-status wait"><i class="fa-solid fa-clock"></i> Pending</span>{% elif trx.status == "Gagal" %}<span class="cs-status bad"><i class="fa-solid fa-xmark"></i> Gagal</span>{% else %}<span class="cs-status info">{{ trx.status or "-" }}</span>{% endif %}</td>
-                <td><span class="sn">{{ trx.sn or "-" }}</span></td>
-                <td>{% if trx.pengguna is defined and trx.pengguna %}<a class="member-btn" href="/cs/member/{{ trx.pengguna.id }}">Member <i class="fa-solid fa-chevron-right"></i></a>{% elif trx.pengguna_id is defined and trx.pengguna_id %}<a class="member-btn" href="/cs/member/{{ trx.pengguna_id }}">Member <i class="fa-solid fa-chevron-right"></i></a>{% else %}-{% endif %}</td>
-            </tr>{% endfor %}
-        </tbody></table>{% else %}<div class="cs-empty" style="margin:14px;">Tidak ada transaksi yang cocok. Ubah kata kunci atau rentang waktu lalu coba lagi.</div>{% endif %}
-    </div>
-</section>
+{% block extra_script %}
+<script>
+(function(){
+    const todayText = document.getElementById("memberTodayText");
+    const timeText = document.getElementById("memberTimeText");
+
+    function updateClock(){
+        const now = new Date();
+
+        if(todayText){
+            todayText.textContent = now.toLocaleDateString("id-ID", {
+                weekday:"long",
+                day:"2-digit",
+                month:"long",
+                year:"numeric"
+            });
+        }
+
+        if(timeText){
+            timeText.textContent = "Jam " + now.toLocaleTimeString("id-ID");
+        }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+})();
+</script>
 {% endblock %}
