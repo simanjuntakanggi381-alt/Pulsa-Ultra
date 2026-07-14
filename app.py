@@ -187,7 +187,8 @@ def cek_akses():
         "cs_logout",
         "api_chat_start",
         "api_chat_send",
-        "api_chat_messages"
+        "api_chat_messages",
+        "api_cs_chats"
     ]
 
     if request.endpoint in halaman_bebas:
@@ -937,8 +938,6 @@ def cs_live_chat_detail(chat_id):
 
     mutasi_member = ambil_mutasi_member(member, limit=10)
 
-    # Catatan internal aman tanpa migrasi database.
-    # Kalau nanti model ChatSession punya kolom catatan_internal, otomatis bisa dipakai.
     setattr(chat, "catatan_internal", session.get(f"catatan_chat_{chat.id}", ""))
 
     return render_template(
@@ -1175,7 +1174,6 @@ def api_chat_start():
     if kode_chat:
         chat = ChatSession.query.filter_by(kode_chat=kode_chat).first()
 
-    # Kalau chat lama sudah ditutup, user akan dibuatkan sesi baru.
     if chat and chat.status == "closed":
         chat = None
 
@@ -1346,6 +1344,59 @@ def api_chat_messages(kode_chat):
         "unread_admin": chat.unread_admin,
         "unread_user": chat.unread_user,
         "messages": [serialize_chat_message(item) for item in pesan_chat]
+    })
+
+
+@app.route("/api/cs/chats")
+@cs_required
+def api_cs_chats():
+    q = request.args.get("q", "").strip()
+    status = request.args.get("status", "").strip()
+
+    query = ChatSession.query
+
+    if q:
+        query = query.filter(
+            or_(
+                ChatSession.kode_chat.ilike(f"%{q}%"),
+                ChatSession.nama.ilike(f"%{q}%"),
+                ChatSession.nomor_hp.ilike(f"%{q}%"),
+                ChatSession.email.ilike(f"%{q}%"),
+                ChatSession.last_message.ilike(f"%{q}%")
+            )
+        )
+
+    if status:
+        query = query.filter_by(status=status)
+
+    daftar_chat = query.order_by(
+        ChatSession.diperbarui_pada.desc()
+    ).limit(200).all()
+
+    semua_chat = ChatSession.query.all()
+
+    return jsonify({
+        "success": True,
+        "ringkasan": {
+            "total": len(daftar_chat),
+            "open": len([x for x in semua_chat if x.status == "open"]),
+            "closed": len([x for x in semua_chat if x.status == "closed"]),
+            "unread": sum([int(x.unread_admin or 0) for x in semua_chat])
+        },
+        "chats": [
+            {
+                "id": item.id,
+                "kode_chat": item.kode_chat,
+                "nama": item.nama or "Pengguna SenjaData",
+                "nomor_hp": item.nomor_hp or "",
+                "email": item.email or "",
+                "status": item.status or "open",
+                "last_message": item.last_message or "Belum ada pesan terakhir.",
+                "unread_admin": int(item.unread_admin or 0),
+                "diperbarui_pada": format_waktu_chat(item.diperbarui_pada)
+            }
+            for item in daftar_chat
+        ]
     })
 
 
