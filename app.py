@@ -173,10 +173,13 @@ def cek_akses():
         "admin_pengguna",
         "admin_produk",
         "admin_cek_sistem",
-        "admin_live_chat",
-        "admin_live_chat_detail",
-        "admin_live_chat_reply",
-        "admin_live_chat_close",
+        "cs_index",
+        "cs_login",
+        "cs_live_chat",
+        "cs_live_chat_detail",
+        "cs_live_chat_balas",
+        "cs_live_chat_tutup",
+        "cs_logout",
         "api_chat_start",
         "api_chat_send",
         "api_chat_messages"
@@ -534,8 +537,12 @@ def admin_logout():
 
 
 # =========================================================
-# LIVE CHAT SENJADATA
+# LIVE CHAT PANEL TERPISAH - CS SENJADATA
 # =========================================================
+CS_PANEL_USERNAME = os.getenv("CS_PANEL_USERNAME", "cs")
+CS_PANEL_PASSWORD = os.getenv("CS_PANEL_PASSWORD", "cs12345")
+
+
 def buat_kode_chat():
     return "CHAT-" + uuid.uuid4().hex[:12].upper()
 
@@ -543,7 +550,11 @@ def buat_kode_chat():
 def format_waktu_chat(waktu):
     if not waktu:
         return "-"
-    return waktu.strftime("%d/%m/%Y %H:%M")
+
+    try:
+        return waktu.strftime("%d/%m/%Y %H:%M")
+    except Exception:
+        return "-"
 
 
 def serialize_chat_message(item):
@@ -557,9 +568,57 @@ def serialize_chat_message(item):
     }
 
 
-@app.route("/admin/live-chat")
-@wajib_admin
-def admin_live_chat():
+def cs_sedang_login():
+    return session.get("cs_login") is True
+
+
+def cs_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not cs_sedang_login():
+            flash("⚠️ Silakan masuk ke panel live chat terlebih dahulu.", "warning")
+            return redirect(url_for("cs_login"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+@app.route("/cs")
+@app.route("/cs-panel")
+@app.route("/live-chat-panel")
+def cs_index():
+    if cs_sedang_login():
+        return redirect(url_for("cs_live_chat"))
+
+    return redirect(url_for("cs_login"))
+
+
+@app.route("/cs/login", methods=["GET", "POST"])
+@app.route("/cs-panel/login", methods=["GET", "POST"])
+@app.route("/live-chat-panel/login", methods=["GET", "POST"])
+def cs_login():
+    if cs_sedang_login():
+        return redirect(url_for("cs_live_chat"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+
+        if username.lower() == str(CS_PANEL_USERNAME).lower() and password == str(CS_PANEL_PASSWORD):
+            session["cs_login"] = True
+            session["cs_username"] = username or "CS SenjaData"
+            flash("✅ Berhasil masuk ke Live Chat Panel.", "success")
+            return redirect(url_for("cs_live_chat"))
+
+        flash("❌ Username atau password CS salah.", "danger")
+        return redirect(url_for("cs_login"))
+
+    return render_template("cs_login.html")
+
+
+@app.route("/cs/live-chat")
+@app.route("/live-chat-panel/chat")
+@cs_required
+def cs_live_chat():
     q = request.args.get("q", "").strip()
     status = request.args.get("status", "").strip()
 
@@ -581,15 +640,17 @@ def admin_live_chat():
 
     daftar_chat = query.order_by(ChatSession.diperbarui_pada.desc()).limit(200).all()
 
+    semua_chat = ChatSession.query.all()
+
     ringkasan = {
         "total": len(daftar_chat),
-        "open": len([x for x in daftar_chat if x.status == "open"]),
-        "closed": len([x for x in daftar_chat if x.status == "closed"]),
-        "unread": sum([int(x.unread_admin or 0) for x in daftar_chat])
+        "open": len([x for x in semua_chat if x.status == "open"]),
+        "closed": len([x for x in semua_chat if x.status == "closed"]),
+        "unread": sum([int(x.unread_admin or 0) for x in semua_chat])
     }
 
     return render_template(
-        "admin_live_chat.html",
+        "cs_live_chat.html",
         daftar_chat=daftar_chat,
         ringkasan=ringkasan,
         q=q,
@@ -598,9 +659,10 @@ def admin_live_chat():
     )
 
 
-@app.route("/admin/live-chat/<int:chat_id>")
-@wajib_admin
-def admin_live_chat_detail(chat_id):
+@app.route("/cs/live-chat/<int:chat_id>")
+@app.route("/live-chat-panel/chat/<int:chat_id>")
+@cs_required
+def cs_live_chat_detail(chat_id):
     chat = ChatSession.query.get_or_404(chat_id)
 
     ChatMessage.query.filter_by(
@@ -612,31 +674,33 @@ def admin_live_chat_detail(chat_id):
     chat.unread_admin = 0
     db.session.commit()
 
-    pesan_chat = ChatMessage.query.filter_by(chat_id=chat.id).order_by(ChatMessage.waktu.asc()).all()
+    pesan_chat = ChatMessage.query.filter_by(
+        chat_id=chat.id
+    ).order_by(ChatMessage.waktu.asc()).all()
 
     return render_template(
-        "admin_live_chat_detail.html",
+        "cs_live_chat_detail.html",
         chat=chat,
         pesan_chat=pesan_chat,
         format_waktu_chat=format_waktu_chat
     )
 
 
-@app.route("/admin/live-chat/<int:chat_id>/balas", methods=["POST"])
-@wajib_admin
-def admin_live_chat_reply(chat_id):
+@app.route("/cs/live-chat/<int:chat_id>/balas", methods=["POST"])
+@app.route("/live-chat-panel/chat/<int:chat_id>/balas", methods=["POST"])
+@cs_required
+def cs_live_chat_balas(chat_id):
     chat = ChatSession.query.get_or_404(chat_id)
+
+    if chat.status != "open":
+        flash("⚠️ Chat ini sudah ditutup. Buka sesi baru dari widget user jika perlu.", "warning")
+        return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
 
     pesan = request.form.get("pesan", "").strip()
 
     if not pesan:
         flash("⚠️ Pesan balasan tidak boleh kosong.", "warning")
-        return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
-
-    chat.status = "open"
-    chat.last_message = pesan
-    chat.unread_user = int(chat.unread_user or 0) + 1
-    chat.diperbarui_pada = datetime.utcnow()
+        return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
 
     pesan_baru = ChatMessage(
         chat_id=chat.id,
@@ -646,24 +710,48 @@ def admin_live_chat_reply(chat_id):
         dibaca_user=False
     )
 
+    chat.last_message = pesan
+    chat.unread_user = int(chat.unread_user or 0) + 1
+    chat.unread_admin = 0
+    chat.diperbarui_pada = datetime.utcnow()
+
     db.session.add(pesan_baru)
     db.session.commit()
 
     flash("✅ Balasan berhasil dikirim.", "success")
-    return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
+    return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
 
 
-@app.route("/admin/live-chat/<int:chat_id>/tutup", methods=["POST"])
-@wajib_admin
-def admin_live_chat_close(chat_id):
+@app.route("/cs/live-chat/<int:chat_id>/tutup", methods=["POST"])
+@app.route("/live-chat-panel/chat/<int:chat_id>/tutup", methods=["POST"])
+@cs_required
+def cs_live_chat_tutup(chat_id):
     chat = ChatSession.query.get_or_404(chat_id)
+
     chat.status = "closed"
     chat.diperbarui_pada = datetime.utcnow()
+
     db.session.commit()
 
     flash("✅ Chat berhasil ditutup.", "success")
-    return redirect(url_for("admin_live_chat_detail", chat_id=chat.id))
+    return redirect(url_for("cs_live_chat_detail", chat_id=chat.id))
 
+
+@app.route("/cs/logout")
+@app.route("/cs-panel/logout")
+@app.route("/live-chat-panel/logout")
+@cs_required
+def cs_logout():
+    session.pop("cs_login", None)
+    session.pop("cs_username", None)
+
+    flash("✅ Berhasil keluar dari Live Chat Panel.", "success")
+    return redirect(url_for("cs_login"))
+
+
+# =========================================================
+# API LIVE CHAT UNTUK USER / APK
+# =========================================================
 
 @app.route("/api/chat/start", methods=["POST"])
 def api_chat_start():
@@ -793,7 +881,12 @@ def api_chat_send():
             "message": "Sesi chat tidak ditemukan."
         }), 404
 
-    chat.status = "open"
+    if chat.status != "open":
+        return jsonify({
+            "success": False,
+            "message": "Chat sudah ditutup."
+        }), 403
+
     chat.last_message = pesan
     chat.diperbarui_pada = datetime.utcnow()
 
@@ -855,7 +948,9 @@ def api_chat_messages(kode_chat):
 
     db.session.commit()
 
-    pesan_chat = ChatMessage.query.filter_by(chat_id=chat.id).order_by(ChatMessage.waktu.asc()).all()
+    pesan_chat = ChatMessage.query.filter_by(
+        chat_id=chat.id
+    ).order_by(ChatMessage.waktu.asc()).all()
 
     return jsonify({
         "success": True,
