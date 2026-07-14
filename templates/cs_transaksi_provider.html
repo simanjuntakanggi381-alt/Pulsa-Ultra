@@ -2,41 +2,1093 @@
 
 {% block title %}Transaksi Provider - SenjaData{% endblock %}
 {% block heading %}Transaksi Provider{% endblock %}
-{% block subtitle %}Log transaksi berdasarkan layanan dan provider produk{% endblock %}
+{% block subtitle %}Log transaksi berdasarkan provider, produk, member, status, dan tanggal harian{% endblock %}
 
 {% block extra_style %}
 <style>
-    .provider-page{margin-top:1px}.provider-heading{margin:0 0 10px}.provider-heading h2{color:#fff;font-size:18px;line-height:1.2;font-weight:950;letter-spacing:-.025em}.provider-heading p{margin-top:4px;color:#7889a1;font-size:11px;font-weight:700}.provider-filter{padding:11px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#0c1629,#0a1222);box-shadow:0 12px 25px rgba(0,0,0,.14)}.provider-filter-title{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:#91a5c0;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.provider-filter-title i{color:#52d9ff}.provider-filter form{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.provider-filter .cs-select,.provider-filter .cs-input,.provider-filter .cs-search input{min-height:31px;border-radius:10px;font-size:10px}.provider-filter .cs-search i{left:10px;font-size:10px}.provider-filter .cs-search input{padding-left:29px}.provider-filter .cs-btn{min-height:32px;border-radius:9px;font-size:10px}.provider-date{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;grid-column:1 / span 2}.provider-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;grid-column:1 / span 4}.provider-active{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.provider-active span{display:inline-flex;align-items:center;padding:5px 7px;border:1px solid rgba(19,214,255,.18);border-radius:7px;background:#0b1b31;color:#a9dff0;font-size:10px;font-weight:800}.provider-table-card{margin-top:12px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#090f1d}.provider-table-wrap{overflow:auto}.provider-table{width:100%;min-width:1420px;border-collapse:collapse}.provider-table th{padding:10px 9px;background:linear-gradient(90deg,#083b4e,#062434);border-bottom:1px solid #145267;color:#c5e6ef;text-align:left;font-size:9px;font-weight:950;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}.provider-table td{padding:13px 9px;border-bottom:1px solid #172238;color:#c7d4e3;font-size:10px;font-weight:700;vertical-align:middle;white-space:nowrap}.provider-table tbody tr:hover td{background:rgba(19,214,255,.035)}.provider-table .num{color:#7f93ad;font-weight:900}.provider-table .time{color:#d8e6f5}.provider-table .provider{color:#8be9ff;font-weight:900}.provider-table .member{display:block;max-width:145px;overflow:hidden;text-overflow:ellipsis;color:#f0f6ff;font-weight:900}.provider-table .member-id{display:inline-flex;padding:4px 5px;border-radius:6px;background:#101d32;color:#91a8c6;font-family:Consolas,"Courier New",monospace;font-size:9px}.provider-table .ref{color:#a5b9d2;font-family:Consolas,"Courier New",monospace;font-size:9px}.provider-table .product{display:block;max-width:160px;overflow:hidden;text-overflow:ellipsis;color:#e5edf7;font-weight:850}.provider-table .target{color:#b8cae2;font-family:Consolas,"Courier New",monospace}.provider-table .money{color:#e8eff9;font-weight:900}.provider-table .saldo{color:#a6eac5;font-weight:850}.provider-table .muted{color:#6f829b}.provider-table .status{font-size:9px;padding:5px 7px}.provider-empty{min-height:270px;display:flex;align-items:center;justify-content:center;color:#8292a8;font-size:12px;font-weight:750}@media(max-width:1050px){.provider-filter form{grid-template-columns:repeat(3,minmax(0,1fr))}.provider-date{grid-column:auto}.provider-actions{grid-column:1 / -1}}@media(max-width:620px){.provider-heading h2{font-size:17px}.provider-filter form{grid-template-columns:1fr}.provider-date,.provider-actions{grid-column:auto}.provider-date{grid-template-columns:1fr}.provider-actions{grid-template-columns:1fr 1fr}}
+    /* =====================================================
+       TRANSAKSI PROVIDER - PREMIUM DARK TABLE
+    ===================================================== */
+
+    .provider-page{
+        display:grid;
+        gap:14px;
+    }
+
+    .provider-hero{
+        position:relative;
+        overflow:hidden;
+        padding:18px;
+        border-radius:18px;
+        border:1px solid var(--line);
+        background:
+            radial-gradient(circle at 12% 0%,rgba(19,214,255,.16),transparent 34%),
+            radial-gradient(circle at 100% 0%,rgba(18,107,255,.14),transparent 36%),
+            linear-gradient(135deg,#0d182d,#081020);
+        box-shadow:0 18px 45px rgba(0,0,0,.22);
+    }
+
+    .provider-hero::after{
+        content:"";
+        position:absolute;
+        right:-70px;
+        top:-80px;
+        width:210px;
+        height:210px;
+        border-radius:999px;
+        background:rgba(19,214,255,.10);
+    }
+
+    .provider-hero-inner{
+        position:relative;
+        z-index:2;
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:14px;
+        flex-wrap:wrap;
+    }
+
+    .provider-heading h2{
+        color:#fff;
+        font-size:24px;
+        line-height:1.12;
+        font-weight:950;
+        letter-spacing:-.045em;
+    }
+
+    .provider-heading p{
+        margin-top:7px;
+        max-width:720px;
+        color:#8fa5bf;
+        font-size:12px;
+        line-height:1.55;
+        font-weight:750;
+    }
+
+    .provider-today{
+        display:grid;
+        gap:7px;
+        min-width:220px;
+        padding:12px;
+        border-radius:16px;
+        background:rgba(7,16,32,.70);
+        border:1px solid rgba(19,214,255,.18);
+    }
+
+    .provider-today span{
+        color:#8fa5bf;
+        font-size:10px;
+        font-weight:950;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+    }
+
+    .provider-today strong{
+        color:#fff;
+        font-size:16px;
+        font-weight:950;
+    }
+
+    .provider-today small{
+        color:#13d6ff;
+        font-size:11px;
+        font-weight:850;
+    }
+
+    .provider-stats{
+        display:grid;
+        grid-template-columns:repeat(5,minmax(0,1fr));
+        gap:10px;
+    }
+
+    .provider-stat{
+        min-height:94px;
+        padding:13px;
+        border-radius:16px;
+        border:1px solid var(--line);
+        background:
+            radial-gradient(circle at 100% 0%,var(--glow,rgba(19,214,255,.12)),transparent 45%),
+            linear-gradient(180deg,#0d182d,#09101f);
+        box-shadow:0 12px 28px rgba(0,0,0,.18);
+    }
+
+    .provider-stat i{
+        float:right;
+        color:var(--icon,#13d6ff);
+        font-size:17px;
+        opacity:.92;
+    }
+
+    .provider-stat span{
+        display:block;
+        color:#8193ad;
+        font-size:10px;
+        font-weight:950;
+        text-transform:uppercase;
+        letter-spacing:.06em;
+    }
+
+    .provider-stat strong{
+        display:block;
+        margin-top:12px;
+        color:#fff;
+        font-size:22px;
+        line-height:1;
+        font-weight:950;
+        letter-spacing:-.04em;
+    }
+
+    .provider-filter{
+        padding:13px;
+        border:1px solid var(--line);
+        border-radius:18px;
+        background:
+            radial-gradient(circle at 0% 0%,rgba(19,214,255,.08),transparent 34%),
+            linear-gradient(180deg,#0c1629,#0a1222);
+        box-shadow:0 14px 32px rgba(0,0,0,.18);
+    }
+
+    .provider-filter-top{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-bottom:11px;
+    }
+
+    .provider-filter-title{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        color:#dbeafe;
+        font-size:11px;
+        font-weight:950;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+    }
+
+    .provider-filter-title i{
+        color:#52d9ff;
+    }
+
+    .provider-filter-note{
+        color:#8396b0;
+        font-size:11px;
+        font-weight:800;
+    }
+
+    .provider-filter form{
+        display:grid;
+        grid-template-columns:1fr 150px 150px 150px;
+        gap:9px;
+        align-items:center;
+    }
+
+    .provider-search-wide{
+        grid-column:1 / span 1;
+    }
+
+    .provider-search-row{
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:9px;
+        grid-column:1 / -1;
+    }
+
+    .provider-date-row{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+
+    .provider-actions{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+    }
+
+    .provider-filter .cs-select,
+    .provider-filter .cs-input,
+    .provider-filter .cs-search input{
+        min-height:39px;
+        border-radius:13px;
+        font-size:11px;
+    }
+
+    .provider-filter .cs-search i{
+        left:12px;
+        font-size:11px;
+    }
+
+    .provider-filter .cs-search input{
+        padding-left:34px;
+    }
+
+    .provider-filter .cs-btn{
+        min-height:39px;
+        border-radius:13px;
+        font-size:11px;
+    }
+
+    .provider-date-shortcuts{
+        display:flex;
+        align-items:center;
+        gap:7px;
+        flex-wrap:wrap;
+        margin-top:11px;
+    }
+
+    .provider-date-shortcuts a{
+        min-height:31px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+        padding:0 10px;
+        border-radius:999px;
+        border:1px solid rgba(19,214,255,.20);
+        background:#08172a;
+        color:#cfe3ff;
+        font-size:10px;
+        font-weight:950;
+        transition:.18s ease;
+    }
+
+    .provider-date-shortcuts a:hover{
+        border-color:rgba(19,214,255,.55);
+        color:#fff;
+        transform:translateY(-1px);
+    }
+
+    .provider-active{
+        display:flex;
+        align-items:center;
+        gap:7px;
+        flex-wrap:wrap;
+        margin-top:10px;
+        padding-top:10px;
+        border-top:1px solid var(--line);
+    }
+
+    .provider-active span{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:6px 9px;
+        border:1px solid rgba(19,214,255,.18);
+        border-radius:999px;
+        background:#0b1b31;
+        color:#a9dff0;
+        font-size:10px;
+        font-weight:850;
+    }
+
+    .provider-table-card{
+        overflow:hidden;
+        border:1px solid var(--line);
+        border-radius:18px;
+        background:
+            radial-gradient(circle at 0% 0%,rgba(19,214,255,.06),transparent 28%),
+            #090f1d;
+        box-shadow:0 18px 45px rgba(0,0,0,.22);
+    }
+
+    .provider-table-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        flex-wrap:wrap;
+        padding:13px 14px;
+        border-bottom:1px solid var(--line);
+        background:linear-gradient(90deg,rgba(19,214,255,.07),rgba(18,107,255,.03));
+    }
+
+    .provider-table-head h3{
+        color:#fff;
+        font-size:14px;
+        font-weight:950;
+    }
+
+    .provider-table-head p{
+        margin-top:4px;
+        color:#8396b0;
+        font-size:11px;
+        font-weight:750;
+    }
+
+    .provider-table-actions{
+        display:flex;
+        gap:7px;
+        flex-wrap:wrap;
+    }
+
+    .provider-table-wrap{
+        overflow:auto;
+        max-height:calc(100vh - 330px);
+        min-height:320px;
+    }
+
+    .provider-table{
+        width:100%;
+        min-width:1540px;
+        border-collapse:collapse;
+    }
+
+    .provider-table th{
+        position:sticky;
+        top:0;
+        z-index:3;
+        padding:11px 9px;
+        background:linear-gradient(90deg,#083b4e,#062434);
+        border-bottom:1px solid #145267;
+        color:#c5e6ef;
+        text-align:left;
+        font-size:9px;
+        font-weight:950;
+        letter-spacing:.03em;
+        text-transform:uppercase;
+        white-space:nowrap;
+    }
+
+    .provider-table td{
+        padding:13px 9px;
+        border-bottom:1px solid #172238;
+        color:#c7d4e3;
+        font-size:10px;
+        font-weight:750;
+        vertical-align:middle;
+        white-space:nowrap;
+    }
+
+    .provider-table tbody tr:nth-child(even) td{
+        background:rgba(255,255,255,.012);
+    }
+
+    .provider-table tbody tr:hover td{
+        background:rgba(19,214,255,.045);
+    }
+
+    .provider-table .num{
+        color:#7f93ad;
+        font-weight:950;
+    }
+
+    .provider-table .time{
+        color:#d8e6f5;
+        font-weight:850;
+    }
+
+    .provider-table .provider{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        color:#8be9ff;
+        font-weight:950;
+    }
+
+    .provider-table .provider::before{
+        content:"";
+        width:7px;
+        height:7px;
+        border-radius:50%;
+        background:#13d6ff;
+        box-shadow:0 0 14px rgba(19,214,255,.7);
+    }
+
+    .provider-table .member{
+        display:block;
+        max-width:165px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        color:#f0f6ff;
+        font-weight:950;
+    }
+
+    .provider-table .member small{
+        display:block;
+        margin-top:3px;
+        color:#7f93ad;
+        font-size:9px;
+        font-weight:800;
+    }
+
+    .provider-table .member-id{
+        display:inline-flex;
+        padding:5px 6px;
+        border-radius:7px;
+        background:#101d32;
+        color:#91a8c6;
+        font-family:Consolas,"Courier New",monospace;
+        font-size:9px;
+        font-weight:900;
+    }
+
+    .provider-table .ref{
+        color:#a5b9d2;
+        font-family:Consolas,"Courier New",monospace;
+        font-size:9px;
+        font-weight:900;
+    }
+
+    .provider-table .cmd{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-height:24px;
+        padding:0 8px;
+        border-radius:8px;
+        background:rgba(18,107,255,.12);
+        border:1px solid rgba(18,107,255,.22);
+        color:#cfe3ff;
+        font-size:9px;
+        font-weight:950;
+    }
+
+    .provider-table .product{
+        display:block;
+        max-width:190px;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        color:#e5edf7;
+        font-weight:900;
+    }
+
+    .provider-table .target{
+        color:#b8cae2;
+        font-family:Consolas,"Courier New",monospace;
+        font-weight:900;
+    }
+
+    .provider-table .money{
+        color:#e8eff9;
+        font-weight:950;
+    }
+
+    .provider-table .saldo{
+        color:#a6eac5;
+        font-weight:900;
+    }
+
+    .provider-table .muted{
+        color:#6f829b;
+    }
+
+    .provider-table .status{
+        font-size:9px;
+        padding:6px 8px;
+    }
+
+    .provider-action-link{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:5px;
+        min-height:26px;
+        padding:0 8px;
+        border-radius:8px;
+        background:rgba(19,214,255,.10);
+        border:1px solid rgba(19,214,255,.20);
+        color:#cfefff;
+        font-size:9px;
+        font-weight:950;
+    }
+
+    .provider-empty{
+        min-height:360px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        color:#8292a8;
+        font-size:12px;
+        font-weight:800;
+        padding:24px;
+    }
+
+    @media(max-width:1160px){
+        .provider-stats{
+            grid-template-columns:repeat(3,minmax(0,1fr));
+        }
+
+        .provider-filter form{
+            grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+
+        .provider-search-wide,
+        .provider-search-row{
+            grid-column:1 / -1;
+        }
+
+        .provider-search-row{
+            grid-template-columns:repeat(2,minmax(0,1fr));
+        }
+    }
+
+    @media(max-width:720px){
+        .provider-stats{
+            grid-template-columns:1fr;
+        }
+
+        .provider-filter form,
+        .provider-search-row,
+        .provider-date-row,
+        .provider-actions{
+            grid-template-columns:1fr;
+        }
+
+        .provider-hero-inner{
+            display:grid;
+        }
+
+        .provider-today{
+            min-width:0;
+        }
+
+        .provider-heading h2{
+            font-size:20px;
+        }
+
+        .provider-table-wrap{
+            max-height:none;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
+
+{% set ns = namespace(total=0, berhasil=0, pending=0, gagal=0, total_nominal=0) %}
+
+{% for trx in daftar_transaksi|default([]) %}
+    {% set ns.total = ns.total + 1 %}
+
+    {% if trx.status == "Berhasil" %}
+        {% set ns.berhasil = ns.berhasil + 1 %}
+    {% elif trx.status == "Pending" %}
+        {% set ns.pending = ns.pending + 1 %}
+    {% elif trx.status == "Gagal" %}
+        {% set ns.gagal = ns.gagal + 1 %}
+    {% endif %}
+
+    {% set ns.total_nominal = ns.total_nominal + (trx.jumlah or 0) %}
+{% endfor %}
+
 <section class="provider-page">
-    <header class="provider-heading"><h2>Provider Transactions</h2><p>Log transaksi produk berdasarkan provider layanan.</p></header>
-    <section class="provider-filter">
-        <div class="provider-filter-title"><i class="fa-solid fa-sliders"></i> Filter transaksi</div>
-        <form method="GET" action="/cs/transaksi-provider">
-            <select class="cs-select" name="provider"><option value="">provider</option>{% for item in daftar_provider %}<option value="{{ item }}" {% if provider == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select>
-            <select class="cs-select" name="status"><option value="">status</option><option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>berhasil</option><option value="Pending" {% if status == "Pending" %}selected{% endif %}>pending</option><option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>gagal</option></select>
-            <div class="cs-search"><i class="fa-solid fa-user"></i><input type="search" name="member" value="{{ member or '' }}" placeholder="member"></div>
-            <div class="cs-search"><i class="fa-solid fa-box"></i><input type="search" name="kode_produk" value="{{ kode_produk or '' }}" placeholder="produk"></div>
-            <div class="cs-search"><i class="fa-solid fa-hashtag"></i><input type="search" name="ref_id" value="{{ ref_id or '' }}" placeholder="ref_id atau SN"></div>
-            <div class="cs-search"><i class="fa-solid fa-mobile-screen"></i><input type="search" name="tujuan" value="{{ tujuan or '' }}" placeholder="tujuan"></div>
-            <div class="provider-date"><input class="cs-input" type="date" name="tanggal_awal" value="{{ tanggal_awal or '' }}" aria-label="Tanggal awal"><input class="cs-input" type="date" name="tanggal_akhir" value="{{ tanggal_akhir or '' }}" aria-label="Tanggal akhir"></div>
-            <div class="provider-actions"><button class="cs-btn primary" type="submit">Filter</button><a class="cs-btn" href="/cs/transaksi-provider">Reset</a></div>
-        </form>
-        {% if provider or status or member or kode_produk or ref_id or tujuan or tanggal_awal or tanggal_akhir %}<div class="provider-active"><span>Filter aktif</span>{% if provider %}<span>Provider: {{ provider }}</span>{% endif %}{% if status %}<span>Status: {{ status }}</span>{% endif %}{% if tanggal_awal or tanggal_akhir %}<span>{{ tanggal_awal or 'awal' }} — {{ tanggal_akhir or 'sekarang' }}</span>{% endif %}</div>{% endif %}
+
+    <section class="provider-hero">
+        <div class="provider-hero-inner">
+            <header class="provider-heading">
+                <h2>Provider Transactions</h2>
+                <p>
+                    Log transaksi produk berdasarkan provider layanan. CS bisa cek transaksi per hari,
+                    filter provider, status, member, produk, tujuan, ref ID, dan SN.
+                </p>
+            </header>
+
+            <div class="provider-today">
+                <span>Tanggal Hari Ini</span>
+                <strong id="providerTodayText">Memuat tanggal...</strong>
+                <small id="providerTimeText">Live time</small>
+            </div>
+        </div>
     </section>
 
-    <section class="provider-table-card"><div class="provider-table-wrap">
-        {% if daftar_transaksi %}<table class="provider-table"><thead><tr><th>No</th><th>Waktu</th><th>Provider</th><th>Member</th><th>Member Trx ID</th><th>Ref ID</th><th>Perintah</th><th>Produk</th><th>Tujuan</th><th>Qty</th><th>HTTP</th><th>RC</th><th>Harga</th><th>Saldo Kini</th><th>Status</th></tr></thead><tbody>
-            {% for trx in daftar_transaksi %}<tr>
-                <td><span class="num">{{ loop.index }}</span></td><td><span class="time">{{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") if trx.waktu else "-" }}</span></td><td><span class="provider">{{ trx.provider_label }}</span></td>
-                <td>{% if trx.pengguna %}<span class="member">{{ trx.pengguna.nama_lengkap or trx.pengguna.email }}</span>{% else %}<span class="muted">-</span>{% endif %}</td><td><span class="member-id">{{ trx.pengguna_id or "-" }}</span></td><td><span class="ref">trx-{{ trx.id }}</span></td><td>BELI</td>
-                <td><span class="product">{{ trx.jenis or "-" }}</span></td><td><span class="target">{{ trx.nomor_tujuan or "-" }}</span></td><td class="money">{{ format_uang(trx.jumlah or 0) }}</td><td class="muted">-</td><td class="muted">-</td><td class="money">{{ format_uang(trx.harga_modal or 0) }}</td><td>{% if trx.pengguna %}<span class="saldo">{{ format_uang(trx.pengguna.saldo or 0) }}</span>{% else %}<span class="muted">-</span>{% endif %}</td>
-                <td>{% if trx.status == "Berhasil" %}<span class="status ok">BERHASIL</span>{% elif trx.status == "Pending" %}<span class="status wait">PENDING</span>{% elif trx.status == "Gagal" %}<span class="status bad">GAGAL</span>{% else %}<span class="status info">{{ trx.status or '-' }}</span>{% endif %}</td>
-            </tr>{% endfor %}
-        </tbody></table>{% else %}<div class="provider-empty">Tidak ada transaksi yang cocok dengan filter ini.</div>{% endif %}
-    </div></section>
+    <section class="provider-stats">
+        <div class="provider-stat" style="--glow:rgba(19,214,255,.13);--icon:#13d6ff;">
+            <i class="fa-solid fa-database"></i>
+            <span>Total Data</span>
+            <strong>{{ ns.total }}</strong>
+        </div>
+
+        <div class="provider-stat" style="--glow:rgba(25,195,125,.13);--icon:#19c37d;">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Berhasil</span>
+            <strong>{{ ns.berhasil }}</strong>
+        </div>
+
+        <div class="provider-stat" style="--glow:rgba(255,159,28,.13);--icon:#ff9f1c;">
+            <i class="fa-solid fa-clock"></i>
+            <span>Pending</span>
+            <strong>{{ ns.pending }}</strong>
+        </div>
+
+        <div class="provider-stat" style="--glow:rgba(255,77,94,.13);--icon:#ff4d5e;">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <span>Gagal</span>
+            <strong>{{ ns.gagal }}</strong>
+        </div>
+
+        <div class="provider-stat" style="--glow:rgba(124,58,237,.13);--icon:#a78bfa;">
+            <i class="fa-solid fa-coins"></i>
+            <span>Total Nominal</span>
+            <strong>{{ format_uang(ns.total_nominal) }}</strong>
+        </div>
+    </section>
+
+    <section class="provider-filter">
+        <div class="provider-filter-top">
+            <div class="provider-filter-title">
+                <i class="fa-solid fa-sliders"></i>
+                Filter transaksi provider
+            </div>
+
+            <div class="provider-filter-note">
+                Gunakan tombol tanggal cepat untuk cek transaksi harian.
+            </div>
+        </div>
+
+        <form method="GET" action="/cs/transaksi-provider">
+            <div class="cs-search provider-search-wide">
+                <i class="fa-solid fa-user"></i>
+                <input
+                    type="search"
+                    name="member"
+                    value="{{ member or '' }}"
+                    placeholder="Cari member / nama / email / nomor HP"
+                >
+            </div>
+
+            <select class="cs-select" name="provider">
+                <option value="">Semua provider</option>
+                {% for item in daftar_provider %}
+                    <option value="{{ item }}" {% if provider == item %}selected{% endif %}>
+                        {{ item }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select class="cs-select" name="status">
+                <option value="">Semua status</option>
+                <option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>berhasil</option>
+                <option value="Pending" {% if status == "Pending" %}selected{% endif %}>pending</option>
+                <option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>gagal</option>
+            </select>
+
+            <div class="provider-date-row">
+                <input
+                    class="cs-input"
+                    type="date"
+                    name="tanggal_awal"
+                    value="{{ tanggal_awal or '' }}"
+                    aria-label="Tanggal awal"
+                >
+
+                <input
+                    class="cs-input"
+                    type="date"
+                    name="tanggal_akhir"
+                    value="{{ tanggal_akhir or '' }}"
+                    aria-label="Tanggal akhir"
+                >
+            </div>
+
+            <div class="provider-search-row">
+                <div class="cs-search">
+                    <i class="fa-solid fa-box"></i>
+                    <input
+                        type="search"
+                        name="kode_produk"
+                        value="{{ kode_produk or '' }}"
+                        placeholder="Kode / nama produk"
+                    >
+                </div>
+
+                <div class="cs-search">
+                    <i class="fa-solid fa-hashtag"></i>
+                    <input
+                        type="search"
+                        name="ref_id"
+                        value="{{ ref_id or '' }}"
+                        placeholder="Ref ID atau SN"
+                    >
+                </div>
+
+                <div class="cs-search">
+                    <i class="fa-solid fa-mobile-screen"></i>
+                    <input
+                        type="search"
+                        name="tujuan"
+                        value="{{ tujuan or '' }}"
+                        placeholder="Nomor tujuan"
+                    >
+                </div>
+
+                <div class="provider-actions">
+                    <button class="cs-btn primary" type="submit">
+                        <i class="fa-solid fa-filter"></i>
+                        Filter
+                    </button>
+
+                    <a class="cs-btn" href="/cs/transaksi-provider">
+                        Reset
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <div class="provider-date-shortcuts">
+            <a href="#" data-range="today">
+                <i class="fa-solid fa-calendar-day"></i>
+                Hari Ini
+            </a>
+
+            <a href="#" data-range="yesterday">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Kemarin
+            </a>
+
+            <a href="#" data-range="last7">
+                <i class="fa-solid fa-calendar-week"></i>
+                7 Hari
+            </a>
+
+            <a href="#" data-range="last30">
+                <i class="fa-solid fa-calendar-days"></i>
+                30 Hari
+            </a>
+
+            <a href="#" data-range="month">
+                <i class="fa-solid fa-calendar"></i>
+                Bulan Ini
+            </a>
+
+            <a href="/cs/transaksi-provider?status=Pending" class="provider-pending">
+                <i class="fa-solid fa-clock"></i>
+                Pending
+            </a>
+        </div>
+
+        {% if provider or status or member or kode_produk or ref_id or tujuan or tanggal_awal or tanggal_akhir %}
+            <div class="provider-active">
+                <span>
+                    <i class="fa-solid fa-check"></i>
+                    Filter aktif
+                </span>
+
+                {% if provider %}
+                    <span>Provider: {{ provider }}</span>
+                {% endif %}
+
+                {% if status %}
+                    <span>Status: {{ status }}</span>
+                {% endif %}
+
+                {% if member %}
+                    <span>Member: {{ member }}</span>
+                {% endif %}
+
+                {% if kode_produk %}
+                    <span>Produk: {{ kode_produk }}</span>
+                {% endif %}
+
+                {% if ref_id %}
+                    <span>Ref/SN: {{ ref_id }}</span>
+                {% endif %}
+
+                {% if tujuan %}
+                    <span>Tujuan: {{ tujuan }}</span>
+                {% endif %}
+
+                {% if tanggal_awal or tanggal_akhir %}
+                    <span>{{ tanggal_awal or 'awal' }} — {{ tanggal_akhir or 'sekarang' }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="provider-table-card">
+        <div class="provider-table-head">
+            <div>
+                <h3>Data Transaksi Provider</h3>
+                <p>
+                    Tabel ini menampilkan log provider lengkap untuk kebutuhan audit CS dan pengecekan transaksi harian.
+                </p>
+            </div>
+
+            <div class="provider-table-actions">
+                <span class="cs-badge green">{{ ns.total }} Data</span>
+                <span class="cs-badge orange">{{ ns.pending }} Pending</span>
+                <span class="cs-badge dark" id="providerCurrentRange">Tanggal aktif</span>
+            </div>
+        </div>
+
+        <div class="provider-table-wrap">
+            {% if daftar_transaksi %}
+                <table class="provider-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Waktu</th>
+                            <th>Provider</th>
+                            <th>Member</th>
+                            <th>Member Trx ID</th>
+                            <th>Ref ID</th>
+                            <th>Perintah</th>
+                            <th>Produk</th>
+                            <th>Tujuan</th>
+                            <th>Qty / Nominal</th>
+                            <th>HTTP</th>
+                            <th>RC</th>
+                            <th>Harga Modal</th>
+                            <th>Saldo Kini</th>
+                            <th>Status</th>
+                            <th>SN / Keterangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for trx in daftar_transaksi %}
+                            <tr>
+                                <td>
+                                    <span class="num">{{ loop.index }}</span>
+                                </td>
+
+                                <td>
+                                    <span class="time">
+                                        {{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") if trx.waktu else "-" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="provider">
+                                        {{ trx.provider_label }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {% if trx.pengguna %}
+                                        <span class="member">
+                                            {{ trx.pengguna.nama_lengkap or trx.pengguna.email }}
+                                            <small>{{ trx.pengguna.email }}</small>
+                                        </span>
+                                    {% else %}
+                                        <span class="muted">-</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <span class="member-id">
+                                        {{ trx.pengguna_id or "-" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="ref">
+                                        trx-{{ trx.id }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="cmd">BELI</span>
+                                </td>
+
+                                <td>
+                                    <span class="product">
+                                        {{ trx.jenis or "-" }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="target">
+                                        {{ trx.nomor_tujuan or "-" }}
+                                    </span>
+                                </td>
+
+                                <td class="money">
+                                    {{ format_uang(trx.jumlah or 0) }}
+                                </td>
+
+                                <td class="muted">-</td>
+
+                                <td class="muted">-</td>
+
+                                <td class="money">
+                                    {{ format_uang(trx.harga_modal or 0) }}
+                                </td>
+
+                                <td>
+                                    {% if trx.pengguna %}
+                                        <span class="saldo">
+                                            {{ format_uang(trx.pengguna.saldo or 0) }}
+                                        </span>
+                                    {% else %}
+                                        <span class="muted">-</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if trx.status == "Berhasil" %}
+                                        <span class="status ok">
+                                            <i class="fa-solid fa-check"></i>
+                                            BERHASIL
+                                        </span>
+                                    {% elif trx.status == "Pending" %}
+                                        <span class="status wait">
+                                            <i class="fa-solid fa-clock"></i>
+                                            PENDING
+                                        </span>
+                                    {% elif trx.status == "Gagal" %}
+                                        <span class="status bad">
+                                            <i class="fa-solid fa-xmark"></i>
+                                            GAGAL
+                                        </span>
+                                    {% else %}
+                                        <span class="status info">
+                                            {{ trx.status or '-' }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td style="min-width:240px;">
+                                    {% if trx.sn %}
+                                        {{ trx.sn }}
+                                    {% else %}
+                                        <span class="muted">-</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if trx.pengguna %}
+                                        <a class="provider-action-link" href="/cs/member/{{ trx.pengguna.id }}">
+                                            <i class="fa-solid fa-user-check"></i>
+                                            Member
+                                        </a>
+                                    {% else %}
+                                        <span class="muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="provider-empty">
+                    Tidak ada transaksi yang cocok dengan filter ini.
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
 </section>
+
+{% endblock %}
+
+{% block extra_script %}
+<script>
+(function(){
+    const todayText = document.getElementById("providerTodayText");
+    const timeText = document.getElementById("providerTimeText");
+    const rangeText = document.getElementById("providerCurrentRange");
+
+    function pad(value){
+        return String(value).padStart(2, "0");
+    }
+
+    function toInputDate(date){
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatTanggalIndonesia(date){
+        return date.toLocaleDateString("id-ID", {
+            weekday:"long",
+            day:"2-digit",
+            month:"long",
+            year:"numeric"
+        });
+    }
+
+    function updateClock(){
+        const now = new Date();
+
+        if(todayText){
+            todayText.textContent = formatTanggalIndonesia(now);
+        }
+
+        if(timeText){
+            timeText.textContent = "Jam " + now.toLocaleTimeString("id-ID");
+        }
+    }
+
+    function buildUrl(startDate, endDate){
+        const params = new URLSearchParams(window.location.search);
+
+        params.set("tanggal_awal", toInputDate(startDate));
+        params.set("tanggal_akhir", toInputDate(endDate));
+
+        params.delete("range");
+
+        return "/cs/transaksi-provider?" + params.toString();
+    }
+
+    function setRangeLinks(){
+        const now = new Date();
+
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        const last7 = new Date(today);
+        last7.setDate(today.getDate() - 6);
+
+        const last30 = new Date(today);
+        last30.setDate(today.getDate() - 29);
+
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        document.querySelectorAll("[data-range]").forEach(function(link){
+            const range = link.getAttribute("data-range");
+
+            if(range === "today"){
+                link.href = buildUrl(today, today);
+            }
+
+            if(range === "yesterday"){
+                link.href = buildUrl(yesterday, yesterday);
+            }
+
+            if(range === "last7"){
+                link.href = buildUrl(last7, today);
+            }
+
+            if(range === "last30"){
+                link.href = buildUrl(last30, today);
+            }
+
+            if(range === "month"){
+                link.href = buildUrl(monthStart, today);
+            }
+        });
+    }
+
+    function updateRangeText(){
+        if(!rangeText){
+            return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const awal = params.get("tanggal_awal");
+        const akhir = params.get("tanggal_akhir");
+
+        if(awal || akhir){
+            rangeText.textContent = (awal || "awal") + " — " + (akhir || "sekarang");
+        }else{
+            rangeText.textContent = "Semua tanggal";
+        }
+    }
+
+    updateClock();
+    setRangeLinks();
+    updateRangeText();
+
+    setInterval(updateClock, 1000);
+})();
+</script>
 {% endblock %}
