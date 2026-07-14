@@ -6,8 +6,7 @@ from config import (
     NAMA_PRODUK,
     HARGA_JUAL,
     BATAS_SALDO_INGAT,
-    AKUN_ADMIN,
-    SERVER_API_URL
+    AKUN_ADMIN
 )
 from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
@@ -16,7 +15,6 @@ from sqlalchemy import func, or_, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
-from urllib.parse import urlparse
 import os
 import uuid
 
@@ -737,6 +735,36 @@ def ringkasan_transaksi(daftar):
     }
 
 
+def provider_dari_produk(nama_produk):
+    nama = (nama_produk or "").lower()
+    provider_map = [
+        ("telkomsel", "Telkomsel"),
+        ("indosat", "Indosat"),
+        ("xl", "XL / Axis"),
+        ("axis", "XL / Axis"),
+        ("tri", "Tri"),
+        ("dana", "DANA"),
+        ("gopay", "GoPay"),
+        ("ovo", "OVO"),
+        ("linkaja", "LinkAja"),
+        ("shopeepay", "ShopeePay"),
+        ("listrik", "PLN"),
+        ("pln", "PLN"),
+        ("gojek", "Gojek"),
+        ("grab", "Grab"),
+        ("unipin", "UniPin"),
+        ("flazz", "Flazz"),
+        ("brizzi", "Brizzi"),
+        ("e-toll", "E-Toll")
+    ]
+
+    for kata, provider in provider_map:
+        if kata in nama:
+            return provider
+
+    return "Lainnya"
+
+
 def cari_member_dari_chat(chat):
     member = None
 
@@ -1143,33 +1171,67 @@ def cs_transaksi():
 @app.route("/cs/transaksi-provider")
 @cs_required
 def cs_transaksi_provider():
-    q = request.args.get("q", "").strip()
+    provider = request.args.get("provider", "").strip()
     status = request.args.get("status", "").strip()
+    member = request.args.get("member", "").strip()
+    kode_produk = request.args.get("kode_produk", "").strip()
+    ref_id = request.args.get("ref_id", "").strip()
+    tujuan = request.args.get("tujuan", "").strip()
     tanggal_awal = request.args.get("tanggal_awal", "").strip()
     tanggal_akhir = request.args.get("tanggal_akhir", "").strip()
     tanggal_awal_obj, tanggal_akhir_obj, mode_filter = rentang_dari_request()
 
-    query = filter_transaksi_query(
-        query=Transaksi.query,
-        q=q,
-        status=status,
-        tanggal_awal_obj=tanggal_awal_obj,
-        tanggal_akhir_obj=tanggal_akhir_obj
-    )
+    query = Transaksi.query
+    if status:
+        query = query.filter(Transaksi.status == status)
+    if tanggal_awal_obj:
+        query = query.filter(Transaksi.waktu >= tanggal_awal_obj)
+    if tanggal_akhir_obj:
+        query = query.filter(Transaksi.waktu <= tanggal_akhir_obj)
+    if kode_produk:
+        query = query.filter(Transaksi.jenis.ilike(f"%{kode_produk}%"))
+    if tujuan:
+        query = query.filter(Transaksi.nomor_tujuan.ilike(f"%{tujuan}%"))
+    if ref_id:
+        ref_key = ref_id.lower().replace("trx-", "")
+        conditions = [Transaksi.sn.ilike(f"%{ref_id}%")]
+        if ref_key.isdigit():
+            conditions.append(Transaksi.id == int(ref_key))
+        query = query.filter(or_(*conditions))
+    if member:
+        query = query.join(Pengguna, Transaksi.pengguna_id == Pengguna.id).filter(or_(
+            Pengguna.nama_lengkap.ilike(f"%{member}%"),
+            Pengguna.email.ilike(f"%{member}%"),
+            Pengguna.nomor_hp.ilike(f"%{member}%")
+        ))
+
     daftar_transaksi = query.order_by(Transaksi.waktu.desc()).limit(500).all()
-    gateway = urlparse(SERVER_API_URL).netloc or "Gateway API"
+    for transaksi in daftar_transaksi:
+        transaksi.provider_label = provider_dari_produk(transaksi.jenis)
+
+    daftar_provider = sorted({
+        transaksi.provider_label for transaksi in daftar_transaksi
+    })
+
+    if provider:
+        daftar_transaksi = [
+            transaksi for transaksi in daftar_transaksi
+            if transaksi.provider_label.lower() == provider.lower()
+        ]
 
     return render_template(
-        "cs_transaksi.html",
+        "cs_transaksi_provider.html",
         daftar_transaksi=daftar_transaksi,
-        ringkasan=ringkasan_transaksi(daftar_transaksi),
-        q=q,
+        daftar_provider=daftar_provider,
+        provider=provider,
         status=status,
+        member=member,
+        kode_produk=kode_produk,
+        ref_id=ref_id,
+        tujuan=tujuan,
         tanggal_awal=tanggal_awal,
         tanggal_akhir=tanggal_akhir,
         mode_filter=mode_filter,
-        view_mode="provider",
-        gateway_label=gateway,
         format_uang=format_uang
     )
 

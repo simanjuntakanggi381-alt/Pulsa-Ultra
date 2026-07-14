@@ -1,0 +1,42 @@
+{% extends "cs_base.html" %}
+
+{% block title %}Transaksi Provider - SenjaData{% endblock %}
+{% block heading %}Transaksi Provider{% endblock %}
+{% block subtitle %}Log transaksi berdasarkan layanan dan provider produk{% endblock %}
+
+{% block extra_style %}
+<style>
+    .provider-page{margin-top:1px}.provider-heading{margin:0 0 10px}.provider-heading h2{color:#fff;font-size:18px;line-height:1.2;font-weight:950;letter-spacing:-.025em}.provider-heading p{margin-top:4px;color:#7889a1;font-size:11px;font-weight:700}.provider-filter{padding:11px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#0c1629,#0a1222);box-shadow:0 12px 25px rgba(0,0,0,.14)}.provider-filter-title{display:flex;align-items:center;gap:7px;margin-bottom:9px;color:#91a5c0;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.provider-filter-title i{color:#52d9ff}.provider-filter form{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.provider-filter .cs-select,.provider-filter .cs-input,.provider-filter .cs-search input{min-height:31px;border-radius:10px;font-size:10px}.provider-filter .cs-search i{left:10px;font-size:10px}.provider-filter .cs-search input{padding-left:29px}.provider-filter .cs-btn{min-height:32px;border-radius:9px;font-size:10px}.provider-date{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;grid-column:1 / span 2}.provider-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;grid-column:1 / span 4}.provider-active{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}.provider-active span{display:inline-flex;align-items:center;padding:5px 7px;border:1px solid rgba(19,214,255,.18);border-radius:7px;background:#0b1b31;color:#a9dff0;font-size:10px;font-weight:800}.provider-table-card{margin-top:12px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#090f1d}.provider-table-wrap{overflow:auto}.provider-table{width:100%;min-width:1420px;border-collapse:collapse}.provider-table th{padding:10px 9px;background:linear-gradient(90deg,#083b4e,#062434);border-bottom:1px solid #145267;color:#c5e6ef;text-align:left;font-size:9px;font-weight:950;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}.provider-table td{padding:13px 9px;border-bottom:1px solid #172238;color:#c7d4e3;font-size:10px;font-weight:700;vertical-align:middle;white-space:nowrap}.provider-table tbody tr:hover td{background:rgba(19,214,255,.035)}.provider-table .num{color:#7f93ad;font-weight:900}.provider-table .time{color:#d8e6f5}.provider-table .provider{color:#8be9ff;font-weight:900}.provider-table .member{display:block;max-width:145px;overflow:hidden;text-overflow:ellipsis;color:#f0f6ff;font-weight:900}.provider-table .member-id{display:inline-flex;padding:4px 5px;border-radius:6px;background:#101d32;color:#91a8c6;font-family:Consolas,"Courier New",monospace;font-size:9px}.provider-table .ref{color:#a5b9d2;font-family:Consolas,"Courier New",monospace;font-size:9px}.provider-table .product{display:block;max-width:160px;overflow:hidden;text-overflow:ellipsis;color:#e5edf7;font-weight:850}.provider-table .target{color:#b8cae2;font-family:Consolas,"Courier New",monospace}.provider-table .money{color:#e8eff9;font-weight:900}.provider-table .saldo{color:#a6eac5;font-weight:850}.provider-table .muted{color:#6f829b}.provider-table .status{font-size:9px;padding:5px 7px}.provider-empty{min-height:270px;display:flex;align-items:center;justify-content:center;color:#8292a8;font-size:12px;font-weight:750}@media(max-width:1050px){.provider-filter form{grid-template-columns:repeat(3,minmax(0,1fr))}.provider-date{grid-column:auto}.provider-actions{grid-column:1 / -1}}@media(max-width:620px){.provider-heading h2{font-size:17px}.provider-filter form{grid-template-columns:1fr}.provider-date,.provider-actions{grid-column:auto}.provider-date{grid-template-columns:1fr}.provider-actions{grid-template-columns:1fr 1fr}}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="provider-page">
+    <header class="provider-heading"><h2>Provider Transactions</h2><p>Log transaksi produk berdasarkan provider layanan.</p></header>
+    <section class="provider-filter">
+        <div class="provider-filter-title"><i class="fa-solid fa-sliders"></i> Filter transaksi</div>
+        <form method="GET" action="/cs/transaksi-provider">
+            <select class="cs-select" name="provider"><option value="">provider</option>{% for item in daftar_provider %}<option value="{{ item }}" {% if provider == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select>
+            <select class="cs-select" name="status"><option value="">status</option><option value="Berhasil" {% if status == "Berhasil" %}selected{% endif %}>berhasil</option><option value="Pending" {% if status == "Pending" %}selected{% endif %}>pending</option><option value="Gagal" {% if status == "Gagal" %}selected{% endif %}>gagal</option></select>
+            <div class="cs-search"><i class="fa-solid fa-user"></i><input type="search" name="member" value="{{ member or '' }}" placeholder="member"></div>
+            <div class="cs-search"><i class="fa-solid fa-box"></i><input type="search" name="kode_produk" value="{{ kode_produk or '' }}" placeholder="produk"></div>
+            <div class="cs-search"><i class="fa-solid fa-hashtag"></i><input type="search" name="ref_id" value="{{ ref_id or '' }}" placeholder="ref_id atau SN"></div>
+            <div class="cs-search"><i class="fa-solid fa-mobile-screen"></i><input type="search" name="tujuan" value="{{ tujuan or '' }}" placeholder="tujuan"></div>
+            <div class="provider-date"><input class="cs-input" type="date" name="tanggal_awal" value="{{ tanggal_awal or '' }}" aria-label="Tanggal awal"><input class="cs-input" type="date" name="tanggal_akhir" value="{{ tanggal_akhir or '' }}" aria-label="Tanggal akhir"></div>
+            <div class="provider-actions"><button class="cs-btn primary" type="submit">Filter</button><a class="cs-btn" href="/cs/transaksi-provider">Reset</a></div>
+        </form>
+        {% if provider or status or member or kode_produk or ref_id or tujuan or tanggal_awal or tanggal_akhir %}<div class="provider-active"><span>Filter aktif</span>{% if provider %}<span>Provider: {{ provider }}</span>{% endif %}{% if status %}<span>Status: {{ status }}</span>{% endif %}{% if tanggal_awal or tanggal_akhir %}<span>{{ tanggal_awal or 'awal' }} — {{ tanggal_akhir or 'sekarang' }}</span>{% endif %}</div>{% endif %}
+    </section>
+
+    <section class="provider-table-card"><div class="provider-table-wrap">
+        {% if daftar_transaksi %}<table class="provider-table"><thead><tr><th>No</th><th>Waktu</th><th>Provider</th><th>Member</th><th>Member Trx ID</th><th>Ref ID</th><th>Perintah</th><th>Produk</th><th>Tujuan</th><th>Qty</th><th>HTTP</th><th>RC</th><th>Harga</th><th>Saldo Kini</th><th>Status</th></tr></thead><tbody>
+            {% for trx in daftar_transaksi %}<tr>
+                <td><span class="num">{{ loop.index }}</span></td><td><span class="time">{{ trx.waktu.strftime("%d/%m/%Y, %H:%M:%S") if trx.waktu else "-" }}</span></td><td><span class="provider">{{ trx.provider_label }}</span></td>
+                <td>{% if trx.pengguna %}<span class="member">{{ trx.pengguna.nama_lengkap or trx.pengguna.email }}</span>{% else %}<span class="muted">-</span>{% endif %}</td><td><span class="member-id">{{ trx.pengguna_id or "-" }}</span></td><td><span class="ref">trx-{{ trx.id }}</span></td><td>BELI</td>
+                <td><span class="product">{{ trx.jenis or "-" }}</span></td><td><span class="target">{{ trx.nomor_tujuan or "-" }}</span></td><td class="money">{{ format_uang(trx.jumlah or 0) }}</td><td class="muted">-</td><td class="muted">-</td><td class="money">{{ format_uang(trx.harga_modal or 0) }}</td><td>{% if trx.pengguna %}<span class="saldo">{{ format_uang(trx.pengguna.saldo or 0) }}</span>{% else %}<span class="muted">-</span>{% endif %}</td>
+                <td>{% if trx.status == "Berhasil" %}<span class="status ok">BERHASIL</span>{% elif trx.status == "Pending" %}<span class="status wait">PENDING</span>{% elif trx.status == "Gagal" %}<span class="status bad">GAGAL</span>{% else %}<span class="status info">{{ trx.status or '-' }}</span>{% endif %}</td>
+            </tr>{% endfor %}
+        </tbody></table>{% else %}<div class="provider-empty">Tidak ada transaksi yang cocok dengan filter ini.</div>{% endif %}
+    </div></section>
+</section>
+{% endblock %}
