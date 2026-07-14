@@ -1049,10 +1049,9 @@
         }
 
 
-
         /* =========================================================
-           SENJADATA LIVE CHAT FINAL - CLEAN + DRAGGABLE
-           Panel CS: /cs/login
+           LIVE CHAT SENJADATA - ORANGE PREMIUM STYLE
+           Terhubung ke panel CS: /cs/login dan /cs/live-chat
         ========================================================= */
 
         .bantuan-float,
@@ -1072,10 +1071,10 @@
             pointer-events: none !important;
         }
 
-        .sjc-widget-final {
+        .senja-chat-float {
             position: fixed;
-            right: max(4px, calc((100vw - 560px) / 2 + 4px));
-            bottom: 112px;
+            right: max(12px, calc((100vw - 560px) / 2 + 12px));
+            bottom: 105px;
             z-index: 99999;
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             touch-action: none;
@@ -1083,92 +1082,95 @@
             -webkit-user-select: none;
         }
 
-        .sjc-widget-final.dragging {
+        .senja-chat-float.is-dragging {
             transition: none !important;
         }
 
-        .sjc-mini {
-            position: relative;
-            min-height: 54px;
-            border: 0;
-            border-radius: 999px 0 0 999px;
-            padding: 0 .95rem 0 .8rem;
+        .senja-chat-button {
+            min-width: 190px;
+            min-height: 58px;
+            padding: 0 18px 0 16px;
+            border: 2px solid #0f172a;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 25% 14%, rgba(255,255,255,.38), transparent 36%),
+                linear-gradient(135deg, #ff7a18 0%, #ff9f1c 58%, #ff6b00 100%);
+            color: #ffffff;
+            box-shadow:
+                0 15px 34px rgba(255,122,24,.36),
+                inset 0 1px 0 rgba(255,255,255,.22);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: .55rem;
-            color: #ffffff;
-            background:
-                radial-gradient(circle at 25% 14%, rgba(255,255,255,.32), transparent 35%),
-                linear-gradient(135deg, #0084ff 0%, #00c6ff 56%, #0667d8 100%);
-            box-shadow: 0 14px 30px rgba(0, 122, 230, .32);
+            gap: 11px;
             cursor: grab;
             transition: transform .18s ease, filter .18s ease;
         }
 
-        .sjc-mini:hover {
+        .senja-chat-button:hover {
             transform: translateY(-2px);
             filter: brightness(1.04);
         }
 
-        .sjc-widget-final.dragging .sjc-mini {
+        .senja-chat-float.is-dragging .senja-chat-button {
             cursor: grabbing;
-            transform: scale(.98);
+            transform: scale(.985);
         }
 
-        .sjc-mini-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 15px;
-            flex: 0 0 auto;
+        .senja-chat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,.18);
-            border: 1px solid rgba(255,255,255,.22);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+            color: #ff7a18;
+            background: #ffffff;
             font-size: 1.08rem;
+            flex: 0 0 auto;
+            box-shadow: 0 8px 18px rgba(15,23,42,.16);
         }
 
-        .sjc-mini-text {
+        .senja-chat-label {
             display: grid;
-            line-height: 1.08;
             text-align: left;
+            line-height: 1.05;
         }
 
-        .sjc-mini-text small {
-            color: rgba(255,255,255,.82);
-            font-size: .62rem;
-            font-weight: 900;
-            letter-spacing: .04em;
+        .senja-chat-label small {
+            color: rgba(255,255,255,.90);
+            font-size: .66rem;
+            font-weight: 950;
+            letter-spacing: .16em;
             text-transform: uppercase;
         }
 
-        .sjc-mini-text strong {
+        .senja-chat-label strong {
+            margin-top: 3px;
             color: #ffffff;
-            font-size: .84rem;
+            font-size: .95rem;
             font-weight: 950;
             white-space: nowrap;
         }
 
-        .sjc-live-dot {
+        .senja-chat-online {
             position: absolute;
-            top: -4px;
-            right: 7px;
-            width: 16px;
-            height: 16px;
+            top: 4px;
+            right: 6px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #22c55e;
             border: 3px solid #ffffff;
-            box-shadow: 0 0 0 5px rgba(34,197,94,.16);
+            box-shadow: 0 0 0 4px rgba(34,197,94,.16);
         }
 
-        .sjc-badge-new {
+        .senja-chat-unread {
             position: absolute;
-            left: -3px;
-            top: -5px;
-            min-width: 20px;
-            height: 20px;
+            left: 4px;
+            top: -6px;
+            min-width: 21px;
+            height: 21px;
             padding: 0 6px;
             border-radius: 999px;
             background: #ef4444;
@@ -1179,34 +1181,34 @@
             display: none;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 16px rgba(239,68,68,.24);
+            box-shadow: 0 8px 18px rgba(239,68,68,.28);
         }
 
-        .sjc-panel-final {
+        .senja-chat-panel {
             position: fixed;
-            right: max(12px, calc((100vw - 560px) / 2 + 12px));
-            bottom: 100px;
-            width: min(380px, calc(100vw - 24px));
-            height: min(560px, calc(100vh - 120px));
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            border-radius: 28px;
-            background: #ffffff;
-            border: 1px solid rgba(226,232,240,.96);
-            box-shadow: 0 28px 85px rgba(15,23,42,.28);
+            right: max(18px, calc((100vw - 560px) / 2 + 18px));
+            bottom: 94px;
+            width: min(390px, calc(100vw - 26px));
+            height: min(590px, calc(100vh - 115px));
             z-index: 100000;
+            display: none;
+            overflow: hidden;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid rgba(226,232,240,.98);
+            box-shadow: 0 24px 80px rgba(15,23,42,.24);
         }
 
-        .sjc-panel-final.active {
+        .senja-chat-panel.is-open {
             display: flex;
-            animation: sjcFinalIn .22s ease-out;
+            flex-direction: column;
+            animation: senjaChatPop .22s ease-out;
         }
 
-        @keyframes sjcFinalIn {
+        @keyframes senjaChatPop {
             from {
                 opacity: 0;
-                transform: translateY(12px) scale(.98);
+                transform: translateY(12px) scale(.985);
             }
             to {
                 opacity: 1;
@@ -1214,366 +1216,361 @@
             }
         }
 
-        .sjc-panel-head {
-            position: relative;
-            overflow: hidden;
-            padding: 1rem;
-            color: #ffffff;
-            background:
-                radial-gradient(circle at 20% 0%, rgba(255,255,255,.28), transparent 34%),
-                linear-gradient(135deg, #007ae6, #00c6ff);
-        }
-
-        .sjc-panel-head::after {
-            content: "";
-            position: absolute;
-            right: -52px;
-            top: -54px;
-            width: 142px;
-            height: 142px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.13);
-        }
-
-        .sjc-panel-top {
-            position: relative;
-            z-index: 2;
+        .senja-chat-header {
+            min-height: 64px;
+            padding: 0 14px 0 16px;
+            border-bottom: 1px solid #f1f5f9;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: .8rem;
+            gap: 12px;
+            background: #ffffff;
         }
 
-        .sjc-panel-brand {
-            display: flex;
-            align-items: center;
-            gap: .72rem;
+        .senja-chat-title {
             min-width: 0;
         }
 
-        .sjc-panel-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,.20);
-            border: 1px solid rgba(255,255,255,.24);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,.20);
-            font-size: 1.18rem;
-            flex: 0 0 auto;
-        }
-
-        .sjc-panel-brand small {
+        .senja-chat-title strong {
             display: block;
-            color: rgba(255,255,255,.76);
-            font-size: .68rem;
-            line-height: 1;
+            color: #0f172a;
+            font-size: .98rem;
             font-weight: 950;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
-        .sjc-panel-brand strong {
-            display: block;
-            margin-top: .25rem;
-            color: #ffffff;
-            font-size: 1rem;
             line-height: 1.1;
-            font-weight: 950;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
-        .sjc-close-final {
+        .senja-chat-title span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 5px;
+            color: #16a34a;
+            font-size: .72rem;
+            font-weight: 850;
+        }
+
+        .senja-chat-title span::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+        }
+
+        .senja-chat-close {
             width: 38px;
             height: 38px;
             border: 0;
-            border-radius: 14px;
-            color: #ffffff;
-            background: rgba(255,255,255,.18);
+            border-radius: 12px;
+            color: #f97316;
+            background: #fff7ed;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
-        .sjc-panel-subtitle {
-            position: relative;
-            z-index: 2;
-            margin-top: .72rem;
-            color: rgba(255,255,255,.88);
-            font-size: .82rem;
-            font-weight: 720;
-            line-height: 1.45;
-        }
-
-        .sjc-body-final {
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            background:
-                radial-gradient(circle at 18% 0%, rgba(0,198,255,.10), transparent 28%),
-                #f8fafc;
-        }
-
-        .sjc-start-final {
-            padding: 1rem;
-            display: block;
-        }
-
-        .sjc-start-final.hide {
-            display: none;
-        }
-
-        .sjc-card-welcome {
-            padding: .95rem;
-            border-radius: 22px;
-            background: #ffffff;
-            border: 1px solid #e8eef7;
-            box-shadow: 0 10px 24px rgba(15,23,42,.05);
-            margin-bottom: .85rem;
-        }
-
-        .sjc-card-welcome strong {
-            display: block;
-            color: #0f172a;
-            font-size: .96rem;
-            font-weight: 950;
-            line-height: 1.25;
-            margin-bottom: .35rem;
-        }
-
-        .sjc-card-welcome span {
-            display: block;
-            color: #64748b;
-            font-size: .82rem;
-            font-weight: 720;
-            line-height: 1.45;
-        }
-
-        .sjc-field-final {
-            margin-bottom: .72rem;
-        }
-
-        .sjc-field-final label {
-            display: block;
-            margin-bottom: .34rem;
-            color: #334155;
-            font-size: .78rem;
-            font-weight: 950;
-        }
-
-        .sjc-field-final input,
-        .sjc-field-final textarea {
-            width: 100%;
-            min-height: 48px;
-            border: 2px solid #e2e8f0;
-            border-radius: 17px;
-            background: #ffffff;
-            color: #0f172a;
-            outline: none;
-            padding: 0 .82rem;
-            font-size: .9rem;
-            font-weight: 780;
-            box-shadow: none;
-        }
-
-        .sjc-field-final textarea {
-            min-height: 92px;
-            resize: none;
-            padding-top: .72rem;
-            line-height: 1.45;
-        }
-
-        .sjc-field-final input:focus,
-        .sjc-field-final textarea:focus,
-        .sjc-input-final:focus {
-            border-color: #007ae6;
-            box-shadow: 0 0 0 5px rgba(0,122,230,.10);
-        }
-
-        .sjc-start-btn-final {
-            width: 100%;
-            min-height: 50px;
-            border: 0;
-            border-radius: 18px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #007ae6, #00c6ff);
-            box-shadow: 0 12px 24px rgba(0,122,230,.20);
-            font-size: .92rem;
-            font-weight: 950;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: .5rem;
-        }
-
-        .sjc-note-final {
-            margin-top: .65rem;
-            color: #64748b;
-            font-size: .72rem;
-            line-height: 1.4;
-            font-weight: 720;
-            text-align: center;
-        }
-
-        .sjc-room-final {
-            display: none;
-            min-height: 0;
-            flex: 1;
-            flex-direction: column;
-        }
-
-        .sjc-room-final.active {
-            display: flex;
-        }
-
-        .sjc-messages-final {
+        .senja-chat-body {
             flex: 1;
             min-height: 0;
             overflow-y: auto;
-            padding: .9rem;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(255,122,24,.08), transparent 26%),
+                #ffffff;
         }
 
-        .sjc-messages-final::-webkit-scrollbar {
-            width: 6px;
+        .senja-chat-body::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .sjc-messages-final::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+        .senja-chat-body::-webkit-scrollbar-thumb {
+            background: #d1d5db;
             border-radius: 999px;
         }
 
-        .sjc-row-final {
+        .senja-chat-content {
+            padding: 14px 14px 16px;
+        }
+
+        .senja-chat-bubble {
             display: flex;
-            margin-bottom: .65rem;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 14px;
         }
 
-        .sjc-row-final.user {
-            justify-content: flex-end;
-        }
-
-        .sjc-row-final.admin {
-            justify-content: flex-start;
-        }
-
-        .sjc-msg-final {
-            max-width: 82%;
-            padding: .68rem .78rem;
-            border-radius: 18px;
-            box-shadow: 0 8px 18px rgba(15,23,42,.06);
-        }
-
-        .sjc-row-final.user .sjc-msg-final {
-            color: #ffffff;
-            background: linear-gradient(135deg, #007ae6, #00c6ff);
-            border-bottom-right-radius: 7px;
-        }
-
-        .sjc-row-final.admin .sjc-msg-final {
-            color: #0f172a;
-            background: #ffffff;
+        .senja-chat-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-bottom-left-radius: 7px;
+            font-size: 1rem;
         }
 
-        .sjc-msg-final small {
-            display: block;
-            opacity: .70;
-            font-size: .66rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            margin-bottom: .25rem;
+        .senja-chat-bubble-box {
+            max-width: calc(100% - 46px);
+            padding: 12px 13px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 8px 20px rgba(15,23,42,.06);
         }
 
-        .sjc-msg-final p {
+        .senja-chat-bubble-box p {
             margin: 0;
-            font-size: .86rem;
+            color: #1f2937;
+            font-size: .9rem;
             line-height: 1.45;
-            font-weight: 720;
-            white-space: pre-wrap;
-            word-break: break-word;
+            font-weight: 650;
         }
 
-        .sjc-msg-final time {
+        .senja-chat-bubble-box time {
             display: block;
-            margin-top: .32rem;
-            opacity: .68;
+            margin-top: 6px;
+            color: #a1a1aa;
+            text-align: right;
             font-size: .68rem;
             font-weight: 800;
         }
 
-        .sjc-send-final {
-            padding: .75rem;
+        .senja-chat-card {
+            margin-left: 46px;
+            padding: 14px;
+            border-radius: 18px;
             background: #ffffff;
-            border-top: 1px solid #e2e8f0;
-            display: grid;
-            grid-template-columns: minmax(0,1fr) 48px;
-            gap: .55rem;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 8px 20px rgba(15,23,42,.05);
         }
 
-        .sjc-input-final {
+        .senja-chat-card.hide {
+            display: none;
+        }
+
+        .senja-chat-card h4 {
+            margin: 0 0 4px;
+            color: #0f172a;
+            font-size: .94rem;
+            font-weight: 950;
+        }
+
+        .senja-chat-card p {
+            margin: 0 0 12px;
+            color: #64748b;
+            font-size: .8rem;
+            line-height: 1.45;
+            font-weight: 700;
+        }
+
+        .senja-field {
+            margin-bottom: 10px;
+        }
+
+        .senja-field label {
+            display: block;
+            color: #111827;
+            font-size: .82rem;
+            font-weight: 950;
+            margin-bottom: 6px;
+        }
+
+        .senja-field input,
+        .senja-field textarea {
             width: 100%;
             min-height: 48px;
-            max-height: 120px;
-            resize: none;
-            border: 2px solid #e2e8f0;
-            border-radius: 17px;
+            border: 1.7px solid #e5e7eb;
+            border-radius: 15px;
             outline: none;
-            padding: .72rem .8rem;
-            background: #f8fafc;
             color: #0f172a;
-            font-size: .88rem;
-            font-weight: 780;
+            background: #ffffff;
+            padding: 0 14px;
+            font-size: .86rem;
+            font-weight: 720;
+            box-shadow: none;
+        }
+
+        .senja-field textarea {
+            min-height: 92px;
+            resize: none;
+            padding-top: 12px;
+            line-height: 1.45;
+        }
+
+        .senja-field input:focus,
+        .senja-field textarea:focus,
+        .senja-chat-input:focus {
+            border-color: #ff9f1c;
+            box-shadow: 0 0 0 5px rgba(255,159,28,.13);
+        }
+
+        .senja-start-button {
+            width: 100%;
+            min-height: 48px;
+            border: 0;
+            border-radius: 15px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #ff7a18, #ff9f1c);
+            font-size: .92rem;
+            font-weight: 950;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(255,122,24,.22);
+        }
+
+        .senja-room {
+            display: none;
+            min-height: 100%;
+            flex-direction: column;
+        }
+
+        .senja-room.active {
+            display: flex;
+        }
+
+        .senja-messages {
+            padding: 14px;
+            min-height: 390px;
+        }
+
+        .senja-msg-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .senja-msg-row.user {
+            justify-content: flex-end;
+        }
+
+        .senja-msg-row.admin {
+            justify-content: flex-start;
+        }
+
+        .senja-msg {
+            max-width: 82%;
+            padding: 10px 12px;
+            border-radius: 16px;
+            box-shadow: 0 7px 18px rgba(15,23,42,.06);
+        }
+
+        .senja-msg-row.user .senja-msg {
+            color: #ffffff;
+            background: linear-gradient(135deg, #ff7a18, #ff9f1c);
+            border-bottom-right-radius: 7px;
+        }
+
+        .senja-msg-row.admin .senja-msg {
+            color: #0f172a;
+            background: #ffffff;
+            border: 1px solid #eef2f7;
+            border-bottom-left-radius: 7px;
+        }
+
+        .senja-msg small {
+            display: block;
+            opacity: .72;
+            font-size: .64rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 3px;
+        }
+
+        .senja-msg p {
+            margin: 0;
+            font-size: .86rem;
+            line-height: 1.42;
+            font-weight: 700;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .senja-msg time {
+            display: block;
+            margin-top: 5px;
+            opacity: .65;
+            font-size: .66rem;
+            font-weight: 800;
+        }
+
+        .senja-send-form {
+            position: sticky;
+            bottom: 0;
+            padding: 10px;
+            background: #ffffff;
+            border-top: 1px solid #eef2f7;
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 46px;
+            gap: 8px;
+        }
+
+        .senja-chat-input {
+            min-height: 46px;
+            max-height: 110px;
+            resize: none;
+            border: 1.7px solid #e5e7eb;
+            border-radius: 15px;
+            outline: none;
+            color: #0f172a;
+            background: #ffffff;
+            padding: 11px 12px;
+            font-size: .86rem;
+            font-weight: 720;
             line-height: 1.35;
         }
 
-        .sjc-send-final button {
-            width: 48px;
-            min-height: 48px;
+        .senja-send-form button {
+            width: 46px;
+            min-height: 46px;
             border: 0;
-            border-radius: 17px;
+            border-radius: 15px;
             color: #ffffff;
-            background: linear-gradient(135deg, #007ae6, #00c6ff);
-            box-shadow: 0 10px 20px rgba(0,122,230,.18);
+            background: linear-gradient(135deg, #ff7a18, #ff9f1c);
+            box-shadow: 0 10px 20px rgba(255,122,24,.18);
             font-size: 1rem;
             cursor: pointer;
         }
 
         @media (max-width: 560px) {
-            .sjc-widget-final {
-                right: 2px;
-                bottom: 110px;
+            .senja-chat-float {
+                right: 8px;
+                bottom: 108px;
             }
 
-            .sjc-mini {
-                min-height: 54px;
-                width: 54px;
+            .senja-chat-button {
+                min-width: 62px;
+                width: 62px;
+                min-height: 56px;
                 padding: 0;
-                border-radius: 18px 0 0 18px;
+                border-radius: 22px;
             }
 
-            .sjc-mini-text {
+            .senja-chat-label {
                 display: none;
             }
 
-            .sjc-mini-icon {
+            .senja-chat-icon {
                 width: 38px;
                 height: 38px;
             }
 
-            .sjc-panel-final {
+            .senja-chat-panel {
                 left: 10px;
                 right: 10px;
-                bottom: 96px;
+                bottom: 95px;
                 width: auto;
-                height: min(560px, calc(100vh - 118px));
-                max-height: calc(100vh - 118px);
-                border-radius: 26px;
+                height: min(585px, calc(100vh - 116px));
+                border-radius: 18px;
+            }
+
+            .senja-chat-card {
+                margin-left: 0;
             }
         }
 
@@ -1746,92 +1743,77 @@
         {% endif %}
     </nav>
 
-    <!-- LIVE CHAT FINAL SENJADATA - PANEL CS TERPISAH -->
-    <div class="sjc-widget-final" id="sjcWidgetFinal">
-        <button class="sjc-mini" type="button" id="sjcToggleFinal" aria-label="Butuh bantuan? Chat kami">
-            <span class="sjc-mini-icon">
-                <i class="fa-solid fa-headset"></i>
+    <!-- LIVE CHAT SENJADATA - STYLE PREMIUM ORANGE -->
+    <div class="senja-chat-float" id="senjaChatFloat">
+        <button class="senja-chat-button" type="button" id="senjaChatButton" aria-label="Butuh bantuan? Chat dengan kami">
+            <span class="senja-chat-icon">
+                <i class="fa-regular fa-comment-dots"></i>
             </span>
 
-            <span class="sjc-mini-text">
+            <span class="senja-chat-label">
                 <small>Butuh Bantuan?</small>
-                <strong>Chat Kami</strong>
+                <strong>Chat dengan kami</strong>
             </span>
 
-            <b class="sjc-live-dot"></b>
+            <span class="senja-chat-online"></span>
         </button>
 
-        <div class="sjc-badge-new" id="sjcNotifFinal">1</div>
+        <span class="senja-chat-unread" id="senjaChatUnread">1</span>
     </div>
 
-    <div class="sjc-panel-final" id="sjcPanelFinal">
-        <div class="sjc-panel-head">
-            <div class="sjc-panel-top">
-                <div class="sjc-panel-brand">
-                    <div class="sjc-panel-logo">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
+    <section class="senja-chat-panel" id="senjaChatPanel" aria-hidden="true">
+        <header class="senja-chat-header">
+            <div class="senja-chat-title">
+                <strong>SenjaData CS</strong>
+                <span>Online siap membantu</span>
+            </div>
 
-                    <div>
-                        <small>CS Online</small>
-                        <strong>Bantuan SenjaData</strong>
+            <button class="senja-chat-close" type="button" id="senjaChatClose" aria-label="Tutup chat">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+        </header>
+
+        <div class="senja-chat-body">
+            <div class="senja-chat-content" id="senjaStartArea">
+                <div class="senja-chat-bubble">
+                    <div class="senja-chat-avatar">👩🏻‍💻</div>
+
+                    <div class="senja-chat-bubble-box">
+                        <p>Bisa dibantu untuk transaksi atau kendala aplikasi kak?</p>
+                        <time>Baru saja</time>
                     </div>
                 </div>
 
-                <button class="sjc-close-final" type="button" id="sjcCloseFinal" aria-label="Tutup chat">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
+                <form class="senja-chat-card" id="senjaStartForm">
+                    <h4>Mari mulai chat. Isi beberapa data dulu.</h4>
+                    <p>CS SenjaData akan membalas pesan kamu dari panel live chat.</p>
 
-            <div class="sjc-panel-subtitle">
-                Butuh bantuan? Chat kami. Pesan kamu akan masuk ke panel CS SenjaData.
-            </div>
-        </div>
-
-        <div class="sjc-body-final">
-            <div class="sjc-start-final" id="sjcStartFinal">
-                <div class="sjc-card-welcome">
-                    <strong>Halo 👋 Butuh bantuan?</strong>
-                    <span>Isi data singkat, lalu CS SenjaData akan membalas dari panel live chat.</span>
-                </div>
-
-                <form id="sjcStartFormFinal">
-                    <div class="sjc-field-final">
+                    <div class="senja-field">
                         <label>Nama</label>
-                        <input type="text" id="sjcNamaFinal" value="{{ nama_pengguna|default('') }}" placeholder="Nama kamu" required>
+                        <input type="text" id="senjaChatNama" value="{{ nama_pengguna|default('') }}" placeholder="Masukkan nama Anda" required>
                     </div>
 
-                    <div class="sjc-field-final">
-                        <label>Nomor HP</label>
-                        <input type="tel" id="sjcNomorFinal" value="{{ pengguna_login.nomor_hp if pengguna_login else '' }}" placeholder="Contoh: 08123456789">
+                    <div class="senja-field">
+                        <label>Kontak</label>
+                        <input type="text" id="senjaChatKontak" value="{{ pengguna_login.nomor_hp if pengguna_login else '' }}" placeholder="Nomor WhatsApp / email">
                     </div>
 
-                    <div class="sjc-field-final">
-                        <label>Email</label>
-                        <input type="email" id="sjcEmailFinal" value="{{ email_pengguna|default('') }}" placeholder="Email opsional">
+                    <div class="senja-field">
+                        <label>Masalah</label>
+                        <textarea id="senjaChatMasalah" placeholder="Tulis kendala Anda..." required></textarea>
                     </div>
 
-                    <div class="sjc-field-final">
-                        <label>Pesan</label>
-                        <textarea id="sjcPesanAwalFinal" placeholder="Tulis pertanyaan kamu..." required></textarea>
-                    </div>
-
-                    <button class="sjc-start-btn-final" type="submit">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        Mulai Chat
+                    <button class="senja-start-button" type="submit">
+                        Lanjutkan ke chat
                     </button>
-
-                    <div class="sjc-note-final">
-                        Terhubung ke panel CS SenjaData.
-                    </div>
                 </form>
             </div>
 
-            <div class="sjc-room-final" id="sjcRoomFinal">
-                <div class="sjc-messages-final" id="sjcMessagesFinal"></div>
+            <div class="senja-room" id="senjaRoomArea">
+                <div class="senja-messages" id="senjaMessages"></div>
 
-                <form class="sjc-send-final" id="sjcSendFormFinal">
-                    <textarea class="sjc-input-final" id="sjcInputFinal" placeholder="Tulis pesan..." required></textarea>
+                <form class="senja-send-form" id="senjaSendForm">
+                    <textarea class="senja-chat-input" id="senjaChatInput" placeholder="Tulis pesan..." required></textarea>
 
                     <button type="submit" aria-label="Kirim pesan">
                         <i class="fa-solid fa-paper-plane"></i>
@@ -1839,7 +1821,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </section>
 
 </div>
 
@@ -1927,32 +1909,39 @@ function lihatSandi(id, tombol) {
 
 <script>
 (function(){
-    function hideOldChatButtons(){
-        const candidates = document.querySelectorAll("a, button, div, section");
+    function hideOldChats(){
+        const selectors = [
+            ".bantuan-float", ".tombol-bantuan", ".sd-chat-widget", ".sjc-widget",
+            ".sjc-widget-final", ".chat-kami", ".chat-kami-btn", ".floating-chat",
+            ".old-chat-widget", ".wa-floating", ".whatsapp-floating", ".btn-chat", ".chat-button"
+        ];
 
-        candidates.forEach(function(el){
-            if(el.closest("#sjcWidgetFinal") || el.closest("#sjcPanelFinal")){
+        selectors.forEach(function(sel){
+            document.querySelectorAll(sel).forEach(function(el){
+                if(el.closest("#senjaChatFloat") || el.closest("#senjaChatPanel")){
+                    return;
+                }
+
+                el.style.setProperty("display", "none", "important");
+                el.style.setProperty("visibility", "hidden", "important");
+                el.style.setProperty("opacity", "0", "important");
+                el.style.setProperty("pointer-events", "none", "important");
+            });
+        });
+
+        document.querySelectorAll("a, button, div").forEach(function(el){
+            if(el.closest("#senjaChatFloat") || el.closest("#senjaChatPanel")){
                 return;
             }
 
             const text = (el.innerText || el.textContent || "").trim().toLowerCase();
             const cls = (el.className || "").toString().toLowerCase();
-            const style = window.getComputedStyle(el);
+            const st = window.getComputedStyle(el);
 
-            const isFixedOrFloating =
-                style.position === "fixed" ||
-                cls.includes("float") ||
-                cls.includes("floating") ||
-                cls.includes("bantuan") ||
-                cls.includes("chat");
+            const looksFloating = st.position === "fixed" || cls.includes("float") || cls.includes("chat") || cls.includes("bantuan");
+            const looksChatText = text.includes("chat kami") || text.includes("chat dengan kami") || text.includes("whatsapp");
 
-            const isOldChatText =
-                text === "chat kami" ||
-                text.includes("chat kami") ||
-                text.includes("whatsapp") ||
-                text.includes("bantuan whatsapp");
-
-            if(isFixedOrFloating && isOldChatText){
+            if(looksFloating && looksChatText){
                 el.style.setProperty("display", "none", "important");
                 el.style.setProperty("visibility", "hidden", "important");
                 el.style.setProperty("opacity", "0", "important");
@@ -1961,33 +1950,32 @@ function lihatSandi(id, tombol) {
         });
     }
 
-    hideOldChatButtons();
-    setTimeout(hideOldChatButtons, 600);
-    setInterval(hideOldChatButtons, 2500);
+    hideOldChats();
+    setTimeout(hideOldChats, 700);
+    setInterval(hideOldChats, 2500);
 
-    const widget = document.getElementById("sjcWidgetFinal");
-    const toggle = document.getElementById("sjcToggleFinal");
-    const panel = document.getElementById("sjcPanelFinal");
-    const closeBtn = document.getElementById("sjcCloseFinal");
-    const startBox = document.getElementById("sjcStartFinal");
-    const room = document.getElementById("sjcRoomFinal");
-    const startForm = document.getElementById("sjcStartFormFinal");
-    const sendForm = document.getElementById("sjcSendFormFinal");
-    const box = document.getElementById("sjcMessagesFinal");
-    const notif = document.getElementById("sjcNotifFinal");
+    const floatBox = document.getElementById("senjaChatFloat");
+    const button = document.getElementById("senjaChatButton");
+    const panel = document.getElementById("senjaChatPanel");
+    const closeBtn = document.getElementById("senjaChatClose");
+    const startArea = document.getElementById("senjaStartArea");
+    const roomArea = document.getElementById("senjaRoomArea");
+    const startForm = document.getElementById("senjaStartForm");
+    const sendForm = document.getElementById("senjaSendForm");
+    const messagesBox = document.getElementById("senjaMessages");
+    const unreadBadge = document.getElementById("senjaChatUnread");
 
-    const namaInput = document.getElementById("sjcNamaFinal");
-    const nomorInput = document.getElementById("sjcNomorFinal");
-    const emailInput = document.getElementById("sjcEmailFinal");
-    const pesanAwalInput = document.getElementById("sjcPesanAwalFinal");
-    const input = document.getElementById("sjcInputFinal");
+    const namaInput = document.getElementById("senjaChatNama");
+    const kontakInput = document.getElementById("senjaChatKontak");
+    const masalahInput = document.getElementById("senjaChatMasalah");
+    const chatInput = document.getElementById("senjaChatInput");
 
-    if(!widget || !toggle || !panel || !closeBtn || !startBox || !room || !startForm || !sendForm || !box){
+    if(!floatBox || !button || !panel || !closeBtn || !startArea || !roomArea || !startForm || !sendForm || !messagesBox){
         return;
     }
 
-    let kodeChat = localStorage.getItem("senjadata_final_kode_chat") || "";
-    let lastAdminCount = Number(localStorage.getItem("senjadata_final_admin_count") || "0");
+    let kodeChat = localStorage.getItem("senjadata_orange_chat_code") || "";
+    let lastAdminCount = Number(localStorage.getItem("senjadata_orange_admin_count") || "0");
     let polling = null;
 
     let dragging = false;
@@ -2002,68 +1990,67 @@ function lihatSandi(id, tombol) {
         return Math.max(min, Math.min(value, max));
     }
 
-    function safeNumber(value){
+    function numberOrNull(value){
         const num = Number(value);
         return Number.isFinite(num) ? num : null;
     }
 
-    function setWidgetPosition(left, top, save){
-        const rect = widget.getBoundingClientRect();
-        const maxLeft = Math.max(2, window.innerWidth - rect.width - 2);
+    function setFloatPosition(left, top, save){
+        const rect = floatBox.getBoundingClientRect();
+        const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
         const maxTop = Math.max(70, window.innerHeight - rect.height - 96);
 
-        const finalLeft = clamp(left, 2, maxLeft);
+        const finalLeft = clamp(left, 8, maxLeft);
         const finalTop = clamp(top, 70, maxTop);
 
-        widget.style.left = finalLeft + "px";
-        widget.style.top = finalTop + "px";
-        widget.style.right = "auto";
-        widget.style.bottom = "auto";
+        floatBox.style.left = finalLeft + "px";
+        floatBox.style.top = finalTop + "px";
+        floatBox.style.right = "auto";
+        floatBox.style.bottom = "auto";
 
         if(save){
-            localStorage.setItem("senjadata_final_chat_left", String(finalLeft));
-            localStorage.setItem("senjadata_final_chat_top", String(finalTop));
+            localStorage.setItem("senjadata_orange_float_left", String(finalLeft));
+            localStorage.setItem("senjadata_orange_float_top", String(finalTop));
         }
     }
 
-    function setDefaultPosition(){
-        const savedLeft = safeNumber(localStorage.getItem("senjadata_final_chat_left"));
-        const savedTop = safeNumber(localStorage.getItem("senjadata_final_chat_top"));
+    function setDefaultFloat(){
+        const savedLeft = numberOrNull(localStorage.getItem("senjadata_orange_float_left"));
+        const savedTop = numberOrNull(localStorage.getItem("senjadata_orange_float_top"));
 
         if(savedLeft !== null && savedTop !== null){
-            setWidgetPosition(savedLeft, savedTop, false);
+            setFloatPosition(savedLeft, savedTop, false);
             return;
         }
 
-        const rect = widget.getBoundingClientRect();
+        const rect = floatBox.getBoundingClientRect();
+        const left = window.innerWidth - rect.width - 12;
+        const top = window.innerHeight - rect.height - 106;
 
-        const defaultLeft = window.innerWidth - rect.width - 2;
-        const defaultTop = window.innerHeight - rect.height - 110;
-
-        setWidgetPosition(defaultLeft, defaultTop, false);
+        setFloatPosition(left, top, false);
     }
 
-    setTimeout(setDefaultPosition, 250);
+    setTimeout(setDefaultFloat, 250);
 
-    toggle.addEventListener("pointerdown", function(e){
+    button.addEventListener("pointerdown", function(e){
         dragging = true;
         moved = false;
 
-        const rect = widget.getBoundingClientRect();
+        const rect = floatBox.getBoundingClientRect();
 
         startX = e.clientX;
         startY = e.clientY;
         startLeft = rect.left;
         startTop = rect.top;
 
-        widget.classList.add("dragging");
+        floatBox.classList.add("is-dragging");
 
         try{
-            toggle.setPointerCapture(e.pointerId);
+            button.setPointerCapture(e.pointerId);
         }catch(err){}
     });
 
-    toggle.addEventListener("pointermove", function(e){
+    button.addEventListener("pointermove", function(e){
         if(!dragging){
             return;
         }
@@ -2071,12 +2058,12 @@ function lihatSandi(id, tombol) {
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
 
-        if(Math.abs(dx) > 5 || Math.abs(dy) > 5){
+        if(Math.abs(dx) > 6 || Math.abs(dy) > 6){
             moved = true;
         }
 
         if(moved){
-            setWidgetPosition(startLeft + dx, startTop + dy, false);
+            setFloatPosition(startLeft + dx, startTop + dy, false);
         }
     });
 
@@ -2086,55 +2073,58 @@ function lihatSandi(id, tombol) {
         }
 
         dragging = false;
-        widget.classList.remove("dragging");
+        floatBox.classList.remove("is-dragging");
 
         try{
-            toggle.releasePointerCapture(e.pointerId);
+            button.releasePointerCapture(e.pointerId);
         }catch(err){}
 
         if(moved){
-            const rect = widget.getBoundingClientRect();
-            setWidgetPosition(rect.left, rect.top, true);
-            suppressClickUntil = Date.now() + 350;
+            const rect = floatBox.getBoundingClientRect();
+            setFloatPosition(rect.left, rect.top, true);
+
+            suppressClickUntil = Date.now() + 380;
 
             e.preventDefault();
             e.stopPropagation();
         }
     }
 
-    toggle.addEventListener("pointerup", stopDrag);
-    toggle.addEventListener("pointercancel", stopDrag);
+    button.addEventListener("pointerup", stopDrag);
+    button.addEventListener("pointercancel", stopDrag);
 
-    function bukaPanel(){
+    function openPanel(){
         if(Date.now() < suppressClickUntil){
             return;
         }
 
-        panel.classList.add("active");
+        panel.classList.add("is-open");
+        panel.setAttribute("aria-hidden", "false");
 
-        if(notif){
-            notif.style.display = "none";
+        if(unreadBadge){
+            unreadBadge.style.display = "none";
         }
 
         if(kodeChat){
-            tampilkanRoom();
+            showRoom();
             loadMessages();
-            mulaiPolling();
+            startPolling();
         }
     }
 
-    function tutupPanel(){
-        panel.classList.remove("active");
+    function closePanel(){
+        panel.classList.remove("is-open");
+        panel.setAttribute("aria-hidden", "true");
     }
 
-    function tampilkanRoom(){
-        startBox.classList.add("hide");
-        room.classList.add("active");
+    function showRoom(){
+        startArea.style.display = "none";
+        roomArea.classList.add("active");
     }
 
-    function tampilkanStart(){
-        startBox.classList.remove("hide");
-        room.classList.remove("active");
+    function showStart(){
+        startArea.style.display = "block";
+        roomArea.classList.remove("active");
     }
 
     function escapeHtml(text){
@@ -2143,17 +2133,17 @@ function lihatSandi(id, tombol) {
         return div.innerHTML;
     }
 
-    function scrollBawah(){
-        box.scrollTop = box.scrollHeight;
+    function scrollBottom(){
+        messagesBox.scrollTop = messagesBox.scrollHeight;
     }
 
     function renderMessages(messages){
-        box.innerHTML = "";
+        messagesBox.innerHTML = "";
 
         if(!messages || messages.length === 0){
-            box.innerHTML = `
-                <div class="sjc-row-final admin">
-                    <div class="sjc-msg-final">
+            messagesBox.innerHTML = `
+                <div class="senja-msg-row admin">
+                    <div class="senja-msg">
                         <small>CS SenjaData</small>
                         <p>Halo, silakan tulis pesan kamu. CS akan membalas secepatnya.</p>
                         <time>Baru saja</time>
@@ -2166,67 +2156,67 @@ function lihatSandi(id, tombol) {
         let adminCount = 0;
 
         messages.forEach(function(item){
-            const pengirim = item.pengirim === "admin" ? "admin" : "user";
+            const sender = item.pengirim === "admin" ? "admin" : "user";
 
-            if(pengirim === "admin"){
+            if(sender === "admin"){
                 adminCount++;
             }
 
             const row = document.createElement("div");
-            row.className = "sjc-row-final " + pengirim;
+            row.className = "senja-msg-row " + sender;
 
             row.innerHTML = `
-                <div class="sjc-msg-final">
-                    <small>${pengirim === "admin" ? "CS SenjaData" : "Kamu"}</small>
+                <div class="senja-msg">
+                    <small>${sender === "admin" ? "CS SenjaData" : "Kamu"}</small>
                     <p>${escapeHtml(item.pesan)}</p>
                     <time>${escapeHtml(item.waktu || "")}</time>
                 </div>
             `;
 
-            box.appendChild(row);
+            messagesBox.appendChild(row);
         });
 
-        const panelOpen = panel.classList.contains("active");
+        const panelOpen = panel.classList.contains("is-open");
 
-        if(!panelOpen && adminCount > lastAdminCount && notif){
-            notif.style.display = "flex";
-            notif.textContent = String(adminCount - lastAdminCount);
+        if(!panelOpen && adminCount > lastAdminCount && unreadBadge){
+            unreadBadge.style.display = "flex";
+            unreadBadge.textContent = String(adminCount - lastAdminCount);
         }
 
         lastAdminCount = adminCount;
-        localStorage.setItem("senjadata_final_admin_count", String(lastAdminCount));
+        localStorage.setItem("senjadata_orange_admin_count", String(lastAdminCount));
 
-        scrollBawah();
+        scrollBottom();
     }
 
-    async function mulaiChat(payload){
-        const res = await fetch("/api/chat/start", {
+    async function startChat(payload){
+        const response = await fetch("/api/chat/start", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(payload)
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if(!res.ok || !data.success){
+        if(!response.ok || !data.success){
             throw new Error(data.message || "Gagal memulai chat.");
         }
 
         kodeChat = data.kode_chat;
-        localStorage.setItem("senjadata_final_kode_chat", kodeChat);
+        localStorage.setItem("senjadata_orange_chat_code", kodeChat);
 
-        tampilkanRoom();
+        showRoom();
         await loadMessages();
-        mulaiPolling();
+        startPolling();
     }
 
-    async function kirimPesan(pesan){
+    async function sendMessage(pesan){
         if(!kodeChat){
-            tampilkanStart();
+            showStart();
             return;
         }
 
-        const res = await fetch("/api/chat/send", {
+        const response = await fetch("/api/chat/send", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
@@ -2236,9 +2226,9 @@ function lihatSandi(id, tombol) {
             })
         });
 
-        const data = await res.json();
+        const data = await response.json();
 
-        if(!res.ok || !data.success){
+        if(!response.ok || !data.success){
             throw new Error(data.message || "Gagal mengirim pesan.");
         }
 
@@ -2251,10 +2241,10 @@ function lihatSandi(id, tombol) {
         }
 
         try{
-            const res = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user");
-            const data = await res.json();
+            const response = await fetch("/api/chat/messages/" + encodeURIComponent(kodeChat) + "?mode=user");
+            const data = await response.json();
 
-            if(!res.ok || !data.success){
+            if(!response.ok || !data.success){
                 return;
             }
 
@@ -2264,7 +2254,7 @@ function lihatSandi(id, tombol) {
         }
     }
 
-    function mulaiPolling(){
+    function startPolling(){
         if(polling){
             clearInterval(polling);
         }
@@ -2276,25 +2266,32 @@ function lihatSandi(id, tombol) {
         }, 4000);
     }
 
-    toggle.addEventListener("click", bukaPanel);
-    closeBtn.addEventListener("click", tutupPanel);
+    button.addEventListener("click", openPanel);
+    closeBtn.addEventListener("click", closePanel);
 
     startForm.addEventListener("submit", async function(e){
         e.preventDefault();
 
         const nama = namaInput.value.trim() || "Pengguna SenjaData";
-        const nomor_hp = nomorInput.value.trim();
-        const email = emailInput.value.trim();
-        const pesan = pesanAwalInput.value.trim();
+        const kontak = kontakInput.value.trim();
+        const masalah = masalahInput.value.trim();
 
-        if(!pesan){
-            alert("Pesan wajib diisi bro.");
+        if(!masalah){
+            alert("Masalah / pesan wajib diisi bro.");
             return;
         }
 
+        const isEmail = kontak.includes("@");
+
         try{
-            await mulaiChat({ nama, nomor_hp, email, pesan });
-            pesanAwalInput.value = "";
+            await startChat({
+                nama: nama,
+                nomor_hp: isEmail ? "" : kontak,
+                email: isEmail ? kontak : "",
+                pesan: masalah
+            });
+
+            masalahInput.value = "";
         }catch(err){
             alert(err.message);
         }
@@ -2303,30 +2300,30 @@ function lihatSandi(id, tombol) {
     sendForm.addEventListener("submit", async function(e){
         e.preventDefault();
 
-        const pesan = input.value.trim();
+        const pesan = chatInput.value.trim();
 
         if(!pesan){
             return;
         }
 
         try{
-            input.value = "";
-            await kirimPesan(pesan);
+            chatInput.value = "";
+            await sendMessage(pesan);
         }catch(err){
             alert(err.message);
         }
     });
 
     window.addEventListener("resize", function(){
-        const rect = widget.getBoundingClientRect();
-        setWidgetPosition(rect.left, rect.top, true);
+        const rect = floatBox.getBoundingClientRect();
+        setFloatPosition(rect.left, rect.top, true);
     });
 
     if(kodeChat){
-        tampilkanRoom();
-        mulaiPolling();
+        showRoom();
+        startPolling();
     }else{
-        tampilkanStart();
+        showStart();
     }
 })();
 </script>
