@@ -978,7 +978,7 @@ body{
 }
 
 
-/* Logo operator dari folder static/img/operator */
+/* Logo operator - ambil dari static/img/operator */
 .operator-logo,
 .nominal-logo{
     background:#ffffff !important;
@@ -994,6 +994,13 @@ body{
     display:block;
     object-fit:contain;
     border-radius:inherit;
+}
+
+.operator-logo.logo-fallback,
+.nominal-logo.logo-fallback{
+    background:linear-gradient(135deg,#2563eb,#06b6d4) !important;
+    color:#fff;
+    padding:0;
 }
 
 .nominal-name{
@@ -1372,8 +1379,8 @@ body{
                                 <span>Operator</span>
                             </div>
                             <div class="sim-stat">
-                                <strong id="simStatus">Idle</strong>
-                                <span>Status</span>
+                                <strong id="simRoute">Idle</strong>
+                                <span>Route</span>
                             </div>
                             <div class="sim-stat">
                                 <strong>1-5</strong>
@@ -1563,7 +1570,7 @@ body{
     const simTitle=document.getElementById('simTitle');
     const simSubtitle=document.getElementById('simSubtitle');
     const simOperator=document.getElementById('simOperator');
-    const simStatus=document.getElementById('simStatus');
+    const simRoute=document.getElementById('simRoute');
 
     let activeOperator='';
     let activeFilter='recommended';
@@ -1638,7 +1645,6 @@ body{
         }
     };
 
-
     const operatorOrder=['TLK','TSEL','ISAT','INDOSAT','XL','AXIS','TRI','THREE','SMART','SMARTFREN','BYU'];
 
     const prefixRules=[
@@ -1690,12 +1696,24 @@ body{
         const alt=(m.nama || op || 'Operator').replace(/"/g,'');
 
         if(m.img){
-            return '<div class="'+className+'">'+
-                '<img src="'+m.img+'" alt="'+alt+'" loading="lazy" onerror="this.outerHTML=\\''+(m.logo || 'OP')+'\\'">'+
+            return '<div class="'+className+'" data-logo-text="'+(m.logo || 'OP')+'">'+
+                '<img src="'+m.img+'" alt="'+alt+'" loading="lazy">'+
             '</div>';
         }
 
-        return '<div class="'+className+'">'+(m.logo || 'OP')+'</div>';
+        return '<div class="'+className+' logo-fallback">'+(m.logo || 'OP')+'</div>';
+    }
+
+    function aktifkanFallbackLogo(){
+        document.querySelectorAll('.operator-logo img,.nominal-logo img').forEach(function(img){
+            img.addEventListener('error',function(){
+                const parent=img.parentElement;
+                if(!parent) return;
+
+                parent.textContent=parent.getAttribute('data-logo-text') || 'OP';
+                parent.classList.add('logo-fallback');
+            },{once:true});
+        });
     }
 
     function priceLabel(text){
@@ -1790,6 +1808,8 @@ body{
 
             operatorStrip.appendChild(card);
         });
+
+        aktifkanFallbackLogo();
     }
 
     function setOperator(op,auto){
@@ -1805,7 +1825,7 @@ body{
             simTitle.textContent='Nomor belum dicek';
             simSubtitle.textContent='Masukkan nomor HP tujuan.';
             simOperator.textContent='-';
-            simStatus.textContent='Idle';
+            simRoute.textContent='Idle';
 
             return;
         }
@@ -1821,7 +1841,7 @@ body{
         simTitle.textContent='Operator '+meta(op).nama;
         simSubtitle.textContent='Operator sudah dipilih. Silakan lanjut pilih nominal.';
         simOperator.textContent=meta(op).nama;
-        simStatus.textContent='Ready';
+        simRoute.textContent='Ready';
 
         operatorInfo.style.display='block';
         operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terbaca: ':'Operator dipilih: ')+'<strong>'+meta(op).nama+'</strong>';
@@ -1897,7 +1917,7 @@ body{
             simTitle.textContent='Operator Manual';
             simSubtitle.textContent='Pilih operator manual untuk lanjut ke daftar nominal.';
             simOperator.textContent='Manual';
-            simStatus.textContent='Check';
+            simRoute.textContent='Check';
         }
 
         if(orbitDashboard.classList.contains('show')){
@@ -1992,7 +2012,7 @@ body{
                 '<div class="nominal-benefits">'+
                     '<span><i class="fa-solid fa-bolt"></i> Instan</span>'+
                     '<span><i class="fa-solid fa-signal"></i> '+meta(activeOperator).nama+'</span>'+
-                    '<span><i class="fa-solid fa-satellite"></i> Proses</span>'+
+                    '<span><i class="fa-solid fa-bolt"></i> Proses otomatis</span>'+
                     '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
                 '</div>';
 
@@ -2013,6 +2033,8 @@ body{
 
             nominalList.appendChild(card);
         });
+
+        aktifkanFallbackLogo();
     }
 
     function updateSummary(){
