@@ -1063,6 +1063,628 @@ body{
         width:100%;
     }
 }
+
+/* PDAM final - lebih bersih, full width HP, minim scroll */
+.pdamx-shell{
+    border-radius:24px !important;
+    background:#ffffff !important;
+    border:1px solid #f1f5f9 !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.pdamx-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(255,255,255,.20),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#0369a1 55%,#0ea5e9 100%) !important;
+    box-shadow:0 10px 22px rgba(2,132,199,.18) !important;
+}
+
+.pdamx-hero::before,
+.pdamx-hero::after{
+    opacity:.35 !important;
+}
+
+.pdamx-mini-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+    margin:.75rem 0 .85rem;
+}
+
+.pdamx-mini{
+    padding:.72rem .5rem;
+    border-radius:18px;
+    background:#ffffff;
+    border:1px solid #e0f2fe;
+    box-shadow:0 8px 18px rgba(15,23,42,.045);
+    text-align:center;
+}
+
+.pdamx-mini i{
+    width:34px;
+    height:34px;
+    margin:0 auto .42rem;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#0284c7;
+    background:#f0f9ff;
+}
+
+.pdamx-mini strong{
+    display:block;
+    color:#0f172a;
+    font-size:.72rem;
+    font-weight:950;
+}
+
+.pdamx-mini span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.search-card,
+.summary-box{
+    border-radius:20px !important;
+    border-color:#f1f5f9 !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#f0f9ff !important;
+    color:#0369a1 !important;
+    border:1px solid #bae6fd !important;
+}
+
+.region-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.region-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.region-card.active{
+    background:#f0f9ff !important;
+    border-color:#0284c7 !important;
+    box-shadow:0 8px 20px rgba(14,165,233,.10) !important;
+}
+
+.region-logo,
+.bill-logo{
+    background:linear-gradient(135deg,#0f172a,#0284c7,#0ea5e9) !important;
+}
+
+.results-head,
+.summary-total{
+    background:linear-gradient(135deg,#0f172a,#0369a1,#0ea5e9) !important;
+}
+
+.promo-banner{
+    background:linear-gradient(135deg,#0369a1,#0ea5e9) !important;
+    box-shadow:0 8px 18px rgba(14,165,233,.13) !important;
+}
+
+.bill-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.bill-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.bill-card.active{
+    background:#f0f9ff !important;
+    border-color:#0284c7 !important;
+    box-shadow:0 8px 20px rgba(14,165,233,.10) !important;
+}
+
+.submit-btn,
+.search-btn,
+.choose-bill{
+    background:linear-gradient(135deg,#0284c7,#0ea5e9) !important;
+}
+
+.submit-btn,
+.search-btn{
+    box-shadow:0 10px 22px rgba(14,165,233,.18) !important;
+}
+
+@media(max-width:520px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+
+    body{
+        background:#f8fafc !important;
+    }
+
+    .pdamx-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.24rem .2rem 4.8rem !important;
+        box-sizing:border-box !important;
+    }
+
+    .pdamx-shell{
+        width:calc(100vw - .4rem) !important;
+        max-width:none !important;
+        margin:0 auto !important;
+        padding:.42rem !important;
+        border-radius:18px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+        box-sizing:border-box !important;
+    }
+
+    .pdamx-topbar{
+        margin-bottom:.48rem !important;
+        gap:.45rem !important;
+    }
+
+    .pdamx-back,
+    .pdamx-chip{
+        min-height:32px !important;
+        padding:0 .56rem !important;
+        font-size:.62rem !important;
+        box-shadow:none !important;
+    }
+
+    .pdamx-hero{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(14,165,233,.14) !important;
+    }
+
+    .pdamx-hero::before,
+    .pdamx-hero::after{
+        display:none !important;
+    }
+
+    .pdamx-hero-main{
+        gap:.58rem !important;
+        align-items:center !important;
+    }
+
+    .pdamx-hero-icon{
+        width:40px !important;
+        height:40px !important;
+        flex-basis:40px !important;
+        border-radius:14px !important;
+        font-size:.95rem !important;
+    }
+
+    .pdamx-badge{
+        margin-bottom:.22rem !important;
+        padding:.2rem .46rem !important;
+        font-size:.54rem !important;
+        letter-spacing:.02em !important;
+    }
+
+    .pdamx-hero h2{
+        font-size:.98rem !important;
+        line-height:1.16 !important;
+    }
+
+    .pdamx-hero p{
+        margin:.18rem 0 0 !important;
+        font-size:.64rem !important;
+        line-height:1.3 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .pdamx-hero-tags{
+        display:none !important;
+    }
+
+    .pdamx-mini-row{
+        gap:.36rem !important;
+        margin:.5rem 0 .55rem !important;
+    }
+
+    .pdamx-mini{
+        padding:.48rem .25rem !important;
+        border-radius:14px !important;
+        box-shadow:none !important;
+    }
+
+    .pdamx-mini i{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        margin-bottom:.3rem !important;
+        font-size:.7rem !important;
+    }
+
+    .pdamx-mini strong{
+        font-size:.6rem !important;
+    }
+
+    .pdamx-mini span{
+        font-size:.48rem !important;
+    }
+
+    .search-card{
+        border-radius:18px !important;
+        padding:.68rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .section-title{
+        margin-bottom:.5rem !important;
+        gap:.45rem !important;
+        align-items:center !important;
+    }
+
+    .section-title h3{
+        font-size:.84rem !important;
+    }
+
+    .section-title p{
+        display:none !important;
+    }
+
+    .section-pill{
+        padding:.28rem .48rem !important;
+        font-size:.54rem !important;
+    }
+
+    .input-control{
+        min-height:48px !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        padding-left:2.25rem !important;
+    }
+
+    .input-help{
+        margin-top:.32rem !important;
+        font-size:.62rem !important;
+    }
+
+    .quick-row{
+        gap:.34rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .quick-row button{
+        padding:.38rem .52rem !important;
+        font-size:.6rem !important;
+    }
+
+    .pdamx-info{
+        margin-top:.48rem !important;
+        padding:.55rem .62rem !important;
+        border-radius:13px !important;
+        font-size:.66rem !important;
+        background:#f8fafc !important;
+        border-color:#dbeafe !important;
+        color:#334155 !important;
+    }
+
+    .region-strip{
+        display:grid !important;
+        grid-template-columns:repeat(3,1fr) !important;
+        gap:.38rem !important;
+        overflow:visible !important;
+        padding:0 !important;
+    }
+
+    .region-card{
+        min-width:0 !important;
+        width:100% !important;
+        min-height:72px !important;
+        flex:initial !important;
+        padding:.48rem .28rem !important;
+        border-radius:14px !important;
+        text-align:center !important;
+        box-shadow:none !important;
+    }
+
+    .region-card::before{
+        display:none !important;
+    }
+
+    .region-logo{
+        width:30px !important;
+        height:30px !important;
+        margin:0 auto .32rem !important;
+        border-radius:11px !important;
+        font-size:.58rem !important;
+    }
+
+    .region-card strong{
+        font-size:.58rem !important;
+        line-height:1.1 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .region-card span{
+        display:none !important;
+    }
+
+    .search-btn{
+        min-height:48px !important;
+        margin-top:.6rem !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        box-shadow:0 8px 18px rgba(14,165,233,.18) !important;
+    }
+
+    .compact-bill{
+        top:.35rem !important;
+        margin-bottom:.5rem !important;
+        padding:.55rem !important;
+        border-radius:16px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.10) !important;
+    }
+
+    .compact-inner strong{
+        font-size:.74rem !important;
+    }
+
+    .compact-inner span{
+        font-size:.6rem !important;
+    }
+
+    .compact-edit{
+        min-height:32px !important;
+        padding:0 .55rem !important;
+        font-size:.6rem !important;
+    }
+
+    .period-wrap{
+        margin-bottom:.45rem !important;
+    }
+
+    .period-title{
+        margin-bottom:.3rem !important;
+    }
+
+    .period-title strong{
+        font-size:.78rem !important;
+    }
+
+    .period-title span{
+        display:none !important;
+    }
+
+    .period-strip{
+        gap:.35rem !important;
+        padding-bottom:.25rem !important;
+    }
+
+    .period-chip{
+        flex:0 0 82px !important;
+        border-radius:13px !important;
+        padding:.42rem .28rem !important;
+        box-shadow:none !important;
+    }
+
+    .period-chip strong{
+        font-size:.6rem !important;
+    }
+
+    .period-chip span{
+        font-size:.5rem !important;
+    }
+
+    .results-head{
+        border-radius:16px !important;
+        margin-bottom:.5rem !important;
+        box-shadow:0 7px 16px rgba(15,23,42,.12) !important;
+    }
+
+    .results-head-main{
+        padding:.68rem !important;
+    }
+
+    .results-head h3{
+        font-size:.82rem !important;
+    }
+
+    .results-head p{
+        font-size:.6rem !important;
+        line-height:1.25 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .results-count{
+        margin-top:.38rem !important;
+        padding:.24rem .46rem !important;
+        font-size:.56rem !important;
+    }
+
+    .promo-banner{
+        display:none !important;
+    }
+
+    .filter-scroll{
+        gap:.35rem !important;
+        margin-bottom:.35rem !important;
+        padding-bottom:.25rem !important;
+    }
+
+    .filter-btn{
+        padding:.38rem .52rem !important;
+        font-size:.58rem !important;
+    }
+
+    .bill-list{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .bill-card{
+        min-width:0 !important;
+        width:100% !important;
+        border-radius:15px !important;
+        box-shadow:none !important;
+    }
+
+    .bill-card:hover{
+        transform:none !important;
+    }
+
+    .bill-main{
+        padding:.58rem !important;
+    }
+
+    .bill-top{
+        align-items:flex-start !important;
+        margin-bottom:.42rem !important;
+        gap:.35rem !important;
+    }
+
+    .bill-left{
+        gap:.42rem !important;
+        align-items:flex-start !important;
+    }
+
+    .bill-logo{
+        width:30px !important;
+        height:30px !important;
+        flex-basis:30px !important;
+        border-radius:11px !important;
+        font-size:.55rem !important;
+    }
+
+    .bill-name strong{
+        font-size:.66rem !important;
+        line-height:1.18 !important;
+        white-space:normal !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .bill-name span,
+    .bill-tag,
+    .bill-detail,
+    .bill-benefits{
+        display:none !important;
+    }
+
+    .bill-bottom{
+        display:block !important;
+        padding-top:.42rem !important;
+    }
+
+    .price-box span,
+    .price-box small{
+        display:none !important;
+    }
+
+    .price-box strong{
+        font-size:.74rem !important;
+    }
+
+    .choose-bill{
+        width:100% !important;
+        min-height:34px !important;
+        margin-top:.42rem !important;
+        border-radius:11px !important;
+        font-size:.64rem !important;
+    }
+
+    .summary-box{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-top:.58rem !important;
+        box-shadow:0 7px 16px rgba(14,165,233,.07) !important;
+    }
+
+    .summary-title{
+        margin-bottom:.48rem !important;
+        font-size:.82rem !important;
+    }
+
+    .summary-row{
+        padding:.42rem 0 !important;
+    }
+
+    .summary-row span{
+        font-size:.66rem !important;
+    }
+
+    .summary-row b{
+        font-size:.73rem !important;
+    }
+
+    .summary-total{
+        margin-top:.52rem !important;
+        padding:.68rem !important;
+        border-radius:15px !important;
+    }
+
+    .summary-total span{
+        font-size:.66rem !important;
+    }
+
+    .summary-total b{
+        font-size:.92rem !important;
+    }
+
+    .submit-btn{
+        min-height:48px !important;
+        margin-top:.65rem !important;
+        border-radius:15px !important;
+        font-size:.84rem !important;
+        box-shadow:0 8px 18px rgba(14,165,233,.18) !important;
+    }
+}
+
+@media(max-width:360px){
+    .pdamx-page{
+        padding:.2rem .16rem 4.7rem !important;
+    }
+
+    .pdamx-shell{
+        width:calc(100vw - .32rem) !important;
+        padding:.34rem !important;
+        border-radius:16px !important;
+    }
+
+    .region-strip{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .bill-list{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .bill-name strong{
+        font-size:.62rem !important;
+    }
+
+    .price-box strong{
+        font-size:.68rem !important;
+    }
+}
+
 </style>
 
 <div class="pdamx-page">
@@ -1083,7 +1705,7 @@ body{
             </a>
 
             <div class="pdamx-chip">
-                <i class="fa-solid fa-droplet"></i>
+                <i class="fa-solid fa-faucet-drip"></i>
                 PDAM
             </div>
         </div>
@@ -1091,16 +1713,16 @@ body{
         <div class="pdamx-hero" id="heroBox">
             <div class="pdamx-hero-main">
                 <div class="pdamx-hero-icon">
-                    <i class="fa-solid fa-droplet"></i>
+                    <i class="fa-solid fa-faucet-drip"></i>
                 </div>
 
                 <div>
                     <div class="pdamx-badge">
-                        <i class="fa-solid fa-crown"></i>
-                        Water Billing
+                        <i class="fa-solid fa-circle-check"></i>
+                        Tagihan Air
                     </div>
-                    <h2>Bayar Tagihan Air Lebih Mudah</h2>
-                    <p>Masukkan nomor pelanggan dan pilih wilayah PDAM. Setelah dicek, tagihan akan tampil rapi.</p>
+                    <h2>Bayar Tagihan Air</h2>
+                    <p>Masukkan nomor pelanggan, pilih wilayah, lalu cek tagihan.</p>
                 </div>
             </div>
 
@@ -1110,6 +1732,24 @@ body{
                 <button type="button" data-region="PDAM_SURABAYA">Surabaya</button>
                 <button type="button" data-region="PDAM_MEDAN">Medan</button>
                 <button type="button" data-region="PDAM_MAKASSAR">Makassar</button>
+            </div>
+        </div>
+
+        <div class="pdamx-mini-row">
+            <div class="pdamx-mini">
+                <i class="fa-solid fa-faucet-drip"></i>
+                <strong>Cek Air</strong>
+                <span>Nomor pelanggan</span>
+            </div>
+            <div class="pdamx-mini">
+                <i class="fa-solid fa-location-dot"></i>
+                <strong>Wilayah</strong>
+                <span>Pilih PDAM</span>
+            </div>
+            <div class="pdamx-mini">
+                <i class="fa-solid fa-receipt"></i>
+                <strong>Tagihan</strong>
+                <span>Bayar aman</span>
             </div>
         </div>
 
@@ -1126,7 +1766,7 @@ body{
                 <div class="section-title">
                     <div>
                         <h3>Nomor Pelanggan PDAM</h3>
-                        <p>Isi nomor pelanggan sesuai rekening air.</p>
+                        <p>Isi nomor pelanggan PDAM.</p>
                     </div>
                     <span class="section-pill">Step 1</span>
                 </div>
@@ -1149,12 +1789,12 @@ body{
                 </div>
 
                 <div class="input-help">
-                    <span>Gunakan angka tanpa spasi.</span>
+                    <span>Angka saja, tanpa spasi.</span>
                     <span id="charCount">0/25</span>
                 </div>
 
                 <div class="quick-row">
-                    <button type="button" data-id="3001234567">Isi Contoh ID</button>
+                    <button type="button" data-id="3001234567">Contoh ID</button>
                     <button type="button" data-id="7788990011">Contoh Lain</button>
                     <button type="button" data-clear="1">Hapus</button>
                 </div>
@@ -1164,8 +1804,8 @@ body{
                 <div style="margin-top:1rem;">
                     <div class="section-title">
                         <div>
-                            <h3>Pilih Wilayah PDAM</h3>
-                            <p>Geser lalu pilih wilayah PDAM sesuai pelanggan.</p>
+                            <h3>Wilayah PDAM</h3>
+                            <p>Pilih wilayah sesuai rekening air.</p>
                         </div>
                         <span class="section-pill">Step 2</span>
                     </div>
@@ -1190,7 +1830,7 @@ body{
 
                 <button type="button" class="search-btn" id="searchBtn">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    Cek Tagihan PDAM
+                    Cek Tagihan
                 </button>
             </div>
 
@@ -1208,8 +1848,8 @@ body{
                 <div class="period-wrap">
                     <div class="period-title">
                         <div>
-                            <strong>Pilih periode tagihan</strong>
-                            <span>Geser untuk lihat simulasi bulan tagihan</span>
+                            <strong>Periode Tagihan</strong>
+                            <span>Pilih periode yang ingin dicek.</span>
                         </div>
                     </div>
 
@@ -1226,18 +1866,18 @@ body{
 
                 <div class="promo-banner">
                     <div>
-                        <strong>Tagihan Air Lebih Rapi</strong>
-                        <span>Cek detail pemakaian, periode, admin, dan total pembayaran.</span>
+                        <strong>Rincian Tagihan Air</strong>
+                        <span>Cek pemakaian, periode, admin, dan total bayar.</span>
                     </div>
                     <div class="promo-badge">PDAM</div>
                 </div>
 
                 <div class="filter-scroll">
-                    <button type="button" class="filter-btn active" data-filter="recommended">Rekomendasi</button>
+                    <button type="button" class="filter-btn active" data-filter="recommended">Pilihan</button>
                     <button type="button" class="filter-btn" data-filter="current">Bulan Ini</button>
                     <button type="button" class="filter-btn" data-filter="arrears">Tunggakan</button>
-                    <button type="button" class="filter-btn" data-filter="low">Pemakaian Rendah</button>
-                    <button type="button" class="filter-btn" data-filter="high">Pemakaian Tinggi</button>
+                    <button type="button" class="filter-btn" data-filter="low">Rendah</button>
+                    <button type="button" class="filter-btn" data-filter="high">Tinggi</button>
                     <button type="button" class="filter-btn" data-filter="cheap">Termurah</button>
                 </div>
 
@@ -1246,7 +1886,7 @@ body{
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Ringkasan PDAM
+                        Ringkasan
                     </div>
 
                     <div class="summary-row">
@@ -1274,12 +1914,12 @@ body{
                             <span>Total Pembayaran</span>
                             <b id="sumTotal">Rp 0</b>
                         </div>
-                        <i class="fa-solid fa-droplet"></i>
+                        <i class="fa-solid fa-faucet-drip"></i>
                     </div>
 
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <i class="fa-solid fa-circle-check"></i>
-                        Lanjutkan Pembayaran
+                        Bayar Sekarang
                     </button>
                 </div>
             </div>
@@ -1326,6 +1966,7 @@ body{
     let selectedBill=null;
     let activeFilter='recommended';
     let activePeriod='bulan-ini';
+    let infoTimer=null;
 
     function cleanNumber(value){
         return (value || '').replace(/[^0-9]/g,'');
@@ -1349,6 +1990,8 @@ body{
     function updateInfo(){
         let nomor=cleanNumber(nomorInput.value);
 
+        clearTimeout(infoTimer);
+
         if(nomor.length>25){
             nomor=nomor.slice(0,25);
         }
@@ -1363,25 +2006,27 @@ body{
 
         if(nomor.length<5){
             pdamInfo.style.display='block';
-            pdamInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor pelanggan masih terlalu pendek.';
+            pdamInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor masih terlalu pendek.';
             return;
         }
 
-        pdamInfo.style.display='block';
-        pdamInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format nomor sudah cukup. Silakan pilih wilayah PDAM.';
+        infoTimer=setTimeout(function(){
+            pdamInfo.style.display='block';
+            pdamInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Nomor sudah cukup. Pilih wilayah PDAM.';
+        },500);
     }
 
     function validateSearch(){
         const nomor=cleanNumber(nomorInput.value);
 
         if(!nomor || nomor.length<5){
-            alert('Masukkan nomor pelanggan PDAM minimal 5 digit.');
+            alert('Masukkan nomor pelanggan minimal 5 digit.');
             nomorInput.focus();
             return false;
         }
 
         if(!selectedRegion){
-            alert('Silakan pilih wilayah PDAM terlebih dahulu.');
+            alert('Pilih wilayah PDAM dulu.');
             return false;
         }
 
@@ -1469,7 +2114,7 @@ body{
             {
                 kode:selectedRegion.kode,
                 region:selectedRegion.nama,
-                title:'Pemakaian Rendah',
+                title:'Rendah',
                 desc:'Estimasi tagihan air untuk pemakaian hemat.',
                 type:'low',
                 usage:(8+(seed%7))+' m³',
@@ -1481,7 +2126,7 @@ body{
             {
                 kode:selectedRegion.kode,
                 region:selectedRegion.nama,
-                title:'Pemakaian Tinggi',
+                title:'Tinggi',
                 desc:'Estimasi tagihan air untuk pemakaian besar.',
                 type:'high',
                 usage:(34+(seed%18))+' m³',
@@ -1588,7 +2233,7 @@ body{
                 '</div>'+
 
                 '<div class="bill-benefits">'+
-                    '<span><i class="fa-solid fa-droplet"></i> PDAM</span>'+
+                    '<span><i class="fa-solid fa-faucet-drip"></i> PDAM</span>'+
                     '<span><i class="fa-solid fa-circle-check"></i> '+item.tag+'</span>'+
                     '<span><i class="fa-solid fa-clock"></i> '+item.period+'</span>'+
                     '<span><i class="fa-solid fa-wallet"></i> Admin '+item.admin+'</span>'+
@@ -1721,6 +2366,10 @@ body{
         heroBox.classList.remove('hidden');
         searchCard.classList.remove('hidden');
         compactBill.classList.remove('show');
+        resultsMode.classList.remove('show');
+        selectedBill=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
 
         setTimeout(function(){
             searchCard.scrollIntoView({behavior:'smooth',block:'start'});
@@ -1739,17 +2388,17 @@ body{
 
         if(!selectedRegion){
             e.preventDefault();
-            alert('Silakan pilih wilayah PDAM terlebih dahulu.');
+            alert('Pilih wilayah PDAM dulu.');
             return;
         }
 
         if(!selectedBill || !kodeProduk.value){
             e.preventDefault();
-            alert('Pilih salah satu tagihan PDAM terlebih dahulu.');
+            alert('Pilih tagihan PDAM dulu.');
             return;
         }
 
-        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDAM...';
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
         submitBtn.style.opacity='0.75';
         submitBtn.style.pointerEvents='none';
     });
