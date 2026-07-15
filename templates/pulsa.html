@@ -38,6 +38,28 @@
     'XL_100000': 'XL Pulsa 100.000',
     'XL_150000': 'XL Pulsa 150.000',
 
+    'AXIS_5000': 'AXIS Pulsa 5.000',
+    'AXIS_10000': 'AXIS Pulsa 10.000',
+    'AXIS_15000': 'AXIS Pulsa 15.000',
+    'AXIS_20000': 'AXIS Pulsa 20.000',
+    'AXIS_25000': 'AXIS Pulsa 25.000',
+    'AXIS_30000': 'AXIS Pulsa 30.000',
+    'AXIS_50000': 'AXIS Pulsa 50.000',
+    'AXIS_75000': 'AXIS Pulsa 75.000',
+    'AXIS_100000': 'AXIS Pulsa 100.000',
+    'AXIS_150000': 'AXIS Pulsa 150.000',
+
+    'SMART_5000': 'Smartfren Pulsa 5.000',
+    'SMART_10000': 'Smartfren Pulsa 10.000',
+    'SMART_15000': 'Smartfren Pulsa 15.000',
+    'SMART_20000': 'Smartfren Pulsa 20.000',
+    'SMART_25000': 'Smartfren Pulsa 25.000',
+    'SMART_30000': 'Smartfren Pulsa 30.000',
+    'SMART_50000': 'Smartfren Pulsa 50.000',
+    'SMART_75000': 'Smartfren Pulsa 75.000',
+    'SMART_100000': 'Smartfren Pulsa 100.000',
+    'SMART_150000': 'Smartfren Pulsa 150.000',
+
     'TRI_5000': 'Tri Pulsa 5.000',
     'TRI_10000': 'Tri Pulsa 10.000',
     'TRI_15000': 'Tri Pulsa 15.000',
@@ -83,6 +105,28 @@
     'XL_75000': 77000,
     'XL_100000': 102000,
     'XL_150000': 152000,
+
+    'AXIS_5000': 7000,
+    'AXIS_10000': 12000,
+    'AXIS_15000': 17000,
+    'AXIS_20000': 22000,
+    'AXIS_25000': 27000,
+    'AXIS_30000': 32000,
+    'AXIS_50000': 52000,
+    'AXIS_75000': 77000,
+    'AXIS_100000': 102000,
+    'AXIS_150000': 152000,
+
+    'SMART_5000': 7000,
+    'SMART_10000': 12000,
+    'SMART_15000': 17000,
+    'SMART_20000': 22000,
+    'SMART_25000': 27000,
+    'SMART_30000': 32000,
+    'SMART_50000': 52000,
+    'SMART_75000': 77000,
+    'SMART_100000': 102000,
+    'SMART_150000': 152000,
 
     'TRI_5000': 7000,
     'TRI_10000': 12000,
@@ -1394,7 +1438,9 @@ body{
                         <button type="button" data-id="081234567890">Telkomsel</button>
                         <button type="button" data-id="085712345678">Indosat</button>
                         <button type="button" data-id="087812345678">XL</button>
+                        <button type="button" data-id="083812345678">AXIS</button>
                         <button type="button" data-id="089612345678">Tri</button>
+                        <button type="button" data-id="088812345678">Smartfren</button>
                         <button type="button" data-clear="1">Hapus</button>
                     </div>
 
@@ -1666,12 +1712,14 @@ body{
             nama:'Smartfren',
             logo:'SF',
             img:'{{ url_for("static", filename="img/operator/smartfren.png") }}',
+            imgAlt:'{{ url_for("static", filename="img/operator/smarfren.png") }}',
             prefix:'0881, 0889'
         },
         SMARTFREN:{
             nama:'Smartfren',
             logo:'SF',
             img:'{{ url_for("static", filename="img/operator/smartfren.png") }}',
+            imgAlt:'{{ url_for("static", filename="img/operator/smarfren.png") }}',
             prefix:'0881, 0889'
         },
         BYU:{
@@ -1733,7 +1781,7 @@ body{
         const alt=(m.nama || op || 'Operator').replace(/"/g,'');
 
         if(m.img){
-            return '<div class="'+className+'" data-logo-text="'+(m.logo || 'OP')+'">'+
+            return '<div class="'+className+'" data-logo-text="'+(m.logo || 'OP')+'" data-logo-alt="'+(m.imgAlt || '')+'">'+
                 '<img src="'+m.img+'" alt="'+alt+'" loading="lazy">'+
             '</div>';
         }
@@ -1747,9 +1795,17 @@ body{
                 const parent=img.parentElement;
                 if(!parent) return;
 
+                const altSrc=parent.getAttribute('data-logo-alt') || '';
+
+                if(altSrc && img.getAttribute('src') !== altSrc){
+                    img.setAttribute('src',altSrc);
+                    parent.setAttribute('data-logo-alt','');
+                    return;
+                }
+
                 parent.textContent=parent.getAttribute('data-logo-text') || 'OP';
                 parent.classList.add('logo-fallback');
-            },{once:true});
+            });
         });
     }
 
