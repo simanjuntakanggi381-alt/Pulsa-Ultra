@@ -34,6 +34,78 @@
     'TV_VIU': 2500
 } %}
 
+{% set tv_logo_map = {
+    'TV_INDIHOME': 'tv_indihome.png',
+    'TV_USEETV': 'tv_indihome.png',
+    'TV_FIRSTMEDIA': 'tv_firstmedia.png',
+    'TV_FIRST_MEDIA': 'tv_firstmedia.png',
+    'TV_TRANSVISION': 'tv_transvision.png',
+    'TV_MNCVISION': 'tv_mncvision.png',
+    'TV_MNC_VISION': 'tv_mncvision.png',
+    'TV_KVISION': 'tv_kvision.png',
+    'TV_K_VISION': 'tv_kvision.png',
+    'TV_NEXPARABOLA': 'tv_nexparabola.png',
+    'TV_NEX_PARABOLA': 'tv_nexparabola.png',
+    'TV_BIZNET': 'tv_biznet.png',
+    'TV_MYREPUBLIC': 'tv_myrepublic.png',
+    'TV_MY_REPUBLIC': 'tv_myrepublic.png',
+    'TV_VISIONPLUS': 'tv_visionplus.png',
+    'TV_VISION_PLUS': 'tv_visionplus.png',
+    'TV_VIDIO': 'tv_vidio.png',
+    'TV_CATCHPLAY': 'tv_catchplay.png',
+    'TV_CATCHPLAY_PLUS': 'tv_catchplay.png',
+    'TV_VIU': 'tv_viu.png',
+
+    'TAGIHAN_INDIHOME': 'tv_indihome.png',
+    'TAGIHAN_FIRSTMEDIA': 'tv_firstmedia.png',
+    'TAGIHAN_FIRST_MEDIA': 'tv_firstmedia.png',
+    'TAGIHAN_TRANSVISION': 'tv_transvision.png',
+    'TAGIHAN_MNCVISION': 'tv_mncvision.png',
+    'TAGIHAN_KVISION': 'tv_kvision.png',
+    'TAGIHAN_NEXPARABOLA': 'tv_nexparabola.png',
+    'TAGIHAN_BIZNET': 'tv_biznet.png',
+    'TAGIHAN_MYREPUBLIC': 'tv_myrepublic.png',
+    'TAGIHAN_VISIONPLUS': 'tv_visionplus.png',
+    'TAGIHAN_VIDIO': 'tv_vidio.png',
+    'TAGIHAN_CATCHPLAY': 'tv_catchplay.png',
+    'TAGIHAN_VIU': 'tv_viu.png'
+} %}
+
+{% macro tv_logo_file(kode, nama) -%}
+    {%- set kode_upper = kode|upper -%}
+    {%- set nama_upper = nama|upper -%}
+
+    {%- if tv_logo_map.get(kode_upper) -%}
+        {{ tv_logo_map.get(kode_upper) }}
+    {%- elif 'INDIHOME' in kode_upper or 'INDIHOME' in nama_upper or 'USEETV' in nama_upper -%}
+        tv_indihome.png
+    {%- elif 'FIRST' in kode_upper or 'FIRST' in nama_upper -%}
+        tv_firstmedia.png
+    {%- elif 'TRANSVISION' in kode_upper or 'TRANSVISION' in nama_upper -%}
+        tv_transvision.png
+    {%- elif 'MNC' in kode_upper or 'MNC' in nama_upper -%}
+        tv_mncvision.png
+    {%- elif 'KVISION' in kode_upper or 'K-VISION' in nama_upper or 'K VISION' in nama_upper -%}
+        tv_kvision.png
+    {%- elif 'NEX' in kode_upper or 'NEX' in nama_upper -%}
+        tv_nexparabola.png
+    {%- elif 'BIZNET' in kode_upper or 'BIZNET' in nama_upper -%}
+        tv_biznet.png
+    {%- elif 'MYREPUBLIC' in kode_upper or 'MYREPUBLIC' in nama_upper or 'MY REPUBLIC' in nama_upper -%}
+        tv_myrepublic.png
+    {%- elif 'VISION' in kode_upper or 'VISION+' in nama_upper or 'VISION PLUS' in nama_upper -%}
+        tv_visionplus.png
+    {%- elif 'VIDIO' in kode_upper or 'VIDIO' in nama_upper -%}
+        tv_vidio.png
+    {%- elif 'CATCHPLAY' in kode_upper or 'CATCHPLAY' in nama_upper -%}
+        tv_catchplay.png
+    {%- elif 'VIU' in kode_upper or 'VIU' in nama_upper -%}
+        tv_viu.png
+    {%- else -%}
+
+    {%- endif -%}
+{%- endmacro %}
+
 {% set produk_final = produk_list if produk_list else fallback_produk_tv %}
 {% set harga_final = harga_map if harga_map else fallback_harga_tv %}
 
@@ -1918,6 +1990,100 @@ body{
     }
 }
 
+
+/* Logo PNG TV dari folder static/img/operator */
+.provider-logo.provider-logo-img{
+    width:58px !important;
+    height:58px !important;
+    border-radius:18px !important;
+    background:#ffffff !important;
+    border:1px solid #ffe4e6 !important;
+    padding:6px !important;
+    overflow:hidden !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    color:#be123c !important;
+    box-shadow:0 8px 18px rgba(239,23,72,.12) !important;
+}
+
+.provider-logo.provider-logo-img img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:12px !important;
+}
+
+.provider-logo.provider-logo-img.logo-fallback{
+    background:linear-gradient(135deg,#111827,#be123c,#ef1748) !important;
+    border-color:rgba(239,23,72,.25) !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+
+.provider-logo.provider-logo-img.logo-fallback::after{
+    content:attr(data-fallback);
+    font-size:.66rem;
+    font-weight:950;
+    letter-spacing:.02em;
+}
+
+.provider-card.active .provider-logo.provider-logo-img{
+    border-color:#fb7185 !important;
+    box-shadow:0 8px 18px rgba(239,23,72,.18) !important;
+}
+
+.package-logo.package-logo-img{
+    background:#ffffff !important;
+    border:1px solid #ffe4e6 !important;
+    padding:5px !important;
+    overflow:hidden !important;
+    color:#be123c !important;
+}
+
+.package-logo.package-logo-img img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:10px !important;
+}
+
+.package-logo.package-logo-img.logo-fallback{
+    background:linear-gradient(135deg,#111827,#be123c,#ef1748) !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+
+.package-logo.package-logo-img.logo-fallback::after{
+    content:attr(data-fallback);
+    font-size:.56rem;
+    font-weight:950;
+}
+
+@media(max-width:520px){
+    .provider-logo.provider-logo-img{
+        width:42px !important;
+        height:42px !important;
+        margin:0 auto .35rem !important;
+        border-radius:13px !important;
+        padding:4px !important;
+    }
+
+    .provider-logo.provider-logo-img img{
+        border-radius:9px !important;
+    }
+
+    .provider-logo.provider-logo-img.logo-fallback::after{
+        font-size:.5rem !important;
+    }
+
+    .package-logo.package-logo-img{
+        padding:4px !important;
+    }
+}
+
 </style>
 
 <div class="tv-lounge-page">
@@ -2072,14 +2238,27 @@ body{
                     <div class="provider-strip" id="providerStrip">
                         {% for kode, nama in produk_final.items() %}
                             {% set admin = harga_final.get(kode, 0) %}
+                            {% set logo_file = tv_logo_file(kode, nama)|trim %}
                             <button
                                 type="button"
                                 class="provider-card"
                                 data-kode="{{ kode }}"
                                 data-nama="{{ nama|e }}"
                                 data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+                                data-logo-url="{% if logo_file %}{{ url_for('static', filename='img/operator/' ~ logo_file) }}{% endif %}"
                             >
-                                <div class="provider-logo">{{ nama[:2].upper() }}</div>
+                                <div class="provider-logo provider-logo-img" data-fallback="{{ nama[:3].upper() }}">
+                                    {% if logo_file %}
+                                        <img
+                                            src="{{ url_for('static', filename='img/operator/' ~ logo_file) }}"
+                                            alt="Logo {{ nama }}"
+                                            loading="lazy"
+                                            onerror="this.remove();this.parentElement.classList.add('logo-fallback');"
+                                        >
+                                    {% else %}
+                                        {{ nama[:3].upper() }}
+                                    {% endif %}
+                                </div>
                                 <strong>{{ nama }}</strong>
                                 <span>Tagihan / paket TV</span>
                             </button>
@@ -2299,6 +2478,18 @@ body{
         }).join('').slice(0,2).toUpperCase();
     }
 
+    function packageLogoHtml(){
+        const fallback=logoText(selectedProvider.nama || 'TV');
+
+        if(selectedProvider && selectedProvider.logoUrl){
+            return '<div class="package-logo package-logo-img" data-fallback="'+fallback+'">'+
+                '<img src="'+selectedProvider.logoUrl+'" alt="'+selectedProvider.nama+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'logo-fallback\');">'+
+            '</div>';
+        }
+
+        return '<div class="package-logo">'+fallback+'</div>';
+    }
+
     function updateFlow(){
         const steps=document.querySelectorAll('.tv-flow-item');
         const nomor=cleanNumber(nomorInput.value);
@@ -2472,7 +2663,7 @@ body{
                 '<div class="package-main">'+
                     '<div class="package-top">'+
                         '<div class="package-left">'+
-                            '<div class="package-logo">'+logoText(item.provider)+'</div>'+
+                            packageLogoHtml()+
                             '<div class="package-name">'+
                                 '<strong>'+item.title+'</strong>'+
                                 '<span>'+item.provider+' · '+item.pack+'</span>'+
@@ -2593,7 +2784,8 @@ body{
             selectedProvider={
                 kode:card.dataset.kode,
                 nama:card.dataset.nama,
-                admin:card.dataset.admin
+                admin:card.dataset.admin,
+                logoUrl:card.dataset.logoUrl || ''
             };
 
             updateFlow();
