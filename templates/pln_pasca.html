@@ -663,6 +663,778 @@ body{
         align-items:flex-start;
     }
 }
+
+/* PLN Pasca final - rapi, compact, bagus di HP */
+.plnpasca-shell{
+    border-radius:24px !important;
+    background:#ffffff !important;
+    border:1px solid #f1f5f9 !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.plnpasca-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(255,255,255,.22),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#f59e0b 52%,#2563eb 100%) !important;
+    box-shadow:0 10px 22px rgba(245,158,11,.18) !important;
+}
+
+.plnpasca-hero:before,
+.plnpasca-hero:after{
+    opacity:.35 !important;
+}
+
+.plnpasca-flow-panel{
+    margin:.75rem 0 .85rem;
+    padding:.78rem;
+    border-radius:22px;
+    background:#ffffff;
+    border:1px solid #fde68a;
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+
+.flow-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.65rem;
+}
+
+.flow-head strong{
+    display:block;
+    color:#0f172a;
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.flow-head span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:650;
+}
+
+.flow-pill{
+    flex:0 0 auto;
+    padding:.28rem .5rem;
+    border-radius:999px;
+    background:#fefce8;
+    color:#854d0e;
+    border:1px solid #fde68a;
+    font-size:.58rem;
+    font-weight:950;
+}
+
+.flow-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+}
+
+.flow-item{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:.7rem .45rem;
+    text-align:center;
+}
+
+.flow-item i{
+    width:32px;
+    height:32px;
+    margin:0 auto .38rem;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fefce8;
+    color:#ca8a04;
+}
+
+.flow-item.active i{
+    background:linear-gradient(135deg,#f59e0b,#2563eb);
+    color:#fff;
+}
+
+.flow-item strong{
+    display:block;
+    color:#0f172a;
+    font-size:.7rem;
+    line-height:1.15;
+    font-weight:950;
+}
+
+.flow-item span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.56rem;
+    line-height:1.18;
+    font-weight:700;
+}
+
+.plnpasca-card,
+.summary-box{
+    border-radius:20px !important;
+    border-color:#f1f5f9 !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#fefce8 !important;
+    color:#854d0e !important;
+    border:1px solid #fde68a !important;
+}
+
+.pln-checklist{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.5rem;
+    margin-top:.62rem;
+}
+
+.pln-checklist div{
+    display:flex;
+    align-items:center;
+    gap:.38rem;
+    padding:.55rem .6rem;
+    border-radius:15px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#334155;
+    font-size:.68rem;
+    font-weight:800;
+}
+
+.pln-checklist i{
+    color:#16a34a;
+    font-size:.72rem;
+}
+
+.meter-preview{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.65rem;
+    margin-top:.68rem;
+    padding:.72rem;
+    border-radius:18px;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(250,204,21,.16),transparent 28%),
+        #f8fafc;
+    border:1px solid #e2e8f0;
+}
+
+.meter-left{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+}
+
+.meter-icon{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg,#f59e0b,#2563eb);
+}
+
+.meter-left strong{
+    display:block;
+    color:#0f172a;
+    font-size:.82rem;
+    font-weight:950;
+    line-height:1.2;
+}
+
+.meter-left span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:700;
+}
+
+.meter-status{
+    flex:0 0 auto;
+    padding:.3rem .52rem;
+    border-radius:999px;
+    background:#fefce8;
+    border:1px solid #fde68a;
+    color:#854d0e;
+    font-size:.6rem;
+    font-weight:950;
+}
+
+.provider-note{
+    display:flex !important;
+    align-items:flex-start !important;
+    gap:.45rem !important;
+    margin-bottom:.65rem !important;
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+    font-size:.72rem !important;
+}
+
+.provider-note i{
+    color:#ca8a04;
+    margin-top:.08rem;
+}
+
+.pln-service-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.5rem;
+    margin-bottom:.75rem;
+}
+
+.pln-service-row div{
+    min-height:64px;
+    padding:.58rem .38rem;
+    border-radius:16px;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    text-align:center;
+    box-shadow:0 6px 14px rgba(15,23,42,.035);
+}
+
+.pln-service-row i{
+    width:30px;
+    height:30px;
+    margin:0 auto .32rem;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fefce8;
+    color:#ca8a04;
+}
+
+.pln-service-row strong{
+    display:block;
+    color:#0f172a;
+    font-size:.64rem;
+    font-weight:950;
+}
+
+.pln-service-row span{
+    display:block;
+    margin-top:.08rem;
+    color:#64748b;
+    font-size:.52rem;
+    font-weight:700;
+}
+
+.plnpasca-product-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.plnpasca-product-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.plnpasca-product-card.active{
+    background:#fefce8 !important;
+    border-color:#f59e0b !important;
+    box-shadow:0 8px 20px rgba(245,158,11,.12) !important;
+}
+
+.product-topline{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.45rem;
+    margin-bottom:.55rem;
+}
+
+.product-icon{
+    width:34px;
+    height:34px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg,#0f172a,#f59e0b,#2563eb);
+    box-shadow:0 6px 12px rgba(245,158,11,.12);
+}
+
+.product-label{
+    margin:0 !important;
+}
+
+.summary-total{
+    background:linear-gradient(135deg,#0f172a,#f59e0b,#2563eb) !important;
+}
+
+.btn-main{
+    background:linear-gradient(135deg,#f59e0b,#2563eb) !important;
+    box-shadow:0 10px 22px rgba(37,99,235,.18) !important;
+}
+
+.plnpasca-note{
+    border-left:0 !important;
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+}
+
+/* Tampilan HP PLN Pasca */
+@media(max-width:520px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+
+    body{
+        background:#f8fafc !important;
+    }
+
+    .plnpasca-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.24rem .2rem 4.8rem !important;
+        box-sizing:border-box !important;
+    }
+
+    .plnpasca-shell{
+        width:calc(100vw - .4rem) !important;
+        max-width:none !important;
+        margin:0 auto !important;
+        padding:.42rem !important;
+        border-radius:18px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+        box-sizing:border-box !important;
+    }
+
+    .plnpasca-topbar{
+        margin-bottom:.48rem !important;
+        gap:.45rem !important;
+    }
+
+    .back-menu,
+    .status-pill{
+        min-height:32px !important;
+        padding:0 .56rem !important;
+        font-size:.62rem !important;
+        box-shadow:none !important;
+    }
+
+    .plnpasca-hero{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(245,158,11,.14) !important;
+    }
+
+    .plnpasca-hero:before,
+    .plnpasca-hero:after{
+        display:none !important;
+    }
+
+    .plnpasca-hero-content{
+        gap:.58rem !important;
+        align-items:center !important;
+    }
+
+    .plnpasca-hero-icon{
+        width:40px !important;
+        height:40px !important;
+        flex-basis:40px !important;
+        border-radius:14px !important;
+        font-size:.95rem !important;
+    }
+
+    .plnpasca-badge{
+        margin-bottom:.22rem !important;
+        padding:.2rem .46rem !important;
+        font-size:.54rem !important;
+        letter-spacing:.02em !important;
+    }
+
+    .plnpasca-hero h2{
+        font-size:.98rem !important;
+        line-height:1.16 !important;
+    }
+
+    .plnpasca-hero p{
+        margin:.18rem 0 0 !important;
+        font-size:.64rem !important;
+        line-height:1.3 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .plnpasca-step-row{
+        display:none !important;
+    }
+
+    .plnpasca-flow-panel{
+        margin:.5rem 0 .55rem !important;
+        padding:.6rem !important;
+        border-radius:17px !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .flow-head{
+        margin-bottom:.48rem !important;
+        align-items:center !important;
+    }
+
+    .flow-head strong{
+        font-size:.74rem !important;
+    }
+
+    .flow-head span{
+        display:none !important;
+    }
+
+    .flow-pill{
+        padding:.24rem .42rem !important;
+        font-size:.52rem !important;
+    }
+
+    .flow-grid{
+        gap:.36rem !important;
+    }
+
+    .flow-item{
+        border-radius:14px !important;
+        padding:.48rem .24rem !important;
+        box-shadow:none !important;
+    }
+
+    .flow-item i{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        margin-bottom:.3rem !important;
+        font-size:.7rem !important;
+    }
+
+    .flow-item strong{
+        font-size:.58rem !important;
+    }
+
+    .flow-item span{
+        font-size:.46rem !important;
+    }
+
+    .plnpasca-card{
+        border-radius:18px !important;
+        padding:.68rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .section-head{
+        margin-bottom:.5rem !important;
+        gap:.45rem !important;
+        align-items:center !important;
+        flex-direction:row !important;
+    }
+
+    .section-head h3{
+        font-size:.84rem !important;
+    }
+
+    .section-head p{
+        display:none !important;
+    }
+
+    .section-pill{
+        padding:.28rem .48rem !important;
+        font-size:.54rem !important;
+    }
+
+    .input-control{
+        min-height:48px !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        padding-left:2.25rem !important;
+    }
+
+    .input-box i{
+        left:.78rem !important;
+        font-size:.84rem !important;
+    }
+
+    .input-help{
+        margin-top:.32rem !important;
+        font-size:.62rem !important;
+    }
+
+    .plnpasca-quick{
+        gap:.34rem !important;
+        margin-top:.45rem !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+        scrollbar-width:none !important;
+    }
+
+    .plnpasca-quick::-webkit-scrollbar{
+        display:none !important;
+    }
+
+    .plnpasca-quick button{
+        flex:0 0 auto !important;
+        padding:.38rem .52rem !important;
+        font-size:.6rem !important;
+    }
+
+    .pln-checklist{
+        gap:.36rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .pln-checklist div{
+        padding:.42rem .45rem !important;
+        border-radius:12px !important;
+        font-size:.56rem !important;
+    }
+
+    .meter-preview{
+        padding:.55rem !important;
+        border-radius:15px !important;
+        margin-top:.48rem !important;
+        gap:.45rem !important;
+    }
+
+    .meter-icon{
+        width:34px !important;
+        height:34px !important;
+        flex-basis:34px !important;
+        border-radius:12px !important;
+        font-size:.72rem !important;
+    }
+
+    .meter-left{
+        gap:.45rem !important;
+    }
+
+    .meter-left strong{
+        font-size:.68rem !important;
+    }
+
+    .meter-left span{
+        font-size:.56rem !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:1 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .meter-status{
+        padding:.24rem .42rem !important;
+        font-size:.52rem !important;
+    }
+
+    .plnpasca-info{
+        margin-top:.48rem !important;
+        padding:.55rem .62rem !important;
+        border-radius:13px !important;
+        font-size:.66rem !important;
+        background:#f8fafc !important;
+        border-color:#e2e8f0 !important;
+        color:#334155 !important;
+    }
+
+    .provider-note{
+        margin-bottom:.48rem !important;
+        padding:.55rem !important;
+        border-radius:13px !important;
+        font-size:.62rem !important;
+    }
+
+    .pln-service-row{
+        gap:.36rem !important;
+        margin-bottom:.55rem !important;
+    }
+
+    .pln-service-row div{
+        min-height:56px !important;
+        padding:.45rem .25rem !important;
+        border-radius:13px !important;
+        box-shadow:none !important;
+    }
+
+    .pln-service-row i{
+        width:26px !important;
+        height:26px !important;
+        margin-bottom:.25rem !important;
+        border-radius:10px !important;
+        font-size:.62rem !important;
+    }
+
+    .pln-service-row strong{
+        font-size:.55rem !important;
+    }
+
+    .pln-service-row span{
+        font-size:.44rem !important;
+    }
+
+    .plnpasca-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .plnpasca-product-card{
+        min-height:108px !important;
+        padding:.55rem !important;
+        border-radius:15px !important;
+        box-shadow:none !important;
+    }
+
+    .plnpasca-product-card:hover{
+        transform:none !important;
+    }
+
+    .plnpasca-product-card:before{
+        display:none !important;
+    }
+
+    .product-topline{
+        margin-bottom:.38rem !important;
+    }
+
+    .product-icon{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        font-size:.68rem !important;
+    }
+
+    .product-label{
+        padding:.14rem .32rem !important;
+        font-size:.44rem !important;
+    }
+
+    .product-name{
+        font-size:.64rem !important;
+        line-height:1.18 !important;
+        margin-bottom:.25rem !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .product-desc{
+        display:none !important;
+    }
+
+    .product-price{
+        font-size:.58rem !important;
+        line-height:1.2 !important;
+    }
+
+    .summary-box{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-top:.58rem !important;
+        box-shadow:0 7px 16px rgba(245,158,11,.07) !important;
+    }
+
+    .summary-title{
+        margin-bottom:.48rem !important;
+        font-size:.82rem !important;
+    }
+
+    .summary-row{
+        padding:.42rem 0 !important;
+        flex-direction:column !important;
+        gap:.12rem !important;
+    }
+
+    .summary-row span{
+        font-size:.66rem !important;
+    }
+
+    .summary-row b{
+        font-size:.73rem !important;
+        text-align:left !important;
+    }
+
+    .summary-total{
+        margin-top:.52rem !important;
+        padding:.68rem !important;
+        border-radius:15px !important;
+        flex-direction:row !important;
+        align-items:center !important;
+    }
+
+    .summary-total span{
+        font-size:.66rem !important;
+    }
+
+    .summary-total b{
+        font-size:.92rem !important;
+    }
+
+    .btn-main{
+        min-height:48px !important;
+        margin-top:.65rem !important;
+        border-radius:15px !important;
+        font-size:.84rem !important;
+        box-shadow:0 8px 18px rgba(37,99,235,.18) !important;
+    }
+
+    .plnpasca-note{
+        margin-top:.65rem !important;
+        padding:.65rem !important;
+        border-radius:15px !important;
+        font-size:.62rem !important;
+        line-height:1.4 !important;
+    }
+}
+
+@media(max-width:360px){
+    .plnpasca-page{
+        padding:.2rem .16rem 4.7rem !important;
+    }
+
+    .plnpasca-shell{
+        width:calc(100vw - .32rem) !important;
+        padding:.34rem !important;
+        border-radius:16px !important;
+    }
+
+    .plnpasca-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.36rem !important;
+    }
+
+    .product-name{
+        font-size:.6rem !important;
+    }
+
+    .product-price{
+        font-size:.54rem !important;
+    }
+}
+
 </style>
 
 <div class="plnpasca-page">
@@ -699,23 +1471,56 @@ body{
                         <i class="fa-solid fa-receipt"></i>
                         Tagihan Listrik
                     </div>
-                    <h2>Bayar PLN Pascabayar Lebih Mudah</h2>
-                    <p>Masukkan nomor meter atau ID pelanggan, pilih layanan PLN, lalu lanjutkan pembayaran tagihan.</p>
+                    <h2>Bayar Tagihan PLN</h2>
+                    <p>Masukkan ID pelanggan, pilih layanan PLN, lalu cek tagihan sebelum bayar.</p>
                 </div>
             </div>
 
             <div class="plnpasca-step-row">
                 <div class="plnpasca-step">
-                    <strong>1. Input ID</strong>
+                    <strong>Input ID</strong>
                     <span>Meter / pelanggan</span>
                 </div>
                 <div class="plnpasca-step">
-                    <strong>2. Pilih Layanan</strong>
+                    <strong>Pilih Layanan</strong>
                     <span>PLN pasca</span>
                 </div>
                 <div class="plnpasca-step">
-                    <strong>3. Bayar</strong>
+                    <strong>Cek & Bayar</strong>
                     <span>Konfirmasi</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="plnpasca-flow-panel">
+            <div class="flow-head">
+                <div>
+                    <strong>Alur Cek Tagihan PLN</strong>
+                    <span>Isi ID, pilih layanan, lalu cek rincian sebelum bayar.</span>
+                </div>
+                <div class="flow-pill">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Aman
+                </div>
+            </div>
+
+            <div class="flow-grid">
+                <div class="flow-item active">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <strong>Input</strong>
+                    <span>ID pelanggan</span>
+                </div>
+
+                <div class="flow-item">
+                    <i class="fa-solid fa-bolt"></i>
+                    <strong>Layanan</strong>
+                    <span>Pilih PLN</span>
+                </div>
+
+                <div class="flow-item">
+                    <i class="fa-solid fa-receipt"></i>
+                    <strong>Tagihan</strong>
+                    <span>Cek detail</span>
                 </div>
             </div>
         </div>
@@ -732,7 +1537,7 @@ body{
             <div class="plnpasca-card">
                 <div class="section-head">
                     <div>
-                        <h3>Nomor Meter / ID Pelanggan</h3>
+                        <h3>Nomor / ID Pelanggan</h3>
                         <p>Masukkan nomor meter atau ID pelanggan PLN pascabayar.</p>
                     </div>
                     <span class="section-pill">Step 1</span>
@@ -755,13 +1560,37 @@ body{
                 </div>
 
                 <div class="input-help">
-                    <span>Gunakan ID pelanggan tanpa spasi.</span>
+                    <span>Angka saja, tanpa spasi.</span>
                     <span id="charCount">0/30</span>
                 </div>
 
                 <div class="plnpasca-quick">
-                    <button type="button" data-id="123456789012">Isi Contoh ID</button>
-                    <button type="button" data-clear="1">Hapus ID</button>
+                    <button type="button" data-id="123456789012">Contoh ID</button>
+                    <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="pln-checklist">
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>ID tanpa spasi</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Cek sebelum bayar</span>
+                    </div>
+                </div>
+
+                <div class="meter-preview">
+                    <div class="meter-left">
+                        <div class="meter-icon">
+                            <i class="fa-solid fa-bolt-lightning"></i>
+                        </div>
+                        <div>
+                            <strong id="meterTitle">ID Belum Diisi</strong>
+                            <span id="meterSub">Masukkan nomor meter atau ID pelanggan.</span>
+                        </div>
+                    </div>
+                    <div class="meter-status" id="meterStatus">Idle</div>
                 </div>
 
                 <div class="plnpasca-info" id="plnPascaInfo"></div>
@@ -770,14 +1599,33 @@ body{
             <div class="plnpasca-card">
                 <div class="section-head">
                     <div>
-                        <h3>Jenis Layanan PLN</h3>
-                        <p>Pilih layanan PLN sesuai kebutuhan pembayaran.</p>
+                        <h3>Layanan PLN</h3>
+                        <p>Pilih jenis layanan sesuai tagihan pelanggan.</p>
                     </div>
                     <span class="section-pill">Step 2</span>
                 </div>
 
                 <div class="provider-note">
-                    <strong>Info:</strong> Pastikan ID pelanggan benar agar tagihan PLN bisa ditemukan.
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Pastikan ID pelanggan sudah benar. Pilih layanan yang sama dengan kebutuhan pelanggan agar pengecekan lebih mudah.</span>
+                </div>
+
+                <div class="pln-service-row">
+                    <div>
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <strong>Pasca</strong>
+                        <span>Tagihan bulanan</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <strong>Non Taglis</strong>
+                        <span>Layanan PLN</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <strong>Daya</strong>
+                        <span>Tambah/ubah</span>
+                    </div>
                 </div>
 
                 {% if produk_final %}
@@ -791,7 +1639,25 @@ body{
                             data-nama="{{ nama|e }}"
                             data-harga="{% if format_uang is defined %}{{ format_uang(nominal) }}{% else %}{{ '{:,.0f}'.format(nominal|int)|replace(',', '.') }}{% endif %}"
                         >
-                            <div class="product-label">PLN</div>
+                            {% set kode_upper = kode|upper %}
+                            {% if 'NON_TAGLIS' in kode_upper %}
+                                {% set product_icon = 'fa-screwdriver-wrench' %}
+                                {% set product_badge = 'NON TAGLIS' %}
+                            {% elif 'INSTALLASI' in kode_upper or 'PENYAMBUNGAN' in kode_upper %}
+                                {% set product_icon = 'fa-plug-circle-bolt' %}
+                                {% set product_badge = 'PASANG' %}
+                            {% elif 'TAMBAH_DAYA' in kode_upper or 'PERUBAHAN_DAYA' in kode_upper %}
+                                {% set product_icon = 'fa-gauge-high' %}
+                                {% set product_badge = 'DAYA' %}
+                            {% else %}
+                                {% set product_icon = 'fa-bolt-lightning' %}
+                                {% set product_badge = 'PLN' %}
+                            {% endif %}
+
+                            <div class="product-topline">
+                                <div class="product-icon"><i class="fa-solid {{ product_icon }}"></i></div>
+                                <div class="product-label">{{ product_badge }}</div>
+                            </div>
                             <div class="product-name">{{ nama }}</div>
                             <div class="product-desc">Cek tagihan sebelum pembayaran</div>
                             <div class="product-price">
@@ -814,11 +1680,11 @@ body{
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Ringkasan PLN Pascabayar
+                        Ringkasan PLN
                     </div>
 
                     <div class="summary-row">
-                        <span>Nomor Meter / ID</span>
+                        <span>Nomor / ID</span>
                         <b id="sumNomor">-</b>
                     </div>
 
@@ -829,7 +1695,7 @@ body{
 
                     <div class="summary-total">
                         <div>
-                            <span>Biaya Admin</span>
+                            <span>Admin</span>
                             <b id="sumHarga">Rp 0</b>
                         </div>
                         <i class="fa-solid fa-wallet"></i>
@@ -839,7 +1705,7 @@ body{
                 {% if produk_final %}
                 <button type="submit" class="btn-main" id="btnCek">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    Cek / Bayar Tagihan
+                    Cek Tagihan
                 </button>
                 {% endif %}
 
@@ -861,15 +1727,61 @@ body{
     const summaryBox=document.getElementById('summaryBox');
     const form=document.getElementById('plnPascaForm');
     const btnCek=document.getElementById('btnCek');
+    const meterTitle=document.getElementById('meterTitle');
+    const meterSub=document.getElementById('meterSub');
+    const meterStatus=document.getElementById('meterStatus');
+    let infoTimer=null;
 
     function cleanValue(value){
         return (value||'').replace(/\s+/g,'');
+    }
+
+    function updateFlow(){
+        const steps=document.querySelectorAll('.flow-item');
+        const tujuan=nomorInput?cleanValue(nomorInput.value):'';
+        const activeProduk=document.querySelector('.plnpasca-product-card.active');
+
+        if(!steps.length) return;
+
+        steps.forEach(function(step){ step.classList.remove('active'); });
+
+        if(tujuan.length>=5 && activeProduk){
+            steps[2] && steps[2].classList.add('active');
+        }else if(tujuan.length>=5){
+            steps[1] && steps[1].classList.add('active');
+        }else{
+            steps[0] && steps[0].classList.add('active');
+        }
+    }
+
+    function updateMeterPreview(tujuan){
+        if(!meterTitle || !meterSub || !meterStatus) return;
+
+        if(!tujuan){
+            meterTitle.textContent='ID Belum Diisi';
+            meterSub.textContent='Masukkan nomor meter atau ID pelanggan.';
+            meterStatus.textContent='Idle';
+            return;
+        }
+
+        if(tujuan.length<5){
+            meterTitle.textContent='ID Belum Lengkap';
+            meterSub.textContent='Lanjutkan isi ID pelanggan PLN.';
+            meterStatus.textContent='Check';
+            return;
+        }
+
+        meterTitle.textContent='ID PLN Siap';
+        meterSub.textContent='ID '+tujuan+' siap dicek tagihannya.';
+        meterStatus.textContent='Ready';
     }
 
     function updateInfo(){
         if(!nomorInput) return;
 
         let tujuan=cleanValue(nomorInput.value);
+
+        clearTimeout(infoTimer);
 
         if(tujuan.length>30){
             tujuan=tujuan.slice(0,30);
@@ -880,6 +1792,9 @@ body{
         if(charCount){
             charCount.textContent=tujuan.length+'/30';
         }
+
+        updateMeterPreview(tujuan);
+        updateFlow();
 
         if(!plnPascaInfo) return;
 
@@ -894,8 +1809,11 @@ body{
             return;
         }
 
-        plnPascaInfo.style.display='block';
-        plnPascaInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format ID pelanggan sudah cukup. Silakan pilih layanan PLN.';
+        infoTimer=setTimeout(function(){
+            plnPascaInfo.style.display='block';
+            plnPascaInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> ID sudah cukup. Pilih layanan PLN.';
+            updateFlow();
+        },500);
     }
 
     function updateSummary(selected){
@@ -937,6 +1855,7 @@ body{
             nomorInput.focus();
             updateInfo();
             updateSummary();
+            updateFlow();
         });
     });
 
@@ -956,6 +1875,7 @@ body{
                 nama:card.dataset.nama,
                 harga:card.dataset.harga
             });
+            updateFlow();
         });
     });
 
@@ -966,19 +1886,19 @@ body{
 
             if(!tujuan||tujuan.length<5){
                 e.preventDefault();
-                alert('Masukkan nomor meter atau ID pelanggan terlebih dahulu.');
+                alert('Masukkan nomor meter atau ID pelanggan dulu.');
                 if(nomorInput) nomorInput.focus();
                 return;
             }
 
             if(!produk){
                 e.preventDefault();
-                alert('Silakan pilih jenis layanan PLN terlebih dahulu.');
+                alert('Pilih layanan PLN dulu.');
                 return;
             }
 
             if(btnCek){
-                btnCek.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Mengecek Tagihan...';
+                btnCek.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Mengecek...';
                 btnCek.style.opacity='0.75';
                 btnCek.style.pointerEvents='none';
             }
@@ -988,6 +1908,8 @@ body{
     if(nomorInput&&nomorInput.value){
         nomorInput.dispatchEvent(new Event('input'));
     }
+
+    updateFlow();
 })();
 </script>
 
