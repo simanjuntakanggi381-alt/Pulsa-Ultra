@@ -876,6 +876,414 @@ body{
     display:none;
   }
 }
+
+/* Lainnya final HP - full width, rapi, compact */
+@media(max-width:620px){
+  html,
+  body{
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:hidden !important;
+  }
+
+  body{
+    background:#f8fafc !important;
+  }
+
+  .explore-page{
+    width:100vw !important;
+    max-width:100vw !important;
+    margin-left:50% !important;
+    transform:translateX(-50%) !important;
+    padding:.24rem .2rem 4.8rem !important;
+    box-sizing:border-box !important;
+  }
+
+  .explore-shell{
+    width:calc(100vw - .4rem) !important;
+    max-width:none !important;
+    margin:0 auto !important;
+    padding:.42rem !important;
+    border-radius:18px !important;
+    background:#ffffff !important;
+    box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+    box-sizing:border-box !important;
+  }
+
+  .explore-alert{
+    margin-bottom:.45rem !important;
+    padding:.6rem .7rem !important;
+    border-radius:14px !important;
+    font-size:.7rem !important;
+  }
+
+  .explore-topbar{
+    margin-bottom:.48rem !important;
+    align-items:center !important;
+    gap:.45rem !important;
+  }
+
+  .explore-back,
+  .explore-top-pill{
+    min-height:32px !important;
+    padding:0 .56rem !important;
+    font-size:.62rem !important;
+    box-shadow:none !important;
+  }
+
+  .explore-hero{
+    border-radius:18px !important;
+    padding:.75rem !important;
+    box-shadow:0 8px 18px rgba(15,23,42,.12) !important;
+  }
+
+  .explore-hero::before,
+  .explore-hero::after{
+    display:none !important;
+  }
+
+  .explore-hero-main{
+    grid-template-columns:1fr 58px !important;
+    gap:.6rem !important;
+    align-items:center !important;
+  }
+
+  .explore-badge{
+    margin-bottom:.25rem !important;
+    padding:.2rem .46rem !important;
+    font-size:.53rem !important;
+    letter-spacing:.02em !important;
+  }
+
+  .explore-hero h2{
+    max-width:none !important;
+    font-size:1rem !important;
+    line-height:1.14 !important;
+  }
+
+  .explore-hero p{
+    max-width:230px !important;
+    margin-top:.22rem !important;
+    font-size:.64rem !important;
+    line-height:1.3 !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  .explore-visual{
+    position:relative !important;
+    right:auto !important;
+    bottom:auto !important;
+    width:58px !important;
+    height:58px !important;
+    opacity:1 !important;
+  }
+
+  .explore-visual::before,
+  .explore-visual::after{
+    display:none !important;
+  }
+
+  .explore-visual-icon{
+    width:48px !important;
+    height:48px !important;
+    border-radius:17px !important;
+    font-size:1.08rem !important;
+    box-shadow:0 8px 18px rgba(15,23,42,.16) !important;
+  }
+
+  .explore-hero-stats{
+    display:none !important;
+  }
+
+  .explore-search-panel{
+    margin-top:.55rem !important;
+    padding:.62rem !important;
+    border-radius:17px !important;
+    box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+  }
+
+  .explore-search-head{
+    margin-bottom:.48rem !important;
+    align-items:center !important;
+    flex-direction:row !important;
+    gap:.45rem !important;
+  }
+
+  .explore-search-head strong{
+    font-size:.78rem !important;
+  }
+
+  .explore-search-head span{
+    display:none !important;
+  }
+
+  .explore-search-chip{
+    padding:.26rem .45rem !important;
+    font-size:.54rem !important;
+  }
+
+  .explore-search input{
+    min-height:44px !important;
+    border-radius:14px !important;
+    font-size:.76rem !important;
+    padding-left:2.25rem !important;
+  }
+
+  .explore-search i{
+    left:.78rem !important;
+    font-size:.78rem !important;
+  }
+
+  .explore-tabs{
+    padding:.55rem 0 0 !important;
+    gap:.32rem !important;
+  }
+
+  .explore-tabs button{
+    min-height:32px !important;
+    padding:0 .52rem !important;
+    font-size:.58rem !important;
+  }
+
+  .explore-focus{
+    grid-template-columns:repeat(2,1fr) !important;
+    gap:.42rem !important;
+    margin-top:.55rem !important;
+  }
+
+  .focus-card{
+    min-height:98px !important;
+    border-radius:16px !important;
+    padding:.58rem !important;
+    box-shadow:none !important;
+  }
+
+  .focus-card:hover{
+    transform:none !important;
+  }
+
+  .focus-card::before{
+    display:none !important;
+  }
+
+  .focus-icon{
+    width:32px !important;
+    height:32px !important;
+    border-radius:12px !important;
+    font-size:.78rem !important;
+    box-shadow:none !important;
+  }
+
+  .focus-tag{
+    padding:.18rem .34rem !important;
+    font-size:.48rem !important;
+  }
+
+  .focus-card strong{
+    margin-top:.45rem !important;
+    font-size:.68rem !important;
+    line-height:1.16 !important;
+  }
+
+  .focus-card span{
+    margin-top:.14rem !important;
+    font-size:.54rem !important;
+    line-height:1.22 !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  .explore-section-title{
+    margin:.65rem 0 .42rem !important;
+    align-items:center !important;
+    flex-direction:row !important;
+    gap:.5rem !important;
+  }
+
+  .explore-section-title h3{
+    font-size:.86rem !important;
+  }
+
+  .explore-section-title p{
+    display:none !important;
+  }
+
+  .explore-section-pill{
+    padding:.28rem .48rem !important;
+    font-size:.54rem !important;
+  }
+
+  .explore-list{
+    gap:.52rem !important;
+  }
+
+  .explore-group{
+    border-radius:18px !important;
+    padding:.62rem !important;
+    box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+  }
+
+  .explore-group::before{
+    display:none !important;
+  }
+
+  .group-head{
+    margin-bottom:.55rem !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    gap:.5rem !important;
+  }
+
+  .group-left{
+    align-items:center !important;
+    gap:.5rem !important;
+  }
+
+  .group-icon{
+    width:36px !important;
+    height:36px !important;
+    flex-basis:36px !important;
+    border-radius:13px !important;
+    font-size:.82rem !important;
+    box-shadow:none !important;
+  }
+
+  .group-head h4{
+    font-size:.78rem !important;
+  }
+
+  .group-head p{
+    display:none !important;
+  }
+
+  .group-badge{
+    padding:.22rem .38rem !important;
+    font-size:.5rem !important;
+  }
+
+  .service-stack{
+    grid-template-columns:repeat(2,1fr) !important;
+    gap:.38rem !important;
+  }
+
+  .service-row{
+    display:block !important;
+    padding:.52rem !important;
+    border-radius:14px !important;
+    min-height:88px !important;
+    box-shadow:none !important;
+  }
+
+  .service-row:hover{
+    transform:none !important;
+    box-shadow:none !important;
+  }
+
+  .service-left{
+    display:block !important;
+  }
+
+  .service-icon{
+    width:30px !important;
+    height:30px !important;
+    border-radius:11px !important;
+    font-size:.72rem !important;
+    margin-bottom:.38rem !important;
+    box-shadow:none !important;
+  }
+
+  .service-text strong{
+    font-size:.65rem !important;
+    line-height:1.15 !important;
+    white-space:normal !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  .service-text span{
+    margin-top:.1rem !important;
+    font-size:.52rem !important;
+    line-height:1.2 !important;
+    white-space:normal !important;
+    display:-webkit-box !important;
+    -webkit-line-clamp:2 !important;
+    -webkit-box-orient:vertical !important;
+    overflow:hidden !important;
+  }
+
+  .service-right{
+    position:absolute !important;
+    right:.45rem !important;
+    top:.45rem !important;
+  }
+
+  .service-status{
+    display:none !important;
+  }
+
+  .service-arrow{
+    width:22px !important;
+    height:22px !important;
+    border-radius:8px !important;
+    font-size:.54rem !important;
+    background:#ffffff !important;
+    color:#0f172a !important;
+    border:1px solid #e2e8f0 !important;
+  }
+
+  .explore-empty{
+    margin-top:.55rem !important;
+    padding:.7rem !important;
+    border-radius:14px !important;
+    font-size:.66rem !important;
+  }
+
+  .explore-mobile-hide{
+    display:none !important;
+  }
+}
+
+@media(max-width:360px){
+  .explore-page{
+    padding:.2rem .16rem 4.7rem !important;
+  }
+
+  .explore-shell{
+    width:calc(100vw - .32rem) !important;
+    padding:.34rem !important;
+    border-radius:16px !important;
+  }
+
+  .focus-card{
+    min-height:92px !important;
+    padding:.5rem !important;
+  }
+
+  .service-stack{
+    grid-template-columns:repeat(2,1fr) !important;
+  }
+
+  .service-row{
+    min-height:84px !important;
+    padding:.48rem !important;
+  }
+
+  .service-text strong{
+    font-size:.61rem !important;
+  }
+
+  .service-text span{
+    font-size:.49rem !important;
+  }
+}
+
 </style>
 
 <div class="explore-page">
@@ -897,7 +1305,7 @@ body{
 
       <div class="explore-top-pill">
         <i class="fa-solid fa-compass"></i>
-        Explore Hub
+        Menu Lainnya
       </div>
     </div>
 
@@ -906,11 +1314,11 @@ body{
         <div>
           <div class="explore-badge">
             <i class="fa-solid fa-circle"></i>
-            Menu Layanan
+            Menu Lainnya
           </div>
 
-          <h2>Mau transaksi apa hari ini?</h2>
-          <p>Pilih kebutuhan kamu, lalu buka layanan yang sesuai. Semua kategori dibuat lebih jelas agar pengguna tidak bingung.</p>
+          <h2>Pilih layanan lainnya</h2>
+          <p>Cari layanan yang kamu butuhkan, lalu buka menunya dari sini.</p>
         </div>
 
         <div class="explore-visual">
@@ -941,12 +1349,12 @@ body{
     <div class="explore-search-panel">
       <div class="explore-search-head">
         <div>
-          <strong>Cari layanan cepat</strong>
-          <span>Ketik nama layanan atau pilih kategori di bawah.</span>
+          <strong>Cari layanan</strong>
+          <span>Ketik nama layanan atau pilih kategori.</span>
         </div>
 
         <div class="explore-search-chip">
-          Smart Explore
+          Cari Cepat
         </div>
       </div>
 
@@ -957,9 +1365,9 @@ body{
 
       <div class="explore-tabs">
         <button type="button" class="active" data-filter="all">Semua</button>
-        <button type="button" data-filter="tagihan">Rumah & Tagihan</button>
-        <button type="button" data-filter="operator">Kartu & Operator</button>
-        <button type="button" data-filter="hiburan">Digital & Hiburan</button>
+        <button type="button" data-filter="tagihan">Tagihan Rumah</button>
+        <button type="button" data-filter="operator">Kartu Operator</button>
+        <button type="button" data-filter="hiburan">Digital</button>
         <button type="button" data-filter="keuangan">Keuangan</button>
       </div>
     </div>
@@ -1005,18 +1413,18 @@ body{
           </div>
           <div class="focus-tag">Operator</div>
         </div>
-        <strong>Kartu & Operator</strong>
+        <strong>Kartu Operator</strong>
         <span>Masa aktif, paket telp, dan aktivasi perdana.</span>
       </a>
     </div>
 
     <div class="explore-section-title">
       <div>
-        <h3>Pilih Berdasarkan Kebutuhan</h3>
-        <p>Layanan dipisah per kategori supaya lebih enak dilihat dan mudah dipilih.</p>
+        <h3>Pilih Kategori</h3>
+        <p>Menu dirapikan per kategori biar gampang dicari.</p>
       </div>
 
-      <span class="explore-section-pill">Explore Board</span>
+      <span class="explore-section-pill">Menu</span>
     </div>
 
     <div class="explore-list">
@@ -1028,8 +1436,8 @@ body{
               <i class="fa-solid fa-house-signal"></i>
             </div>
             <div>
-              <h4>Rumah & Tagihan</h4>
-              <p>Pembayaran rutin untuk kebutuhan rumah dan tagihan bulanan.</p>
+              <h4>Tagihan Rumah</h4>
+              <p>Tagihan rutin rumah dan bulanan.</p>
             </div>
           </div>
           <div class="group-badge">7 layanan</div>
@@ -1157,8 +1565,8 @@ body{
               <i class="fa-solid fa-signal"></i>
             </div>
             <div>
-              <h4>Kartu & Operator</h4>
-              <p>Layanan tambahan untuk kartu SIM, telepon, dan aktivasi.</p>
+              <h4>Kartu Operator</h4>
+              <p>Menu tambahan untuk kartu dan operator.</p>
             </div>
           </div>
           <div class="group-badge">3 layanan</div>
@@ -1222,8 +1630,8 @@ body{
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </div>
             <div>
-              <h4>Digital & Hiburan</h4>
-              <p>Untuk game, voucher, hiburan digital, dan perjalanan.</p>
+              <h4>Digital</h4>
+              <p>Game, voucher, digital, dan perjalanan.</p>
             </div>
           </div>
           <div class="group-badge">3 layanan</div>
@@ -1287,8 +1695,8 @@ body{
               <i class="fa-solid fa-building-shield"></i>
             </div>
             <div>
-              <h4>Keuangan & Sosial</h4>
-              <p>Untuk cicilan, proteksi, zakat, dan kebutuhan sosial.</p>
+              <h4>Keuangan</h4>
+              <p>Angsuran, asuransi, zakat, dan donasi.</p>
             </div>
           </div>
           <div class="group-badge">3 layanan</div>
@@ -1348,10 +1756,10 @@ body{
     </div>
 
     <div class="explore-empty" id="emptyResult">
-      Layanan tidak ditemukan. Coba cari BPJS, PDAM, game, internet, PLN, voucher, angsuran, atau zakat.
+      Layanan tidak ditemukan. Coba cari BPJS, PDAM, game, PLN, voucher, atau zakat.
     </div>
 
-    <div class="explore-status-grid">
+    <div class="explore-status-grid explore-mobile-hide">
       <div class="explore-status">
         <i class="fa-solid fa-circle-check" style="background:#ecfdf5;color:#059669;"></i>
         <strong>Aktif</strong>
@@ -1371,12 +1779,12 @@ body{
       </div>
     </div>
 
-    <div class="explore-note">
+    <div class="explore-note explore-mobile-hide">
       <strong>
         <i class="fa-solid fa-shield-halved"></i>
         Catatan Aman
       </strong>
-      Pilih layanan sesuai kebutuhan. Setiap menu akan membuka halaman khusus agar nomor, ID pelanggan, dan pilihan produk lebih mudah dicek sebelum transaksi.
+      Pilih layanan sesuai kebutuhan. Cek nomor, ID pelanggan, dan produk sebelum lanjut transaksi.
     </div>
 
   </div>
