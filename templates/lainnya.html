@@ -1284,6 +1284,99 @@ body{
   }
 }
 
+
+/* Icon layanan dibuat lebih jelas dan mudah dikenali */
+.service-icon,
+.focus-icon,
+.group-icon,
+.explore-visual-icon{
+  position:relative;
+  overflow:hidden;
+}
+
+.service-icon::after{
+  content:attr(data-short);
+  position:absolute;
+  left:50%;
+  bottom:-1px;
+  transform:translateX(-50%);
+  padding:1px 4px;
+  border-radius:999px;
+  background:rgba(255,255,255,.92);
+  color:#0f172a;
+  font-size:.42rem;
+  line-height:1.1;
+  font-weight:950;
+  letter-spacing:.01em;
+  box-shadow:0 1px 4px rgba(15,23,42,.10);
+}
+
+.service-row[data-short] .service-icon::after{
+  content:attr(data-short);
+}
+
+.service-row[data-short="AIR"] .service-icon::after,
+.service-row[data-short="BPJS"] .service-icon::after,
+.service-row[data-short="WIFI"] .service-icon::after,
+.service-row[data-short="TIKET"] .service-icon::after{
+  font-size:.38rem;
+}
+
+.service-icon i,
+.focus-icon i,
+.group-icon i{
+  position:relative;
+  z-index:2;
+  filter:drop-shadow(0 2px 4px rgba(15,23,42,.18));
+}
+
+.service-row{
+  position:relative;
+}
+
+.service-text strong{
+  letter-spacing:-.01em;
+}
+
+@media(max-width:620px){
+  .service-icon::after{
+    font-size:.36rem !important;
+    padding:1px 3px !important;
+  }
+
+  .service-row[data-short="TIKET"] .service-icon::after,
+  .service-row[data-short="CICIL"] .service-icon::after,
+  .service-row[data-short="ZAKAT"] .service-icon::after{
+    font-size:.32rem !important;
+  }
+
+  .service-icon{
+    width:34px !important;
+    height:34px !important;
+    border-radius:12px !important;
+    margin-bottom:.42rem !important;
+  }
+
+  .service-icon i{
+    font-size:.82rem !important;
+  }
+
+  .focus-icon,
+  .group-icon{
+    box-shadow:0 6px 14px rgba(15,23,42,.10) !important;
+  }
+
+  .service-row{
+    background:#ffffff !important;
+    border-color:#e5e7eb !important;
+  }
+
+  .service-row:active{
+    transform:scale(.985) !important;
+    background:#f8fafc !important;
+  }
+}
+
 </style>
 
 <div class="explore-page">
@@ -1376,7 +1469,7 @@ body{
       <a href="{{ url_for('bpjs') }}" class="focus-card" style="--grad:linear-gradient(135deg,#16a34a,#059669);--soft:rgba(22,163,74,.09);">
         <div class="focus-top">
           <div class="focus-icon">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
+            <i class="fa-solid fa-house-circle-check"></i>
           </div>
           <div class="focus-tag">Bulanan</div>
         </div>
@@ -1387,7 +1480,7 @@ body{
       <a href="{{ url_for('internet') }}" class="focus-card" style="--grad:linear-gradient(135deg,#2563eb,#06b6d4);--soft:rgba(37,99,235,.09);">
         <div class="focus-top">
           <div class="focus-icon">
-            <i class="fa-solid fa-house-signal"></i>
+            <i class="fa-solid fa-wifi"></i>
           </div>
           <div class="focus-tag">Rumah</div>
         </div>
@@ -1409,7 +1502,7 @@ body{
       <a href="{{ url_for('masa_aktif') }}" class="focus-card" style="--grad:linear-gradient(135deg,#f59e0b,#06b6d4);--soft:rgba(245,158,11,.10);">
         <div class="focus-top">
           <div class="focus-icon">
-            <i class="fa-solid fa-signal"></i>
+            <i class="fa-solid fa-sim-card"></i>
           </div>
           <div class="focus-tag">Operator</div>
         </div>
@@ -1433,7 +1526,7 @@ body{
         <div class="group-head">
           <div class="group-left">
             <div class="group-icon">
-              <i class="fa-solid fa-house-signal"></i>
+              <i class="fa-solid fa-house-circle-check"></i>
             </div>
             <div>
               <h4>Tagihan Rumah</h4>
@@ -1444,10 +1537,10 @@ body{
         </div>
 
         <div class="service-stack">
-          <a href="{{ url_for('pdam') }}" class="service-row" data-category="tagihan" data-keywords="pdam air tagihan pembayaran">
+          <a href="{{ url_for('pdam') }}" class="service-row" data-category="tagihan" data-keywords="pdam air tagihan pembayaran" data-short="AIR">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#0288d1,#00b0ff);--icon-shadow:rgba(0,176,255,.22);">
-                <i class="fa-solid fa-droplet"></i>
+                <i class="fa-solid fa-faucet-drip"></i>
               </div>
               <div class="service-text">
                 <strong>PDAM</strong>
@@ -1460,10 +1553,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('bpjs') }}" class="service-row" data-category="tagihan" data-keywords="bpjs kesehatan iuran tagihan">
+          <a href="{{ url_for('bpjs') }}" class="service-row" data-category="tagihan" data-keywords="bpjs kesehatan iuran tagihan" data-short="BPJS">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#16a34a,#059669);--icon-shadow:rgba(22,163,74,.22);">
-                <i class="fa-solid fa-heart-pulse"></i>
+                <i class="fa-solid fa-briefcase-medical"></i>
               </div>
               <div class="service-text">
                 <strong>BPJS Kesehatan</strong>
@@ -1476,10 +1569,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('internet') }}" class="service-row" data-category="tagihan" data-keywords="internet wifi indihome biznet tagihan">
+          <a href="{{ url_for('internet') }}" class="service-row" data-category="tagihan" data-keywords="internet wifi indihome biznet tagihan" data-short="WIFI">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#4f46e5,#06b6d4);--icon-shadow:rgba(79,70,229,.22);">
-                <i class="fa-solid fa-router"></i>
+                <i class="fa-solid fa-wifi"></i>
               </div>
               <div class="service-text">
                 <strong>Internet Rumah</strong>
@@ -1492,10 +1585,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('tv') }}" class="service-row" data-category="tagihan hiburan" data-keywords="tv kabel streaming tagihan">
+          <a href="{{ url_for('tv') }}" class="service-row" data-category="tagihan hiburan" data-keywords="tv kabel streaming tagihan" data-short="TV">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#ff5252,#ff1744);--icon-shadow:rgba(255,23,68,.22);">
-                <i class="fa-solid fa-tv"></i>
+                <i class="fa-solid fa-display"></i>
               </div>
               <div class="service-text">
                 <strong>TV Kabel</strong>
@@ -1508,10 +1601,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('pln_pasca') }}" class="service-row" data-category="tagihan" data-keywords="pln pasca listrik tagihan">
+          <a href="{{ url_for('pln_pasca') }}" class="service-row" data-category="tagihan" data-keywords="pln pasca listrik tagihan" data-short="PLN">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#e11d48,#9f1239);--icon-shadow:rgba(225,29,72,.22);">
-                <i class="fa-solid fa-bolt"></i>
+                <i class="fa-solid fa-bolt-lightning"></i>
               </div>
               <div class="service-text">
                 <strong>PLN Pascabayar</strong>
@@ -1524,10 +1617,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('gas') }}" class="service-row" data-category="tagihan" data-keywords="gas pgn rumah bisnis">
+          <a href="{{ url_for('gas') }}" class="service-row" data-category="tagihan" data-keywords="gas pgn rumah bisnis" data-short="GAS">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#ff6d00,#ff3d00);--icon-shadow:rgba(255,61,0,.22);">
-                <i class="fa-solid fa-fire-flame-simple"></i>
+                <i class="fa-solid fa-fire-burner"></i>
               </div>
               <div class="service-text">
                 <strong>Gas</strong>
@@ -1540,10 +1633,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('pbb') }}" class="service-row" data-category="tagihan" data-keywords="pbb pajak bumi bangunan">
+          <a href="{{ url_for('pbb') }}" class="service-row" data-category="tagihan" data-keywords="pbb pajak bumi bangunan" data-short="PBB">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#0ea5e9,#0369a1);--icon-shadow:rgba(14,165,233,.22);">
-                <i class="fa-solid fa-building-columns"></i>
+                <i class="fa-solid fa-house-chimney"></i>
               </div>
               <div class="service-text">
                 <strong>PBB</strong>
@@ -1573,10 +1666,10 @@ body{
         </div>
 
         <div class="service-stack">
-          <a href="{{ url_for('masa_aktif') }}" class="service-row" data-category="operator" data-keywords="masa aktif kartu sim perpanjang">
+          <a href="{{ url_for('masa_aktif') }}" class="service-row" data-category="operator" data-keywords="masa aktif kartu sim perpanjang" data-short="MASA">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#ff9100,#ff6d00);--icon-shadow:rgba(255,109,0,.22);">
-                <i class="fa-solid fa-clock-rotate-left"></i>
+                <i class="fa-solid fa-calendar-check"></i>
               </div>
               <div class="service-text">
                 <strong>Masa Aktif</strong>
@@ -1589,7 +1682,7 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('paket_telp') }}" class="service-row" data-category="operator" data-keywords="paket telp telepon menit operator">
+          <a href="{{ url_for('paket_telp') }}" class="service-row" data-category="operator" data-keywords="paket telp telepon menit operator" data-short="TELP">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#00b4db,#0083b0);--icon-shadow:rgba(0,131,176,.22);">
                 <i class="fa-solid fa-phone-volume"></i>
@@ -1605,7 +1698,7 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('aktivasi') }}" class="service-row" data-category="operator" data-keywords="aktivasi perdana kartu sim">
+          <a href="{{ url_for('aktivasi') }}" class="service-row" data-category="operator" data-keywords="aktivasi perdana kartu sim" data-short="SIM">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#f50057,#ff4081);--icon-shadow:rgba(245,0,87,.22);">
                 <i class="fa-solid fa-sim-card"></i>
@@ -1627,7 +1720,7 @@ body{
         <div class="group-head">
           <div class="group-left">
             <div class="group-icon">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <i class="fa-solid fa-gamepad"></i>
             </div>
             <div>
               <h4>Digital</h4>
@@ -1638,7 +1731,7 @@ body{
         </div>
 
         <div class="service-stack">
-          <a href="{{ url_for('game') }}" class="service-row" data-category="hiburan" data-keywords="game topup voucher mobile legends free fire pubg">
+          <a href="{{ url_for('game') }}" class="service-row" data-category="hiburan" data-keywords="game topup voucher mobile legends free fire pubg" data-short="GAME">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#7c4dff,#2979ff);--icon-shadow:rgba(41,121,255,.22);">
                 <i class="fa-solid fa-gamepad"></i>
@@ -1654,10 +1747,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('voucher') }}" class="service-row" data-category="hiburan" data-keywords="voucher digital hiburan belanja">
+          <a href="{{ url_for('voucher') }}" class="service-row" data-category="hiburan" data-keywords="voucher digital hiburan belanja" data-short="VCR">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#eab308,#ca8a04);--icon-shadow:rgba(234,179,8,.22);">
-                <i class="fa-solid fa-ticket"></i>
+                <i class="fa-solid fa-ticket-simple"></i>
               </div>
               <div class="service-text">
                 <strong>Voucher Digital</strong>
@@ -1670,10 +1763,10 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('tiket') }}" class="service-row" data-category="hiburan" data-keywords="tiket pesawat travel perjalanan">
+          <a href="{{ url_for('tiket') }}" class="service-row" data-category="hiburan" data-keywords="tiket pesawat travel perjalanan" data-short="TIKET">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#6366f1,#4338ca);--icon-shadow:rgba(99,102,241,.22);">
-                <i class="fa-solid fa-plane"></i>
+                <i class="fa-solid fa-plane-departure"></i>
               </div>
               <div class="service-text">
                 <strong>Tiket</strong>
@@ -1692,7 +1785,7 @@ body{
         <div class="group-head">
           <div class="group-left">
             <div class="group-icon">
-              <i class="fa-solid fa-building-shield"></i>
+              <i class="fa-solid fa-wallet"></i>
             </div>
             <div>
               <h4>Keuangan</h4>
@@ -1703,10 +1796,10 @@ body{
         </div>
 
         <div class="service-stack">
-          <a href="{{ url_for('angsuran') }}" class="service-row" data-category="keuangan" data-keywords="angsuran cicilan kredit finance">
+          <a href="{{ url_for('angsuran') }}" class="service-row" data-category="keuangan" data-keywords="angsuran cicilan kredit finance" data-short="CICIL">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#ec4899,#be185d);--icon-shadow:rgba(236,72,153,.22);">
-                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <i class="fa-solid fa-money-bill-transfer"></i>
               </div>
               <div class="service-text">
                 <strong>Angsuran</strong>
@@ -1719,7 +1812,7 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('asuransi') }}" class="service-row" data-category="keuangan" data-keywords="asuransi proteksi tagihan">
+          <a href="{{ url_for('asuransi') }}" class="service-row" data-category="keuangan" data-keywords="asuransi proteksi tagihan" data-short="AMAN">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#10b981,#047857);--icon-shadow:rgba(16,185,129,.22);">
                 <i class="fa-solid fa-shield-halved"></i>
@@ -1735,7 +1828,7 @@ body{
             </div>
           </a>
 
-          <a href="{{ url_for('zakat') }}" class="service-row" data-category="keuangan" data-keywords="zakat donasi infaq sedekah sosial">
+          <a href="{{ url_for('zakat') }}" class="service-row" data-category="keuangan" data-keywords="zakat donasi infaq sedekah sosial" data-short="ZAKAT">
             <div class="service-left">
               <div class="service-icon" style="--grad:linear-gradient(135deg,#84cc16,#4d7c0f);--icon-shadow:rgba(132,204,22,.22);">
                 <i class="fa-solid fa-hand-holding-heart"></i>
@@ -1848,6 +1941,18 @@ body{
   });
 
   applyFilter();
+})();
+</script>
+
+
+<script>
+(function(){
+  document.querySelectorAll('.service-row[data-short]').forEach(function(row){
+    var icon=row.querySelector('.service-icon');
+    if(icon && !icon.getAttribute('data-short')){
+      icon.setAttribute('data-short', row.getAttribute('data-short') || '');
+    }
+  });
 })();
 </script>
 
