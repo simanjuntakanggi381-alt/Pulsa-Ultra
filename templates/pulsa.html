@@ -977,6 +977,25 @@ body{
     box-shadow:0 6px 14px rgba(37,99,235,.14);
 }
 
+
+/* Logo operator dari folder static/img/operator */
+.operator-logo,
+.nominal-logo{
+    background:#ffffff !important;
+    border:1px solid #e2e8f0;
+    padding:5px;
+    overflow:hidden;
+}
+
+.operator-logo img,
+.nominal-logo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:contain;
+    border-radius:inherit;
+}
+
 .nominal-name{
     min-width:0;
 }
@@ -1353,8 +1372,8 @@ body{
                                 <span>Operator</span>
                             </div>
                             <div class="sim-stat">
-                                <strong id="simRoute">Idle</strong>
-                                <span>Route</span>
+                                <strong id="simStatus">Idle</strong>
+                                <span>Status</span>
                             </div>
                             <div class="sim-stat">
                                 <strong>1-5</strong>
@@ -1544,25 +1563,81 @@ body{
     const simTitle=document.getElementById('simTitle');
     const simSubtitle=document.getElementById('simSubtitle');
     const simOperator=document.getElementById('simOperator');
-    const simRoute=document.getElementById('simRoute');
+    const simStatus=document.getElementById('simStatus');
 
     let activeOperator='';
     let activeFilter='recommended';
     let selectedNominal=null;
 
     const operatorMeta={
-        TLK:{nama:'Telkomsel',logo:'TS',prefix:'0811, 0812'},
-        TSEL:{nama:'Telkomsel',logo:'TS',prefix:'0811, 0812'},
-        ISAT:{nama:'Indosat',logo:'IM',prefix:'0855, 0857'},
-        INDOSAT:{nama:'Indosat',logo:'IM',prefix:'0855, 0857'},
-        XL:{nama:'XL',logo:'XL',prefix:'0817, 0878'},
-        AXIS:{nama:'AXIS',logo:'AX',prefix:'0831, 0838'},
-        TRI:{nama:'Tri',logo:'TR',prefix:'0895, 0899'},
-        THREE:{nama:'Tri',logo:'TR',prefix:'0895, 0899'},
-        SMART:{nama:'Smartfren',logo:'SF',prefix:'0881, 0889'},
-        SMARTFREN:{nama:'Smartfren',logo:'SF',prefix:'0881, 0889'},
-        BYU:{nama:'by.U',logo:'BY',prefix:'0851'}
+        TLK:{
+            nama:'Telkomsel',
+            logo:'TS',
+            img:'{{ url_for("static", filename="img/operator/telkomsel.png") }}',
+            prefix:'0811, 0812'
+        },
+        TSEL:{
+            nama:'Telkomsel',
+            logo:'TS',
+            img:'{{ url_for("static", filename="img/operator/telkomsel.png") }}',
+            prefix:'0811, 0812'
+        },
+        ISAT:{
+            nama:'Indosat',
+            logo:'IM',
+            img:'{{ url_for("static", filename="img/operator/indosat.png") }}',
+            prefix:'0855, 0857'
+        },
+        INDOSAT:{
+            nama:'Indosat',
+            logo:'IM',
+            img:'{{ url_for("static", filename="img/operator/indosat.png") }}',
+            prefix:'0855, 0857'
+        },
+        XL:{
+            nama:'XL',
+            logo:'XL',
+            img:'{{ url_for("static", filename="img/operator/xl.png") }}',
+            prefix:'0817, 0878'
+        },
+        AXIS:{
+            nama:'AXIS',
+            logo:'AX',
+            img:'{{ url_for("static", filename="img/operator/axis.png") }}',
+            prefix:'0831, 0838'
+        },
+        TRI:{
+            nama:'Tri',
+            logo:'TR',
+            img:'{{ url_for("static", filename="img/operator/tri.png") }}',
+            prefix:'0895, 0899'
+        },
+        THREE:{
+            nama:'Tri',
+            logo:'TR',
+            img:'{{ url_for("static", filename="img/operator/tri.png") }}',
+            prefix:'0895, 0899'
+        },
+        SMART:{
+            nama:'Smartfren',
+            logo:'SF',
+            img:'{{ url_for("static", filename="img/operator/smartfren.png") }}',
+            prefix:'0881, 0889'
+        },
+        SMARTFREN:{
+            nama:'Smartfren',
+            logo:'SF',
+            img:'{{ url_for("static", filename="img/operator/smartfren.png") }}',
+            prefix:'0881, 0889'
+        },
+        BYU:{
+            nama:'by.U',
+            logo:'BY',
+            img:'{{ url_for("static", filename="img/operator/byu.png") }}',
+            prefix:'0851'
+        }
     };
+
 
     const operatorOrder=['TLK','TSEL','ISAT','INDOSAT','XL','AXIS','TRI','THREE','SMART','SMARTFREN','BYU'];
 
@@ -1608,6 +1683,19 @@ body{
             logo:(op || 'OP').slice(0,2),
             prefix:'Manual'
         };
+    }
+
+    function logoOperator(op,className){
+        const m=meta(op);
+        const alt=(m.nama || op || 'Operator').replace(/"/g,'');
+
+        if(m.img){
+            return '<div class="'+className+'">'+
+                '<img src="'+m.img+'" alt="'+alt+'" loading="lazy" onerror="this.outerHTML=\\''+(m.logo || 'OP')+'\\'">'+
+            '</div>';
+        }
+
+        return '<div class="'+className+'">'+(m.logo || 'OP')+'</div>';
     }
 
     function priceLabel(text){
@@ -1692,7 +1780,7 @@ body{
             card.dataset.op=op;
 
             card.innerHTML=
-                '<div class="operator-logo">'+m.logo+'</div>'+
+                logoOperator(op,'operator-logo')+
                 '<strong>'+m.nama+'</strong>'+
                 '<span>'+m.prefix+'</span>';
 
@@ -1717,7 +1805,7 @@ body{
             simTitle.textContent='Nomor belum dicek';
             simSubtitle.textContent='Masukkan nomor HP tujuan.';
             simOperator.textContent='-';
-            simRoute.textContent='Idle';
+            simStatus.textContent='Idle';
 
             return;
         }
@@ -1733,7 +1821,7 @@ body{
         simTitle.textContent='Operator '+meta(op).nama;
         simSubtitle.textContent='Operator sudah dipilih. Silakan lanjut pilih nominal.';
         simOperator.textContent=meta(op).nama;
-        simRoute.textContent='Ready';
+        simStatus.textContent='Ready';
 
         operatorInfo.style.display='block';
         operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terbaca: ':'Operator dipilih: ')+'<strong>'+meta(op).nama+'</strong>';
@@ -1809,7 +1897,7 @@ body{
             simTitle.textContent='Operator Manual';
             simSubtitle.textContent='Pilih operator manual untuk lanjut ke daftar nominal.';
             simOperator.textContent='Manual';
-            simRoute.textContent='Check';
+            simStatus.textContent='Check';
         }
 
         if(orbitDashboard.classList.contains('show')){
@@ -1871,7 +1959,7 @@ body{
                 '<div class="nominal-main">'+
                     '<div class="nominal-top">'+
                         '<div class="nominal-left">'+
-                            '<div class="nominal-logo">'+meta(activeOperator).logo+'</div>'+
+                            logoOperator(activeOperator,'nominal-logo')+
                             '<div class="nominal-name">'+
                                 '<strong>'+item.nama+'</strong>'+
                                 '<span>'+meta(activeOperator).nama+' · '+tag+'</span>'+
@@ -1904,7 +1992,7 @@ body{
                 '<div class="nominal-benefits">'+
                     '<span><i class="fa-solid fa-bolt"></i> Instan</span>'+
                     '<span><i class="fa-solid fa-signal"></i> '+meta(activeOperator).nama+'</span>'+
-                    '<span><i class="fa-solid fa-satellite"></i> Proses otomatis</span>'+
+                    '<span><i class="fa-solid fa-satellite"></i> Proses</span>'+
                     '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
                 '</div>';
 
