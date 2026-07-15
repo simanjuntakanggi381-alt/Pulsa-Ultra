@@ -3,119 +3,768 @@
 
 {% set produk_list = daftar_produk|default({}, true) %}
 {% set harga_map = harga|default({}, true) %}
+{% set hasil = hasil_cek|default(None, true) %}
 
-{% set fallback_produk_pdam = {
-    'PDAM_JAKARTA': 'PDAM Jakarta',
-    'PDAM_BANDUNG': 'PDAM Bandung',
-    'PDAM_SURABAYA': 'PDAM Surabaya',
-    'PDAM_MEDAN': 'PDAM Medan',
-    'PDAM_MAKASSAR': 'PDAM Makassar',
-    'PDAM_SEMARANG': 'PDAM Semarang',
-    'PDAM_TANGERANG': 'PDAM Tangerang',
-    'PDAM_BEKASI': 'PDAM Bekasi',
-    'PDAM_DEPOK': 'PDAM Depok',
-    'PDAM_BOGOR': 'PDAM Bogor',
-    'PDAM_DENPASAR': 'PDAM Denpasar',
-    'PDAM_PALEMBANG': 'PDAM Palembang'
+{% set fallback_produk_bpjs = {
+    'BPJS_KES_1': 'BPJS Kesehatan 1 Bulan',
+    'BPJS_KES_2': 'BPJS Kesehatan 2 Bulan',
+    'BPJS_KES_3': 'BPJS Kesehatan 3 Bulan',
+    'BPJS_KES_6': 'BPJS Kesehatan 6 Bulan',
+    'BPJS_KES_12': 'BPJS Kesehatan 12 Bulan',
+    'BPJS_KETENAGAKERJAAN': 'BPJS Ketenagakerjaan'
 } %}
 
-{% set fallback_harga_pdam = {
-    'PDAM_JAKARTA': 2500,
-    'PDAM_BANDUNG': 2500,
-    'PDAM_SURABAYA': 2500,
-    'PDAM_MEDAN': 2500,
-    'PDAM_MAKASSAR': 2500,
-    'PDAM_SEMARANG': 2500,
-    'PDAM_TANGERANG': 3000,
-    'PDAM_BEKASI': 3000,
-    'PDAM_DEPOK': 3000,
-    'PDAM_BOGOR': 3000,
-    'PDAM_DENPASAR': 3000,
-    'PDAM_PALEMBANG': 3000
+{% set fallback_harga_bpjs = {
+    'BPJS_KES_1': 2500,
+    'BPJS_KES_2': 2500,
+    'BPJS_KES_3': 2500,
+    'BPJS_KES_6': 2500,
+    'BPJS_KES_12': 2500,
+    'BPJS_KETENAGAKERJAAN': 2500
 } %}
 
-{% set produk_final = produk_list if produk_list else fallback_produk_pdam %}
-{% set harga_final = harga_map if harga_map else fallback_harga_pdam %}
+{% set produk_final = produk_list if produk_list else fallback_produk_bpjs %}
+{% set harga_final = harga_map if harga_map else fallback_harga_bpjs %}
 
 <style>
-:root{
-    --pd-blue:#0288d1;
-    --pd-blue-2:#00b0ff;
-    --pd-blue-3:#0369a1;
-    --pd-cyan:#06b6d4;
-    --pd-dark:#0f172a;
-    --pd-text:#334155;
-    --pd-muted:#64748b;
-    --pd-border:#e2e8f0;
-    --pd-soft:#f8fafc;
-    --pd-green:#16a34a;
-    --pd-orange:#f59e0b;
-    --pd-red:#ef4444;
-    --pd-shadow:0 18px 42px rgba(15,23,42,.10);
-    --pd-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+:root {
+    --bpjs-main: #00c853;
+    --bpjs-main2: #00e676;
+    --bpjs-dark: #0f172a;
+    --bpjs-text: #334155;
+    --bpjs-muted: #64748b;
+    --bpjs-line: #e2e8f0;
+    --bpjs-soft: #ecfdf5;
+    --bpjs-green: #16a34a;
 }
 
+body {
+    background:
+        radial-gradient(circle at top left, rgba(0,200,83,.10), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0,230,118,.10), transparent 32%),
+        #f6f8fc;
+}
+
+.bpjs-page {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1rem .85rem 7rem;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--bpjs-text);
+}
+
+.bpjs-shell {
+    border-radius: 34px;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at top left, rgba(0,200,83,.15), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(0,230,118,.12), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(0,200,83,.12);
+    box-shadow: 0 18px 45px rgba(15,23,42,.08);
+}
+
+.bpjs-alert {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 18px;
+    text-align: center;
+    font-weight: 850;
+    font-size: .94rem;
+    line-height: 1.45;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #bbf7d0;
+}
+
+.bpjs-alert.success {
+    background: #ecfdf5;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.bpjs-alert.error,
+.bpjs-alert.danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.bpjs-alert.warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-color: #fde68a;
+}
+
+.bpjs-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    padding: 1.4rem;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,.38), transparent 34%),
+        linear-gradient(135deg, #00e676 0%, #00c853 58%, #00963c 100%);
+    box-shadow: 0 16px 34px rgba(0,200,83,.28);
+    margin-bottom: 1rem;
+}
+
+.bpjs-hero::before {
+    content: "";
+    position: absolute;
+    right: -58px;
+    top: -58px;
+    width: 175px;
+    height: 175px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.15);
+}
+
+.bpjs-hero::after {
+    content: "";
+    position: absolute;
+    right: 18px;
+    bottom: -45px;
+    width: 125px;
+    height: 125px;
+    border-radius: 50%;
+    border: 18px solid rgba(255,255,255,.10);
+}
+
+.bpjs-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.bpjs-hero-icon {
+    width: 68px;
+    height: 68px;
+    flex: 0 0 68px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.20);
+    border: 1px solid rgba(255,255,255,.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.62rem;
+}
+
+.bpjs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .32rem .68rem;
+    margin-bottom: .5rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    color: #ffffff;
+    font-size: .76rem;
+    font-weight: 950;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.bpjs-hero h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    line-height: 1.16;
+    font-weight: 950;
+    letter-spacing: -.035em;
+}
+
+.bpjs-hero p {
+    margin: .45rem 0 0;
+    color: rgba(255,255,255,.92);
+    font-size: .94rem;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.bpjs-step-row {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .6rem;
+    margin-top: 1.15rem;
+}
+
+.bpjs-step {
+    padding: .78rem .45rem;
+    border-radius: 18px;
+    text-align: center;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+.bpjs-step strong {
+    display: block;
+    color: #ffffff;
+    font-size: .82rem;
+    font-weight: 950;
+}
+
+.bpjs-step span {
+    display: block;
+    margin-top: .12rem;
+    color: rgba(255,255,255,.84);
+    font-size: .7rem;
+}
+
+.bpjs-card,
+.result-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 1.12rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 12px 28px rgba(15,23,42,.06);
+    margin-bottom: 1rem;
+}
+
+.section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.section-head h3 {
+    margin: 0;
+    color: var(--bpjs-dark);
+    font-size: 1.12rem;
+    line-height: 1.25;
+    font-weight: 950;
+    letter-spacing: -.02em;
+}
+
+.section-head p {
+    margin: .28rem 0 0;
+    color: var(--bpjs-muted);
+    font-size: .86rem;
+    line-height: 1.45;
+    font-weight: 650;
+}
+
+.section-pill {
+    flex: 0 0 auto;
+    padding: .46rem .75rem;
+    border-radius: 999px;
+    background: #ecfdf5;
+    color: #047857;
+    font-size: .78rem;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-box i {
+    position: absolute;
+    left: 1.05rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 1.08rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.input-control {
+    width: 100%;
+    min-height: 64px;
+    border-radius: 22px;
+    border: 2px solid var(--bpjs-line);
+    background: #ffffff;
+    color: var(--bpjs-dark);
+    font-size: 1.08rem;
+    font-weight: 900;
+    box-sizing: border-box;
+    outline: none;
+    padding: 0 1rem 0 3rem;
+    transition: .22s ease;
+}
+
+.input-control::placeholder {
+    color: #94a3b8;
+    font-weight: 750;
+}
+
+.input-control:focus {
+    border-color: var(--bpjs-main);
+    box-shadow: 0 0 0 5px rgba(0,200,83,.12);
+}
+
+.form-help {
+    margin-top: .55rem;
+    color: var(--bpjs-muted);
+    font-size: .84rem;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.bpjs-info {
+    display: none;
+    margin-top: .75rem;
+    padding: .95rem;
+    border-radius: 18px;
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    color: #047857;
+    font-size: .9rem;
+    line-height: 1.45;
+    font-weight: 800;
+}
+
+.product-note {
+    margin-bottom: .85rem;
+    padding: .98rem;
+    border-radius: 19px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: .88rem;
+    line-height: 1.5;
+    font-weight: 800;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: .85rem;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: .95rem;
+}
+
+.search-input {
+    width: 100%;
+    min-height: 54px;
+    border-radius: 18px;
+    border: 2px solid var(--bpjs-line);
+    background: #ffffff;
+    color: var(--bpjs-dark);
+    font-size: .96rem;
+    font-weight: 750;
+    box-sizing: border-box;
+    outline: none;
+    padding: 0 1rem 0 2.8rem;
+    transition: .22s ease;
+}
+
+.search-input:focus {
+    border-color: var(--bpjs-main);
+    box-shadow: 0 0 0 5px rgba(0,200,83,.10);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: .85rem;
+}
+
+.product-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 124px;
+    border: 1.5px solid #edf2f7;
+    border-radius: 24px;
+    background: #ffffff;
+    padding: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: .2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    border-color: #86efac;
+    box-shadow: 0 10px 20px rgba(15,23,42,.07);
+}
+
+.product-card.active {
+    border-color: var(--bpjs-main);
+    background: #ecfdf5;
+    box-shadow: 0 12px 24px rgba(0,200,83,.13);
+}
+
+.product-card::before {
+    content: "";
+    position: absolute;
+    right: -34px;
+    top: -34px;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: rgba(0,200,83,.08);
+}
+
+.product-label {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    padding: .24rem .55rem;
+    margin-bottom: .42rem;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #047857;
+    font-size: .66rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.product-name {
+    position: relative;
+    z-index: 2;
+    color: var(--bpjs-dark);
+    font-size: 1rem;
+    line-height: 1.24;
+    font-weight: 950;
+    margin-bottom: .4rem;
+}
+
+.product-desc {
+    position: relative;
+    z-index: 2;
+    color: var(--bpjs-muted);
+    font-size: .78rem;
+    line-height: 1.35;
+    font-weight: 700;
+    margin-bottom: .4rem;
+}
+
+.product-price {
+    position: relative;
+    z-index: 2;
+    color: var(--bpjs-green);
+    font-size: .92rem;
+    font-weight: 950;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    padding: 1.1rem;
+    border-radius: 20px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #713f12;
+    font-size: .9rem;
+    line-height: 1.55;
+    font-weight: 800;
+    text-align: center;
+}
+
+.summary-box {
+    display: none;
+    margin-top: 1rem;
+    padding: 1.1rem;
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(0,200,83,.10), transparent 32%),
+        #ffffff;
+    border: 1px solid #bbf7d0;
+    box-shadow: 0 12px 24px rgba(0,200,83,.08);
+}
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-bottom: .75rem;
+    color: var(--bpjs-dark);
+    font-size: 1.02rem;
+    font-weight: 950;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .72rem 0;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.summary-row span {
+    color: var(--bpjs-muted);
+    font-size: .9rem;
+    font-weight: 800;
+}
+
+.summary-row b {
+    color: var(--bpjs-dark);
+    font-size: .9rem;
+    line-height: 1.35;
+    text-align: right;
+    word-break: break-word;
+}
+
+.summary-total {
+    margin-top: .85rem;
+    padding: 1.05rem;
+    border-radius: 21px;
+    background: linear-gradient(135deg, #064e3b, #00c853);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.summary-total span {
+    display: block;
+    color: rgba(255,255,255,.82);
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+.summary-total b {
+    display: block;
+    margin-top: .2rem;
+    color: #ffffff;
+    font-size: 1.32rem;
+    font-weight: 950;
+}
+
+.btn-main {
+    width: 100%;
+    min-height: 64px;
+    margin-top: 1rem;
+    border: 0;
+    border-radius: 22px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 1.08rem;
+    font-weight: 950;
+    background: linear-gradient(135deg, #00e676, #00c853);
+    box-shadow: 0 13px 28px rgba(0,200,83,.25);
+    transition: .2s ease;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 17px 32px rgba(0,200,83,.31);
+}
+
+.btn-main.green {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 13px 28px rgba(22,163,74,.24);
+}
+
+.btn-main.blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 13px 28px rgba(37,99,235,.24);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.note {
+    margin-top: 1rem;
+    padding: .98rem;
+    border-radius: 19px;
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    border-left: 5px solid #00c853;
+    color: #047857;
+    font-size: .88rem;
+    line-height: 1.55;
+    font-weight: 750;
+}
+
+.result-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.result-head {
+    padding: 1.1rem;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #ffffff;
+}
+
+.result-head strong {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 950;
+    margin-bottom: .25rem;
+}
+
+.result-head span {
+    display: block;
+    font-size: .86rem;
+    opacity: .95;
+}
+
+.result-body {
+    padding: 1.1rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .85rem;
+    border-radius: 17px;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    margin-bottom: .6rem;
+}
+
+.detail-row span {
+    color: var(--bpjs-muted);
+    font-size: .9rem;
+    font-weight: 800;
+}
+
+.detail-row b {
+    color: var(--bpjs-dark);
+    font-size: .9rem;
+    text-align: right;
+    word-break: break-word;
+}
+
+.total-row {
+    margin-top: .85rem;
+    padding: 1.05rem;
+    border-radius: 21px;
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-row span {
+    display: block;
+    font-size: .86rem;
+    opacity: .85;
+}
+
+.total-row b {
+    display: block;
+    margin-top: .2rem;
+    font-size: 1.32rem;
+}
+
+.action-grid {
+    margin-top: .95rem;
+    display: grid;
+    gap: .75rem;
+}
+
+@media(max-width:560px) {
+    .bpjs-page {
+        max-width: 100%;
+        padding: .9rem .75rem 7rem;
+    }
+
+    .bpjs-shell {
+        padding: .75rem;
+        border-radius: 28px;
+    }
+
+    .bpjs-hero {
+        padding: 1.2rem;
+        border-radius: 26px;
+    }
+
+    .bpjs-hero-icon {
+        width: 60px;
+        height: 60px;
+        flex-basis: 60px;
+        border-radius: 21px;
+        font-size: 1.38rem;
+    }
+
+    .bpjs-hero h2 {
+        font-size: 1.28rem;
+    }
+
+    .bpjs-step-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: .45rem;
+    }
+
+    .bpjs-step {
+        padding: .65rem .35rem;
+        border-radius: 15px;
+    }
+
+    .bpjs-step strong {
+        font-size: .72rem;
+    }
+
+    .bpjs-step span {
+        font-size: .62rem;
+    }
+
+    .section-head {
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .75rem;
+    }
+
+    .product-card {
+        min-height: 118px;
+        border-radius: 22px;
+        padding: .95rem;
+    }
+
+    .summary-row,
+    .detail-row {
+        flex-direction: column;
+        gap: .28rem;
+    }
+
+    .summary-row b,
+    .detail-row b {
+        text-align: left;
+    }
+
+    .summary-total,
+    .total-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media(max-width:390px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* BPJS final - clean, menarik, full width HP */
 body{
-    background:
-        radial-gradient(circle at top left,rgba(2,136,209,.14),transparent 34%),
-        radial-gradient(circle at top right,rgba(0,176,255,.10),transparent 34%),
-        linear-gradient(180deg,#f8fafc 0%,#e0f2fe 42%,#f8fafc 100%);
+    background:#f8fafc !important;
 }
 
-.pdamx-page{
-    width:100%;
-    max-width:470px;
-    margin:0 auto;
-    padding:.8rem .7rem 5rem;
-    box-sizing:border-box;
-    color:var(--pd-text);
-    font-family:'Inter','Segoe UI',Roboto,Arial,sans-serif;
+.bpjs-shell{
+    border-radius:24px !important;
+    background:#ffffff !important;
+    border:1px solid #f1f5f9 !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
 }
 
-.pdamx-shell{
-    border-radius:28px;
-    padding:.7rem;
-    background:
-        radial-gradient(circle at top left,rgba(2,136,209,.08),transparent 32%),
-        linear-gradient(180deg,#fff,#f8fafc);
-    border:1px solid rgba(2,136,209,.12);
-    box-shadow:var(--pd-shadow);
-    overflow:hidden;
-}
-
-.pdamx-alert{
-    margin-bottom:.8rem;
-    padding:.82rem .9rem;
-    border-radius:16px;
-    text-align:center;
-    font-weight:850;
-    font-size:.84rem;
-    line-height:1.45;
-    background:#f0f9ff;
-    color:#075985;
-    border:1px solid #bae6fd;
-}
-
-.pdamx-alert.success{
-    background:#ecfdf5;
-    color:#166534;
-    border-color:#bbf7d0;
-}
-
-.pdamx-alert.error,
-.pdamx-alert.danger{
-    background:#fef2f2;
-    color:#991b1b;
-    border-color:#fecaca;
-}
-
-.pdamx-alert.warning{
-    background:#fffbeb;
-    color:#92400e;
-    border-color:#fde68a;
-}
-
-.pdamx-topbar{
+.bpjs-topbar{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -123,8 +772,8 @@ body{
     margin-bottom:.75rem;
 }
 
-.pdamx-back,
-.pdamx-chip{
+.bpjs-back,
+.bpjs-top-pill{
     min-height:38px;
     padding:0 .72rem;
     border-radius:999px;
@@ -137,229 +786,95 @@ body{
     font-weight:950;
 }
 
-.pdamx-back{
+.bpjs-back{
     background:#fff;
-    border:1px solid var(--pd-border);
-    color:#0288d1;
+    border:1px solid #e2e8f0;
+    color:#047857;
     box-shadow:0 8px 18px rgba(15,23,42,.055);
 }
 
-.pdamx-chip{
-    background:#f0f9ff;
-    color:#0369a1;
-    border:1px solid #bae6fd;
+.bpjs-top-pill{
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #bbf7d0;
 }
 
-.pdamx-hero{
-    position:relative;
-    overflow:hidden;
-    border-radius:24px;
-    padding:1rem;
-    margin-bottom:.8rem;
-    color:#fff;
+.bpjs-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
     background:
-        radial-gradient(circle at 18% 0%,rgba(255,255,255,.28),transparent 34%),
-        linear-gradient(135deg,#0f172a 0%,#0288d1 55%,#00b0ff 100%);
-    box-shadow:0 16px 32px rgba(0,176,255,.23);
+        radial-gradient(circle at 100% 0%,rgba(255,255,255,.20),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#047857 56%,#22c55e 100%) !important;
+    box-shadow:0 10px 22px rgba(22,163,74,.18) !important;
 }
 
-.pdamx-hero::before{
-    content:"";
-    position:absolute;
-    right:-24px;
-    top:-32px;
-    width:92px;
-    height:92px;
-    border-radius:50%;
-    background:rgba(255,255,255,.12);
+.bpjs-hero::before,
+.bpjs-hero::after{
+    opacity:.35 !important;
 }
 
-.pdamx-hero::after{
-    content:"";
-    position:absolute;
-    right:18px;
-    bottom:-34px;
-    width:76px;
-    height:76px;
-    border-radius:50%;
-    border:12px solid rgba(255,255,255,.09);
+.bpjs-hero-icon{
+    box-shadow:0 8px 18px rgba(15,23,42,.14);
 }
 
-.pdamx-hero-main{
-    position:relative;
-    z-index:2;
-    display:flex;
-    align-items:flex-start;
-    gap:.75rem;
+.bpjs-mini-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+    margin:.75rem 0 .85rem;
 }
 
-.pdamx-hero-icon{
-    width:48px;
-    height:48px;
-    flex:0 0 48px;
+.bpjs-mini{
+    padding:.72rem .5rem;
     border-radius:18px;
-    background:rgba(255,255,255,.20);
-    border:1px solid rgba(255,255,255,.25);
+    background:#ffffff;
+    border:1px solid #dcfce7;
+    box-shadow:0 8px 18px rgba(15,23,42,.045);
+    text-align:center;
+}
+
+.bpjs-mini i{
+    width:34px;
+    height:34px;
+    margin:0 auto .42rem;
+    border-radius:13px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:1.15rem;
+    color:#047857;
+    background:#ecfdf5;
 }
 
-.pdamx-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:.32rem;
-    padding:.28rem .58rem;
-    margin-bottom:.42rem;
-    border-radius:999px;
-    background:rgba(255,255,255,.18);
-    color:#fff;
-    font-size:.62rem;
-    font-weight:950;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-}
-
-.pdamx-hero h2{
-    margin:0;
-    color:#fff;
-    font-size:1.05rem;
-    line-height:1.18;
-    font-weight:950;
-    letter-spacing:-.03em;
-}
-
-.pdamx-hero p{
-    margin:.32rem 0 0;
-    color:rgba(255,255,255,.90);
-    font-size:.74rem;
-    line-height:1.45;
-    font-weight:600;
-}
-
-.pdamx-hero-tags{
-    position:relative;
-    z-index:2;
-    display:flex;
-    gap:.38rem;
-    margin-top:.72rem;
-    overflow-x:auto;
-    scrollbar-width:none;
-}
-
-.pdamx-hero-tags::-webkit-scrollbar{
-    display:none;
-}
-
-.pdamx-hero-tags button{
-    flex:0 0 auto;
-    border:1px solid rgba(255,255,255,.18);
-    background:rgba(255,255,255,.16);
-    color:#fff;
-    border-radius:999px;
-    padding:.34rem .58rem;
-    font-size:.62rem;
-    font-weight:950;
-    cursor:pointer;
-}
-
-.search-card{
-    border-radius:24px;
-    padding:.88rem;
-    background:#fff;
-    border:1px solid #bae6fd;
-    box-shadow:var(--pd-soft-shadow);
-    margin-bottom:.85rem;
-}
-
-.section-title{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:.7rem;
-    margin-bottom:.75rem;
-}
-
-.section-title h3{
-    margin:0;
+.bpjs-mini strong{
+    display:block;
     color:#0f172a;
-    font-size:.95rem;
-    line-height:1.25;
+    font-size:.72rem;
     font-weight:950;
 }
 
-.section-title p{
-    margin:.18rem 0 0;
+.bpjs-mini span{
+    display:block;
+    margin-top:.1rem;
     color:#64748b;
-    font-size:.72rem;
-    line-height:1.4;
-    font-weight:650;
+    font-size:.58rem;
+    font-weight:750;
+}
+
+.bpjs-card,
+.result-card,
+.summary-box{
+    border-radius:20px !important;
+    border-color:#f1f5f9 !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
 }
 
 .section-pill{
-    flex:0 0 auto;
-    padding:.34rem .56rem;
-    border-radius:999px;
-    background:#f0f9ff;
-    color:#0369a1;
-    font-size:.64rem;
-    font-weight:950;
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+    border:1px solid #bbf7d0 !important;
 }
 
-.input-box{
-    position:relative;
-}
-
-.input-box i{
-    position:absolute;
-    left:.85rem;
-    top:50%;
-    transform:translateY(-50%);
-    color:#64748b;
-    z-index:2;
-    pointer-events:none;
-    font-size:.88rem;
-}
-
-.input-control{
-    width:100%;
-    min-height:54px;
-    border-radius:15px;
-    border:1.8px solid #e2e8f0;
-    background:#fff;
-    color:#0f172a;
-    font-size:.86rem;
-    font-weight:850;
-    box-sizing:border-box;
-    outline:none;
-    padding:0 .85rem 0 2.45rem;
-    transition:.2s ease;
-}
-
-.input-control::placeholder{
-    color:#94a3b8;
-    font-weight:650;
-}
-
-.input-control:focus{
-    border-color:#00b0ff;
-    box-shadow:0 0 0 4px rgba(0,176,255,.12);
-}
-
-.input-help{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.7rem;
-    margin-top:.45rem;
-    color:#64748b;
-    font-size:.7rem;
-    line-height:1.4;
-    font-weight:650;
-}
-
-.quick-row{
+.bpjs-quick{
     display:flex;
     gap:.42rem;
     overflow-x:auto;
@@ -368,11 +883,11 @@ body{
     scrollbar-width:none;
 }
 
-.quick-row::-webkit-scrollbar{
+.bpjs-quick::-webkit-scrollbar{
     display:none;
 }
 
-.quick-row button{
+.bpjs-quick button{
     flex:0 0 auto;
     border:1px solid #e5e7eb;
     background:#fff;
@@ -384,750 +899,499 @@ body{
     cursor:pointer;
 }
 
-.pdamx-info{
-    display:none;
-    margin-top:.65rem;
-    padding:.75rem;
-    border-radius:16px;
-    background:#f0f9ff;
-    border:1px solid #bae6fd;
-    color:#075985;
-    font-size:.78rem;
-    line-height:1.45;
-    font-weight:750;
+.product-note{
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
 }
 
-.region-strip{
-    display:flex;
-    gap:.55rem;
-    overflow-x:auto;
-    padding:.15rem 0 .35rem;
-    scrollbar-width:none;
+.product-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
 }
 
-.region-strip::-webkit-scrollbar{
-    display:none;
+.product-card:hover{
+    transform:translateY(-1px) !important;
 }
 
-.region-card{
-    flex:0 0 130px;
-    min-height:110px;
-    position:relative;
-    overflow:hidden;
-    border:1.5px solid #edf2f7;
-    border-radius:18px;
-    background:#fff;
-    padding:.78rem;
-    cursor:pointer;
-    text-align:left;
-    transition:.2s ease;
+.product-card.active{
+    background:#ecfdf5 !important;
+    border-color:#16a34a !important;
+    box-shadow:0 8px 20px rgba(22,163,74,.10) !important;
 }
 
-.region-card:hover{
-    transform:translateY(-2px);
-    border-color:#7dd3fc;
-    box-shadow:0 10px 20px rgba(15,23,42,.07);
-}
-
-.region-card.active{
-    border-color:#00b0ff;
-    background:#f0f9ff;
-    box-shadow:0 12px 24px rgba(0,176,255,.12);
-}
-
-.region-card::before{
-    content:"";
-    position:absolute;
-    right:-28px;
-    top:-28px;
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    background:rgba(0,176,255,.08);
-}
-
-.region-logo{
-    width:38px;
-    height:38px;
-    border-radius:14px;
-    background:linear-gradient(135deg,#0288d1,#00b0ff);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:.68rem;
-    font-weight:950;
-    margin-bottom:.55rem;
-    position:relative;
-    z-index:2;
-}
-
-.region-card strong{
-    position:relative;
-    z-index:2;
-    display:block;
-    color:#0f172a;
-    font-size:.78rem;
-    line-height:1.25;
-    font-weight:950;
-}
-
-.region-card span{
-    position:relative;
-    z-index:2;
-    display:block;
-    margin-top:.2rem;
-    color:#64748b;
-    font-size:.66rem;
-    line-height:1.3;
-    font-weight:700;
-}
-
-.search-btn{
-    width:100%;
-    min-height:56px;
-    border:0;
-    border-radius:17px;
-    margin-top:.82rem;
-    color:#fff;
-    background:linear-gradient(135deg,#0288d1,#00b0ff);
-    font-size:.92rem;
-    font-weight:950;
-    cursor:pointer;
-    box-shadow:0 13px 26px rgba(0,176,255,.24);
-    transition:.2s ease;
-}
-
-.search-btn:hover{
-    transform:translateY(-1px);
-}
-
-.compact-bill{
-    display:none;
-    position:sticky;
-    top:.5rem;
-    z-index:20;
-    margin-bottom:.75rem;
-    padding:.75rem;
-    border-radius:20px;
-    background:rgba(255,255,255,.93);
-    border:1px solid #bae6fd;
-    box-shadow:0 14px 30px rgba(15,23,42,.12);
-    backdrop-filter:blur(10px);
-}
-
-.compact-bill.show{
-    display:block;
-}
-
-.compact-inner{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.65rem;
-}
-
-.compact-inner strong{
-    display:block;
-    color:#0f172a;
-    font-size:.84rem;
-    font-weight:950;
-}
-
-.compact-inner span{
-    display:block;
-    margin-top:.12rem;
-    color:#64748b;
-    font-size:.7rem;
-    font-weight:750;
-}
-
-.compact-edit{
-    flex:0 0 auto;
-    border:0;
-    min-height:38px;
-    padding:0 .7rem;
-    border-radius:999px;
-    background:#f0f9ff;
-    color:#0369a1;
-    font-size:.7rem;
-    font-weight:950;
-    cursor:pointer;
-}
-
-.results-mode{
-    display:none;
-}
-
-.results-mode.show{
-    display:block;
-}
-
-.period-wrap{
-    margin-bottom:.75rem;
-}
-
-.period-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.75rem;
-    margin-bottom:.45rem;
-}
-
-.period-title strong{
-    color:#0f172a;
-    font-size:.9rem;
-    font-weight:950;
-}
-
-.period-title span{
-    color:#64748b;
-    font-size:.72rem;
-    font-weight:700;
-}
-
-.period-strip{
-    display:flex;
-    gap:.45rem;
-    overflow-x:auto;
-    padding:.15rem 0 .4rem;
-    scrollbar-width:none;
-}
-
-.period-strip::-webkit-scrollbar{
-    display:none;
-}
-
-.period-chip{
-    flex:0 0 112px;
-    border:1px solid #e2e8f0;
-    background:#fff;
-    border-radius:16px;
-    padding:.68rem .55rem;
-    text-align:center;
-    cursor:pointer;
-    box-shadow:0 8px 18px rgba(15,23,42,.045);
-    transition:.2s ease;
-}
-
-.period-chip:hover{
-    transform:translateY(-2px);
-    border-color:#7dd3fc;
-}
-
-.period-chip.active{
-    background:#f0f9ff;
-    border-color:#00b0ff;
-    box-shadow:inset 0 -3px 0 #00b0ff,0 10px 22px rgba(0,176,255,.10);
-}
-
-.period-chip strong{
-    display:block;
-    color:#0f172a;
-    font-size:.76rem;
-    font-weight:950;
-}
-
-.period-chip span{
-    display:block;
-    margin-top:.22rem;
-    color:#64748b;
-    font-size:.68rem;
-    font-weight:750;
-}
-
-.results-head{
-    overflow:hidden;
-    border-radius:22px;
-    margin-bottom:.65rem;
-    color:#fff;
-    background:
-        radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 32%),
-        linear-gradient(135deg,#0f172a,#0288d1);
-    box-shadow:0 12px 26px rgba(15,23,42,.16);
-}
-
-.results-head-main{
-    padding:.95rem;
-}
-
-.results-head h3{
-    margin:0;
-    color:#fff;
-    font-size:1rem;
-    line-height:1.25;
-    font-weight:950;
-}
-
-.results-head p{
-    margin:.3rem 0 0;
-    color:rgba(255,255,255,.82);
-    font-size:.74rem;
-    line-height:1.4;
-    font-weight:650;
-}
-
-.results-count{
-    display:inline-flex;
-    margin-top:.55rem;
-    padding:.32rem .58rem;
-    border-radius:999px;
-    background:rgba(255,255,255,.16);
-    color:#fff;
-    font-size:.68rem;
-    font-weight:950;
-}
-
-.promo-banner{
-    margin-bottom:.65rem;
-    padding:.82rem .9rem;
-    border-radius:18px;
-    color:#fff;
-    background:
-        radial-gradient(circle at 20% 20%,rgba(255,255,255,.25),transparent 26%),
-        linear-gradient(135deg,#0288d1,#06b6d4 58%,#00b0ff);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.75rem;
-    box-shadow:0 12px 26px rgba(0,176,255,.16);
-}
-
-.promo-banner strong{
-    display:block;
-    color:#fff;
-    font-size:.82rem;
-    line-height:1.25;
-    font-weight:950;
-}
-
-.promo-banner span{
-    display:block;
-    margin-top:.14rem;
-    color:rgba(255,255,255,.85);
-    font-size:.66rem;
-    font-weight:700;
-}
-
-.promo-badge{
-    flex:0 0 auto;
-    padding:.38rem .6rem;
-    border-radius:999px;
-    background:#fff;
-    color:#0288d1;
-    font-size:.68rem;
-    font-weight:950;
-}
-
-.filter-scroll{
-    display:flex;
-    gap:.45rem;
-    overflow-x:auto;
-    padding:.15rem 0 .55rem;
-    margin-bottom:.55rem;
-    scrollbar-width:none;
-}
-
-.filter-scroll::-webkit-scrollbar{
-    display:none;
-}
-
-.filter-btn{
-    flex:0 0 auto;
-    border:1px solid #bae6fd;
-    background:#fff;
-    color:#0369a1;
-    border-radius:999px;
-    padding:.5rem .68rem;
-    font-size:.7rem;
-    font-weight:950;
-    cursor:pointer;
-}
-
-.filter-btn.active{
-    background:#0288d1;
-    color:#fff;
-    border-color:#0288d1;
-}
-
-.bill-list{
-    display:grid;
-    gap:.68rem;
-}
-
-.bill-card{
-    overflow:hidden;
-    border-radius:22px;
-    background:#fff;
-    border:1.5px solid #e2e8f0;
-    box-shadow:0 10px 24px rgba(15,23,42,.055);
-    transition:.22s ease;
-}
-
-.bill-card:hover{
-    transform:translateY(-2px);
-    border-color:#7dd3fc;
-}
-
-.bill-card.active{
-    border-color:#00b0ff;
-    background:#f0f9ff;
-    box-shadow:0 0 0 1px #00b0ff,0 14px 28px rgba(0,176,255,.10);
-}
-
-.bill-main{
-    padding:.88rem;
-}
-
-.bill-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:.65rem;
-    margin-bottom:.75rem;
-}
-
-.bill-left{
-    min-width:0;
-    display:flex;
-    align-items:center;
-    gap:.65rem;
-}
-
-.bill-logo{
-    width:42px;
-    height:42px;
-    flex:0 0 42px;
-    border-radius:15px;
-    background:linear-gradient(135deg,#0f172a,#00b0ff);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:950;
-    font-size:.78rem;
-    box-shadow:0 6px 14px rgba(0,176,255,.14);
-}
-
-.bill-name{
-    min-width:0;
-}
-
-.bill-name strong{
-    display:block;
-    color:#0f172a;
-    font-size:.88rem;
-    font-weight:950;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.bill-name span{
-    display:block;
-    margin-top:.1rem;
-    color:#64748b;
-    font-size:.68rem;
-    font-weight:700;
-}
-
-.bill-tag{
-    flex:0 0 auto;
-    padding:.3rem .5rem;
-    border-radius:999px;
-    background:#ecfdf5;
-    color:#047857;
-    font-size:.62rem;
-    font-weight:950;
-}
-
-.bill-detail{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:.55rem;
-    margin-bottom:.75rem;
-}
-
-.detail-box{
-    padding:.65rem;
-    border-radius:15px;
-    background:#f8fafc;
-    border:1px solid #eef2f7;
-}
-
-.detail-box span{
-    display:block;
-    color:#64748b;
-    font-size:.66rem;
-    font-weight:750;
-}
-
-.detail-box strong{
-    display:block;
-    margin-top:.12rem;
-    color:#0f172a;
-    font-size:.8rem;
-    font-weight:950;
-}
-
-.bill-bottom{
-    display:flex;
-    align-items:flex-end;
-    justify-content:space-between;
-    gap:.7rem;
-    padding-top:.75rem;
-    border-top:1px solid #eef2f7;
-}
-
-.price-box span{
-    display:block;
-    color:#64748b;
-    font-size:.66rem;
-    font-weight:750;
-}
-
-.price-box strong{
-    display:block;
-    margin-top:.08rem;
-    color:#0288d1;
-    font-size:1rem;
-    font-weight:950;
-}
-
-.price-box small{
-    display:block;
-    margin-top:.1rem;
-    color:#16a34a;
-    font-size:.62rem;
-    font-weight:850;
-}
-
-.choose-bill{
-    min-height:40px;
-    padding:0 .82rem;
-    border:0;
-    border-radius:13px;
-    background:linear-gradient(135deg,#0288d1,#00b0ff);
-    color:#fff;
-    font-size:.74rem;
-    font-weight:950;
-    cursor:pointer;
-}
-
-.bill-benefits{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.4rem;
-    padding:.68rem .88rem;
-    background:#f8fafc;
-    border-top:1px solid #eef2f7;
-}
-
-.bill-benefits span{
-    display:inline-flex;
-    align-items:center;
-    gap:.25rem;
-    padding:.28rem .48rem;
-    border-radius:999px;
-    background:#fff;
-    border:1px solid #e2e8f0;
-    color:#475569;
-    font-size:.62rem;
-    font-weight:850;
-}
-
-.summary-box{
-    display:none;
-    margin-top:.85rem;
-    padding:.9rem;
-    border-radius:22px;
-    background:#fff;
-    border:1px solid #bae6fd;
-    box-shadow:0 12px 24px rgba(0,176,255,.08);
-}
-
-.summary-title{
-    display:flex;
-    align-items:center;
-    gap:.42rem;
-    margin-bottom:.7rem;
-    color:#0f172a;
-    font-size:.9rem;
-    font-weight:950;
-}
-
-.summary-row{
-    display:flex;
-    flex-direction:column;
-    gap:.16rem;
-    padding:.58rem 0;
-    border-bottom:1px solid #eef2f7;
-}
-
-.summary-row span{
-    color:#64748b;
-    font-size:.74rem;
-    font-weight:750;
-}
-
-.summary-row b{
-    color:#0f172a;
-    font-size:.82rem;
-    line-height:1.35;
-    word-break:break-word;
-}
-
-.summary-total{
-    margin-top:.72rem;
-    padding:.85rem;
-    border-radius:18px;
-    background:linear-gradient(135deg,#0f172a,#0288d1);
-    color:#fff;
-    display:flex;
-    justify-content:space-between;
-    gap:.85rem;
-    align-items:center;
-}
-
-.summary-total span{
-    display:block;
-    color:rgba(255,255,255,.78);
-    font-size:.74rem;
-    font-weight:750;
-}
-
-.summary-total b{
-    display:block;
-    margin-top:.16rem;
-    color:#fff;
-    font-size:1.05rem;
-    font-weight:950;
-}
-
-.submit-btn{
-    width:100%;
-    min-height:56px;
-    margin-top:.85rem;
-    border:0;
-    border-radius:17px;
-    color:#fff;
-    background:linear-gradient(135deg,#0288d1,#00b0ff);
-    font-size:.94rem;
-    font-weight:950;
-    cursor:pointer;
-    box-shadow:0 13px 26px rgba(0,176,255,.24);
-}
-
-.empty-state{
-    padding:.9rem;
-    border-radius:18px;
-    background:#fffbeb;
-    border:1px solid #fde68a;
-    color:#713f12;
-    font-size:.8rem;
-    line-height:1.45;
-    font-weight:750;
-    text-align:center;
-}
-
-.hidden{
+.product-card::before{
     display:none !important;
 }
 
-@media(max-width:420px){
-    .pdamx-page{
-        padding-left:.5rem;
-        padding-right:.5rem;
+.product-label{
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+}
+
+.summary-total,
+.total-row,
+.result-head{
+    background:linear-gradient(135deg,#0f172a,#047857,#22c55e) !important;
+}
+
+.btn-main{
+    background:linear-gradient(135deg,#047857,#22c55e) !important;
+    box-shadow:0 10px 22px rgba(22,163,74,.18) !important;
+}
+
+.note{
+    border-left:0 !important;
+    border-radius:17px !important;
+}
+
+/* Tampilan HP BPJS */
+@media(max-width:560px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
     }
 
-    .pdamx-shell{
-        padding:.65rem;
-        border-radius:24px;
+    body{
+        background:#f8fafc !important;
     }
 
-    .region-card{
-        flex-basis:122px;
+    .bpjs-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.24rem .2rem 4.8rem !important;
+        box-sizing:border-box !important;
     }
 
-    .bill-detail{
-        grid-template-columns:1fr;
+    .bpjs-shell{
+        width:calc(100vw - .4rem) !important;
+        max-width:none !important;
+        margin:0 auto !important;
+        padding:.42rem !important;
+        border-radius:18px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+        box-sizing:border-box !important;
     }
 
-    .bill-bottom{
-        flex-direction:column;
-        align-items:flex-start;
+    .bpjs-topbar{
+        margin-bottom:.48rem !important;
+        gap:.45rem !important;
     }
 
-    .choose-bill{
-        width:100%;
+    .bpjs-back,
+    .bpjs-top-pill{
+        min-height:32px !important;
+        padding:0 .56rem !important;
+        font-size:.62rem !important;
+        box-shadow:none !important;
+    }
+
+    .bpjs-hero{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(22,163,74,.14) !important;
+    }
+
+    .bpjs-hero::before,
+    .bpjs-hero::after{
+        display:none !important;
+    }
+
+    .bpjs-hero-inner{
+        gap:.58rem !important;
+        align-items:center !important;
+    }
+
+    .bpjs-hero-icon{
+        width:40px !important;
+        height:40px !important;
+        flex-basis:40px !important;
+        border-radius:14px !important;
+        font-size:.95rem !important;
+    }
+
+    .bpjs-badge{
+        margin-bottom:.22rem !important;
+        padding:.2rem .46rem !important;
+        font-size:.54rem !important;
+        letter-spacing:.02em !important;
+    }
+
+    .bpjs-hero h2{
+        font-size:.98rem !important;
+        line-height:1.16 !important;
+    }
+
+    .bpjs-hero p{
+        margin:.18rem 0 0 !important;
+        font-size:.64rem !important;
+        line-height:1.3 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .bpjs-step-row{
+        display:none !important;
+    }
+
+    .bpjs-mini-row{
+        gap:.36rem !important;
+        margin:.5rem 0 .55rem !important;
+    }
+
+    .bpjs-mini{
+        padding:.48rem .25rem !important;
+        border-radius:14px !important;
+        box-shadow:none !important;
+    }
+
+    .bpjs-mini i{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        margin-bottom:.3rem !important;
+        font-size:.7rem !important;
+    }
+
+    .bpjs-mini strong{
+        font-size:.6rem !important;
+    }
+
+    .bpjs-mini span{
+        font-size:.48rem !important;
+    }
+
+    .bpjs-card{
+        border-radius:18px !important;
+        padding:.68rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .section-head{
+        margin-bottom:.5rem !important;
+        gap:.45rem !important;
+        align-items:center !important;
+        flex-direction:row !important;
+    }
+
+    .section-head h3{
+        font-size:.84rem !important;
+    }
+
+    .section-head p{
+        display:none !important;
+    }
+
+    .section-pill{
+        padding:.28rem .48rem !important;
+        font-size:.54rem !important;
+    }
+
+    .input-control{
+        min-height:48px !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        padding-left:2.25rem !important;
+    }
+
+    .form-help{
+        margin-top:.32rem !important;
+        font-size:.62rem !important;
+        line-height:1.25 !important;
+    }
+
+    .bpjs-quick{
+        gap:.34rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .bpjs-quick button{
+        padding:.38rem .52rem !important;
+        font-size:.6rem !important;
+    }
+
+    .bpjs-info{
+        margin-top:.48rem !important;
+        padding:.55rem .62rem !important;
+        border-radius:13px !important;
+        font-size:.66rem !important;
+        background:#f8fafc !important;
+        border-color:#dbeafe !important;
+        color:#334155 !important;
+    }
+
+    .product-note{
+        display:none !important;
+    }
+
+    .search-box{
+        margin-bottom:.48rem !important;
+    }
+
+    .search-input{
+        min-height:44px !important;
+        border-radius:14px !important;
+        font-size:.74rem !important;
+        padding-left:2.25rem !important;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .product-card{
+        min-height:88px !important;
+        border-radius:15px !important;
+        padding:.52rem !important;
+        box-shadow:none !important;
+    }
+
+    .product-card:hover{
+        transform:none !important;
+    }
+
+    .product-label{
+        margin-bottom:.32rem !important;
+        padding:.16rem .34rem !important;
+        font-size:.48rem !important;
+    }
+
+    .product-name{
+        font-size:.65rem !important;
+        line-height:1.18 !important;
+        margin-bottom:.22rem !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .product-desc{
+        display:none !important;
+    }
+
+    .product-price{
+        font-size:.62rem !important;
+    }
+
+    .summary-box{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-top:.58rem !important;
+        box-shadow:0 7px 16px rgba(22,163,74,.07) !important;
+    }
+
+    .summary-title{
+        margin-bottom:.48rem !important;
+        font-size:.82rem !important;
+    }
+
+    .summary-row{
+        padding:.42rem 0 !important;
+        gap:.25rem !important;
+    }
+
+    .summary-row span{
+        font-size:.66rem !important;
+    }
+
+    .summary-row b{
+        font-size:.73rem !important;
+        text-align:left !important;
+    }
+
+    .summary-total{
+        margin-top:.52rem !important;
+        padding:.68rem !important;
+        border-radius:15px !important;
+    }
+
+    .summary-total span{
+        font-size:.66rem !important;
+    }
+
+    .summary-total b{
+        font-size:.92rem !important;
+    }
+
+    .btn-main{
+        min-height:48px !important;
+        margin-top:.65rem !important;
+        border-radius:15px !important;
+        font-size:.84rem !important;
+        box-shadow:0 8px 18px rgba(22,163,74,.18) !important;
+    }
+
+    .note{
+        display:none !important;
+    }
+
+    .result-card{
+        border-radius:18px !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .result-head,
+    .result-body{
+        padding:.72rem !important;
+    }
+
+    .detail-row{
+        padding:.52rem !important;
+        border-radius:13px !important;
+        margin-bottom:.42rem !important;
+    }
+
+    .detail-row span,
+    .detail-row b{
+        font-size:.66rem !important;
+    }
+
+    .total-row{
+        padding:.68rem !important;
+        border-radius:15px !important;
+    }
+
+    .total-row span{
+        font-size:.66rem !important;
+    }
+
+    .total-row b{
+        font-size:.92rem !important;
+    }
+
+    .action-grid{
+        gap:.45rem !important;
     }
 }
+
+@media(max-width:360px){
+    .bpjs-page{
+        padding:.2rem .16rem 4.7rem !important;
+    }
+
+    .bpjs-shell{
+        width:calc(100vw - .32rem) !important;
+        padding:.34rem !important;
+        border-radius:16px !important;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .product-name{
+        font-size:.61rem !important;
+    }
+
+    .product-price{
+        font-size:.58rem !important;
+    }
+}
+
 </style>
 
-<div class="pdamx-page">
-    <div class="pdamx-shell">
+<div class="bpjs-page">
+    <div class="bpjs-shell">
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for kategori, pesan in messages %}
-                    <div class="pdamx-alert {{ kategori }}">{{ pesan }}</div>
+                    <div class="bpjs-alert {{ kategori }}">{{ pesan }}</div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <div class="pdamx-topbar">
-            <a href="{{ url_for('lainnya') }}" class="pdamx-back">
+        <div class="bpjs-topbar">
+            <a href="{{ url_for('lainnya') }}" class="bpjs-back">
                 <i class="fa-solid fa-chevron-left"></i>
                 Menu
             </a>
 
-            <div class="pdamx-chip">
-                <i class="fa-solid fa-droplet"></i>
-                PDAM
+            <div class="bpjs-top-pill">
+                <i class="fa-solid fa-briefcase-medical"></i>
+                BPJS
             </div>
         </div>
 
-        <div class="pdamx-hero" id="heroBox">
-            <div class="pdamx-hero-main">
-                <div class="pdamx-hero-icon">
-                    <i class="fa-solid fa-droplet"></i>
+        <div class="bpjs-hero">
+            <div class="bpjs-hero-inner">
+                <div class="bpjs-hero-icon">
+                    <i class="fa-solid fa-briefcase-medical"></i>
                 </div>
 
                 <div>
-                    <div class="pdamx-badge">
-                        <i class="fa-solid fa-crown"></i>
-                        Water Billing
+                    <div class="bpjs-badge">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        BPJS
                     </div>
-                    <h2>Bayar Tagihan Air Lebih Mudah</h2>
-                    <p>Masukkan nomor pelanggan dan pilih wilayah PDAM. Setelah dicek, tagihan akan tampil rapi.</p>
+
+                    <h2>BPJS Kesehatan</h2>
+                    <p>Masukkan nomor peserta, pilih layanan, lalu cek tagihan.</p>
                 </div>
             </div>
 
-            <div class="pdamx-hero-tags">
-                <button type="button" data-region="PDAM_JAKARTA">Jakarta</button>
-                <button type="button" data-region="PDAM_BANDUNG">Bandung</button>
-                <button type="button" data-region="PDAM_SURABAYA">Surabaya</button>
-                <button type="button" data-region="PDAM_MEDAN">Medan</button>
-                <button type="button" data-region="PDAM_MAKASSAR">Makassar</button>
+            <div class="bpjs-step-row">
+                <div class="bpjs-step">
+                    <strong>Nomor</strong>
+                    <span>Peserta</span>
+                </div>
+
+                <div class="bpjs-step">
+                    <strong>Layanan</strong>
+                    <span>Pilih</span>
+                </div>
+
+                <div class="bpjs-step">
+                    <strong>Cek</strong>
+                    <span>Bayar</span>
+                </div>
             </div>
         </div>
 
-        <form method="POST" action="{{ url_for('pdam') }}" id="pdamForm" autocomplete="off">
+        <div class="bpjs-mini-row">
+            <div class="bpjs-mini">
+                <i class="fa-solid fa-id-card"></i>
+                <strong>Nomor</strong>
+                <span>Peserta / VA</span>
+            </div>
+            <div class="bpjs-mini">
+                <i class="fa-solid fa-briefcase-medical"></i>
+                <strong>Layanan</strong>
+                <span>Pilih BPJS</span>
+            </div>
+            <div class="bpjs-mini">
+                <i class="fa-solid fa-receipt"></i>
+                <strong>Tagihan</strong>
+                <span>Cek detail</span>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('lainnya') }}" id="bpjsForm" autocomplete="off">
             {% if csrf_token is defined %}
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             {% endif %}
 
             <input type="hidden" name="aksi" value="cek_layanan">
-            <input type="hidden" name="jenis" value="pdam">
+            <input type="hidden" name="jenis" value="bpjs">
             <input type="hidden" name="kode_produk" id="kode_produk">
 
-            <div class="search-card" id="searchCard">
-                <div class="section-title">
+            <div class="bpjs-card">
+                <div class="section-head">
                     <div>
-                        <h3>Nomor Pelanggan PDAM</h3>
-                        <p>Isi nomor pelanggan sesuai rekening air.</p>
+                        <h3>Nomor Peserta BPJS</h3>
+                        <p>Masukkan nomor peserta atau virtual account.</p>
                     </div>
+
                     <span class="section-pill">Step 1</span>
                 </div>
 
@@ -1137,624 +1401,365 @@ body{
                         id="nomor_tujuan"
                         name="nomor_tujuan"
                         class="input-control"
-                        placeholder="Contoh: 3001234567"
+                        placeholder="Contoh: 0001234567890"
                         value="{{ nomor_tujuan|default(request.form.get('nomor_tujuan', ''), true) if request is defined else '' }}"
                         inputmode="numeric"
-                        minlength="5"
-                        maxlength="25"
+                        minlength="8"
+                        maxlength="16"
                         required
                         autofocus
                     >
-                    <i class="fa-solid fa-hashtag"></i>
+                    <i class="fa-solid fa-id-card"></i>
                 </div>
 
-                <div class="input-help">
-                    <span>Gunakan angka tanpa spasi.</span>
-                    <span id="charCount">0/25</span>
+                <div class="form-help">
+                    Isi angka tanpa spasi. Cek lagi sebelum lanjut.
                 </div>
 
-                <div class="quick-row">
-                    <button type="button" data-id="3001234567">Isi Contoh ID</button>
-                    <button type="button" data-id="7788990011">Contoh Lain</button>
+                <div class="bpjs-quick">
+                    <button type="button" data-id="0001234567890">Contoh Nomor</button>
+                    <button type="button" data-id="8888800012345">Contoh VA</button>
                     <button type="button" data-clear="1">Hapus</button>
                 </div>
 
-                <div class="pdamx-info" id="pdamInfo"></div>
+                <div class="bpjs-info" id="bpjsInfo"></div>
+            </div>
 
-                <div style="margin-top:1rem;">
-                    <div class="section-title">
-                        <div>
-                            <h3>Pilih Wilayah PDAM</h3>
-                            <p>Geser lalu pilih wilayah PDAM sesuai pelanggan.</p>
-                        </div>
-                        <span class="section-pill">Step 2</span>
+            <div class="bpjs-card">
+                <div class="section-head">
+                    <div>
+                        <h3>Pilih Produk BPJS</h3>
+                        <p>Pilih jenis BPJS yang ingin dicek.</p>
                     </div>
 
-                    <div class="region-strip" id="regionStrip">
+                    <span class="section-pill">Step 2</span>
+                </div>
+
+                <div class="product-note">
+                    <strong>Info:</strong> Biaya di kartu hanya admin awal. Total asli muncul setelah cek tagihan.
+                </div>
+
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="searchProduk"
+                        class="search-input"
+                        placeholder="Cari layanan BPJS..."
+                        autocomplete="off"
+                    >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+
+                <div class="product-grid" id="productGrid">
+                    {% if produk_final %}
                         {% for kode, nama in produk_final.items() %}
-                            {% set admin = harga_final.get(kode, 0) %}
+                            {% set nominal = harga_final.get(kode, 0) %}
                             <button
                                 type="button"
-                                class="region-card"
+                                class="product-card"
                                 data-kode="{{ kode }}"
                                 data-nama="{{ nama|e }}"
-                                data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+                                data-harga="{% if format_uang is defined %}{{ format_uang(nominal) }}{% else %}{{ '{:,.0f}'.format(nominal|int)|replace(',', '.') }}{% endif %}"
+                                data-search="{{ (nama ~ ' ' ~ kode)|lower }}"
                             >
-                                <div class="region-logo">{{ nama[:2].upper() }}</div>
-                                <strong>{{ nama }}</strong>
-                                <span>Tagihan air wilayah</span>
+                                <div class="product-label">BPJS</div>
+                                <div class="product-name">{{ nama }}</div>
+                                <div class="product-desc">Pilih layanan</div>
+                                <div class="product-price">
+                                    Admin Rp
+                                    {% if format_uang is defined %}
+                                        {{ format_uang(nominal) }}
+                                    {% else %}
+                                        {{ "{:,.0f}".format(nominal|int)|replace(",", ".") }}
+                                    {% endif %}
+                                </div>
                             </button>
                         {% endfor %}
-                    </div>
-                </div>
-
-                <button type="button" class="search-btn" id="searchBtn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Cek Tagihan PDAM
-                </button>
-            </div>
-
-            <div class="compact-bill" id="compactBill">
-                <div class="compact-inner">
-                    <div>
-                        <strong id="compactRegion">-</strong>
-                        <span id="compactInfo">-</span>
-                    </div>
-                    <button type="button" class="compact-edit" id="editBtn">Ubah</button>
-                </div>
-            </div>
-
-            <div class="results-mode" id="resultsMode">
-                <div class="period-wrap">
-                    <div class="period-title">
-                        <div>
-                            <strong>Pilih periode tagihan</strong>
-                            <span>Geser untuk lihat simulasi bulan tagihan</span>
+                    {% else %}
+                        <div class="empty-state">
+                            Produk BPJS belum tersedia.
                         </div>
-                    </div>
-
-                    <div class="period-strip" id="periodStrip"></div>
+                    {% endif %}
                 </div>
-
-                <div class="results-head">
-                    <div class="results-head-main">
-                        <h3 id="resultTitle">Hasil PDAM</h3>
-                        <p id="resultSubtitle">Pilih tagihan PDAM yang ingin dibayar.</p>
-                        <div class="results-count" id="resultCount">0 tagihan tersedia</div>
-                    </div>
-                </div>
-
-                <div class="promo-banner">
-                    <div>
-                        <strong>Tagihan Air Lebih Rapi</strong>
-                        <span>Cek detail pemakaian, periode, admin, dan total pembayaran.</span>
-                    </div>
-                    <div class="promo-badge">PDAM</div>
-                </div>
-
-                <div class="filter-scroll">
-                    <button type="button" class="filter-btn active" data-filter="recommended">Rekomendasi</button>
-                    <button type="button" class="filter-btn" data-filter="current">Bulan Ini</button>
-                    <button type="button" class="filter-btn" data-filter="arrears">Tunggakan</button>
-                    <button type="button" class="filter-btn" data-filter="low">Pemakaian Rendah</button>
-                    <button type="button" class="filter-btn" data-filter="high">Pemakaian Tinggi</button>
-                    <button type="button" class="filter-btn" data-filter="cheap">Termurah</button>
-                </div>
-
-                <div class="bill-list" id="billList"></div>
 
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Ringkasan PDAM
+                        Ringkasan
                     </div>
 
                     <div class="summary-row">
-                        <span>Nomor Pelanggan</span>
+                        <span>Nomor Peserta</span>
                         <b id="sumNomor">-</b>
                     </div>
 
                     <div class="summary-row">
-                        <span>Wilayah PDAM</span>
-                        <b id="sumRegion">-</b>
-                    </div>
-
-                    <div class="summary-row">
-                        <span>Tagihan</span>
-                        <b id="sumBill">-</b>
-                    </div>
-
-                    <div class="summary-row">
-                        <span>Periode</span>
-                        <b id="sumPeriod">-</b>
+                        <span>Produk</span>
+                        <b id="sumProduk">-</b>
                     </div>
 
                     <div class="summary-total">
                         <div>
-                            <span>Total Pembayaran</span>
-                            <b id="sumTotal">Rp 0</b>
+                            <span>Admin Awal</span>
+                            <b id="sumHarga">Rp 0</b>
                         </div>
-                        <i class="fa-solid fa-droplet"></i>
+                        <i class="fa-solid fa-wallet"></i>
                     </div>
+                </div>
 
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <i class="fa-solid fa-circle-check"></i>
-                        Lanjutkan Pembayaran
+                {% if produk_final %}
+                    <button type="submit" class="btn-main" id="btnSubmit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Cek Tagihan
                     </button>
+                {% endif %}
+
+                <div class="note">
+                    <strong>Penting:</strong> Detail tagihan dan total bayar akan tampil sebelum pembayaran.
                 </div>
             </div>
         </form>
-    </div>
-</div>
 
-<div id="pdamProductData" style="display:none;">
-    {% for kode, nama in produk_final.items() %}
-        {% set admin = harga_final.get(kode, 0) %}
-        <span
-            data-kode="{{ kode }}"
-            data-nama="{{ nama|e }}"
-            data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
-        ></span>
-    {% endfor %}
+        {% if hasil %}
+            <div class="result-card">
+                <div class="result-head">
+                    <strong><i class="fa-solid fa-circle-check"></i> Tagihan BPJS Ditemukan</strong>
+                    <span>Periksa data di bawah ini sebelum menekan tombol bayar.</span>
+                </div>
+
+                <div class="result-body">
+                    <div class="detail-row">
+                        <span>Nama Pelanggan</span>
+                        <b>{{ hasil.nama_pelanggan|default('-', true) }}</b>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Nomor Peserta</span>
+                        <b>{{ hasil.nomor_tujuan|default('-', true) }}</b>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Produk</span>
+                        <b>{{ hasil.nama_produk|default('-', true) }}</b>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Periode</span>
+                        <b>{{ hasil.periode|default('-', true) }}</b>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Tagihan</span>
+                        <b>
+                            Rp
+                            {% if format_uang is defined %}
+                                {{ format_uang(hasil.tagihan|default(0, true)) }}
+                            {% else %}
+                                {{ "{:,.0f}".format(hasil.tagihan|default(0, true)|int)|replace(",", ".") }}
+                            {% endif %}
+                        </b>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Admin</span>
+                        <b>
+                            Rp
+                            {% if format_uang is defined %}
+                                {{ format_uang(hasil.admin|default(0, true)) }}
+                            {% else %}
+                                {{ "{:,.0f}".format(hasil.admin|default(0, true)|int)|replace(",", ".") }}
+                            {% endif %}
+                        </b>
+                    </div>
+
+                    <div class="total-row">
+                        <div>
+                            <span>Total Bayar</span>
+                            <b>
+                                Rp
+                                {% if format_uang is defined %}
+                                    {{ format_uang(hasil.total|default(0, true)) }}
+                                {% else %}
+                                    {{ "{:,.0f}".format(hasil.total|default(0, true)|int)|replace(",", ".") }}
+                                {% endif %}
+                            </b>
+                        </div>
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <div class="action-grid">
+                        <form method="POST" action="{{ url_for('lainnya') }}">
+                            {% if csrf_token is defined %}
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            {% endif %}
+
+                            <input type="hidden" name="aksi" value="bayar_layanan">
+                            <input type="hidden" name="jenis" value="bpjs">
+                            <input type="hidden" name="ref_id" value="{{ hasil.ref_id|default('', true) }}">
+                            <input type="hidden" name="nomor_tujuan" value="{{ hasil.nomor_tujuan|default('', true) }}">
+                            <input type="hidden" name="kode_produk" value="{{ hasil.kode_produk|default('', true) }}">
+                            <input type="hidden" name="total" value="{{ hasil.total|default(0, true) }}">
+
+                            <button type="submit" class="btn-main green">
+                                <i class="fa-solid fa-lock"></i>
+                                Bayar Sekarang
+                            </button>
+                        </form>
+
+                        <a href="{{ url_for('lainnya', jenis='bpjs') }}" class="btn-main blue">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            &nbsp; Cek Nomor Lain
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
 </div>
 
 <script>
 (function(){
-    const heroBox=document.getElementById('heroBox');
-    const searchCard=document.getElementById('searchCard');
-    const compactBill=document.getElementById('compactBill');
-    const editBtn=document.getElementById('editBtn');
-    const form=document.getElementById('pdamForm');
-    const nomorInput=document.getElementById('nomor_tujuan');
-    const charCount=document.getElementById('charCount');
-    const pdamInfo=document.getElementById('pdamInfo');
-    const regionCards=document.querySelectorAll('.region-card');
-    const searchBtn=document.getElementById('searchBtn');
-    const resultsMode=document.getElementById('resultsMode');
-    const periodStrip=document.getElementById('periodStrip');
-    const resultTitle=document.getElementById('resultTitle');
-    const resultSubtitle=document.getElementById('resultSubtitle');
-    const resultCount=document.getElementById('resultCount');
-    const compactRegion=document.getElementById('compactRegion');
-    const compactInfo=document.getElementById('compactInfo');
-    const billList=document.getElementById('billList');
-    const summaryBox=document.getElementById('summaryBox');
-    const kodeProduk=document.getElementById('kode_produk');
-    const submitBtn=document.getElementById('submitBtn');
+    const nomorInput = document.getElementById('nomor_tujuan');
+    const kodeProduk = document.getElementById('kode_produk');
+    const bpjsInfo = document.getElementById('bpjsInfo');
+    const summaryBox = document.getElementById('summaryBox');
+    const form = document.getElementById('bpjsForm');
+    const btn = document.getElementById('btnSubmit');
+    const searchProduk = document.getElementById('searchProduk');
+    let infoTimer = null;
 
-    let selectedRegion=null;
-    let selectedBill=null;
-    let activeFilter='recommended';
-    let activePeriod='bulan-ini';
-
-    function cleanNumber(value){
-        return (value || '').replace(/[^0-9]/g,'');
+    function cleanNumber(value) {
+        return (value || '').replace(/[^0-9]/g, '').slice(0, 16);
     }
 
-    function parseMoney(text){
-        return parseInt(String(text || '').replace(/[^0-9]/g,''),10) || 0;
-    }
+    function updateInfo() {
+        if (!nomorInput || !bpjsInfo) return;
 
-    function rupiah(num){
-        num=Math.max(0,Math.round(num));
-        return 'Rp '+String(num).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-    }
+        clearTimeout(infoTimer);
 
-    function logoText(name){
-        return String(name || 'PD').split(' ').map(function(word){
-            return word[0];
-        }).join('').slice(0,2).toUpperCase();
-    }
+        const nomor = cleanNumber(nomorInput.value);
+        nomorInput.value = nomor;
 
-    function updateInfo(){
-        let nomor=cleanNumber(nomorInput.value);
-
-        if(nomor.length>25){
-            nomor=nomor.slice(0,25);
-        }
-
-        nomorInput.value=nomor;
-        charCount.textContent=nomor.length+'/25';
-
-        if(!nomor){
-            pdamInfo.style.display='none';
+        if (!nomor) {
+            bpjsInfo.style.display = 'none';
             return;
         }
 
-        if(nomor.length<5){
-            pdamInfo.style.display='block';
-            pdamInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Nomor pelanggan masih terlalu pendek.';
+        if (nomor.length < 8) {
+            bpjsInfo.style.display = 'block';
+            bpjsInfo.innerHTML = '<i class="fa-solid fa-circle-info"></i> Nomor masih terlalu pendek.';
             return;
         }
 
-        pdamInfo.style.display='block';
-        pdamInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format nomor sudah cukup. Silakan pilih wilayah PDAM.';
+        infoTimer = setTimeout(function(){
+            bpjsInfo.style.display = 'block';
+            bpjsInfo.innerHTML = '<i class="fa-solid fa-circle-check"></i> Nomor sudah cukup. Pilih layanan BPJS.';
+        }, 450);
     }
 
-    function validateSearch(){
-        const nomor=cleanNumber(nomorInput.value);
+    function updateSummary(selected) {
+        selected = selected || {};
 
-        if(!nomor || nomor.length<5){
-            alert('Masukkan nomor pelanggan PDAM minimal 5 digit.');
-            nomorInput.focus();
-            return false;
-        }
+        if (!summaryBox) return;
 
-        if(!selectedRegion){
-            alert('Silakan pilih wilayah PDAM terlebih dahulu.');
-            return false;
-        }
+        const nomor = nomorInput ? cleanNumber(nomorInput.value) : '';
+        const activeProduct = document.querySelector('.product-card.active');
 
-        return true;
+        const sumNomor = document.getElementById('sumNomor');
+        const sumProduk = document.getElementById('sumProduk');
+        const sumHarga = document.getElementById('sumHarga');
+
+        if (sumNomor) sumNomor.textContent = nomor || '-';
+        if (sumProduk) sumProduk.textContent = selected.nama || (activeProduct ? activeProduct.dataset.nama : '-');
+        if (sumHarga) sumHarga.textContent = 'Rp ' + (selected.harga || (activeProduct ? activeProduct.dataset.harga : '0'));
+
+        summaryBox.style.display = nomor && activeProduct ? 'block' : 'none';
     }
 
-    function renderPeriods(){
-        const periods=[
-            {key:'bulan-ini',label:'Bulan Ini',info:'Tagihan aktif'},
-            {key:'bulan-lalu',label:'Bulan Lalu',info:'Riwayat'},
-            {key:'2-bulan',label:'2 Bulan',info:'Gabungan'},
-            {key:'3-bulan',label:'3 Bulan',info:'Tunggakan'},
-            {key:'estimasi',label:'Estimasi',info:'Simulasi'}
-        ];
-
-        periodStrip.innerHTML='';
-
-        periods.forEach(function(item){
-            const btn=document.createElement('button');
-            btn.type='button';
-            btn.className='period-chip '+(activePeriod===item.key?'active':'');
-            btn.dataset.period=item.key;
-            btn.innerHTML='<strong>'+item.label+'</strong><span>'+item.info+'</span>';
-
-            btn.addEventListener('click',function(){
-                activePeriod=btn.dataset.period;
-                renderPeriods();
-                renderBills();
-            });
-
-            periodStrip.appendChild(btn);
-        });
-    }
-
-    function periodLabel(){
-        const map={
-            'bulan-ini':'Bulan Ini',
-            'bulan-lalu':'Bulan Lalu',
-            '2-bulan':'2 Bulan',
-            '3-bulan':'3 Bulan',
-            'estimasi':'Estimasi'
-        };
-
-        return map[activePeriod] || 'Bulan Ini';
-    }
-
-    function makeBills(){
-        if(!selectedRegion) return [];
-
-        const admin=parseMoney(selectedRegion.admin);
-        const seed=parseInt(cleanNumber(nomorInput.value).slice(-4),10) || 1234;
-
-        const base1=65000+(seed%9)*9500;
-        const base2=base1+42000;
-        const base3=base1+88000;
-
-        const multiplier=activePeriod==='2-bulan'?2:(activePeriod==='3-bulan'?3:1);
-        const tunggakan=activePeriod==='3-bulan';
-
-        return [
-            {
-                kode:selectedRegion.kode,
-                region:selectedRegion.nama,
-                title:'Tagihan Air Aktif',
-                desc:'Tagihan utama berdasarkan nomor pelanggan.',
-                type:'current',
-                usage:(18+(seed%12))+' m³',
-                period:periodLabel(),
-                admin:selectedRegion.admin,
-                total:(base1*multiplier)+admin,
-                tag:'Aktif'
-            },
-            {
-                kode:selectedRegion.kode,
-                region:selectedRegion.nama,
-                title:'Tagihan + Denda Ringan',
-                desc:'Simulasi bila ada sisa pembayaran sebelumnya.',
-                type:'arrears',
-                usage:(24+(seed%15))+' m³',
-                period:periodLabel(),
-                admin:selectedRegion.admin,
-                total:(base2*multiplier)+admin+7500,
-                tag:'Tunggakan'
-            },
-            {
-                kode:selectedRegion.kode,
-                region:selectedRegion.nama,
-                title:'Pemakaian Rendah',
-                desc:'Estimasi tagihan air untuk pemakaian hemat.',
-                type:'low',
-                usage:(8+(seed%7))+' m³',
-                period:periodLabel(),
-                admin:selectedRegion.admin,
-                total:(42000*multiplier)+admin,
-                tag:'Hemat'
-            },
-            {
-                kode:selectedRegion.kode,
-                region:selectedRegion.nama,
-                title:'Pemakaian Tinggi',
-                desc:'Estimasi tagihan air untuk pemakaian besar.',
-                type:'high',
-                usage:(34+(seed%18))+' m³',
-                period:periodLabel(),
-                admin:selectedRegion.admin,
-                total:(base3*multiplier)+admin,
-                tag:'Tinggi'
-            }
-        ].map(function(item){
-            item.totalText=rupiah(item.total);
-            item.arrears=tunggakan || item.type==='arrears';
-            return item;
-        });
-    }
-
-    function applyFilter(list){
-        if(activeFilter==='recommended'){
-            return list.sort(function(a,b){
-                if(a.type==='current') return -1;
-                if(b.type==='current') return 1;
-                return a.total-b.total;
-            });
-        }
-
-        if(activeFilter==='cheap'){
-            return list.sort(function(a,b){return a.total-b.total;});
-        }
-
-        if(activeFilter==='current'){
-            return list.filter(function(item){return item.type==='current';});
-        }
-
-        if(activeFilter==='arrears'){
-            return list.filter(function(item){return item.type==='arrears' || item.arrears;});
-        }
-
-        if(activeFilter==='low'){
-            return list.filter(function(item){return item.type==='low';});
-        }
-
-        if(activeFilter==='high'){
-            return list.filter(function(item){return item.type==='high';});
-        }
-
-        return list;
-    }
-
-    function renderBills(){
-        billList.innerHTML='';
-        selectedBill=null;
-        kodeProduk.value='';
-        summaryBox.style.display='none';
-
-        let list=applyFilter(makeBills());
-
-        resultTitle.textContent='Hasil '+selectedRegion.nama;
-        resultSubtitle.textContent='ID '+cleanNumber(nomorInput.value)+' · Pilih tagihan PDAM yang ingin dibayar.';
-        resultCount.textContent=list.length+' tagihan tersedia';
-
-        compactRegion.textContent=selectedRegion.nama;
-        compactInfo.textContent='ID '+cleanNumber(nomorInput.value)+' · '+periodLabel();
-
-        if(!list.length){
-            billList.innerHTML='<div class="empty-state">Tidak ada tagihan pada filter ini. Coba pilih filter lain.</div>';
-            return;
-        }
-
-        list.forEach(function(item){
-            const card=document.createElement('div');
-            card.className='bill-card';
-
-            card.innerHTML=
-                '<div class="bill-main">'+
-                    '<div class="bill-top">'+
-                        '<div class="bill-left">'+
-                            '<div class="bill-logo">'+logoText(item.region)+'</div>'+
-                            '<div class="bill-name">'+
-                                '<strong>'+item.title+'</strong>'+
-                                '<span>'+item.region+' · '+item.period+'</span>'+
-                            '</div>'+
-                        '</div>'+
-                        '<div class="bill-tag">'+item.tag+'</div>'+
-                    '</div>'+
-
-                    '<div class="bill-detail">'+
-                        '<div class="detail-box">'+
-                            '<span>Periode</span>'+
-                            '<strong>'+item.period+'</strong>'+
-                        '</div>'+
-                        '<div class="detail-box">'+
-                            '<span>Pemakaian</span>'+
-                            '<strong>'+item.usage+'</strong>'+
-                        '</div>'+
-                    '</div>'+
-
-                    '<div class="bill-bottom">'+
-                        '<div class="price-box">'+
-                            '<span>Total pembayaran</span>'+
-                            '<strong>'+item.totalText+'</strong>'+
-                            '<small>Admin '+item.admin+' termasuk</small>'+
-                        '</div>'+
-                        '<button type="button" class="choose-bill">Pilih</button>'+
-                    '</div>'+
-                '</div>'+
-
-                '<div class="bill-benefits">'+
-                    '<span><i class="fa-solid fa-droplet"></i> PDAM</span>'+
-                    '<span><i class="fa-solid fa-circle-check"></i> '+item.tag+'</span>'+
-                    '<span><i class="fa-solid fa-clock"></i> '+item.period+'</span>'+
-                    '<span><i class="fa-solid fa-wallet"></i> Admin '+item.admin+'</span>'+
-                '</div>';
-
-            card.querySelector('.choose-bill').addEventListener('click',function(){
-                document.querySelectorAll('.bill-card').forEach(function(el){
-                    el.classList.remove('active');
-                });
-
-                card.classList.add('active');
-                selectedBill=item;
-                kodeProduk.value=item.kode;
-                updateSummary();
-
-                setTimeout(function(){
-                    summaryBox.scrollIntoView({behavior:'smooth',block:'center'});
-                },120);
-            });
-
-            billList.appendChild(card);
-        });
-    }
-
-    function updateSummary(){
-        if(!selectedBill){
-            summaryBox.style.display='none';
-            return;
-        }
-
-        document.getElementById('sumNomor').textContent=cleanNumber(nomorInput.value);
-        document.getElementById('sumRegion').textContent=selectedBill.region;
-        document.getElementById('sumBill').textContent=selectedBill.title+' · '+selectedBill.usage;
-        document.getElementById('sumPeriod').textContent=selectedBill.period;
-        document.getElementById('sumTotal').textContent=selectedBill.totalText;
-
-        summaryBox.style.display='block';
-    }
-
-    function enterResultMode(){
-        heroBox.classList.add('hidden');
-        searchCard.classList.add('hidden');
-        compactBill.classList.add('show');
-        resultsMode.classList.add('show');
-
-        renderPeriods();
-        renderBills();
-
+    if (nomorInput) {
         setTimeout(function(){
-            resultsMode.scrollIntoView({behavior:'smooth',block:'start'});
-        },120);
+            nomorInput.focus();
+        }, 250);
+
+        nomorInput.addEventListener('input', function(){
+            updateInfo();
+            updateSummary();
+        });
     }
 
-    nomorInput.addEventListener('input',function(){
-        updateInfo();
-
-        if(resultsMode.classList.contains('show')){
-            renderBills();
-        }
-    });
-
-    document.querySelectorAll('.quick-row button').forEach(function(btn){
-        btn.addEventListener('click',function(){
-            if(btn.getAttribute('data-clear')){
-                nomorInput.value='';
-            }else{
-                nomorInput.value=btn.getAttribute('data-id') || '';
-            }
-
-            nomorInput.focus();
-            updateInfo();
-
-            if(resultsMode.classList.contains('show')){
-                renderBills();
-            }
-        });
-    });
-
-    regionCards.forEach(function(card){
-        card.addEventListener('click',function(){
-            regionCards.forEach(function(el){
+    document.querySelectorAll('.product-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.product-card').forEach(function(el) {
                 el.classList.remove('active');
             });
 
             card.classList.add('active');
 
-            selectedRegion={
-                kode:card.dataset.kode,
-                nama:card.dataset.nama,
-                admin:card.dataset.admin
-            };
-
-            if(resultsMode.classList.contains('show')){
-                renderBills();
+            if (kodeProduk) {
+                kodeProduk.value = card.dataset.kode;
             }
-        });
-    });
 
-    document.querySelectorAll('.pdamx-hero-tags button').forEach(function(btn){
-        btn.addEventListener('click',function(){
-            const target=btn.dataset.region;
-            const card=document.querySelector('.region-card[data-kode="'+target+'"]');
-
-            if(card){
-                card.click();
-                card.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
-            }
-        });
-    });
-
-    document.querySelectorAll('.filter-btn').forEach(function(btn){
-        btn.addEventListener('click',function(){
-            activeFilter=btn.dataset.filter;
-
-            document.querySelectorAll('.filter-btn').forEach(function(el){
-                el.classList.remove('active');
+            updateSummary({
+                nama: card.dataset.nama,
+                harga: card.dataset.harga
             });
-
-            btn.classList.add('active');
-            renderBills();
         });
     });
 
-    searchBtn.addEventListener('click',function(){
-        if(!validateSearch()) return;
-        enterResultMode();
-    });
 
-    editBtn.addEventListener('click',function(){
-        heroBox.classList.remove('hidden');
-        searchCard.classList.remove('hidden');
-        compactBill.classList.remove('show');
+    document.querySelectorAll('.bpjs-quick button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            if (btn.getAttribute('data-clear')) {
+                nomorInput.value = '';
+            } else {
+                nomorInput.value = btn.getAttribute('data-id') || '';
+            }
 
-        setTimeout(function(){
-            searchCard.scrollIntoView({behavior:'smooth',block:'start'});
-        },100);
-    });
-
-    form.addEventListener('submit',function(e){
-        const nomor=cleanNumber(nomorInput.value);
-
-        if(!nomor || nomor.length<5){
-            e.preventDefault();
-            alert('Masukkan nomor pelanggan PDAM terlebih dahulu.');
             nomorInput.focus();
-            return;
-        }
-
-        if(!selectedRegion){
-            e.preventDefault();
-            alert('Silakan pilih wilayah PDAM terlebih dahulu.');
-            return;
-        }
-
-        if(!selectedBill || !kodeProduk.value){
-            e.preventDefault();
-            alert('Pilih salah satu tagihan PDAM terlebih dahulu.');
-            return;
-        }
-
-        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses PDAM...';
-        submitBtn.style.opacity='0.75';
-        submitBtn.style.pointerEvents='none';
+            updateInfo();
+            updateSummary();
+        });
     });
 
-    if(nomorInput.value){
+    if (searchProduk) {
+        searchProduk.addEventListener('input', function() {
+            const keyword = searchProduk.value.toLowerCase().trim();
+
+            document.querySelectorAll('.product-card').forEach(function(card) {
+                const text = card.dataset.search || '';
+                card.style.display = text.includes(keyword) ? 'block' : 'none';
+            });
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const nomor = nomorInput ? cleanNumber(nomorInput.value) : '';
+            const produk = kodeProduk ? kodeProduk.value : '';
+
+            if (!nomor || nomor.length < 8) {
+                e.preventDefault();
+                alert('Masukkan nomor peserta BPJS dulu.');
+                if (nomorInput) nomorInput.focus();
+                return;
+            }
+
+            if (!produk) {
+                e.preventDefault();
+                alert('Pilih layanan BPJS dulu.');
+                return;
+            }
+
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengecek...';
+                btn.style.opacity = '0.75';
+                btn.style.pointerEvents = 'none';
+            }
+        });
+    }
+
+    if (nomorInput && nomorInput.value) {
         nomorInput.dispatchEvent(new Event('input'));
     }
 })();
