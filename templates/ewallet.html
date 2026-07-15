@@ -954,6 +954,144 @@ body{
     border-radius:17px !important;
 }
 
+
+/* Final rapihan e-wallet + logo */
+.ew-shell{
+    border-radius:24px !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.ew-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    background:linear-gradient(135deg,#047857,#10b981) !important;
+    box-shadow:0 10px 22px rgba(16,185,129,.18) !important;
+}
+
+.ew-hero:before,
+.ew-hero:after{
+    opacity:.45;
+}
+
+.ew-hero-icon{
+    width:52px !important;
+    height:52px !important;
+    flex-basis:52px !important;
+    border-radius:17px !important;
+}
+
+.ew-badge{
+    font-size:.66rem !important;
+    letter-spacing:.02em !important;
+}
+
+.ew-hero h2{
+    font-size:1.22rem !important;
+}
+
+.ew-hero p{
+    font-size:.82rem !important;
+    font-weight:650 !important;
+}
+
+.ew-hero-tags{
+    display:none !important;
+}
+
+.ew-step-row{
+    gap:.45rem !important;
+}
+
+.ew-step{
+    padding:.58rem .35rem !important;
+    border-radius:14px !important;
+}
+
+.ew-card{
+    border-radius:20px !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#f1f5f9 !important;
+    color:#475569 !important;
+}
+
+.wallet-grid{
+    gap:.55rem !important;
+}
+
+.wallet-card{
+    min-height:82px !important;
+    border-radius:16px !important;
+}
+
+.wallet-card.active{
+    background:#ecfdf5 !important;
+}
+
+.wallet-logo{
+    width:36px !important;
+    height:36px !important;
+    margin-bottom:.4rem !important;
+    background:#ffffff !important;
+    border:1px solid #e2e8f0 !important;
+    padding:5px !important;
+    overflow:hidden !important;
+}
+
+.wallet-logo img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:inherit !important;
+}
+
+.wallet-logo.logo-fallback{
+    padding:0 !important;
+    font-size:.56rem !important;
+    font-weight:950 !important;
+}
+
+.wallet-name{
+    font-size:.66rem !important;
+}
+
+.nominal-note{
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+}
+
+.nominal-card{
+    border-radius:15px !important;
+    box-shadow:none !important;
+}
+
+.nominal-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.nominal-card.active{
+    box-shadow:0 8px 20px rgba(16,185,129,.10) !important;
+}
+
+.nominal-label{
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+}
+
+.btn-submit{
+    border-radius:16px !important;
+    box-shadow:0 10px 22px rgba(16,185,129,.18) !important;
+}
+
+.note{
+    border-left:0 !important;
+    border-radius:17px !important;
+}
+
 </style>
 
 <div class="ew-page">
@@ -1077,62 +1215,62 @@ body{
 
                 <div class="wallet-grid">
                     <button type="button" class="wallet-card" data-wallet="DANA">
-                        <div class="wallet-logo wallet-logo-js">DANA</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/dana.png') }}" alt="DANA" loading="lazy" onerror="this.remove();this.parentElement.textContent='DANA';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">DANA</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="GOPAY">
-                        <div class="wallet-logo wallet-logo-js">GP</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/gopay.png') }}" alt="GoPay" loading="lazy" onerror="this.remove();this.parentElement.textContent='GP';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">GoPay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="OVO">
-                        <div class="wallet-logo wallet-logo-js">OVO</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/ovo.png') }}" alt="OVO" loading="lazy" onerror="this.remove();this.parentElement.textContent='OVO';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">OVO</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="LINKAJA">
-                        <div class="wallet-logo wallet-logo-js">LA</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/linkaja.png') }}" alt="LinkAja" loading="lazy" onerror="this.remove();this.parentElement.textContent='LA';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">LinkAja</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="SHOPEEPAY">
-                        <div class="wallet-logo wallet-logo-js">SP</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/shopeepay.png') }}" alt="ShopeePay" loading="lazy" onerror="this.remove();this.parentElement.textContent='SP';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">ShopeePay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="QRIS">
-                        <div class="wallet-logo wallet-logo-js">QR</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/qris.png') }}" alt="QRIS" loading="lazy" onerror="this.remove();this.parentElement.textContent='QR';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">QRIS</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="MAXIM">
-                        <div class="wallet-logo wallet-logo-js">MX</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/maxim.png') }}" alt="Maxim" loading="lazy" onerror="this.remove();this.parentElement.textContent='MX';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">Maxim</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="GRAB">
-                        <div class="wallet-logo wallet-logo-js">GR</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/grab.png') }}" alt="Grab" loading="lazy" onerror="this.remove();this.parentElement.textContent='GR';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">Grab</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="SAKUKU">
-                        <div class="wallet-logo wallet-logo-js">SK</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/sakuku.png') }}" alt="Sakuku" loading="lazy" onerror="this.remove();this.parentElement.textContent='SK';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">Sakuku</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="ASTRAPAY">
-                        <div class="wallet-logo wallet-logo-js">AP</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/astrapay.png') }}" alt="AstraPay" loading="lazy" onerror="this.remove();this.parentElement.textContent='AP';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">AstraPay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="ISAKU">
-                        <div class="wallet-logo wallet-logo-js">IS</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/i.saku.png') }}" alt="i.Saku" loading="lazy" onerror="this.remove();this.parentElement.textContent='IS';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">i.Saku</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="DOKU">
-                        <div class="wallet-logo wallet-logo-js">DK</div>
+                        <div class="wallet-logo"><img src="{{ url_for('static', filename='img/operator/doku.png') }}" alt="DOKU" loading="lazy" onerror="this.remove();this.parentElement.textContent='DK';this.parentElement.classList.add('logo-fallback');"></div>
                         <div class="wallet-name">DOKU</div>
                     </button>
                 </div>
@@ -1250,100 +1388,19 @@ body{
     let activeFilter='ALL';
 
     const walletMeta={
-        DANA:{
-            nama:'DANA',
-            logo:'DANA',
-            img:'{{ url_for("static", filename="img/operator/dana.png") }}'
-        },
-        GOPAY:{
-            nama:'GoPay',
-            logo:'GP',
-            img:'{{ url_for("static", filename="img/operator/gopay.png") }}'
-        },
-        OVO:{
-            nama:'OVO',
-            logo:'OVO',
-            img:'{{ url_for("static", filename="img/operator/ovo.png") }}'
-        },
-        LINKAJA:{
-            nama:'LinkAja',
-            logo:'LA',
-            img:'{{ url_for("static", filename="img/operator/linkaja.png") }}'
-        },
-        SHOPEEPAY:{
-            nama:'ShopeePay',
-            logo:'SP',
-            img:'{{ url_for("static", filename="img/operator/shopeepay.png") }}'
-        },
-        QRIS:{
-            nama:'QRIS',
-            logo:'QR',
-            img:'{{ url_for("static", filename="img/operator/qris.png") }}'
-        },
-        MAXIM:{
-            nama:'Maxim',
-            logo:'MX',
-            img:'{{ url_for("static", filename="img/operator/maxim.png") }}'
-        },
-        GRAB:{
-            nama:'Grab',
-            logo:'GR',
-            img:'{{ url_for("static", filename="img/operator/grab.png") }}'
-        },
-        SAKUKU:{
-            nama:'Sakuku',
-            logo:'SK',
-            img:'{{ url_for("static", filename="img/operator/sakuku.png") }}'
-        },
-        ASTRAPAY:{
-            nama:'AstraPay',
-            logo:'AP',
-            img:'{{ url_for("static", filename="img/operator/astrapay.png") }}'
-        },
-        ISAKU:{
-            nama:'i.Saku',
-            logo:'IS',
-            img:'{{ url_for("static", filename="img/operator/i.saku.png") }}'
-        },
-        DOKU:{
-            nama:'DOKU',
-            logo:'DK',
-            img:'{{ url_for("static", filename="img/operator/doku.png") }}'
-        }
+        DANA:'DANA',
+        GOPAY:'GoPay',
+        OVO:'OVO',
+        LINKAJA:'LinkAja',
+        SHOPEEPAY:'ShopeePay',
+        QRIS:'QRIS',
+        MAXIM:'Maxim',
+        GRAB:'Grab',
+        SAKUKU:'Sakuku',
+        ASTRAPAY:'AstraPay',
+        ISAKU:'i.Saku',
+        DOKU:'DOKU'
     };
-
-
-    function walletName(wallet){
-        return walletMeta[wallet] ? walletMeta[wallet].nama : wallet;
-    }
-
-    function walletLogo(wallet){
-        const meta=walletName(wallet) || {
-            nama:wallet,
-            logo:String(wallet || 'EW').slice(0,2),
-            img:''
-        };
-
-        if(meta.img){
-            return '<div class="wallet-logo" data-logo-text="'+(meta.logo || 'EW')+'">'+
-                '<img src="'+meta.img+'" alt="'+meta.nama+'" loading="lazy">'+
-            '</div>';
-        }
-
-        return '<div class="wallet-logo logo-fallback">'+(meta.logo || 'EW')+'</div>';
-    }
-
-    function aktifkanFallbackWallet(){
-        document.querySelectorAll('.wallet-logo img').forEach(function(img){
-            img.addEventListener('error',function(){
-                const parent=img.parentElement;
-                if(!parent) return;
-
-                parent.textContent=parent.getAttribute('data-logo-text') || 'EW';
-                parent.classList.add('logo-fallback');
-            },{once:true});
-        });
-    }
 
     const defaultNominal={
         DANA:['5rb','10rb','15rb','20rb','25rb','30rb','50rb','75rb','100rb','150rb','200rb','300rb','500rb','1jt'],
@@ -1380,9 +1437,11 @@ body{
 
     function cleanNumber(value){
         value=(value||'').replace(/[^0-9]/g,'');
+
         if(value.startsWith('62')){
             value='0'+value.slice(2);
         }
+
         return value;
     }
 
@@ -1420,7 +1479,7 @@ body{
 
             return {
                 kode:wallet+'_'+nominal,
-                nama:walletName(wallet)+' '+label,
+                nama:(walletMeta[wallet] || wallet)+' '+label,
                 harga:formatRupiah(total),
                 group:filterGroup(nominal)
             };
@@ -1437,24 +1496,8 @@ body{
         return getDefaultProducts(wallet);
     }
 
-
-    function isiLogoWallet(){
-        isiLogoWallet();
-
-    document.querySelectorAll('.wallet-card').forEach(function(card){
-            const wallet=card.dataset.wallet;
-            const oldLogo=card.querySelector('.wallet-logo');
-
-            if(!oldLogo) return;
-
-            oldLogo.outerHTML=walletLogo(wallet);
-        });
-
-        aktifkanFallbackWallet();
-    }
-
     function setWallet(wallet){
-        if(!wallet || !walletName(wallet)) return;
+        if(!wallet || !walletMeta[wallet]) return;
 
         activeWallet=wallet;
         walletValue.value=wallet;
@@ -1465,7 +1508,7 @@ body{
         });
 
         walletInfo.style.display='block';
-        walletInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> E-Wallet dipilih: <strong>'+walletName(wallet)+'</strong>';
+        walletInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> E-Wallet dipilih: <strong>'+walletMeta[wallet]+'</strong>';
 
         renderNominal();
         updateSummary();
@@ -1486,7 +1529,7 @@ body{
         kodeProduk.value='';
 
         if(!activeWallet){
-            nominalGrid.innerHTML='<div class="nominal-empty">Pilih e-wallet terlebih dahulu untuk melihat nominal saldo.</div>';
+            nominalGrid.innerHTML='<div class="nominal-empty">Pilih e-wallet dulu untuk melihat nominal.</div>';
             updateSummary();
             return;
         }
@@ -1544,7 +1587,7 @@ body{
         const activeNominal=document.querySelector('.nominal-card.active');
 
         document.getElementById('sumNomor').textContent=nomor || '-';
-        document.getElementById('sumWallet').textContent=wallet ? walletName(wallet) : '-';
+        document.getElementById('sumWallet').textContent=wallet ? walletMeta[wallet] : '-';
         document.getElementById('sumProduk').textContent=selected.nama || (activeNominal ? activeNominal.dataset.nama : '-');
         document.getElementById('sumHarga').textContent=selected.harga || (activeNominal ? activeNominal.dataset.harga : 'Rp 0');
 
@@ -1613,7 +1656,7 @@ body{
             return;
         }
 
-        btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Saldo...';
+        btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses...';
         btnBayar.style.opacity='0.75';
         btnBayar.style.pointerEvents='none';
     });
