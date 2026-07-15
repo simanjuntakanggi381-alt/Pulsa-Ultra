@@ -1758,6 +1758,148 @@ body{
     }
 }
 
+
+/* Update: sensor nomor dibuat lebih santai */
+@media(max-width:520px){
+    .operator-info{
+        background:#f8fafc !important;
+        border-color:#dbeafe !important;
+        color:#334155 !important;
+    }
+
+    .operator-card.active{
+        border-color:#2563eb !important;
+        background:#eff6ff !important;
+        box-shadow:0 8px 16px rgba(37,99,235,.10) !important;
+    }
+
+    .open-orbit-btn{
+        background:linear-gradient(135deg,#2563eb,#0ea5e9) !important;
+    }
+}
+
+
+/* Final width fix HP - layar dibuat lebih penuh */
+@media(max-width:520px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+
+    .orbit-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.25rem .22rem 4.6rem !important;
+        box-sizing:border-box !important;
+    }
+
+    .orbit-shell{
+        width:calc(100vw - .44rem) !important;
+        max-width:none !important;
+        border-radius:18px !important;
+        padding:.42rem !important;
+        margin:0 auto !important;
+        box-sizing:border-box !important;
+    }
+
+    .orbit-card,
+    .orbit-hero,
+    .orbit-balance,
+    .compact-orbit,
+    .summary-box{
+        width:100% !important;
+        box-sizing:border-box !important;
+    }
+
+    .phone-console{
+        width:100% !important;
+        box-sizing:border-box !important;
+    }
+
+    .operator-strip{
+        grid-template-columns:repeat(3,1fr) !important;
+        gap:.38rem !important;
+    }
+
+    .operator-card{
+        min-width:0 !important;
+        width:100% !important;
+        min-height:74px !important;
+    }
+
+    .nominal-list{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .nominal-card{
+        min-width:0 !important;
+        width:100% !important;
+    }
+
+    .orbit-balance-stats,
+    .sim-orbit-stats{
+        grid-template-columns:repeat(3,1fr) !important;
+    }
+
+    .quick-row,
+    .mode-strip{
+        margin-left:-.05rem !important;
+        margin-right:-.05rem !important;
+    }
+
+    .open-orbit-btn,
+    .submit-btn{
+        width:100% !important;
+    }
+}
+
+@media(max-width:360px){
+    .orbit-page{
+        padding:.2rem .18rem 4.5rem !important;
+    }
+
+    .orbit-shell{
+        width:calc(100vw - .36rem) !important;
+        padding:.36rem !important;
+        border-radius:16px !important;
+    }
+
+    .operator-strip{
+        grid-template-columns:repeat(3,1fr) !important;
+    }
+
+    .operator-card{
+        min-height:68px !important;
+        padding:.42rem .25rem !important;
+    }
+
+    .operator-logo{
+        width:27px !important;
+        height:27px !important;
+    }
+
+    .operator-card strong{
+        font-size:.61rem !important;
+    }
+
+    .nominal-list{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .nominal-name strong{
+        font-size:.64rem !important;
+    }
+
+    .price-box strong{
+        font-size:.72rem !important;
+    }
+}
+
 </style>
 
 <div class="orbit-page">
@@ -2090,6 +2232,7 @@ body{
     let activeOperator='';
     let activeFilter='recommended';
     let selectedNominal=null;
+    let autoOpenTimer=null;
 
     const operatorMeta={
         TLK:{
@@ -2340,15 +2483,15 @@ body{
 
 
     function autoOpenIfReady(){
-        const nomor=cleanNumber(nomorInput.value);
+        clearTimeout(autoOpenTimer);
 
-        if(nomor.length>=10 && activeOperator && !orbitDashboard.classList.contains('show')){
-            setTimeout(function(){
-                if(cleanNumber(nomorInput.value).length>=10 && activeOperator && !orbitDashboard.classList.contains('show')){
-                    enterOrbit();
-                }
-            },180);
-        }
+        autoOpenTimer=setTimeout(function(){
+            const nomor=cleanNumber(nomorInput.value);
+
+            if(nomor.length>=10 && activeOperator && !orbitDashboard.classList.contains('show')){
+                enterOrbit();
+            }
+        },1200);
     }
 
     function setOperator(op,auto){
@@ -2391,7 +2534,9 @@ body{
             renderNominals();
         }
 
-        autoOpenIfReady();
+        if(cleanNumber(nomorInput.value).length>=10){
+            autoOpenIfReady();
+        }
     }
 
     function getNominals(){
@@ -2470,6 +2615,7 @@ body{
         charCount.textContent=nomor.length+'/14';
 
         if(!nomor){
+            clearTimeout(autoOpenTimer);
             operatorInfo.style.display='none';
             setOperator('',false);
             return;
@@ -2478,7 +2624,13 @@ body{
         const detected=detectOperator(nomor);
 
         if(detected){
-            setOperator(detected,true);
+            if(nomor.length>=10){
+                setOperator(detected,true);
+            }else{
+                clearTimeout(autoOpenTimer);
+                setOperator(detected,true);
+                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator terbaca. Lanjutkan nomor sampai lengkap.';
+            }
         }else if(nomor.length>=4){
             operatorInfo.style.display='block';
             operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual jika diperlukan.';
