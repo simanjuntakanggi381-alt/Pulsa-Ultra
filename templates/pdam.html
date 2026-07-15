@@ -34,6 +34,21 @@
     'PDAM_PALEMBANG': 3000
 } %}
 
+{% set pdam_logo_map = {
+    'PDAM_JAKARTA': 'pdam_jakarta.png',
+    'PDAM_BANDUNG': 'pdam_bandung.png',
+    'PDAM_SURABAYA': 'pdam_surabaya.png',
+    'PDAM_MEDAN': 'pdam_medan.png',
+    'PDAM_MAKASSAR': 'pdam_makassar.png',
+    'PDAM_SEMARANG': 'pdam_semarang.png',
+    'PDAM_TANGERANG': 'pdam_tangerang.png',
+    'PDAM_BEKASI': 'pdam_bekasi.png',
+    'PDAM_DEPOK': 'pdam_depok.png',
+    'PDAM_BOGOR': 'pdam_bogor.png',
+    'PDAM_DENPASAR': 'pdam_denpasar.png',
+    'PDAM_PALEMBANG': 'pdam_palembang.png'
+} %}
+
 {% set produk_final = produk_list if produk_list else fallback_produk_pdam %}
 {% set harga_final = harga_map if harga_map else fallback_harga_pdam %}
 
@@ -1685,6 +1700,68 @@ body{
     }
 }
 
+
+/* Logo PNG PDAM dari folder static/img/operator */
+.region-logo.region-logo-img{
+    width:58px !important;
+    height:58px !important;
+    border-radius:18px !important;
+    background:#ffffff !important;
+    border:1px solid #dbeafe !important;
+    padding:6px !important;
+    overflow:hidden !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    color:#0284c7 !important;
+    box-shadow:0 8px 18px rgba(14,165,233,.12) !important;
+}
+
+.region-logo.region-logo-img img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:12px !important;
+}
+
+.region-logo.region-logo-img.logo-fallback{
+    background:linear-gradient(135deg,#0f172a,#0284c7,#0ea5e9) !important;
+    border-color:rgba(14,165,233,.25) !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+
+.region-logo.region-logo-img.logo-fallback::after{
+    content:attr(data-fallback);
+    font-size:.66rem;
+    font-weight:950;
+    letter-spacing:.02em;
+}
+
+.region-card.active .region-logo.region-logo-img{
+    border-color:#38bdf8 !important;
+    box-shadow:0 8px 18px rgba(14,165,233,.18) !important;
+}
+
+@media(max-width:520px){
+    .region-logo.region-logo-img{
+        width:42px !important;
+        height:42px !important;
+        margin:0 auto .35rem !important;
+        border-radius:13px !important;
+        padding:4px !important;
+    }
+
+    .region-logo.region-logo-img img{
+        border-radius:9px !important;
+    }
+
+    .region-logo.region-logo-img.logo-fallback::after{
+        font-size:.5rem !important;
+    }
+}
+
 </style>
 
 <div class="pdamx-page">
@@ -1820,9 +1897,21 @@ body{
                                 data-nama="{{ nama|e }}"
                                 data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
                             >
-                                <div class="region-logo">{{ nama[:2].upper() }}</div>
+                                {% set logo_file = pdam_logo_map.get(kode|upper, '') %}
+                                <div class="region-logo region-logo-img" data-fallback="{{ nama[:3].upper() }}">
+                                    {% if logo_file %}
+                                        <img
+                                            src="{{ url_for('static', filename='img/operator/' ~ logo_file) }}"
+                                            alt="Logo {{ nama }}"
+                                            loading="lazy"
+                                            onerror="this.remove();this.parentElement.classList.add('logo-fallback');"
+                                        >
+                                    {% else %}
+                                        {{ nama[:3].upper() }}
+                                    {% endif %}
+                                </div>
                                 <strong>{{ nama }}</strong>
-                                <span>Tagihan air wilayah</span>
+                                <span>Wilayah layanan air</span>
                             </button>
                         {% endfor %}
                     </div>
@@ -1982,9 +2071,24 @@ body{
     }
 
     function logoText(name){
+        const text=String(name || '').toUpperCase();
+
+        if(text.includes('JAKARTA')) return 'JKT';
+        if(text.includes('BANDUNG')) return 'BDG';
+        if(text.includes('SURABAYA')) return 'SBY';
+        if(text.includes('MEDAN')) return 'MDN';
+        if(text.includes('MAKASSAR')) return 'MKS';
+        if(text.includes('SEMARANG')) return 'SMG';
+        if(text.includes('TANGERANG')) return 'TGR';
+        if(text.includes('BEKASI')) return 'BKS';
+        if(text.includes('DEPOK')) return 'DPK';
+        if(text.includes('BOGOR')) return 'BGR';
+        if(text.includes('DENPASAR')) return 'DPS';
+        if(text.includes('PALEMBANG')) return 'PLG';
+
         return String(name || 'PD').split(' ').map(function(word){
             return word[0];
-        }).join('').slice(0,2).toUpperCase();
+        }).join('').slice(0,3).toUpperCase();
     }
 
     function updateInfo(){
