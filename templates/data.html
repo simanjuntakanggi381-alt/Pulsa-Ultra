@@ -981,6 +981,354 @@ body{
     border-radius:17px !important;
 }
 
+
+/* Mode HP paket data: full width, padat, lebih cepat dipakai */
+@media(max-width:520px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+
+    body{
+        background:#f6f8fc !important;
+    }
+
+    .data-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.25rem .22rem 4.6rem !important;
+        box-sizing:border-box !important;
+    }
+
+    .data-shell{
+        width:calc(100vw - .44rem) !important;
+        max-width:none !important;
+        border-radius:18px !important;
+        padding:.42rem !important;
+        margin:0 auto !important;
+        box-sizing:border-box !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+    }
+
+    .data-topbar{
+        margin-bottom:.45rem !important;
+    }
+
+    .back-menu,
+    .status-pill{
+        min-height:32px !important;
+        padding:0 .58rem !important;
+        font-size:.66rem !important;
+    }
+
+    .data-hero{
+        width:100% !important;
+        box-sizing:border-box !important;
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(79,70,229,.16) !important;
+    }
+
+    .data-hero:before,
+    .data-hero:after{
+        display:none !important;
+    }
+
+    .data-hero-content{
+        gap:.58rem !important;
+        align-items:center !important;
+    }
+
+    .data-hero-icon{
+        width:40px !important;
+        height:40px !important;
+        flex-basis:40px !important;
+        border-radius:14px !important;
+        font-size:.96rem !important;
+    }
+
+    .data-badge{
+        margin-bottom:.22rem !important;
+        padding:.2rem .48rem !important;
+        font-size:.56rem !important;
+        letter-spacing:.02em !important;
+    }
+
+    .data-hero h2{
+        font-size:.98rem !important;
+        line-height:1.16 !important;
+    }
+
+    .data-hero p{
+        margin:.18rem 0 0 !important;
+        font-size:.68rem !important;
+        line-height:1.3 !important;
+    }
+
+    .data-step-row{
+        display:none !important;
+    }
+
+    .data-card{
+        width:100% !important;
+        box-sizing:border-box !important;
+        border-radius:18px !important;
+        padding:.7rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .section-head{
+        gap:.5rem !important;
+        margin-bottom:.5rem !important;
+    }
+
+    .section-head h3{
+        font-size:.86rem !important;
+    }
+
+    .section-head p{
+        margin-top:.08rem !important;
+        font-size:.66rem !important;
+        line-height:1.28 !important;
+    }
+
+    .section-pill{
+        padding:.28rem .5rem !important;
+        font-size:.58rem !important;
+    }
+
+    .input-control{
+        min-height:48px !important;
+        border-radius:14px !important;
+        font-size:.86rem !important;
+        padding-left:2.35rem !important;
+    }
+
+    .input-help{
+        margin-top:.32rem !important;
+        font-size:.64rem !important;
+    }
+
+    .data-quick{
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+        gap:.34rem !important;
+        margin-top:.45rem !important;
+        padding-bottom:.12rem !important;
+        scrollbar-width:none !important;
+    }
+
+    .data-quick::-webkit-scrollbar{
+        display:none !important;
+    }
+
+    .data-quick button{
+        flex:0 0 auto !important;
+        padding:.38rem .52rem !important;
+        font-size:.62rem !important;
+    }
+
+    .operator-info{
+        margin-top:.48rem !important;
+        padding:.55rem .62rem !important;
+        border-radius:13px !important;
+        font-size:.68rem !important;
+        background:#f8fafc !important;
+        border-color:#dbeafe !important;
+        color:#334155 !important;
+    }
+
+    .operator-grid{
+        display:grid !important;
+        grid-template-columns:repeat(3,1fr) !important;
+        gap:.38rem !important;
+    }
+
+    .operator-card{
+        min-width:0 !important;
+        width:100% !important;
+        min-height:72px !important;
+        border-radius:15px !important;
+        padding:.5rem .35rem !important;
+        box-shadow:none !important;
+        transform:none !important;
+    }
+
+    .operator-card:hover{
+        transform:none !important;
+    }
+
+    .operator-logo{
+        width:30px !important;
+        height:30px !important;
+        border-radius:11px !important;
+        padding:4px !important;
+        margin-bottom:.28rem !important;
+    }
+
+    .operator-name{
+        font-size:.66rem !important;
+        line-height:1.15 !important;
+    }
+
+    .package-filter{
+        gap:.35rem !important;
+        margin-bottom:.45rem !important;
+        padding-bottom:.25rem !important;
+    }
+
+    .filter-btn{
+        padding:.38rem .55rem !important;
+        font-size:.62rem !important;
+    }
+
+    .package-note{
+        display:none !important;
+    }
+
+    .package-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .package-card{
+        min-width:0 !important;
+        width:100% !important;
+        min-height:104px !important;
+        border-radius:15px !important;
+        padding:.58rem !important;
+        box-shadow:none !important;
+    }
+
+    .package-card:hover{
+        transform:none !important;
+    }
+
+    .package-label{
+        margin-bottom:.34rem !important;
+        padding:.18rem .36rem !important;
+        font-size:.54rem !important;
+    }
+
+    .package-name{
+        font-size:.7rem !important;
+        line-height:1.22 !important;
+        margin-bottom:.3rem !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .package-desc{
+        display:none !important;
+    }
+
+    .package-price{
+        font-size:.76rem !important;
+    }
+
+    .summary-box{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-top:.58rem !important;
+        box-shadow:0 7px 16px rgba(79,70,229,.07) !important;
+    }
+
+    .summary-title{
+        margin-bottom:.48rem !important;
+        font-size:.82rem !important;
+    }
+
+    .summary-row{
+        padding:.42rem 0 !important;
+        gap:.25rem !important;
+    }
+
+    .summary-row span{
+        font-size:.66rem !important;
+    }
+
+    .summary-row b{
+        font-size:.73rem !important;
+        text-align:left !important;
+    }
+
+    .summary-total{
+        margin-top:.52rem !important;
+        padding:.68rem !important;
+        border-radius:15px !important;
+    }
+
+    .summary-total span{
+        font-size:.66rem !important;
+    }
+
+    .summary-total b{
+        font-size:.92rem !important;
+    }
+
+    .btn-submit{
+        min-height:48px !important;
+        margin-top:.65rem !important;
+        border-radius:15px !important;
+        font-size:.84rem !important;
+        box-shadow:0 8px 18px rgba(79,70,229,.18) !important;
+    }
+
+    .note{
+        display:none !important;
+    }
+}
+
+@media(max-width:360px){
+    .data-page{
+        padding:.2rem .18rem 4.5rem !important;
+    }
+
+    .data-shell{
+        width:calc(100vw - .36rem) !important;
+        padding:.36rem !important;
+        border-radius:16px !important;
+    }
+
+    .operator-grid{
+        grid-template-columns:repeat(3,1fr) !important;
+    }
+
+    .operator-card{
+        min-height:68px !important;
+        padding:.42rem .25rem !important;
+    }
+
+    .operator-logo{
+        width:27px !important;
+        height:27px !important;
+    }
+
+    .operator-name{
+        font-size:.61rem !important;
+    }
+
+    .package-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .package-name{
+        font-size:.64rem !important;
+    }
+
+    .package-price{
+        font-size:.72rem !important;
+    }
+}
+
 </style>
 
 <div class="data-page">
@@ -1018,7 +1366,7 @@ body{
                         Paket Data
                     </div>
                     <h2>Isi Paket Data</h2>
-                    <p>Masukkan nomor HP, pilih operator, lalu pilih paket yang ingin dibeli.</p>
+                    <p>Masukkan nomor, pilih operator, lalu pilih paket.</p>
                 </div>
             </div>
 
@@ -1050,7 +1398,7 @@ body{
                 <div class="section-head">
                     <div>
                         <h3>Nomor Tujuan</h3>
-                        <p>Masukkan nomor HP yang ingin diisi paket data.</p>
+                        <p>Masukkan nomor HP tujuan.</p>
                     </div>
                     <span class="section-pill">Nomor</span>
                 </div>
@@ -1092,14 +1440,14 @@ body{
                 <div class="section-head">
                     <div>
                         <h3>Operator Tersedia</h3>
-                        <p>Operator akan otomatis terpilih dari nomor HP. Bisa pilih manual kalau belum sesuai.</p>
+                        <p>Pilih operator kalau belum terbaca otomatis.</p>
                     </div>
                     <span class="section-pill">Operator</span>
                 </div>
 
                 <div class="operator-grid" id="operatorGrid">
                     <div class="operator-empty">
-                        Operator tersedia akan muncul di sini.
+                        Operator akan muncul di sini.
                     </div>
                 </div>
             </div>
@@ -1108,7 +1456,7 @@ body{
                 <div class="section-head">
                     <div>
                         <h3>Pilih Paket</h3>
-                        <p>Pilih paket berdasarkan masa aktif atau kebutuhan kamu.</p>
+                        <p>Pilih paket yang ingin dibeli.</p>
                     </div>
                     <span class="section-pill">Jenis</span>
                 </div>
@@ -1125,12 +1473,12 @@ body{
                 </div>
 
                 <div class="package-note">
-                    <strong>Catatan:</strong> Paket yang tampil menyesuaikan operator yang dipilih.
+                    <strong>Catatan:</strong> Paket mengikuti operator yang dipilih.
                 </div>
 
                 <div class="package-grid" id="packageGrid">
                     <div class="package-empty">
-                        Pilih operator dulu untuk melihat paket data.
+                        Pilih operator dulu untuk melihat paket.
                     </div>
                 </div>
 
@@ -1172,7 +1520,7 @@ body{
                 {% endif %}
 
                 <div class="note">
-                    💡 <strong>Catatan:</strong> Pastikan nomor tujuan sudah benar sebelum melanjutkan pembayaran.
+                    💡 <strong>Catatan:</strong> Cek nomor tujuan sebelum bayar.
                 </div>
             </div>
         </form>
@@ -1181,6 +1529,7 @@ body{
 </div>
 
 <div id="dataProduk" style="display:none;">
+    {# Produk dari backend / database #}
     {% for kode, nama in produk_final.items() %}
         {% set harga_produk = harga_final.get(kode, 0) %}
         {% set kode_upper = kode|upper %}
@@ -1234,6 +1583,59 @@ body{
             data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
         ></span>
     {% endfor %}
+
+    {# Tambahan fallback paket data agar operator lengkap tetap tampil walaupun backend belum lengkap #}
+    {% for kode, nama in fallback_produk_data.items() %}
+        {% if kode not in produk_final %}
+            {% set harga_produk = fallback_harga_data.get(kode, 0) %}
+            {% set kode_upper = kode|upper %}
+            {% set nama_upper = nama|upper %}
+
+            {% if 'TELKOMSEL' in nama_upper or 'TSEL' in kode_upper or 'TLK' in kode_upper %}
+                {% set op = 'TSEL' %}
+            {% elif 'INDOSAT' in nama_upper or 'ISAT' in kode_upper or 'IM3' in kode_upper %}
+                {% set op = 'ISAT' %}
+            {% elif 'AXIS' in nama_upper or 'AXIS' in kode_upper %}
+                {% set op = 'AXIS' %}
+            {% elif 'XL' in nama_upper or 'XL' in kode_upper %}
+                {% set op = 'XL' %}
+            {% elif 'TRI' in nama_upper or 'THREE' in kode_upper or 'TRI' in kode_upper %}
+                {% set op = 'TRI' %}
+            {% elif 'SMARTFREN' in nama_upper or 'SMART' in kode_upper %}
+                {% set op = 'SMART' %}
+            {% elif 'BY.U' in nama_upper or 'BYU' in kode_upper %}
+                {% set op = 'BYU' %}
+            {% else %}
+                {% set op = 'LAINNYA' %}
+            {% endif %}
+
+            {% if 'UNLIMITED' in kode_upper or 'UNLIMITED' in nama_upper %}
+                {% set tipe = 'UNLIMITED' %}
+            {% elif 'SOSMED' in kode_upper or 'SOSMED' in nama_upper or 'SOCIAL' in nama_upper %}
+                {% set tipe = 'SOSMED' %}
+            {% elif 'COMBO' in kode_upper or 'COMBO' in nama_upper %}
+                {% set tipe = 'COMBO' %}
+            {% elif '5HARI' in kode_upper or '5 HARI' in nama_upper or '5D' in kode_upper %}
+                {% set tipe = '5HARI' %}
+            {% elif '7HARI' in kode_upper or '7 HARI' in nama_upper or 'MINGGU' in nama_upper or '7D' in kode_upper %}
+                {% set tipe = 'MINGGUAN' %}
+            {% elif 'BULAN' in nama_upper or '30HARI' in kode_upper or '30 HARI' in nama_upper or '30D' in kode_upper %}
+                {% set tipe = 'BULANAN' %}
+            {% elif 'HARIAN' in kode_upper or 'HARIAN' in nama_upper or '1HARI' in kode_upper or '1 HARI' in nama_upper or '1D' in kode_upper %}
+                {% set tipe = 'HARIAN' %}
+            {% else %}
+                {% set tipe = 'BULANAN' %}
+            {% endif %}
+
+            <span
+                data-kode="{{ kode }}"
+                data-operator="{{ op }}"
+                data-tipe="{{ tipe }}"
+                data-nama="{{ nama }}"
+                data-harga="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+            ></span>
+        {% endif %}
+    {% endfor %}
 </div>
 
 <script>
@@ -1251,6 +1653,7 @@ body{
 
     let activeOperator='';
     let activeJenis='ALL';
+    let detectTimer=null;
 
     const operatorMeta={
         TSEL:{
@@ -1293,7 +1696,8 @@ body{
             logo:'SF',
             bg:'#fff1f2',
             color:'#e11d48',
-            img:'{{ url_for("static", filename="img/operator/smartfren.png") }}'
+            img:'{{ url_for("static", filename="img/operator/smartfren.png") }}',
+            imgAlt:'{{ url_for("static", filename="img/operator/smarfren.png") }}'
         },
         BYU:{
             nama:'by.U',
@@ -1386,7 +1790,7 @@ body{
         const alt=(meta.nama || op || 'Operator').replace(/"/g,'');
 
         if(meta.img){
-            return '<div class="operator-logo" data-logo-text="'+(meta.logo || 'OP')+'" style="background:'+meta.bg+';color:'+meta.color+';">'+
+            return '<div class="operator-logo" data-logo-text="'+(meta.logo || 'OP')+'" data-logo-alt="'+(meta.imgAlt || '')+'" style="background:'+meta.bg+';color:'+meta.color+';">'+
                 '<img src="'+meta.img+'" alt="'+alt+'" loading="lazy">'+
             '</div>';
         }
@@ -1400,9 +1804,17 @@ body{
                 const parent=img.parentElement;
                 if(!parent) return;
 
+                const altSrc=parent.getAttribute('data-logo-alt') || '';
+
+                if(altSrc && img.getAttribute('src') !== altSrc){
+                    img.setAttribute('src',altSrc);
+                    parent.setAttribute('data-logo-alt','');
+                    return;
+                }
+
                 parent.textContent=parent.getAttribute('data-logo-text') || 'OP';
                 parent.classList.add('logo-fallback');
-            },{once:true});
+            });
         });
     }
 
@@ -1514,7 +1926,7 @@ body{
         kodeProduk.value='';
 
         if(!activeOperator){
-            packageGrid.innerHTML='<div class="package-empty">Pilih operator dulu untuk melihat paket data.</div>';
+            packageGrid.innerHTML='<div class="package-empty">Pilih operator dulu untuk melihat paket.</div>';
             updateSummary();
             return;
         }
@@ -1530,7 +1942,7 @@ body{
         }
 
         if(!list.length){
-            packageGrid.innerHTML='<div class="package-empty">Paket belum tersedia untuk pilihan ini.</div>';
+            packageGrid.innerHTML='<div class="package-empty">Paket belum tersedia di pilihan ini.</div>';
             updateSummary();
             return;
         }
@@ -1546,7 +1958,7 @@ body{
             card.innerHTML=
                 '<div class="package-label">'+filterLabel(item.dataset.tipe)+'</div>'+
                 '<div class="package-name">'+item.dataset.nama+'</div>'+
-                '<div class="package-desc">Pilih paket ini</div>'+
+                '<div class="package-desc">Paket data</div>'+
                 '<div class="package-price">'+item.dataset.harga+'</div>';
 
             card.addEventListener('click',function(){
@@ -1587,6 +1999,8 @@ body{
         nomorInput.addEventListener('input',function(){
             let nomor=cleanNumber(nomorInput.value);
 
+            clearTimeout(detectTimer);
+
             if(nomor.length>14){
                 nomor=nomor.slice(0,14);
             }
@@ -1594,13 +2008,28 @@ body{
             nomorInput.value=nomor;
             charCount.textContent=nomor.length+'/14';
 
+            if(!nomor){
+                operatorInfo.style.display='none';
+                updateSummary();
+                return;
+            }
+
             const op=detectOperator(nomor);
 
-            if(op){
-                setOperator(op,true);
+            if(op && nomor.length<10){
+                operatorInfo.style.display='block';
+                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator terbaca. Lanjutkan nomor sampai lengkap.';
+                updateSummary();
+                return;
+            }
+
+            if(op && nomor.length>=10){
+                detectTimer=setTimeout(function(){
+                    setOperator(op,true);
+                },850);
             }else if(nomor.length>=4){
                 operatorInfo.style.display='block';
-                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Silakan pilih manual.';
+                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual jika diperlukan.';
                 updateSummary();
             }else{
                 operatorInfo.style.display='none';
@@ -1617,6 +2046,7 @@ body{
                 nomorInput.value=btn.getAttribute('data-id')||'';
             }
 
+            clearTimeout(detectTimer);
             nomorInput.focus();
             nomorInput.dispatchEvent(new Event('input'));
         });
@@ -1636,7 +2066,7 @@ body{
 
             if(!nomor || nomor.length<10){
                 e.preventDefault();
-                alert('Masukkan nomor HP minimal 10 digit.');
+                alert('Masukkan nomor minimal 10 digit.');
                 nomorInput.focus();
                 return;
             }
@@ -1649,7 +2079,7 @@ body{
 
             if(!produk){
                 e.preventDefault();
-                alert('Pilih paket data dulu.');
+                alert('Pilih paket dulu.');
                 return;
             }
 
