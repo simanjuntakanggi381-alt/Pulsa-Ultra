@@ -35,6 +35,21 @@
     'INTERNET_BIZNET': 3000
 } %}
 
+{% set internet_logo_map = {
+    'INET_INDIHOME': 'internet_indihome.png',
+    'INET_BIZNET': 'internet_biznet.png',
+    'INET_MYREPUBLIC': 'internet_myrepublic.png',
+    'INET_FIRSTMEDIA': 'internet_firstmedia.png',
+    'INET_ICONNET': 'internet_iconnet.png',
+    'INET_MNCPLAY': 'internet_mncplay.png',
+    'INET_CBN': 'internet_cbn.png',
+    'INET_OXYGEN': 'internet_oxygen.png',
+    'INET_GIG': 'internet_gig.png',
+    'INET_REPUBLIC': 'internet_republic.png',
+    'INTERNET_INDIHOME': 'tagihan_indihome.png',
+    'INTERNET_BIZNET': 'tagihan_biznet.png'
+} %}
+
 {% set produk_final = produk_list if produk_list else fallback_produk_internet %}
 {% set harga_final = harga_map if harga_map else fallback_harga_internet %}
 
@@ -1935,6 +1950,100 @@ body{
     }
 }
 
+
+/* Logo PNG Internet dari folder static/img/operator */
+.provider-logo.provider-logo-img{
+    width:58px !important;
+    height:58px !important;
+    border-radius:18px !important;
+    background:#ffffff !important;
+    border:1px solid #dbeafe !important;
+    padding:6px !important;
+    overflow:hidden !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    color:#4f46e5 !important;
+    box-shadow:0 8px 18px rgba(79,70,229,.12) !important;
+}
+
+.provider-logo.provider-logo-img img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:12px !important;
+}
+
+.provider-logo.provider-logo-img.logo-fallback{
+    background:linear-gradient(135deg,#0f172a,#4f46e5,#06b6d4) !important;
+    border-color:rgba(79,70,229,.25) !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+
+.provider-logo.provider-logo-img.logo-fallback::after{
+    content:attr(data-fallback);
+    font-size:.66rem;
+    font-weight:950;
+    letter-spacing:.02em;
+}
+
+.provider-card.active .provider-logo.provider-logo-img{
+    border-color:#818cf8 !important;
+    box-shadow:0 8px 18px rgba(79,70,229,.18) !important;
+}
+
+.bill-logo.bill-logo-img{
+    background:#ffffff !important;
+    border:1px solid #dbeafe !important;
+    padding:5px !important;
+    overflow:hidden !important;
+    color:#4f46e5 !important;
+}
+
+.bill-logo.bill-logo-img img{
+    width:100% !important;
+    height:100% !important;
+    display:block !important;
+    object-fit:contain !important;
+    border-radius:10px !important;
+}
+
+.bill-logo.bill-logo-img.logo-fallback{
+    background:linear-gradient(135deg,#111827,#4f46e5,#06b6d4) !important;
+    color:#fff !important;
+    padding:0 !important;
+}
+
+.bill-logo.bill-logo-img.logo-fallback::after{
+    content:attr(data-fallback);
+    font-size:.56rem;
+    font-weight:950;
+}
+
+@media(max-width:520px){
+    .provider-logo.provider-logo-img{
+        width:42px !important;
+        height:42px !important;
+        margin:0 auto .35rem !important;
+        border-radius:13px !important;
+        padding:4px !important;
+    }
+
+    .provider-logo.provider-logo-img img{
+        border-radius:9px !important;
+    }
+
+    .provider-logo.provider-logo-img.logo-fallback::after{
+        font-size:.5rem !important;
+    }
+
+    .bill-logo.bill-logo-img{
+        padding:4px !important;
+    }
+}
+
 </style>
 
 <div class="net-page">
@@ -2132,8 +2241,21 @@ body{
                                 data-kode="{{ kode }}"
                                 data-nama="{{ nama|e }}"
                                 data-admin="{% if format_uang is defined %}{{ format_uang(admin) }}{% else %}Rp {{ '{:,.0f}'.format(admin|int)|replace(',', '.') }}{% endif %}"
+                                data-logo-url="{% if logo_file %}{{ url_for('static', filename='img/operator/' ~ logo_file) }}{% endif %}"
                             >
-                                <div class="provider-logo">{{ nama[:2].upper() }}</div>
+                                {% set logo_file = internet_logo_map.get(kode|upper, '') %}
+                                <div class="provider-logo provider-logo-img" data-fallback="{{ nama[:3].upper() }}">
+                                    {% if logo_file %}
+                                        <img
+                                            src="{{ url_for('static', filename='img/operator/' ~ logo_file) }}"
+                                            alt="Logo {{ nama }}"
+                                            loading="lazy"
+                                            onerror="this.remove();this.parentElement.classList.add('logo-fallback');"
+                                        >
+                                    {% else %}
+                                        {{ nama[:3].upper() }}
+                                    {% endif %}
+                                </div>
                                 <strong>{{ nama }}</strong>
                                 <span>Cek tagihan internet</span>
                             </button>
@@ -2469,7 +2591,8 @@ body{
         selectedProvider={
             kode:card.dataset.kode,
             nama:card.dataset.nama,
-            admin:card.dataset.admin
+            admin:card.dataset.admin,
+            logoUrl:card.dataset.logoUrl || ''
         };
 
         kodeProduk.value=selectedProvider.kode;
@@ -2491,6 +2614,18 @@ body{
         if(text.includes('cbn')) return '75M';
 
         return '50M';
+    }
+
+    function providerLogoHtml(){
+        const fallback=shortProvider(selectedProvider.nama).slice(0,3).toUpperCase();
+
+        if(selectedProvider && selectedProvider.logoUrl){
+            return '<div class="bill-logo bill-logo-img" data-fallback="'+fallback+'">'+
+                '<img src="'+selectedProvider.logoUrl+'" alt="'+selectedProvider.nama+'" loading="lazy" onerror="this.remove();this.parentElement.classList.add(\'logo-fallback\');">'+
+            '</div>';
+        }
+
+        return '<div class="bill-logo">'+fallback+'</div>';
     }
 
     function updatePanel(){
@@ -2557,7 +2692,7 @@ body{
                 '<div class="bill-main">'+
                     '<div class="bill-top">'+
                         '<div class="bill-left">'+
-                            '<div class="bill-logo">'+shortProvider(selectedProvider.nama).slice(0,2).toUpperCase()+'</div>'+
+                            providerLogoHtml()+
                             '<div class="bill-name">'+
                                 '<strong>'+item.title+'</strong>'+
                                 '<span>'+selectedProvider.nama+' · '+item.plan+'</span>'+
