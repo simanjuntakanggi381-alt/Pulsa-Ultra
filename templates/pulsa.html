@@ -100,6 +100,7 @@
 {% set harga_final = harga_map if harga_map else fallback_harga_pulsa %}
 
 <style>
+/* Halaman pulsa SenjaData - dirapikan manual supaya lebih ringan dan enak dipakai di HP */
 :root{
     --po-blue:#2563eb;
     --po-cyan:#06b6d4;
@@ -114,8 +115,8 @@
     --po-muted:#64748b;
     --po-border:#e2e8f0;
     --po-soft:#f8fafc;
-    --po-shadow:0 18px 42px rgba(15,23,42,.10);
-    --po-soft-shadow:0 10px 26px rgba(15,23,42,.07);
+    --po-shadow:0 12px 28px rgba(15,23,42,.08);
+    --po-soft-shadow:0 8px 20px rgba(15,23,42,.055);
 }
 
 body{
@@ -1261,16 +1262,16 @@ body{
         <div class="orbit-hero" id="heroBox">
             <div class="orbit-hero-main">
                 <div class="orbit-hero-icon">
-                    <i class="fa-solid fa-satellite"></i>
+                    <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
 
                 <div>
                     <div class="orbit-badge">
                         <i class="fa-solid fa-circle-nodes"></i>
-                        Pulsa Orbit OS
+                        Isi Pulsa
                     </div>
-                    <h2>Isi Pulsa dengan Cockpit Modern</h2>
-                    <p>Masukkan nomor, operator terbaca otomatis, lalu pilih nominal lewat orbit rekomendasi.</p>
+                    <h2>Isi Pulsa Lebih Cepat</h2>
+                    <p>Masukkan nomor HP, pilih operator, lalu pilih nominal yang sesuai.</p>
                 </div>
             </div>
 
@@ -1298,9 +1299,9 @@ body{
                 <div class="section-title">
                     <div>
                         <h3>Nomor Tujuan</h3>
-                        <p>Input nomor HP. Sistem akan membaca operator dan jalur pengisian pulsa.</p>
+                        <p>Tulis nomor HP tujuan. Kalau operator belum terbaca, pilih manual di bawah.</p>
                     </div>
-                    <span class="section-pill">Core 1</span>
+                    <span class="section-pill">Nomor</span>
                 </div>
 
                 <div class="phone-console">
@@ -1337,8 +1338,8 @@ body{
                     <div class="sim-orbit-card">
                         <div class="sim-orbit-head">
                             <div>
-                                <strong id="simTitle">SIM Orbit Belum Aktif</strong>
-                                <span id="simSubtitle">Masukkan nomor untuk membaca operator.</span>
+                                <strong id="simTitle">Nomor belum dicek</strong>
+                                <span id="simSubtitle">Masukkan nomor HP tujuan.</span>
                             </div>
 
                             <div class="signal-bars">
@@ -1371,7 +1372,7 @@ body{
                             <h3>Operator Manual</h3>
                             <p>Pilih manual jika hasil baca nomor belum cocok.</p>
                         </div>
-                        <span class="section-pill">Core 2</span>
+                        <span class="section-pill">Operator</span>
                     </div>
 
                     <div class="operator-strip" id="operatorStrip"></div>
@@ -1379,22 +1380,22 @@ body{
 
                 <div class="console-features">
                     <div class="console-box">
-                        <strong>Read SIM</strong>
-                        <span>Deteksi prefix</span>
+                        <strong>Cek Nomor</strong>
+                        <span>Baca operator</span>
                     </div>
                     <div class="console-box">
-                        <strong>Fast Route</strong>
-                        <span>Jalur pulsa</span>
+                        <strong>Proses Cepat</strong>
+                        <span>Transaksi</span>
                     </div>
                     <div class="console-box">
-                        <strong>Smart Pick</strong>
-                        <span>Rekomendasi</span>
+                        <strong>Pilih Nominal</strong>
+                        <span>Pilihan</span>
                     </div>
                 </div>
 
                 <button type="button" class="open-orbit-btn" id="openOrbitBtn">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    Buka Orbit Nominal
+                    Lihat Nominal Pulsa
                 </button>
             </div>
 
@@ -1413,10 +1414,10 @@ body{
                     <div class="orbit-balance-main">
                         <div class="orbit-label">
                             <i class="fa-solid fa-circle-check"></i>
-                            ORBIT NOMINAL AKTIF
+                            NOMINAL TERSEDIA
                         </div>
-                        <h3 id="balanceTitle">Pulsa Orbit Dashboard</h3>
-                        <p id="balanceSubtitle">Pilih nominal pulsa yang cocok berdasarkan kebutuhan penggunaan.</p>
+                        <h3 id="balanceTitle">Daftar Nominal Pulsa</h3>
+                        <p id="balanceSubtitle">Pilih nominal pulsa yang ingin dibeli.</p>
                     </div>
 
                     <div class="orbit-balance-stats">
@@ -1438,27 +1439,27 @@ body{
                 <div class="mode-wrap">
                     <div class="mode-title">
                         <div>
-                            <strong>Mode kebutuhan</strong>
-                            <span>Geser untuk mengatur rekomendasi</span>
+                            <strong>Filter nominal</strong>
+                            <span>Pilih kategori nominal yang ingin ditampilkan</span>
                         </div>
                     </div>
 
                     <div class="mode-strip">
-                        <button type="button" class="mode-chip active" data-filter="recommended">Rekomendasi</button>
+                        <button type="button" class="mode-chip active" data-filter="recommended">Pilihan</button>
                         <button type="button" class="mode-chip" data-filter="daily">Harian</button>
                         <button type="button" class="mode-chip" data-filter="chat">Chat</button>
-                        <button type="button" class="mode-chip" data-filter="stream">Streaming</button>
-                        <button type="button" class="mode-chip" data-filter="big">Big Balance</button>
+                        <button type="button" class="mode-chip" data-filter="stream">Internet</button>
+                        <button type="button" class="mode-chip" data-filter="big">Nominal Besar</button>
                         <button type="button" class="mode-chip" data-filter="cheap">Termurah</button>
                     </div>
                 </div>
 
                 <div class="promo-banner">
                     <div>
-                        <strong>Orbit Smart Recommendation</strong>
-                        <span>Nominal dibuat terasa seperti pilihan kebutuhan, bukan list biasa.</span>
+                        <strong>Pilihan Nominal Pulsa</strong>
+                        <span>Pilih nominal yang tersedia sesuai operator yang dipilih.</span>
                     </div>
-                    <div class="promo-badge">ORBIT OS</div>
+                    <div class="promo-badge">PULSA</div>
                 </div>
 
                 <div class="nominal-list" id="nominalList"></div>
@@ -1494,7 +1495,7 @@ body{
 
                     <button type="submit" class="submit-btn" id="btnBayar">
                         <i class="fa-solid fa-circle-check"></i>
-                        Lanjutkan Pembayaran
+                        Bayar Sekarang
                     </button>
                 </div>
             </div>
@@ -1713,8 +1714,8 @@ body{
                 card.classList.remove('active');
             });
 
-            simTitle.textContent='SIM Orbit Belum Aktif';
-            simSubtitle.textContent='Masukkan nomor untuk membaca operator.';
+            simTitle.textContent='Nomor belum dicek';
+            simSubtitle.textContent='Masukkan nomor HP tujuan.';
             simOperator.textContent='-';
             simRoute.textContent='Idle';
 
@@ -1729,13 +1730,13 @@ body{
             card.classList.toggle('active',card.dataset.op===op);
         });
 
-        simTitle.textContent='SIM Orbit '+meta(op).nama;
-        simSubtitle.textContent='Operator siap. Jalur pulsa sudah terbaca.';
+        simTitle.textContent='Operator '+meta(op).nama;
+        simSubtitle.textContent='Operator sudah dipilih. Silakan lanjut pilih nominal.';
         simOperator.textContent=meta(op).nama;
         simRoute.textContent='Ready';
 
         operatorInfo.style.display='block';
-        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terbaca otomatis: ':'Operator dipilih manual: ')+'<strong>'+meta(op).nama+'</strong>';
+        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terbaca: ':'Operator dipilih: ')+'<strong>'+meta(op).nama+'</strong>';
 
         if(orbitDashboard.classList.contains('show')){
             renderNominals();
@@ -1805,8 +1806,8 @@ body{
         }else if(nomor.length>=4){
             operatorInfo.style.display='block';
             operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual di bawah.';
-            simTitle.textContent='SIM Orbit Manual';
-            simSubtitle.textContent='Pilih operator manual untuk membuka orbit nominal.';
+            simTitle.textContent='Operator Manual';
+            simSubtitle.textContent='Pilih operator manual untuk lanjut ke daftar nominal.';
             simOperator.textContent='Manual';
             simRoute.textContent='Check';
         }
@@ -1842,14 +1843,14 @@ body{
         const list=applyFilter(getNominals());
 
         balanceTitle.textContent='Orbit '+meta(activeOperator).nama;
-        balanceSubtitle.textContent='Nomor '+cleanNumber(nomorInput.value)+' siap diisi. Pilih nominal berdasarkan kebutuhan.';
+        balanceSubtitle.textContent='Nomor '+cleanNumber(nomorInput.value)+' siap diisi. Pilih nominal pulsa di bawah.';
         compactTitle.textContent=meta(activeOperator).nama;
         compactInfo.textContent='Nomor '+cleanNumber(nomorInput.value);
         statOperator.textContent=meta(activeOperator).nama;
         statTotal.textContent=getNominals().length;
 
         if(!list.length){
-            nominalList.innerHTML='<div class="empty-state">Nominal pada mode ini belum tersedia. Coba pilih mode lain.</div>';
+            nominalList.innerHTML='<div class="empty-state">Nominal belum tersedia di filter ini. Coba pilih filter lain.</div>';
             return;
         }
 
@@ -1860,8 +1861,8 @@ body{
             const labelMap={
                 daily:'Harian',
                 chat:'Chat',
-                stream:'Streaming',
-                big:'Big Balance'
+                stream:'Internet',
+                big:'Nominal Besar'
             };
 
             const tag=labelMap[item.type] || 'Pulsa';
@@ -1885,8 +1886,8 @@ body{
                             '<strong>'+rupiah(item.value)+'</strong>'+
                         '</div>'+
                         '<div class="detail-box">'+
-                            '<span>Jalur Proses</span>'+
-                            '<strong>Fast Route</strong>'+
+                            '<span>Proses</span>'+
+                            '<strong>Proses Cepat</strong>'+
                         '</div>'+
                     '</div>'+
 
@@ -1894,7 +1895,7 @@ body{
                         '<div class="price-box">'+
                             '<span>Total pembayaran</span>'+
                             '<strong>'+item.harga+'</strong>'+
-                            '<small>Masuk otomatis ke nomor tujuan</small>'+
+                            '<small>Diproses ke nomor tujuan</small>'+
                         '</div>'+
                         '<button type="button" class="choose-nominal">Pilih</button>'+
                     '</div>'+
@@ -1903,7 +1904,7 @@ body{
                 '<div class="nominal-benefits">'+
                     '<span><i class="fa-solid fa-bolt"></i> Instan</span>'+
                     '<span><i class="fa-solid fa-signal"></i> '+meta(activeOperator).nama+'</span>'+
-                    '<span><i class="fa-solid fa-satellite"></i> Orbit route</span>'+
+                    '<span><i class="fa-solid fa-satellite"></i> Proses otomatis</span>'+
                     '<span><i class="fa-solid fa-wallet"></i> '+item.harga+'</span>'+
                 '</div>';
 
@@ -2028,11 +2029,11 @@ body{
 
         if(!selectedNominal || !kodeProduk.value){
             e.preventDefault();
-            alert('Pilih nominal pulsa terlebih dahulu.');
+            alert('Pilih nominal pulsa dulu.');
             return;
         }
 
-        btnBayar.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses Pulsa...';
+        btnBayar.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
         btnBayar.style.opacity='0.75';
         btnBayar.style.pointerEvents='none';
     });
