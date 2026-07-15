@@ -477,6 +477,29 @@ body{
     line-height:1;
 }
 
+
+/* Logo operator paket data */
+.operator-logo{
+    background:#ffffff !important;
+    border:1px solid #e2e8f0;
+    padding:5px;
+    overflow:hidden;
+}
+
+.operator-logo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:contain;
+    border-radius:inherit;
+}
+
+.operator-logo.logo-fallback{
+    padding:0;
+    font-size:.62rem;
+    font-weight:950;
+}
+
 .operator-name{
     font-size:.62rem;
     font-weight:850;
@@ -934,7 +957,7 @@ body{
                 <div class="data-quick">
                     <button type="button" data-id="081234567890">Telkomsel</button>
                     <button type="button" data-id="085712345678">Indosat</button>
-                    <button type="button" data-id="087812345678">XL</button>
+                    <button type="button" data-id="083812345678">AXIS</button>
                     <button type="button" data-id="089612345678">Tri</button>
                     <button type="button" data-clear="1">Hapus</button>
                 </div>
@@ -946,7 +969,7 @@ body{
                 <div class="section-head">
                     <div>
                         <h3>Operator Tersedia</h3>
-                        <p>Pilih operator manual kalau deteksi otomatis belum cocok.</p>
+                        <p>Operator akan aktif otomatis setelah nomor dimasukkan. Pilih manual hanya jika belum cocok.</p>
                     </div>
                     <span class="section-pill">Step 2</span>
                 </div>
@@ -1107,16 +1130,76 @@ body{
     let activeFilter='ALL';
 
     const operatorMeta={
-        TSEL:{nama:'Telkomsel',logo:'T',bg:'#fef2f2',color:'#dc2626'},
-        ISAT:{nama:'Indosat',logo:'IM3',bg:'#fffbeb',color:'#d97706'},
-        XL:{nama:'XL',logo:'XL',bg:'#eff6ff',color:'#2563eb'},
-        AXIS:{nama:'AXIS',logo:'AX',bg:'#fae8ff',color:'#a21caf'},
-        TRI:{nama:'Tri',logo:'3',bg:'#f1f5f9',color:'#0f172a'},
-        SMART:{nama:'Smartfren',logo:'SF',bg:'#fff1f2',color:'#e11d48'},
-        BYU:{nama:'by.U',logo:'byU',bg:'#ecfeff',color:'#0891b2'},
-        LIVEON:{nama:'Live.On',logo:'LV',bg:'#f5f3ff',color:'#6d28d9'},
-        CERIA:{nama:'Ceria',logo:'CR',bg:'#ecfccb',color:'#4d7c0f'},
-        LAINNYA:{nama:'Lainnya',logo:'OP',bg:'#f8fafc',color:'#334155'}
+        TSEL:{
+            nama:'Telkomsel',
+            logo:'T',
+            bg:'#fef2f2',
+            color:'#dc2626',
+            img:'{{ url_for("static", filename="img/operator/telkomsel.png") }}'
+        },
+        ISAT:{
+            nama:'Indosat',
+            logo:'IM3',
+            bg:'#fffbeb',
+            color:'#d97706',
+            img:'{{ url_for("static", filename="img/operator/indosat.png") }}'
+        },
+        XL:{
+            nama:'XL',
+            logo:'XL',
+            bg:'#eff6ff',
+            color:'#2563eb',
+            img:'{{ url_for("static", filename="img/operator/xl.png") }}'
+        },
+        AXIS:{
+            nama:'AXIS',
+            logo:'AX',
+            bg:'#fae8ff',
+            color:'#a21caf',
+            img:'{{ url_for("static", filename="img/operator/axis.png") }}'
+        },
+        TRI:{
+            nama:'Tri',
+            logo:'3',
+            bg:'#f1f5f9',
+            color:'#0f172a',
+            img:'{{ url_for("static", filename="img/operator/tri.png") }}'
+        },
+        SMART:{
+            nama:'Smartfren',
+            logo:'SF',
+            bg:'#fff1f2',
+            color:'#e11d48',
+            img:'{{ url_for("static", filename="img/operator/smartfren.png") }}'
+        },
+        BYU:{
+            nama:'by.U',
+            logo:'byU',
+            bg:'#ecfeff',
+            color:'#0891b2',
+            img:'{{ url_for("static", filename="img/operator/byu.png") }}'
+        },
+        LIVEON:{
+            nama:'Live.On',
+            logo:'LV',
+            bg:'#f5f3ff',
+            color:'#6d28d9',
+            img:'{{ url_for("static", filename="img/operator/liveon.png") }}'
+        },
+        CERIA:{
+            nama:'Ceria',
+            logo:'CR',
+            bg:'#ecfccb',
+            color:'#4d7c0f',
+            img:'{{ url_for("static", filename="img/operator/ceria.png") }}'
+        },
+        LAINNYA:{
+            nama:'Lainnya',
+            logo:'OP',
+            bg:'#f8fafc',
+            color:'#334155',
+            img:''
+        }
     };
 
     const operatorOrder=['TSEL','ISAT','XL','AXIS','TRI','SMART','BYU','LIVEON','CERIA','LAINNYA'];
@@ -1175,6 +1258,42 @@ body{
         return operatorMeta[op]||operatorMeta.LAINNYA;
     }
 
+    function logoOperator(op){
+        const meta=getMeta(op);
+        const alt=(meta.nama || op || 'Operator').replace(/"/g,'');
+
+        if(meta.img){
+            return '<div class="operator-logo" data-logo-text="'+(meta.logo || 'OP')+'" style="background:'+meta.bg+';color:'+meta.color+';">'+
+                '<img src="'+meta.img+'" alt="'+alt+'" loading="lazy">'+
+            '</div>';
+        }
+
+        return '<div class="operator-logo logo-fallback" style="background:'+meta.bg+';color:'+meta.color+';">'+meta.logo+'</div>';
+    }
+
+    function aktifkanFallbackLogo(){
+        document.querySelectorAll('.operator-logo img').forEach(function(img){
+            img.addEventListener('error',function(){
+                const parent=img.parentElement;
+                if(!parent) return;
+
+                parent.textContent=parent.getAttribute('data-logo-text') || 'OP';
+                parent.classList.add('logo-fallback');
+            },{once:true});
+        });
+    }
+
+    function arahkanOperatorAktif(op){
+        const card=document.querySelector('.operator-card[data-operator="'+op+'"]');
+        if(!card) return;
+
+        card.scrollIntoView({
+            behavior:'smooth',
+            block:'nearest',
+            inline:'center'
+        });
+    }
+
     function renderOperators(){
         operatorGrid.innerHTML='';
 
@@ -1205,7 +1324,7 @@ body{
             card.dataset.operator=op;
 
             card.innerHTML=
-                '<div class="operator-logo" style="background:'+meta.bg+';color:'+meta.color+';">'+meta.logo+'</div>'+
+                logoOperator(op)+
                 '<div class="operator-name">'+meta.nama+'</div>';
 
             card.addEventListener('click',function(){
@@ -1214,6 +1333,8 @@ body{
 
             operatorGrid.appendChild(card);
         });
+
+        aktifkanFallbackLogo();
     }
 
     function setOperator(op,auto){
@@ -1228,6 +1349,8 @@ body{
         document.querySelectorAll('.operator-card').forEach(function(card){
             card.classList.toggle('active',card.dataset.operator===op);
         });
+
+        arahkanOperatorAktif(op);
 
         const meta=getMeta(op);
 
