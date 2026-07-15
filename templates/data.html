@@ -858,6 +858,129 @@ body{
         grid-template-columns:repeat(3,1fr);
     }
 }
+
+/* Rapihan manual halaman paket data */
+.data-shell{
+    border-radius:24px !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.data-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    box-shadow:0 10px 22px rgba(79,70,229,.18) !important;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed) !important;
+}
+
+.data-hero:before,
+.data-hero:after{
+    opacity:.45;
+}
+
+.data-hero-icon{
+    width:52px !important;
+    height:52px !important;
+    flex-basis:52px !important;
+    border-radius:17px !important;
+}
+
+.data-badge{
+    font-size:.66rem !important;
+    letter-spacing:.02em !important;
+}
+
+.data-hero h2{
+    font-size:1.22rem !important;
+}
+
+.data-hero p{
+    font-size:.82rem !important;
+    font-weight:650 !important;
+}
+
+.data-step-row{
+    gap:.45rem !important;
+}
+
+.data-step{
+    padding:.58rem .35rem !important;
+    border-radius:14px !important;
+}
+
+.data-card{
+    border-radius:20px !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#f1f5f9 !important;
+    color:#475569 !important;
+}
+
+.operator-grid{
+    gap:.55rem !important;
+}
+
+.operator-card{
+    min-height:78px !important;
+    border-radius:16px !important;
+}
+
+.operator-card.active{
+    border:2px solid #4f46e5 !important;
+    background:#f5f3ff !important;
+}
+
+.operator-logo{
+    width:34px !important;
+    height:34px !important;
+    margin-bottom:.38rem !important;
+}
+
+.operator-name{
+    font-size:.68rem !important;
+}
+
+.filter-btn{
+    box-shadow:none !important;
+}
+
+.package-note{
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+}
+
+.package-card{
+    min-height:118px !important;
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.package-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.package-card.active{
+    background:#f5f3ff !important;
+    box-shadow:0 8px 20px rgba(79,70,229,.10) !important;
+}
+
+.package-label{
+    background:#f1f5f9 !important;
+    color:#4f46e5 !important;
+}
+
+.btn-submit{
+    border-radius:16px !important;
+    box-shadow:0 10px 22px rgba(79,70,229,.18) !important;
+}
+
+.note{
+    border-left:0 !important;
+    border-radius:17px !important;
+}
+
 </style>
 
 <div class="data-page">
@@ -892,24 +1015,24 @@ body{
                 <div>
                     <div class="data-badge">
                         <i class="fa-solid fa-bolt"></i>
-                        Paket Data Internet
+                        Paket Data
                     </div>
-                    <h2>Pilih Paket Data Lebih Mudah</h2>
-                    <p>Masukkan nomor, pilih operator, filter jenis paket, lalu lanjutkan pembayaran.</p>
+                    <h2>Isi Paket Data</h2>
+                    <p>Masukkan nomor HP, pilih operator, lalu pilih paket yang ingin dibeli.</p>
                 </div>
             </div>
 
             <div class="data-step-row">
                 <div class="data-step">
-                    <strong>1. Nomor</strong>
-                    <span>Input HP</span>
+                    <strong>Nomor</strong>
+                    <span>Isi nomor</span>
                 </div>
                 <div class="data-step">
-                    <strong>2. Operator</strong>
-                    <span>Provider</span>
+                    <strong>Operator</strong>
+                    <span>Pilih</span>
                 </div>
                 <div class="data-step">
-                    <strong>3. Paket</strong>
+                    <strong>Paket</strong>
                     <span>Bayar</span>
                 </div>
             </div>
@@ -929,7 +1052,7 @@ body{
                         <h3>Nomor Tujuan</h3>
                         <p>Masukkan nomor HP yang ingin diisi paket data.</p>
                     </div>
-                    <span class="section-pill">Step 1</span>
+                    <span class="section-pill">Nomor</span>
                 </div>
 
                 <div class="input-box">
@@ -969,14 +1092,14 @@ body{
                 <div class="section-head">
                     <div>
                         <h3>Operator Tersedia</h3>
-                        <p>Operator akan aktif otomatis setelah nomor dimasukkan. Pilih manual hanya jika belum cocok.</p>
+                        <p>Operator akan otomatis terpilih dari nomor HP. Bisa pilih manual kalau belum sesuai.</p>
                     </div>
-                    <span class="section-pill">Step 2</span>
+                    <span class="section-pill">Operator</span>
                 </div>
 
                 <div class="operator-grid" id="operatorGrid">
                     <div class="operator-empty">
-                        Operator akan tampil otomatis sesuai produk yang tersedia.
+                        Operator tersedia akan muncul di sini.
                     </div>
                 </div>
             </div>
@@ -984,10 +1107,10 @@ body{
             <div class="data-card">
                 <div class="section-head">
                     <div>
-                        <h3>Jenis Paket</h3>
-                        <p>Filter paket berdasarkan masa aktif dan kebutuhan.</p>
+                        <h3>Pilih Paket</h3>
+                        <p>Pilih paket berdasarkan masa aktif atau kebutuhan kamu.</p>
                     </div>
-                    <span class="section-pill">Filter</span>
+                    <span class="section-pill">Jenis</span>
                 </div>
 
                 <div class="package-filter">
@@ -1002,23 +1125,23 @@ body{
                 </div>
 
                 <div class="package-note">
-                    <strong>Info:</strong> Paket yang tampil mengikuti operator dan filter yang dipilih.
+                    <strong>Catatan:</strong> Paket yang tampil menyesuaikan operator yang dipilih.
                 </div>
 
                 <div class="package-grid" id="packageGrid">
                     <div class="package-empty">
-                        Pilih operator terlebih dahulu untuk melihat paket internet.
+                        Pilih operator dulu untuk melihat paket data.
                     </div>
                 </div>
 
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Detail Transaksi
+                        Ringkasan
                     </div>
 
                     <div class="summary-row">
-                        <span>No. Tujuan</span>
+                        <span>Nomor Tujuan</span>
                         <b id="sumNomor">-</b>
                     </div>
 
@@ -1044,12 +1167,12 @@ body{
                 {% if produk_final %}
                 <button type="submit" class="btn-submit" id="btnBayar">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    Lanjutkan Pembayaran
+                    Bayar Sekarang
                 </button>
                 {% endif %}
 
                 <div class="note">
-                    💡 <strong>Info Layanan:</strong> Paket data biasanya diproses otomatis. Pastikan nomor tujuan sudah benar sebelum lanjut.
+                    💡 <strong>Catatan:</strong> Pastikan nomor tujuan sudah benar sebelum melanjutkan pembayaran.
                 </div>
             </div>
         </form>
@@ -1127,7 +1250,7 @@ body{
     const btnBayar=document.getElementById('btnBayar');
 
     let activeOperator='';
-    let activeFilter='ALL';
+    let activeJenis='ALL';
 
     const operatorMeta={
         TSEL:{
@@ -1355,14 +1478,14 @@ body{
         const meta=getMeta(op);
 
         operatorInfo.style.display='block';
-        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator terdeteksi: ':'Operator dipilih: ')+'<strong>'+meta.nama+'</strong>';
+        operatorInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> '+(auto?'Operator: ':'Operator: ')+'<strong>'+meta.nama+'</strong>';
 
         renderPackages();
         updateSummary();
     }
 
-    function setFilter(filter){
-        activeFilter=filter;
+    function setJenis(filter){
+        activeJenis=filter;
 
         document.querySelectorAll('.filter-btn').forEach(function(btn){
             btn.classList.toggle('active',btn.dataset.filter===filter);
@@ -1391,7 +1514,7 @@ body{
         kodeProduk.value='';
 
         if(!activeOperator){
-            packageGrid.innerHTML='<div class="package-empty">Pilih operator terlebih dahulu untuk melihat paket internet.</div>';
+            packageGrid.innerHTML='<div class="package-empty">Pilih operator dulu untuk melihat paket data.</div>';
             updateSummary();
             return;
         }
@@ -1400,14 +1523,14 @@ body{
             return item.dataset.operator===activeOperator;
         });
 
-        if(activeFilter!=='ALL'){
+        if(activeJenis!=='ALL'){
             list=list.filter(function(item){
-                return item.dataset.tipe===activeFilter;
+                return item.dataset.tipe===activeJenis;
             });
         }
 
         if(!list.length){
-            packageGrid.innerHTML='<div class="package-empty">Paket untuk filter ini belum tersedia pada operator yang dipilih.</div>';
+            packageGrid.innerHTML='<div class="package-empty">Paket belum tersedia untuk pilihan ini.</div>';
             updateSummary();
             return;
         }
@@ -1423,7 +1546,7 @@ body{
             card.innerHTML=
                 '<div class="package-label">'+filterLabel(item.dataset.tipe)+'</div>'+
                 '<div class="package-name">'+item.dataset.nama+'</div>'+
-                '<div class="package-desc">Klik untuk memilih paket data ini</div>'+
+                '<div class="package-desc">Pilih paket ini</div>'+
                 '<div class="package-price">'+item.dataset.harga+'</div>';
 
             card.addEventListener('click',function(){
@@ -1477,7 +1600,7 @@ body{
                 setOperator(op,true);
             }else if(nomor.length>=4){
                 operatorInfo.style.display='block';
-                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terdeteksi. Silakan pilih manual.';
+                operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Silakan pilih manual.';
                 updateSummary();
             }else{
                 operatorInfo.style.display='none';
@@ -1501,7 +1624,7 @@ body{
 
     document.querySelectorAll('.filter-btn').forEach(function(btn){
         btn.addEventListener('click',function(){
-            setFilter(btn.dataset.filter);
+            setJenis(btn.dataset.filter);
         });
     });
 
@@ -1513,24 +1636,24 @@ body{
 
             if(!nomor || nomor.length<10){
                 e.preventDefault();
-                alert('Masukkan nomor HP yang valid minimal 10 digit.');
+                alert('Masukkan nomor HP minimal 10 digit.');
                 nomorInput.focus();
                 return;
             }
 
             if(!op){
                 e.preventDefault();
-                alert('Silakan pilih operator terlebih dahulu.');
+                alert('Pilih operator dulu.');
                 return;
             }
 
             if(!produk){
                 e.preventDefault();
-                alert('Silakan pilih paket data terlebih dahulu.');
+                alert('Pilih paket data dulu.');
                 return;
             }
 
-            btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Paket Data...';
+            btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses...';
             btnBayar.style.opacity='0.75';
             btnBayar.style.pointerEvents='none';
         });
