@@ -816,6 +816,144 @@ body{
         grid-template-columns:repeat(2,1fr);
     }
 }
+
+/* Rapihan manual halaman e-wallet */
+.ew-shell{
+    border-radius:24px !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.ew-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    background:linear-gradient(135deg,#047857,#10b981) !important;
+    box-shadow:0 10px 22px rgba(16,185,129,.18) !important;
+}
+
+.ew-hero:before,
+.ew-hero:after{
+    opacity:.45;
+}
+
+.ew-hero-icon{
+    width:52px !important;
+    height:52px !important;
+    flex-basis:52px !important;
+    border-radius:17px !important;
+}
+
+.ew-badge{
+    font-size:.66rem !important;
+    letter-spacing:.02em !important;
+}
+
+.ew-hero h2{
+    font-size:1.22rem !important;
+}
+
+.ew-hero p{
+    font-size:.82rem !important;
+    font-weight:650 !important;
+}
+
+.ew-hero-tags{
+    display:none !important;
+}
+
+.ew-step-row{
+    gap:.45rem !important;
+}
+
+.ew-step{
+    padding:.58rem .35rem !important;
+    border-radius:14px !important;
+}
+
+.ew-card{
+    border-radius:20px !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#f1f5f9 !important;
+    color:#475569 !important;
+}
+
+.wallet-grid{
+    gap:.55rem !important;
+}
+
+.wallet-card{
+    min-height:82px !important;
+    border-radius:16px !important;
+}
+
+.wallet-card.active{
+    background:#ecfdf5 !important;
+}
+
+.wallet-logo{
+    width:36px !important;
+    height:36px !important;
+    margin-bottom:.4rem !important;
+    background:#ffffff !important;
+    border:1px solid #e2e8f0;
+    padding:5px;
+    overflow:hidden;
+}
+
+.wallet-logo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:contain;
+    border-radius:inherit;
+}
+
+.wallet-logo.logo-fallback{
+    padding:0;
+    font-size:.56rem;
+    font-weight:950;
+}
+
+.wallet-name{
+    font-size:.66rem !important;
+}
+
+.nominal-note{
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+}
+
+.nominal-card{
+    border-radius:15px !important;
+    box-shadow:none !important;
+}
+
+.nominal-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.nominal-card.active{
+    box-shadow:0 8px 20px rgba(16,185,129,.10) !important;
+}
+
+.nominal-label{
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+}
+
+.btn-submit{
+    border-radius:16px !important;
+    box-shadow:0 10px 22px rgba(16,185,129,.18) !important;
+}
+
+.note{
+    border-left:0 !important;
+    border-radius:17px !important;
+}
+
 </style>
 
 <div class="ew-page">
@@ -850,10 +988,10 @@ body{
                 <div>
                     <div class="ew-badge">
                         <i class="fa-solid fa-bolt"></i>
-                        Top Up Premium
+                        Saldo E-Wallet
                     </div>
-                    <h2>Isi Saldo E-Wallet Cepat & Aman</h2>
-                    <p>Pilih jenis dompet digital, pilih nominal saldo, lalu lanjutkan pembayaran dengan detail yang jelas.</p>
+                    <h2>Isi Saldo E-Wallet</h2>
+                    <p>Pilih e-wallet, masukkan nomor tujuan, lalu pilih nominal saldo.</p>
                 </div>
             </div>
 
@@ -867,15 +1005,15 @@ body{
 
             <div class="ew-step-row">
                 <div class="ew-step">
-                    <strong>1. Nomor</strong>
-                    <span>Input akun</span>
+                    <strong>Nomor</strong>
+                    <span>Isi nomor</span>
                 </div>
                 <div class="ew-step">
-                    <strong>2. Wallet</strong>
-                    <span>Pilih jenis</span>
+                    <strong>E-Wallet</strong>
+                    <span>Pilih</span>
                 </div>
                 <div class="ew-step">
-                    <strong>3. Nominal</strong>
+                    <strong>Nominal</strong>
                     <span>Bayar</span>
                 </div>
             </div>
@@ -892,10 +1030,10 @@ body{
             <div class="ew-card">
                 <div class="section-head">
                     <div>
-                        <h3>Nomor Tujuan / Akun</h3>
-                        <p>Masukkan nomor HP atau akun e-wallet yang akan diisi saldo.</p>
+                        <h3>Nomor Tujuan</h3>
+                        <p>Masukkan nomor HP e-wallet yang ingin diisi saldo.</p>
                     </div>
-                    <span class="section-pill">Step 1</span>
+                    <span class="section-pill">Nomor</span>
                 </div>
 
                 <div class="input-box">
@@ -916,12 +1054,12 @@ body{
                 </div>
 
                 <div class="input-help">
-                    <span>Gunakan nomor aktif yang terdaftar.</span>
+                    <span>Pastikan nomor tujuan sudah benar.</span>
                     <span id="charCount">0/14</span>
                 </div>
 
                 <div class="ew-quick">
-                    <button type="button" data-number="081234567890">Isi Contoh</button>
+                    <button type="button" data-number="081234567890">Contoh</button>
                     <button type="button" data-clear="1">Hapus</button>
                 </div>
 
@@ -931,70 +1069,70 @@ body{
             <div class="ew-card">
                 <div class="section-head">
                     <div>
-                        <h3>Pilih Jenis E-Wallet</h3>
-                        <p>Pilih layanan dompet digital yang ingin diisi saldo.</p>
+                        <h3>Pilih E-Wallet</h3>
+                        <p>Pilih layanan yang ingin kamu top up.</p>
                     </div>
-                    <span class="section-pill">Step 2</span>
+                    <span class="section-pill">E-Wallet</span>
                 </div>
 
                 <div class="wallet-grid">
                     <button type="button" class="wallet-card" data-wallet="DANA">
-                        <div class="wallet-logo" style="background:#eff6ff;color:#2563eb;">DANA</div>
+                        <div class="wallet-logo wallet-logo-js">DANA</div>
                         <div class="wallet-name">DANA</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="GOPAY">
-                        <div class="wallet-logo" style="background:#e0f2fe;color:#0284c7;">GP</div>
+                        <div class="wallet-logo wallet-logo-js">GP</div>
                         <div class="wallet-name">GoPay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="OVO">
-                        <div class="wallet-logo" style="background:#faf5ff;color:#7c3aed;">OVO</div>
+                        <div class="wallet-logo wallet-logo-js">OVO</div>
                         <div class="wallet-name">OVO</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="LINKAJA">
-                        <div class="wallet-logo" style="background:#fef2f2;color:#ef4444;">LA</div>
+                        <div class="wallet-logo wallet-logo-js">LA</div>
                         <div class="wallet-name">LinkAja</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="SHOPEEPAY">
-                        <div class="wallet-logo" style="background:#fff7ed;color:#ea580c;">SP</div>
+                        <div class="wallet-logo wallet-logo-js">SP</div>
                         <div class="wallet-name">ShopeePay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="QRIS">
-                        <div class="wallet-logo" style="background:#f1f5f9;color:#0f172a;">QR</div>
+                        <div class="wallet-logo wallet-logo-js">QR</div>
                         <div class="wallet-name">QRIS</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="MAXIM">
-                        <div class="wallet-logo" style="background:#fefce8;color:#ca8a04;">MX</div>
+                        <div class="wallet-logo wallet-logo-js">MX</div>
                         <div class="wallet-name">Maxim</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="GRAB">
-                        <div class="wallet-logo" style="background:#ecfdf5;color:#059669;">GR</div>
+                        <div class="wallet-logo wallet-logo-js">GR</div>
                         <div class="wallet-name">Grab</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="SAKUKU">
-                        <div class="wallet-logo" style="background:#eff6ff;color:#1d4ed8;">SK</div>
+                        <div class="wallet-logo wallet-logo-js">SK</div>
                         <div class="wallet-name">Sakuku</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="ASTRAPAY">
-                        <div class="wallet-logo" style="background:#fef2f2;color:#b91c1c;">AP</div>
+                        <div class="wallet-logo wallet-logo-js">AP</div>
                         <div class="wallet-name">AstraPay</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="ISAKU">
-                        <div class="wallet-logo" style="background:#eef2ff;color:#4f46e5;">IS</div>
+                        <div class="wallet-logo wallet-logo-js">IS</div>
                         <div class="wallet-name">i.Saku</div>
                     </button>
 
                     <button type="button" class="wallet-card" data-wallet="DOKU">
-                        <div class="wallet-logo" style="background:#ecfeff;color:#0891b2;">DK</div>
+                        <div class="wallet-logo wallet-logo-js">DK</div>
                         <div class="wallet-name">DOKU</div>
                     </button>
                 </div>
@@ -1003,10 +1141,10 @@ body{
             <div class="ew-card">
                 <div class="section-head">
                     <div>
-                        <h3>Pilih Nominal Saldo</h3>
-                        <p>Nominal saldo dibuat padat, banyak pilihan, dan mudah dibaca.</p>
+                        <h3>Pilih Nominal</h3>
+                        <p>Pilih nominal saldo yang ingin dibeli.</p>
                     </div>
-                    <span class="section-pill">Step 3</span>
+                    <span class="section-pill">Nominal</span>
                 </div>
 
                 <div class="nominal-filter">
@@ -1017,19 +1155,19 @@ body{
                 </div>
 
                 <div class="nominal-note">
-                    <strong>Info:</strong> Pastikan nomor tujuan dan nominal saldo sudah benar sebelum lanjut pembayaran.
+                    <strong>Catatan:</strong> Cek nomor dan nominal sebelum lanjut pembayaran.
                 </div>
 
                 <div class="nominal-grid" id="nominalGrid">
                     <div class="nominal-empty">
-                        Pilih jenis e-wallet terlebih dahulu untuk melihat nominal saldo.
+                        Pilih e-wallet terlebih dahulu untuk melihat nominal saldo.
                     </div>
                 </div>
 
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Detail Top Up
+                        Ringkasan
                     </div>
 
                     <div class="summary-row">
@@ -1043,7 +1181,7 @@ body{
                     </div>
 
                     <div class="summary-row">
-                        <span>Nominal Saldo</span>
+                        <span>Nominal</span>
                         <b id="sumProduk">-</b>
                     </div>
 
@@ -1058,11 +1196,11 @@ body{
 
                 <button type="submit" class="btn-submit" id="btnBayar">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    Isi Saldo Sekarang
+                    Bayar Sekarang
                 </button>
 
                 <div class="note">
-                    💡 <strong>Info Layanan:</strong> Saldo biasanya diproses otomatis. Periksa kembali nomor tujuan sebelum melanjutkan.
+                    💡 <strong>Catatan:</strong> Saldo akan diproses ke nomor tujuan yang kamu isi.
                 </div>
             </div>
         </form>
@@ -1112,19 +1250,100 @@ body{
     let activeFilter='ALL';
 
     const walletMeta={
-        DANA:'DANA',
-        GOPAY:'GoPay',
-        OVO:'OVO',
-        LINKAJA:'LinkAja',
-        SHOPEEPAY:'ShopeePay',
-        QRIS:'QRIS',
-        MAXIM:'Maxim',
-        GRAB:'Grab',
-        SAKUKU:'Sakuku',
-        ASTRAPAY:'AstraPay',
-        ISAKU:'i.Saku',
-        DOKU:'DOKU'
+        DANA:{
+            nama:'DANA',
+            logo:'DANA',
+            img:'{{ url_for("static", filename="img/ewallet/dana.png") }}'
+        },
+        GOPAY:{
+            nama:'GoPay',
+            logo:'GP',
+            img:'{{ url_for("static", filename="img/ewallet/gopay.png") }}'
+        },
+        OVO:{
+            nama:'OVO',
+            logo:'OVO',
+            img:'{{ url_for("static", filename="img/ewallet/ovo.png") }}'
+        },
+        LINKAJA:{
+            nama:'LinkAja',
+            logo:'LA',
+            img:'{{ url_for("static", filename="img/ewallet/linkaja.png") }}'
+        },
+        SHOPEEPAY:{
+            nama:'ShopeePay',
+            logo:'SP',
+            img:'{{ url_for("static", filename="img/ewallet/shopeepay.png") }}'
+        },
+        QRIS:{
+            nama:'QRIS',
+            logo:'QR',
+            img:'{{ url_for("static", filename="img/ewallet/qris.png") }}'
+        },
+        MAXIM:{
+            nama:'Maxim',
+            logo:'MX',
+            img:'{{ url_for("static", filename="img/ewallet/maxim.png") }}'
+        },
+        GRAB:{
+            nama:'Grab',
+            logo:'GR',
+            img:'{{ url_for("static", filename="img/ewallet/grab.png") }}'
+        },
+        SAKUKU:{
+            nama:'Sakuku',
+            logo:'SK',
+            img:'{{ url_for("static", filename="img/ewallet/sakuku.png") }}'
+        },
+        ASTRAPAY:{
+            nama:'AstraPay',
+            logo:'AP',
+            img:'{{ url_for("static", filename="img/ewallet/astrapay.png") }}'
+        },
+        ISAKU:{
+            nama:'i.Saku',
+            logo:'IS',
+            img:'{{ url_for("static", filename="img/ewallet/isaku.png") }}'
+        },
+        DOKU:{
+            nama:'DOKU',
+            logo:'DK',
+            img:'{{ url_for("static", filename="img/ewallet/doku.png") }}'
+        }
     };
+
+
+    function walletName(wallet){
+        return walletMeta[wallet] ? walletMeta[wallet].nama : wallet;
+    }
+
+    function walletLogo(wallet){
+        const meta=walletName(wallet) || {
+            nama:wallet,
+            logo:String(wallet || 'EW').slice(0,2),
+            img:''
+        };
+
+        if(meta.img){
+            return '<div class="wallet-logo" data-logo-text="'+(meta.logo || 'EW')+'">'+
+                '<img src="'+meta.img+'" alt="'+meta.nama+'" loading="lazy">'+
+            '</div>';
+        }
+
+        return '<div class="wallet-logo logo-fallback">'+(meta.logo || 'EW')+'</div>';
+    }
+
+    function aktifkanFallbackWallet(){
+        document.querySelectorAll('.wallet-logo img').forEach(function(img){
+            img.addEventListener('error',function(){
+                const parent=img.parentElement;
+                if(!parent) return;
+
+                parent.textContent=parent.getAttribute('data-logo-text') || 'EW';
+                parent.classList.add('logo-fallback');
+            },{once:true});
+        });
+    }
 
     const defaultNominal={
         DANA:['5rb','10rb','15rb','20rb','25rb','30rb','50rb','75rb','100rb','150rb','200rb','300rb','500rb','1jt'],
@@ -1201,7 +1420,7 @@ body{
 
             return {
                 kode:wallet+'_'+nominal,
-                nama:walletMeta[wallet]+' '+label,
+                nama:walletName(wallet)+' '+label,
                 harga:formatRupiah(total),
                 group:filterGroup(nominal)
             };
@@ -1218,8 +1437,24 @@ body{
         return getDefaultProducts(wallet);
     }
 
+
+    function isiLogoWallet(){
+        isiLogoWallet();
+
+    document.querySelectorAll('.wallet-card').forEach(function(card){
+            const wallet=card.dataset.wallet;
+            const oldLogo=card.querySelector('.wallet-logo');
+
+            if(!oldLogo) return;
+
+            oldLogo.outerHTML=walletLogo(wallet);
+        });
+
+        aktifkanFallbackWallet();
+    }
+
     function setWallet(wallet){
-        if(!wallet || !walletMeta[wallet]) return;
+        if(!wallet || !walletName(wallet)) return;
 
         activeWallet=wallet;
         walletValue.value=wallet;
@@ -1230,7 +1465,7 @@ body{
         });
 
         walletInfo.style.display='block';
-        walletInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> E-Wallet dipilih: <strong>'+walletMeta[wallet]+'</strong>';
+        walletInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> E-Wallet dipilih: <strong>'+walletName(wallet)+'</strong>';
 
         renderNominal();
         updateSummary();
@@ -1251,7 +1486,7 @@ body{
         kodeProduk.value='';
 
         if(!activeWallet){
-            nominalGrid.innerHTML='<div class="nominal-empty">Pilih jenis e-wallet terlebih dahulu untuk melihat nominal saldo.</div>';
+            nominalGrid.innerHTML='<div class="nominal-empty">Pilih e-wallet terlebih dahulu untuk melihat nominal saldo.</div>';
             updateSummary();
             return;
         }
@@ -1265,7 +1500,7 @@ body{
         }
 
         if(!list.length){
-            nominalGrid.innerHTML='<div class="nominal-empty">Nominal pada filter ini belum tersedia.</div>';
+            nominalGrid.innerHTML='<div class="nominal-empty">Nominal belum tersedia di filter ini.</div>';
             updateSummary();
             return;
         }
@@ -1279,7 +1514,7 @@ body{
             card.dataset.harga=item.harga;
 
             card.innerHTML=
-                '<div class="nominal-label">Top Up</div>'+
+                '<div class="nominal-label">Saldo</div>'+
                 '<div class="nominal-name">'+item.nama+'</div>'+
                 '<div class="nominal-price">'+item.harga+'</div>';
 
@@ -1309,7 +1544,7 @@ body{
         const activeNominal=document.querySelector('.nominal-card.active');
 
         document.getElementById('sumNomor').textContent=nomor || '-';
-        document.getElementById('sumWallet').textContent=wallet ? walletMeta[wallet] : '-';
+        document.getElementById('sumWallet').textContent=wallet ? walletName(wallet) : '-';
         document.getElementById('sumProduk').textContent=selected.nama || (activeNominal ? activeNominal.dataset.nama : '-');
         document.getElementById('sumHarga').textContent=selected.harga || (activeNominal ? activeNominal.dataset.harga : 'Rp 0');
 
@@ -1361,24 +1596,24 @@ body{
 
         if(!nomor || nomor.length < 10){
             e.preventDefault();
-            alert('Masukkan nomor tujuan e-wallet yang valid minimal 10 digit.');
+            alert('Masukkan nomor tujuan minimal 10 digit.');
             nomorInput.focus();
             return;
         }
 
         if(!wallet){
             e.preventDefault();
-            alert('Silakan pilih jenis e-wallet terlebih dahulu.');
+            alert('Pilih e-wallet dulu.');
             return;
         }
 
         if(!produk){
             e.preventDefault();
-            alert('Silakan pilih nominal saldo terlebih dahulu.');
+            alert('Pilih nominal saldo dulu.');
             return;
         }
 
-        btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Top Up...';
+        btnBayar.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Memproses Saldo...';
         btnBayar.style.opacity='0.75';
         btnBayar.style.pointerEvents='none';
     });
