@@ -6,11 +6,11 @@
 {% set hasil = hasil_cek|default(None, true) %}
 
 {% set fallback_produk_bpjs = {
-    'BPJS_KES_1': 'BPJS Kesehatan 1 Bulan',
-    'BPJS_KES_2': 'BPJS Kesehatan 2 Bulan',
-    'BPJS_KES_3': 'BPJS Kesehatan 3 Bulan',
-    'BPJS_KES_6': 'BPJS Kesehatan 6 Bulan',
-    'BPJS_KES_12': 'BPJS Kesehatan 12 Bulan',
+    'BPJS_KES_1': 'Cek BPJS 1 Bulan',
+    'BPJS_KES_2': 'Cek BPJS 2 Bulan',
+    'BPJS_KES_3': 'Cek BPJS 3 Bulan',
+    'BPJS_KES_6': 'Cek BPJS 6 Bulan',
+    'BPJS_KES_12': 'Cek BPJS 12 Bulan',
     'BPJS_KETENAGAKERJAAN': 'BPJS Ketenagakerjaan'
 } %}
 
@@ -1298,6 +1298,359 @@ body{
     }
 }
 
+
+/* BPJS premium clean v2 - lebih berisi, rapi, dan jelas di HP */
+.bpjs-shell{
+    border-radius:26px !important;
+    background:
+        radial-gradient(circle at top left,rgba(16,185,129,.08),transparent 34%),
+        #ffffff !important;
+    border:1px solid #eef2f7 !important;
+    box-shadow:0 12px 28px rgba(15,23,42,.07) !important;
+}
+
+.bpjs-hero{
+    position:relative !important;
+    border-radius:24px !important;
+    padding:1.05rem !important;
+    background:
+        radial-gradient(circle at 88% 0%,rgba(255,255,255,.20),transparent 30%),
+        linear-gradient(135deg,#0f172a 0%,#065f46 55%,#16a34a 100%) !important;
+    box-shadow:0 12px 26px rgba(22,163,74,.20) !important;
+}
+
+.bpjs-hero::before,
+.bpjs-hero::after{
+    opacity:.35 !important;
+}
+
+.bpjs-hero-icon{
+    background:rgba(255,255,255,.16) !important;
+    border:1px solid rgba(255,255,255,.22) !important;
+    box-shadow:0 10px 22px rgba(15,23,42,.16) !important;
+}
+
+.bpjs-badge{
+    background:rgba(255,255,255,.15) !important;
+    border:1px solid rgba(255,255,255,.18) !important;
+    letter-spacing:.02em !important;
+}
+
+.bpjs-mini-row,
+.bpjs-flow-grid,
+.bpjs-class-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+}
+
+.bpjs-mini,
+.bpjs-flow-item,
+.bpjs-class-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:.72rem .48rem;
+    text-align:center;
+    box-shadow:0 8px 18px rgba(15,23,42,.045);
+}
+
+.bpjs-flow-panel{
+    margin:.75rem 0 .85rem;
+    padding:.78rem;
+    border-radius:22px;
+    background:#ffffff;
+    border:1px solid #dcfce7;
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+
+.bpjs-flow-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.65rem;
+}
+
+.bpjs-flow-head strong{
+    display:block;
+    color:#0f172a;
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.bpjs-flow-head span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:650;
+}
+
+.bpjs-flow-pill{
+    flex:0 0 auto;
+    padding:.28rem .5rem;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    border:1px solid #bbf7d0;
+    font-size:.58rem;
+    font-weight:950;
+}
+
+.bpjs-flow-item i,
+.bpjs-class-card i{
+    width:32px;
+    height:32px;
+    margin:0 auto .38rem;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#ecfdf5;
+    color:#047857;
+}
+
+.bpjs-flow-item.active i{
+    background:linear-gradient(135deg,#047857,#22c55e);
+    color:#fff;
+}
+
+.bpjs-flow-item strong,
+.bpjs-class-card strong{
+    display:block;
+    color:#0f172a;
+    font-size:.7rem;
+    line-height:1.15;
+    font-weight:950;
+}
+
+.bpjs-flow-item span,
+.bpjs-class-card span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.56rem;
+    line-height:1.18;
+    font-weight:700;
+}
+
+.bpjs-card,
+.summary-box,
+.result-card{
+    border-radius:22px !important;
+    border-color:#eef2f7 !important;
+    box-shadow:0 9px 22px rgba(15,23,42,.055) !important;
+}
+
+.section-pill{
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+    border:1px solid #bbf7d0 !important;
+}
+
+.bpjs-checklist{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.5rem;
+    margin-top:.62rem;
+}
+
+.bpjs-checklist div{
+    display:flex;
+    align-items:center;
+    gap:.38rem;
+    padding:.55rem .6rem;
+    border-radius:15px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#334155;
+    font-size:.68rem;
+    font-weight:800;
+}
+
+.bpjs-checklist i{
+    color:#16a34a;
+    font-size:.72rem;
+}
+
+.bpjs-class-row{
+    margin:.68rem 0 .82rem;
+}
+
+.bpjs-class-card{
+    padding:.68rem .38rem;
+    box-shadow:none;
+    background:#f8fafc;
+}
+
+.product-note{
+    background:#f8fafc !important;
+    border-color:#e2e8f0 !important;
+    color:#475569 !important;
+}
+
+.product-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+    background:#ffffff !important;
+}
+
+.product-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.product-card.active{
+    background:#ecfdf5 !important;
+    border-color:#16a34a !important;
+    box-shadow:0 8px 20px rgba(22,163,74,.10) !important;
+}
+
+.product-card::before{
+    display:none !important;
+}
+
+.product-card::after{
+    content:"BPJS";
+    position:absolute;
+    right:.62rem;
+    top:.62rem;
+    padding:.18rem .38rem;
+    border-radius:999px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#047857;
+    font-size:.48rem;
+    font-weight:950;
+}
+
+.product-label{
+    background:#ecfdf5 !important;
+    color:#047857 !important;
+}
+
+.summary-total,
+.total-row,
+.result-head{
+    background:linear-gradient(135deg,#0f172a,#047857,#22c55e) !important;
+}
+
+.btn-main{
+    background:linear-gradient(135deg,#047857,#22c55e) !important;
+    box-shadow:0 10px 22px rgba(22,163,74,.18) !important;
+}
+
+.btn-main.blue{
+    background:linear-gradient(135deg,#2563eb,#0ea5e9) !important;
+}
+
+.note{
+    border-left:0 !important;
+    border-radius:17px !important;
+}
+
+@media(max-width:560px){
+    .bpjs-flow-panel{
+        margin:.5rem 0 .55rem !important;
+        padding:.6rem !important;
+        border-radius:17px !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .bpjs-flow-head{
+        margin-bottom:.48rem !important;
+        align-items:center !important;
+    }
+
+    .bpjs-flow-head strong{
+        font-size:.74rem !important;
+    }
+
+    .bpjs-flow-head span{
+        display:none !important;
+    }
+
+    .bpjs-flow-pill{
+        padding:.24rem .42rem !important;
+        font-size:.52rem !important;
+    }
+
+    .bpjs-flow-grid,
+    .bpjs-class-row{
+        gap:.36rem !important;
+    }
+
+    .bpjs-flow-item,
+    .bpjs-class-card{
+        border-radius:14px !important;
+        padding:.48rem .24rem !important;
+        box-shadow:none !important;
+    }
+
+    .bpjs-flow-item i,
+    .bpjs-class-card i{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        margin-bottom:.3rem !important;
+        font-size:.7rem !important;
+    }
+
+    .bpjs-flow-item strong,
+    .bpjs-class-card strong{
+        font-size:.58rem !important;
+    }
+
+    .bpjs-flow-item span,
+    .bpjs-class-card span{
+        font-size:.46rem !important;
+    }
+
+    .bpjs-checklist{
+        gap:.36rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .bpjs-checklist div{
+        padding:.42rem .45rem !important;
+        border-radius:12px !important;
+        font-size:.56rem !important;
+    }
+
+    .product-card::after{
+        right:.38rem !important;
+        top:.38rem !important;
+        font-size:.42rem !important;
+        padding:.12rem .3rem !important;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .product-card{
+        min-height:96px !important;
+        padding:.56rem !important;
+        border-radius:15px !important;
+    }
+
+    .product-name{
+        font-size:.66rem !important;
+        line-height:1.18 !important;
+        padding-right:1.9rem !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .product-price{
+        font-size:.64rem !important;
+    }
+}
+
 </style>
 
 <div class="bpjs-page">
@@ -1335,8 +1688,8 @@ body{
                         BPJS
                     </div>
 
-                    <h2>BPJS Kesehatan</h2>
-                    <p>Masukkan nomor peserta, pilih layanan, lalu cek tagihan.</p>
+                    <h2>Cek BPJS</h2>
+                    <p>Masukkan nomor peserta, pilih layanan, lalu cek tagihan BPJS.</p>
                 </div>
             </div>
 
@@ -1376,6 +1729,39 @@ body{
             </div>
         </div>
 
+        <div class="bpjs-flow-panel">
+            <div class="bpjs-flow-head">
+                <div>
+                    <strong>Alur Pembayaran BPJS</strong>
+                    <span>Isi nomor, pilih layanan, lalu cek tagihan sebelum bayar.</span>
+                </div>
+                <div class="bpjs-flow-pill">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Aman
+                </div>
+            </div>
+
+            <div class="bpjs-flow-grid">
+                <div class="bpjs-flow-item active">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <strong>Input</strong>
+                    <span>Nomor peserta</span>
+                </div>
+
+                <div class="bpjs-flow-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <strong>Pilih</strong>
+                    <span>Layanan BPJS</span>
+                </div>
+
+                <div class="bpjs-flow-item">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <strong>Cek</strong>
+                    <span>Total tagihan</span>
+                </div>
+            </div>
+        </div>
+
         <form method="POST" action="{{ url_for('lainnya') }}" id="bpjsForm" autocomplete="off">
             {% if csrf_token is defined %}
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -1388,8 +1774,8 @@ body{
             <div class="bpjs-card">
                 <div class="section-head">
                     <div>
-                        <h3>Nomor Peserta BPJS</h3>
-                        <p>Masukkan nomor peserta atau virtual account.</p>
+                        <h3>Nomor Peserta / VA</h3>
+                        <p>Isi nomor peserta atau virtual account BPJS.</p>
                     </div>
 
                     <span class="section-pill">Step 1</span>
@@ -1422,6 +1808,17 @@ body{
                     <button type="button" data-clear="1">Hapus</button>
                 </div>
 
+                <div class="bpjs-checklist">
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Nomor tanpa spasi</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Cek sebelum bayar</span>
+                    </div>
+                </div>
+
                 <div class="bpjs-info" id="bpjsInfo"></div>
             </div>
 
@@ -1436,7 +1833,25 @@ body{
                 </div>
 
                 <div class="product-note">
-                    <strong>Info:</strong> Biaya di kartu hanya admin awal. Total asli muncul setelah cek tagihan.
+                    <strong>Info:</strong> Admin awal tampil di kartu. Total tagihan dicek setelah nomor dikirim.
+                </div>
+
+                <div class="bpjs-class-row">
+                    <div class="bpjs-class-card">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <strong>Mandiri</strong>
+                        <span>Cek iuran pribadi</span>
+                    </div>
+                    <div class="bpjs-class-card">
+                        <i class="fa-solid fa-users"></i>
+                        <strong>Keluarga</strong>
+                        <span>Tagihan peserta</span>
+                    </div>
+                    <div class="bpjs-class-card">
+                        <i class="fa-solid fa-building-shield"></i>
+                        <strong>Kerja</strong>
+                        <span>Ketenagakerjaan</span>
+                    </div>
                 </div>
 
                 <div class="search-box">
@@ -1485,7 +1900,7 @@ body{
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Ringkasan
+                        Ringkasan Cek
                     </div>
 
                     <div class="summary-row">
@@ -1510,12 +1925,12 @@ body{
                 {% if produk_final %}
                     <button type="submit" class="btn-main" id="btnSubmit">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        Cek Tagihan
+                        Cek Tagihan BPJS
                     </button>
                 {% endif %}
 
                 <div class="note">
-                    <strong>Penting:</strong> Detail tagihan dan total bayar akan tampil sebelum pembayaran.
+                    <strong>Catatan:</strong> Cek ulang nomor dan layanan sebelum lanjut.
                 </div>
             </div>
         </form>
@@ -1762,6 +2177,45 @@ body{
     if (nomorInput && nomorInput.value) {
         nomorInput.dispatchEvent(new Event('input'));
     }
+})();
+</script>
+
+
+<script>
+(function(){
+    function updateBpjsFlow(){
+        var nomor=document.getElementById('nomor_tujuan');
+        var activeProduct=document.querySelector('.product-card.active');
+        var steps=document.querySelectorAll('.bpjs-flow-item');
+
+        if(!steps.length) return;
+
+        steps.forEach(function(step){ step.classList.remove('active'); });
+
+        if(nomor && nomor.value.replace(/[^0-9]/g,'').length >= 8){
+            steps[1] && steps[1].classList.add('active');
+        }else{
+            steps[0] && steps[0].classList.add('active');
+        }
+
+        if(activeProduct){
+            steps[2] && steps[2].classList.add('active');
+        }
+    }
+
+    document.addEventListener('input',function(e){
+        if(e.target && e.target.id === 'nomor_tujuan'){
+            updateBpjsFlow();
+        }
+    });
+
+    document.addEventListener('click',function(e){
+        if(e.target.closest && e.target.closest('.product-card')){
+            setTimeout(updateBpjsFlow,50);
+        }
+    });
+
+    updateBpjsFlow();
 })();
 </script>
 
