@@ -1114,6 +1114,810 @@ body{
         grid-template-columns:repeat(3,1fr);
     }
 }
+
+/* TV final - rapi, berisi, dan bagus di HP */
+.tv-lounge-shell{
+    border-radius:24px !important;
+    background:#ffffff !important;
+    border:1px solid #f1f5f9 !important;
+    box-shadow:0 10px 24px rgba(15,23,42,.06) !important;
+}
+
+.tv-hero{
+    border-radius:22px !important;
+    padding:1.05rem !important;
+    background:
+        radial-gradient(circle at 100% 0%,rgba(255,255,255,.20),transparent 30%),
+        linear-gradient(135deg,#111827 0%,#be123c 55%,#ef1748 100%) !important;
+    box-shadow:0 10px 22px rgba(239,23,72,.18) !important;
+}
+
+.tv-hero::before,
+.tv-hero::after{
+    opacity:.35 !important;
+}
+
+.tv-flow-panel{
+    margin:.75rem 0 .85rem;
+    padding:.78rem;
+    border-radius:22px;
+    background:#ffffff;
+    border:1px solid #ffe4e6;
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+}
+
+.tv-flow-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:.6rem;
+    margin-bottom:.65rem;
+}
+
+.tv-flow-head strong{
+    display:block;
+    color:#0f172a;
+    font-size:.86rem;
+    font-weight:950;
+}
+
+.tv-flow-head span{
+    display:block;
+    margin-top:.12rem;
+    color:#64748b;
+    font-size:.66rem;
+    line-height:1.3;
+    font-weight:650;
+}
+
+.tv-flow-pill{
+    flex:0 0 auto;
+    padding:.28rem .5rem;
+    border-radius:999px;
+    background:#fff1f2;
+    color:#be123c;
+    border:1px solid #ffe4e6;
+    font-size:.58rem;
+    font-weight:950;
+}
+
+.tv-flow-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:.55rem;
+}
+
+.tv-flow-item{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:.7rem .45rem;
+    text-align:center;
+}
+
+.tv-flow-item i{
+    width:32px;
+    height:32px;
+    margin:0 auto .38rem;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff1f2;
+    color:#be123c;
+}
+
+.tv-flow-item.active i{
+    background:linear-gradient(135deg,#be123c,#ef1748);
+    color:#fff;
+}
+
+.tv-flow-item strong{
+    display:block;
+    color:#0f172a;
+    font-size:.7rem;
+    line-height:1.15;
+    font-weight:950;
+}
+
+.tv-flow-item span{
+    display:block;
+    margin-top:.1rem;
+    color:#64748b;
+    font-size:.56rem;
+    line-height:1.18;
+    font-weight:700;
+}
+
+.tv-card,
+.summary-box{
+    border-radius:20px !important;
+    border-color:#f1f5f9 !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.05) !important;
+}
+
+.section-pill{
+    background:#fff1f2 !important;
+    color:#be123c !important;
+    border:1px solid #ffe4e6 !important;
+}
+
+.tv-checklist{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.5rem;
+    margin-top:.62rem;
+}
+
+.tv-checklist div{
+    display:flex;
+    align-items:center;
+    gap:.38rem;
+    padding:.55rem .6rem;
+    border-radius:15px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#334155;
+    font-size:.68rem;
+    font-weight:800;
+}
+
+.tv-checklist i{
+    color:#16a34a;
+    font-size:.72rem;
+}
+
+.provider-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.provider-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.provider-card.active{
+    background:#fff1f2 !important;
+    border-color:#ef1748 !important;
+    box-shadow:0 8px 20px rgba(239,23,72,.10) !important;
+}
+
+.provider-logo,
+.package-logo{
+    background:linear-gradient(135deg,#111827,#be123c,#ef1748) !important;
+}
+
+.tv-feature-grid{
+    background:#ffffff !important;
+    border-color:#e2e8f0 !important;
+    box-shadow:0 6px 14px rgba(15,23,42,.035);
+}
+
+.tv-feature{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.28rem;
+    color:#be123c !important;
+}
+
+.tv-feature i{
+    font-size:.68rem;
+}
+
+.tv-provider-note{
+    display:flex;
+    align-items:flex-start;
+    gap:.45rem;
+    margin-top:.65rem;
+    padding:.68rem;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.7rem;
+    line-height:1.35;
+    font-weight:700;
+}
+
+.tv-provider-note i{
+    color:#be123c;
+    margin-top:.08rem;
+}
+
+.lounge-screen,
+.summary-total{
+    background:linear-gradient(135deg,#111827,#be123c,#ef1748) !important;
+}
+
+.promo-banner{
+    background:linear-gradient(135deg,#7c3aed,#be123c,#ef1748) !important;
+    box-shadow:0 8px 18px rgba(239,23,72,.13) !important;
+}
+
+.package-card{
+    border-radius:18px !important;
+    box-shadow:none !important;
+}
+
+.package-card:hover{
+    transform:translateY(-1px) !important;
+}
+
+.package-card.active{
+    background:#fff1f2 !important;
+    border-color:#ef1748 !important;
+    box-shadow:0 8px 20px rgba(239,23,72,.10) !important;
+}
+
+.submit-btn,
+.search-tv-btn,
+.choose-package{
+    background:linear-gradient(135deg,#be123c,#ef1748) !important;
+}
+
+.submit-btn,
+.search-tv-btn{
+    box-shadow:0 10px 22px rgba(239,23,72,.18) !important;
+}
+
+/* Tampilan HP TV */
+@media(max-width:520px){
+    html,
+    body{
+        width:100% !important;
+        max-width:100% !important;
+        overflow-x:hidden !important;
+    }
+
+    body{
+        background:#f8fafc !important;
+    }
+
+    .tv-lounge-page{
+        width:100vw !important;
+        max-width:100vw !important;
+        margin-left:50% !important;
+        transform:translateX(-50%) !important;
+        padding:.24rem .2rem 4.8rem !important;
+        box-sizing:border-box !important;
+    }
+
+    .tv-lounge-shell{
+        width:calc(100vw - .4rem) !important;
+        max-width:none !important;
+        margin:0 auto !important;
+        padding:.42rem !important;
+        border-radius:18px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.06) !important;
+        box-sizing:border-box !important;
+    }
+
+    .tv-topbar{
+        margin-bottom:.48rem !important;
+        gap:.45rem !important;
+    }
+
+    .tv-back,
+    .tv-chip{
+        min-height:32px !important;
+        padding:0 .56rem !important;
+        font-size:.62rem !important;
+        box-shadow:none !important;
+    }
+
+    .tv-hero{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(239,23,72,.14) !important;
+    }
+
+    .tv-hero::before,
+    .tv-hero::after{
+        display:none !important;
+    }
+
+    .tv-hero-main{
+        gap:.58rem !important;
+        align-items:center !important;
+    }
+
+    .tv-hero-icon{
+        width:40px !important;
+        height:40px !important;
+        flex-basis:40px !important;
+        border-radius:14px !important;
+        font-size:.95rem !important;
+    }
+
+    .tv-badge{
+        margin-bottom:.22rem !important;
+        padding:.2rem .46rem !important;
+        font-size:.54rem !important;
+        letter-spacing:.02em !important;
+    }
+
+    .tv-hero h2{
+        font-size:.98rem !important;
+        line-height:1.16 !important;
+    }
+
+    .tv-hero p{
+        margin:.18rem 0 0 !important;
+        font-size:.64rem !important;
+        line-height:1.3 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .hero-menu{
+        display:none !important;
+    }
+
+    .tv-flow-panel{
+        margin:.5rem 0 .55rem !important;
+        padding:.6rem !important;
+        border-radius:17px !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .tv-flow-head{
+        margin-bottom:.48rem !important;
+        align-items:center !important;
+    }
+
+    .tv-flow-head strong{
+        font-size:.74rem !important;
+    }
+
+    .tv-flow-head span{
+        display:none !important;
+    }
+
+    .tv-flow-pill{
+        padding:.24rem .42rem !important;
+        font-size:.52rem !important;
+    }
+
+    .tv-flow-grid{
+        gap:.36rem !important;
+    }
+
+    .tv-flow-item{
+        border-radius:14px !important;
+        padding:.48rem .24rem !important;
+        box-shadow:none !important;
+    }
+
+    .tv-flow-item i{
+        width:28px !important;
+        height:28px !important;
+        border-radius:10px !important;
+        margin-bottom:.3rem !important;
+        font-size:.7rem !important;
+    }
+
+    .tv-flow-item strong{
+        font-size:.58rem !important;
+    }
+
+    .tv-flow-item span{
+        font-size:.46rem !important;
+    }
+
+    .tv-card{
+        border-radius:18px !important;
+        padding:.68rem !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 6px 14px rgba(15,23,42,.045) !important;
+    }
+
+    .section-title{
+        margin-bottom:.5rem !important;
+        gap:.45rem !important;
+        align-items:center !important;
+    }
+
+    .section-title h3{
+        font-size:.84rem !important;
+    }
+
+    .section-title p{
+        display:none !important;
+    }
+
+    .section-pill{
+        padding:.28rem .48rem !important;
+        font-size:.54rem !important;
+    }
+
+    .input-control{
+        min-height:48px !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        padding-left:2.25rem !important;
+    }
+
+    .input-help{
+        margin-top:.32rem !important;
+        font-size:.62rem !important;
+    }
+
+    .quick-row{
+        gap:.34rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .quick-row button{
+        padding:.38rem .52rem !important;
+        font-size:.6rem !important;
+    }
+
+    .tv-checklist{
+        gap:.36rem !important;
+        margin-top:.45rem !important;
+    }
+
+    .tv-checklist div{
+        padding:.42rem .45rem !important;
+        border-radius:12px !important;
+        font-size:.56rem !important;
+    }
+
+    .tv-info{
+        margin-top:.48rem !important;
+        padding:.55rem .62rem !important;
+        border-radius:13px !important;
+        font-size:.66rem !important;
+        background:#f8fafc !important;
+        border-color:#e2e8f0 !important;
+        color:#334155 !important;
+    }
+
+    .provider-strip{
+        display:grid !important;
+        grid-template-columns:repeat(3,1fr) !important;
+        gap:.38rem !important;
+        overflow:visible !important;
+        padding:0 !important;
+    }
+
+    .provider-card{
+        min-width:0 !important;
+        width:100% !important;
+        min-height:78px !important;
+        flex:initial !important;
+        padding:.48rem .28rem !important;
+        border-radius:14px !important;
+        text-align:center !important;
+        box-shadow:none !important;
+    }
+
+    .provider-logo{
+        width:30px !important;
+        height:30px !important;
+        margin:0 auto .32rem !important;
+        border-radius:11px !important;
+        font-size:.55rem !important;
+    }
+
+    .provider-card strong{
+        font-size:.56rem !important;
+        line-height:1.1 !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .provider-card span{
+        display:none !important;
+    }
+
+    .tv-feature-grid{
+        grid-template-columns:repeat(4,1fr) !important;
+        gap:.32rem !important;
+        margin-top:.55rem !important;
+        padding:.48rem !important;
+        border-radius:15px !important;
+    }
+
+    .tv-feature{
+        min-height:34px !important;
+        border-radius:10px !important;
+        font-size:.48rem !important;
+        gap:.18rem !important;
+    }
+
+    .tv-feature i{
+        font-size:.54rem !important;
+    }
+
+    .tv-provider-note{
+        display:none !important;
+    }
+
+    .search-tv-btn{
+        min-height:48px !important;
+        margin-top:.6rem !important;
+        border-radius:14px !important;
+        font-size:.82rem !important;
+        box-shadow:0 8px 18px rgba(239,23,72,.18) !important;
+    }
+
+    .compact-tv{
+        top:.35rem !important;
+        margin-bottom:.5rem !important;
+        padding:.55rem !important;
+        border-radius:16px !important;
+        box-shadow:0 8px 18px rgba(15,23,42,.10) !important;
+    }
+
+    .compact-inner strong{
+        font-size:.74rem !important;
+    }
+
+    .compact-inner span{
+        font-size:.6rem !important;
+    }
+
+    .compact-edit{
+        min-height:32px !important;
+        padding:0 .55rem !important;
+        font-size:.6rem !important;
+    }
+
+    .lounge-screen{
+        border-radius:18px !important;
+        margin-bottom:.55rem !important;
+        box-shadow:0 8px 18px rgba(239,23,72,.14) !important;
+    }
+
+    .lounge-screen-main{
+        padding:.72rem !important;
+    }
+
+    .lounge-label{
+        margin-bottom:.35rem !important;
+        padding:.22rem .45rem !important;
+        font-size:.52rem !important;
+    }
+
+    .lounge-screen h3{
+        font-size:.86rem !important;
+    }
+
+    .lounge-screen p{
+        margin-top:.18rem !important;
+        font-size:.62rem !important;
+        line-height:1.25 !important;
+    }
+
+    .screen-stats{
+        gap:.34rem !important;
+        padding:0 .72rem .72rem !important;
+    }
+
+    .stat-box{
+        padding:.46rem .3rem !important;
+        border-radius:12px !important;
+    }
+
+    .stat-box strong{
+        font-size:.62rem !important;
+    }
+
+    .stat-box span{
+        font-size:.5rem !important;
+    }
+
+    .channel-wrap{
+        margin-bottom:.45rem !important;
+    }
+
+    .channel-title{
+        margin-bottom:.3rem !important;
+    }
+
+    .channel-title strong{
+        font-size:.78rem !important;
+    }
+
+    .channel-title span{
+        display:none !important;
+    }
+
+    .channel-strip{
+        gap:.35rem !important;
+        padding-bottom:.25rem !important;
+    }
+
+    .channel-chip{
+        flex:0 0 82px !important;
+        border-radius:13px !important;
+        padding:.42rem .28rem !important;
+        box-shadow:none !important;
+    }
+
+    .channel-chip strong{
+        font-size:.6rem !important;
+    }
+
+    .channel-chip span{
+        font-size:.5rem !important;
+    }
+
+    .promo-banner{
+        display:none !important;
+    }
+
+    .filter-scroll{
+        gap:.35rem !important;
+        margin-bottom:.35rem !important;
+        padding-bottom:.25rem !important;
+    }
+
+    .filter-btn{
+        padding:.38rem .52rem !important;
+        font-size:.58rem !important;
+    }
+
+    .package-list{
+        grid-template-columns:repeat(2,1fr) !important;
+        gap:.42rem !important;
+    }
+
+    .package-card{
+        min-width:0 !important;
+        width:100% !important;
+        border-radius:15px !important;
+        box-shadow:none !important;
+    }
+
+    .package-card:hover{
+        transform:none !important;
+    }
+
+    .package-main{
+        padding:.58rem !important;
+    }
+
+    .package-top{
+        align-items:flex-start !important;
+        margin-bottom:.42rem !important;
+        gap:.35rem !important;
+    }
+
+    .package-left{
+        gap:.42rem !important;
+        align-items:flex-start !important;
+    }
+
+    .package-logo{
+        width:30px !important;
+        height:30px !important;
+        flex-basis:30px !important;
+        border-radius:11px !important;
+        font-size:.55rem !important;
+    }
+
+    .package-name strong{
+        font-size:.66rem !important;
+        line-height:1.18 !important;
+        white-space:normal !important;
+        display:-webkit-box !important;
+        -webkit-line-clamp:2 !important;
+        -webkit-box-orient:vertical !important;
+        overflow:hidden !important;
+    }
+
+    .package-name span,
+    .package-tag,
+    .package-detail,
+    .package-benefits{
+        display:none !important;
+    }
+
+    .package-bottom{
+        display:block !important;
+        padding-top:.42rem !important;
+    }
+
+    .price-box span,
+    .price-box small{
+        display:none !important;
+    }
+
+    .price-box strong{
+        font-size:.72rem !important;
+    }
+
+    .choose-package{
+        width:100% !important;
+        min-height:34px !important;
+        margin-top:.42rem !important;
+        border-radius:11px !important;
+        font-size:.62rem !important;
+    }
+
+    .summary-box{
+        border-radius:18px !important;
+        padding:.72rem !important;
+        margin-top:.58rem !important;
+        box-shadow:0 7px 16px rgba(239,23,72,.07) !important;
+    }
+
+    .summary-title{
+        margin-bottom:.48rem !important;
+        font-size:.82rem !important;
+    }
+
+    .summary-row{
+        padding:.42rem 0 !important;
+    }
+
+    .summary-row span{
+        font-size:.66rem !important;
+    }
+
+    .summary-row b{
+        font-size:.73rem !important;
+    }
+
+    .summary-total{
+        margin-top:.52rem !important;
+        padding:.68rem !important;
+        border-radius:15px !important;
+    }
+
+    .summary-total span{
+        font-size:.66rem !important;
+    }
+
+    .summary-total b{
+        font-size:.92rem !important;
+    }
+
+    .submit-btn{
+        min-height:48px !important;
+        margin-top:.65rem !important;
+        border-radius:15px !important;
+        font-size:.84rem !important;
+        box-shadow:0 8px 18px rgba(239,23,72,.18) !important;
+    }
+}
+
+@media(max-width:360px){
+    .tv-lounge-page{
+        padding:.2rem .16rem 4.7rem !important;
+    }
+
+    .tv-lounge-shell{
+        width:calc(100vw - .32rem) !important;
+        padding:.34rem !important;
+        border-radius:16px !important;
+    }
+
+    .provider-strip{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .package-list{
+        grid-template-columns:repeat(2,1fr) !important;
+    }
+
+    .package-name strong{
+        font-size:.61rem !important;
+    }
+
+    .price-box strong{
+        font-size:.66rem !important;
+    }
+}
+
 </style>
 
 <div class="tv-lounge-page">
@@ -1148,10 +1952,10 @@ body{
                 <div>
                     <div class="tv-badge">
                         <i class="fa-solid fa-clapperboard"></i>
-                        Entertainment Lounge
+                        TV Kabel
                     </div>
-                    <h2>TV Kabel Premium Lebih Rapi</h2>
-                    <p>Kelola tagihan, paket channel, film, sport, family, dan premium dalam satu dashboard ringan.</p>
+                    <h2>Bayar TV Kabel</h2>
+                    <p>Masukkan ID pelanggan, pilih provider, lalu cek tagihan atau paket TV.</p>
                 </div>
             </div>
 
@@ -1161,6 +1965,39 @@ body{
                 <button type="button" data-provider="TV_MNCVISION">MNC Vision</button>
                 <button type="button" data-provider="TV_KVISION">K-Vision</button>
                 <button type="button" data-provider="TV_TRANSVISION">Transvision</button>
+            </div>
+        </div>
+
+        <div class="tv-flow-panel">
+            <div class="tv-flow-head">
+                <div>
+                    <strong>Alur Cek TV Kabel</strong>
+                    <span>Isi ID, pilih provider, lalu cek tagihan sebelum bayar.</span>
+                </div>
+                <div class="tv-flow-pill">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Aman
+                </div>
+            </div>
+
+            <div class="tv-flow-grid">
+                <div class="tv-flow-item active">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <strong>Input</strong>
+                    <span>ID pelanggan</span>
+                </div>
+
+                <div class="tv-flow-item">
+                    <i class="fa-solid fa-tv"></i>
+                    <strong>Provider</strong>
+                    <span>Pilih layanan</span>
+                </div>
+
+                <div class="tv-flow-item">
+                    <i class="fa-solid fa-receipt"></i>
+                    <strong>Tagihan</strong>
+                    <span>Cek detail</span>
+                </div>
             </div>
         </div>
 
@@ -1176,8 +2013,8 @@ body{
             <div class="tv-card" id="searchCard">
                 <div class="section-title">
                     <div>
-                        <h3>ID Pelanggan TV Kabel</h3>
-                        <p>Masukkan nomor pelanggan TV kabel, parabola, atau streaming.</p>
+                        <h3>ID Pelanggan TV</h3>
+                        <p>Isi ID pelanggan TV kabel, parabola, atau streaming.</p>
                     </div>
                     <span class="section-pill">Step 1</span>
                 </div>
@@ -1200,14 +2037,25 @@ body{
                 </div>
 
                 <div class="input-help">
-                    <span>Gunakan angka tanpa spasi.</span>
+                    <span>Angka saja, tanpa spasi.</span>
                     <span id="charCount">0/25</span>
                 </div>
 
                 <div class="quick-row">
                     <button type="button" data-id="1000123456">Contoh ID</button>
-                    <button type="button" data-id="8800112233">Contoh Parabola</button>
+                    <button type="button" data-id="8800112233">Contoh 2</button>
                     <button type="button" data-clear="1">Hapus</button>
+                </div>
+
+                <div class="tv-checklist">
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>ID tanpa spasi</span>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Provider sesuai</span>
+                    </div>
                 </div>
 
                 <div class="tv-info" id="tvInfo"></div>
@@ -1215,8 +2063,8 @@ body{
                 <div style="margin-top:1rem;">
                     <div class="section-title">
                         <div>
-                            <h3>Pilih Provider TV</h3>
-                            <p>Geser dan pilih provider sesuai layanan kamu.</p>
+                            <h3>Provider TV</h3>
+                            <p>Pilih provider sesuai tagihan pelanggan.</p>
                         </div>
                         <span class="section-pill">Step 2</span>
                     </div>
@@ -1240,19 +2088,24 @@ body{
                 </div>
 
                 <div class="tv-feature-grid">
-                    <button type="button" class="tv-feature">MOVIE</button>
-                    <button type="button" class="tv-feature">SPORT</button>
-                    <button type="button" class="tv-feature">KIDS</button>
-                    <button type="button" class="tv-feature">NEWS</button>
-                    <button type="button" class="tv-feature">HD</button>
-                    <button type="button" class="tv-feature">VOD</button>
-                    <button type="button" class="tv-feature">FAMILY</button>
-                    <button type="button" class="tv-feature">PREMIUM</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-clapperboard"></i> MOVIE</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-futbol"></i> SPORT</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-child-reaching"></i> KIDS</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-newspaper"></i> NEWS</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-display"></i> HD</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-play"></i> VOD</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-house-user"></i> FAMILY</button>
+                    <button type="button" class="tv-feature"><i class="fa-solid fa-star"></i> PREMIUM</button>
+                </div>
+
+                <div class="tv-provider-note">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Pilih provider yang sama dengan tagihan pelanggan. Cek nama provider dari aplikasi resmi atau invoice TV kabel.</span>
                 </div>
 
                 <button type="button" class="search-tv-btn" id="searchBtn">
                     <i class="fa-solid fa-satellite-dish"></i>
-                    Buka Dashboard TV
+                    Cek Tagihan TV
                 </button>
             </div>
 
@@ -1271,10 +2124,10 @@ body{
                     <div class="lounge-screen-main">
                         <div class="lounge-label">
                             <i class="fa-solid fa-circle-check"></i>
-                            TV LOUNGE AKTIF
+                            TV SIAP
                         </div>
-                        <h3 id="screenTitle">Dashboard TV Kabel</h3>
-                        <p id="screenSubtitle">Pilih paket channel, periode, atau tagihan TV kabel yang ingin dibayar.</p>
+                        <h3 id="screenTitle">Panel Tagihan TV</h3>
+                        <p id="screenSubtitle">Pilih tagihan atau paket TV yang ingin dicek.</p>
                     </div>
 
                     <div class="screen-stats">
@@ -1296,8 +2149,8 @@ body{
                 <div class="channel-wrap">
                     <div class="channel-title">
                         <div>
-                            <strong>Kategori channel</strong>
-                            <span>Geser untuk pilih mode hiburan</span>
+                            <strong>Kategori Channel</strong>
+                            <span>Pilih kategori tayangan.</span>
                         </div>
                     </div>
 
@@ -1306,14 +2159,14 @@ body{
 
                 <div class="promo-banner">
                     <div>
-                        <strong>Paket Hiburan Rumah</strong>
-                        <span>Film, sport, keluarga, berita, premium, dan tagihan aktif dalam satu dashboard.</span>
+                        <strong>Rincian TV Rumah</strong>
+                        <span>Cek tagihan, channel, kualitas, dan total estimasi.</span>
                     </div>
                     <div class="promo-badge">TV LOUNGE</div>
                 </div>
 
                 <div class="filter-scroll">
-                    <button type="button" class="filter-btn active" data-filter="recommended">Rekomendasi</button>
+                    <button type="button" class="filter-btn active" data-filter="recommended">Pilihan</button>
                     <button type="button" class="filter-btn" data-filter="bill">Tagihan</button>
                     <button type="button" class="filter-btn" data-filter="family">Keluarga</button>
                     <button type="button" class="filter-btn" data-filter="movie">Film</button>
@@ -1327,7 +2180,7 @@ body{
                 <div class="summary-box" id="summaryBox">
                     <div class="summary-title">
                         <i class="fa-solid fa-receipt"></i>
-                        Ringkasan TV Kabel
+                        Ringkasan
                     </div>
 
                     <div class="summary-row">
@@ -1352,7 +2205,7 @@ body{
 
                     <div class="summary-total">
                         <div>
-                            <span>Total Estimasi</span>
+                            <span>Total</span>
                             <b id="sumTotal">Rp 0</b>
                         </div>
                         <i class="fa-solid fa-tv"></i>
@@ -1360,7 +2213,7 @@ body{
 
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <i class="fa-solid fa-circle-check"></i>
-                        Lanjutkan Pembayaran
+                        Bayar Sekarang
                     </button>
                 </div>
             </div>
@@ -1408,6 +2261,7 @@ body{
     let selectedPackage=null;
     let activeFilter='recommended';
     let activeChannel='all';
+    let inputTimer=null;
 
     const channelModes=[
         {key:'all',label:'Semua',info:'80+ channel'},
@@ -1445,8 +2299,27 @@ body{
         }).join('').slice(0,2).toUpperCase();
     }
 
+    function updateFlow(){
+        const steps=document.querySelectorAll('.tv-flow-item');
+        const nomor=cleanNumber(nomorInput.value);
+
+        if(!steps.length) return;
+
+        steps.forEach(function(step){ step.classList.remove('active'); });
+
+        if(nomor.length>=5 && selectedProvider){
+            steps[2] && steps[2].classList.add('active');
+        }else if(nomor.length>=5){
+            steps[1] && steps[1].classList.add('active');
+        }else{
+            steps[0] && steps[0].classList.add('active');
+        }
+    }
+
     function updateInfo(){
         let nomor=cleanNumber(nomorInput.value);
+
+        clearTimeout(inputTimer);
 
         if(nomor.length>25){
             nomor=nomor.slice(0,25);
@@ -1457,30 +2330,35 @@ body{
 
         if(!nomor){
             tvInfo.style.display='none';
+            updateFlow();
             return;
         }
 
         if(nomor.length<5){
             tvInfo.style.display='block';
             tvInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> ID pelanggan masih terlalu pendek.';
+            updateFlow();
             return;
         }
 
-        tvInfo.style.display='block';
-        tvInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> Format ID sudah cukup. Pilih provider lalu buka dashboard TV.';
+        inputTimer=setTimeout(function(){
+            tvInfo.style.display='block';
+            tvInfo.innerHTML='<i class="fa-solid fa-circle-check"></i> ID sudah cukup. Pilih provider TV.';
+            updateFlow();
+        },500);
     }
 
     function validateSearch(){
         const nomor=cleanNumber(nomorInput.value);
 
         if(!nomor || nomor.length<5){
-            alert('Masukkan ID pelanggan TV Kabel minimal 5 digit.');
+            alert('Masukkan ID pelanggan minimal 5 digit.');
             nomorInput.focus();
             return false;
         }
 
         if(!selectedProvider){
-            alert('Silakan pilih provider TV Kabel terlebih dahulu.');
+            alert('Pilih provider TV dulu.');
             return false;
         }
 
@@ -1718,6 +2596,8 @@ body{
                 admin:card.dataset.admin
             };
 
+            updateFlow();
+
             if(tvDashboard.classList.contains('show')){
                 renderPackages();
             }
@@ -1758,6 +2638,11 @@ body{
         heroBox.classList.remove('hidden');
         searchCard.classList.remove('hidden');
         compactTv.classList.remove('show');
+        tvDashboard.classList.remove('show');
+        selectedPackage=null;
+        kodeProduk.value='';
+        summaryBox.style.display='none';
+        updateFlow();
 
         setTimeout(function(){
             searchCard.scrollIntoView({behavior:'smooth',block:'start'});
@@ -1776,17 +2661,17 @@ body{
 
         if(!selectedProvider){
             e.preventDefault();
-            alert('Silakan pilih provider TV Kabel terlebih dahulu.');
+            alert('Pilih provider TV dulu.');
             return;
         }
 
         if(!selectedPackage || !kodeProduk.value){
             e.preventDefault();
-            alert('Pilih salah satu paket atau tagihan TV Kabel terlebih dahulu.');
+            alert('Pilih tagihan atau paket TV dulu.');
             return;
         }
 
-        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses TV Kabel...';
+        submitBtn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
         submitBtn.style.opacity='0.75';
         submitBtn.style.pointerEvents='none';
     });
@@ -1794,6 +2679,8 @@ body{
     if(nomorInput.value){
         nomorInput.dispatchEvent(new Event('input'));
     }
+
+    updateFlow();
 })();
 </script>
 
