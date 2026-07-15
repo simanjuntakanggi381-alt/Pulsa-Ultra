@@ -1260,6 +1260,43 @@ body{
         width:100%;
     }
 }
+
+/* Operator card dibuat lebih rapi: tanpa nomor prefix di bawah nama */
+.operator-card{
+    flex:0 0 104px !important;
+    min-height:96px !important;
+    padding:.72rem .62rem !important;
+    text-align:center !important;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.operator-card span{
+    display:none !important;
+}
+
+.operator-card strong{
+    margin-top:.44rem;
+    font-size:.78rem !important;
+    text-align:center !important;
+}
+
+.operator-logo{
+    margin:0 auto !important;
+}
+
+.operator-card.active{
+    transform:translateY(-2px);
+}
+
+.operator-card.auto-detected{
+    border-color:#16a34a !important;
+    background:#ecfdf5 !important;
+    box-shadow:0 12px 24px rgba(22,163,74,.12) !important;
+}
+
 </style>
 
 <div class="orbit-page">
@@ -1396,7 +1433,7 @@ body{
                     <div class="section-title">
                         <div>
                             <h3>Operator Manual</h3>
-                            <p>Pilih manual jika hasil baca nomor belum cocok.</p>
+                            <p>Operator akan otomatis dipilih dari nomor HP. Kalau belum cocok, pilih manual.</p>
                         </div>
                         <span class="section-pill">Operator</span>
                     </div>
@@ -1838,6 +1875,8 @@ body{
             card.classList.toggle('active',card.dataset.op===op);
         });
 
+        focusOperatorCard(op);
+
         simTitle.textContent='Operator '+meta(op).nama;
         simSubtitle.textContent='Operator sudah dipilih. Silakan lanjut pilih nominal.';
         simOperator.textContent=meta(op).nama;
@@ -1891,6 +1930,31 @@ body{
         });
     }
 
+
+    function focusOperatorCard(op){
+        const card=document.querySelector('.operator-card[data-op="'+op+'"]');
+
+        if(!card){
+            return;
+        }
+
+        document.querySelectorAll('.operator-card').forEach(function(item){
+            item.classList.remove('auto-detected');
+        });
+
+        card.classList.add('auto-detected');
+
+        setTimeout(function(){
+            card.classList.remove('auto-detected');
+        },1600);
+
+        card.scrollIntoView({
+            behavior:'smooth',
+            inline:'center',
+            block:'nearest'
+        });
+    }
+
     function updateInputInfo(){
         let nomor=cleanNumber(nomorInput.value);
 
@@ -1913,7 +1977,7 @@ body{
             setOperator(detected,true);
         }else if(nomor.length>=4){
             operatorInfo.style.display='block';
-            operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual di bawah.';
+            operatorInfo.innerHTML='<i class="fa-solid fa-circle-info"></i> Operator belum terbaca. Pilih manual jika diperlukan.';
             simTitle.textContent='Operator Manual';
             simSubtitle.textContent='Pilih operator manual untuk lanjut ke daftar nominal.';
             simOperator.textContent='Manual';
