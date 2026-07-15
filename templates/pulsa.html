@@ -1613,6 +1613,7 @@ body{
 </div>
 
 <div id="dataProduk" style="display:none;">
+    {# Produk dari backend / database #}
     {% for kode, nama in produk_final.items() %}
         {% set harga_produk = harga_final.get(kode, 0) %}
         <span
@@ -1622,6 +1623,20 @@ body{
             data-harga="{{ harga_produk }}"
             data-harga-teks="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
         ></span>
+    {% endfor %}
+
+    {# Tambahan fallback agar AXIS dan Smartfren tetap muncul walaupun backend belum punya produknya #}
+    {% for kode, nama in fallback_produk_pulsa.items() %}
+        {% if kode not in produk_final %}
+            {% set harga_produk = fallback_harga_pulsa.get(kode, 0) %}
+            <span
+                data-kode="{{ kode }}"
+                data-operator="{{ kode.split('_')[0] }}"
+                data-nama="{{ nama }}"
+                data-harga="{{ harga_produk }}"
+                data-harga-teks="{% if format_uang is defined %}{{ format_uang(harga_produk) }}{% else %}Rp {{ '{:,.0f}'.format(harga_produk|int)|replace(',', '.') }}{% endif %}"
+            ></span>
+        {% endif %}
     {% endfor %}
 </div>
 
@@ -1744,6 +1759,7 @@ body{
 
     const dataProduk=Array.from(document.querySelectorAll('#dataProduk span'));
 
+    // Operator yang tampil di kartu manual diambil dari data produk di atas.
     const operatorAvailable=new Set(
         dataProduk.map(function(el){
             return (el.dataset.operator || '').trim();
