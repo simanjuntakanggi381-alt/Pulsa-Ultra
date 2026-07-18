@@ -1842,22 +1842,36 @@ def profil():
     )
 
 
-@app.route("/master/saldo-retail", methods=["POST"])
+def data_fitur_master():
+    pengguna = ambil_pengguna_login()
+    if not pengguna:
+        return None
+    return {
+        "pengguna": pengguna,
+        "mutasi": MutasiSaldo.query.filter_by(email=pengguna.email).order_by(MutasiSaldo.waktu.desc()).limit(50).all(),
+        "jaringan": JaringanRetail.query.filter_by(master_id=pengguna.id).order_by(JaringanRetail.id.desc()).all(),
+        "total_transaksi": Transaksi.query.filter_by(pengguna_id=pengguna.id).count()
+    }
+
+
+@app.route("/master/saldo-retail", methods=["GET", "POST"])
 def master_saldo_retail():
     if not user_sedang_login() or not user_master():
         flash("Fitur ini khusus akun Master.", "warning")
         return redirect(url_for("login"))
 
     pengguna = ambil_pengguna_login()
+    if request.method == "GET":
+        return render_template("master_saldo_retail.html", **data_fitur_master())
     nominal = request.form.get("nominal", type=int)
 
     if not pengguna or not nominal or nominal < 10000:
         flash("Minimal pemindahan saldo retail Rp 10.000.", "warning")
-        return redirect(url_for("profil"))
+        return redirect(url_for("master_topup_retail"))
 
     if int(pengguna.saldo or 0) < nominal:
         flash("Saldo utama tidak cukup untuk dipindahkan ke saldo retail.", "danger")
-        return redirect(url_for("profil"))
+        return redirect(url_for("master_topup_retail"))
 
     pengguna.saldo = int(pengguna.saldo or 0) - nominal
     pengguna.saldo_retail = int(pengguna.saldo_retail or 0) + nominal
@@ -1870,7 +1884,19 @@ def master_saldo_retail():
     db.session.commit()
 
     flash(f"Berhasil memindahkan {format_flash_nominal(nominal)} ke saldo retail.", "success")
-    return redirect(url_for("profil"))
+    return redirect(url_for("master_saldo_retail"))
+
+
+@app.route("/master/topup-retail")
+@wajib_master
+def master_topup_retail():
+    return render_template("master_topup_retail.html", **data_fitur_master())
+
+
+@app.route("/master/fee-retail")
+@wajib_master
+def master_fee_retail():
+    return render_template("master_fee_retail.html", **data_fitur_master())
 
 
 @app.route("/master/withdraw-fee", methods=["POST"])
@@ -1883,17 +1909,35 @@ def master_withdraw_fee():
     nominal = request.form.get("nominal", type=int)
     if not pengguna or not nominal or nominal < 10000:
         flash("Minimal withdraw fee Rp 10.000.", "warning")
-        return redirect(url_for("profil"))
+        return redirect(url_for("master_fee_retail"))
     if int(pengguna.fee_retail or 0) < nominal:
         flash("Fee retail belum cukup untuk ditarik.", "danger")
-        return redirect(url_for("profil"))
+        return redirect(url_for("master_fee_retail"))
 
     pengguna.fee_retail = int(pengguna.fee_retail or 0) - nominal
     pengguna.saldo = int(pengguna.saldo or 0) + nominal
     db.session.add(MutasiSaldo(email=pengguna.email, jenis="Masuk", nominal=nominal, keterangan="Withdraw fee retail ke saldo utama"))
     db.session.commit()
     flash(f"Withdraw fee {format_flash_nominal(nominal)} berhasil masuk ke saldo utama.", "success")
-    return redirect(url_for("profil"))
+    return redirect(url_for("master_fee_retail"))
+
+
+@app.route("/master/mutasi")
+@wajib_master
+def master_mutasi():
+    return render_template("master_mutasi.html", **data_fitur_master())
+
+
+@app.route("/master/jaringan")
+@wajib_master
+def master_jaringan():
+    return render_template("master_jaringan.html", **data_fitur_master())
+
+
+@app.route("/master/jaringan/tambah")
+@wajib_master
+def master_jaringan_tambah():
+    return render_template("master_tambah_jaringan.html", **data_fitur_master())
 
 
 @app.route("/master/jaringan-retail", methods=["POST"])
@@ -1907,12 +1951,12 @@ def master_tambah_jaringan():
     nomor_hp = request.form.get("nomor_hp", "").strip()
     if not pengguna or len(nama) < 2 or len(nomor_hp) < 8:
         flash("Lengkapi nama dan nomor HP jaringan retail.", "warning")
-        return redirect(url_for("profil"))
+        return redirect(url_for("master_jaringan_tambah"))
 
     db.session.add(JaringanRetail(master_id=pengguna.id, nama=nama, nomor_hp=nomor_hp, status="Aktif"))
     db.session.commit()
     flash(f"Jaringan retail {nama} berhasil ditambahkan.", "success")
-    return redirect(url_for("profil"))
+    return redirect(url_for("master_jaringan"))
 
 
 # =========================================================
