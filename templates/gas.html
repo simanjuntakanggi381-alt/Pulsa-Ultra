@@ -1196,6 +1196,235 @@ body{
     }
 }
 
+/* Midnight dashboard theme - hitam elegan dengan kontras yang tetap jelas */
+body{
+    background:
+        radial-gradient(circle at 15% 0%,rgba(249,115,22,.14),transparent 30%),
+        radial-gradient(circle at 90% 22%,rgba(245,158,11,.07),transparent 28%),
+        linear-gradient(180deg,#050505 0%,#0a0a0b 52%,#111113 100%)!important;
+}
+
+.gas-center-shell{
+    background:
+        radial-gradient(circle at 100% 0%,rgba(249,115,22,.08),transparent 28%),
+        linear-gradient(180deg,#111214,#090a0c)!important;
+    border-color:#292b30!important;
+    box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+
+.gas-back,
+.gas-chip{
+    background:#17181b!important;
+    border-color:#303238!important;
+    color:#fb923c!important;
+    box-shadow:0 8px 20px rgba(0,0,0,.22)!important;
+}
+
+.gas-hero,
+.gas-live-card,
+.dashboard-card,
+.summary-total{
+    background:
+        radial-gradient(circle at 88% 0%,rgba(249,115,22,.22),transparent 34%),
+        linear-gradient(145deg,#1c1d21 0%,#08090b 68%,#18100b 100%)!important;
+    border:1px solid #34363c!important;
+    box-shadow:0 16px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+
+.dashboard-card{
+    position:relative;
+}
+
+.dashboard-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(110deg,transparent 0 62%,rgba(249,115,22,.07));
+}
+
+.dashboard-main,
+.dashboard-stats{
+    position:relative;
+    z-index:1;
+}
+
+.dashboard-label{
+    background:rgba(34,197,94,.11)!important;
+    color:#86efac!important;
+    border:1px solid rgba(74,222,128,.22);
+}
+
+.dash-stat,
+.live-stat,
+.hero-mini{
+    background:rgba(255,255,255,.045)!important;
+    border-color:rgba(255,255,255,.10)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.dash-stat strong,
+.live-stat strong{
+    color:#fff7ed!important;
+}
+
+.dash-stat span,
+.live-stat span{
+    color:#a9abb2!important;
+}
+
+.panel-card,
+.gas-flow-panel,
+.summary-box{
+    background:#121316!important;
+    border-color:#2a2c31!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.30)!important;
+}
+
+.section-title h3,
+.gas-flow-head strong,
+.mode-title strong,
+.summary-title,
+.summary-row b{
+    color:#f8fafc!important;
+}
+
+.section-title p,
+.gas-flow-head span,
+.mode-title span,
+.summary-row span,
+.input-help{
+    color:#9ca3af!important;
+}
+
+.input-console{
+    background:#0b0c0e!important;
+    border-color:#292b30!important;
+}
+
+.input-control{
+    background:#18191d!important;
+    border-color:#3b3d43!important;
+    color:#fff!important;
+    caret-color:#fb923c;
+}
+
+.input-control:focus{
+    border-color:#f97316!important;
+    box-shadow:0 0 0 4px rgba(249,115,22,.14)!important;
+}
+
+.quick-row button,
+.mode-chip{
+    background:#191a1e!important;
+    border-color:#34363c!important;
+    color:#d7d9de!important;
+}
+
+.mode-chip.active{
+    background:linear-gradient(135deg,#f97316,#ea580c)!important;
+    border-color:#fb923c!important;
+    color:#fff!important;
+    box-shadow:0 7px 18px rgba(234,88,12,.22);
+}
+
+.gas-flow-item,
+.gas-checklist div,
+.gas-service-overview div,
+.gas-price-help{
+    background:#18191d!important;
+    border-color:#303238!important;
+}
+
+.gas-flow-item strong,
+.gas-service-overview strong,
+.gas-price-help strong{
+    color:#f3f4f6!important;
+}
+
+.gas-flow-item span,
+.gas-service-overview span,
+.gas-price-help span,
+.gas-checklist div{
+    color:#9ca3af!important;
+}
+
+.section-pill,
+.gas-flow-pill,
+.gas-service-overview i{
+    background:rgba(249,115,22,.12)!important;
+    border-color:rgba(251,146,60,.25)!important;
+    color:#fb923c!important;
+}
+
+.service-card{
+    background:#151619!important;
+    border-color:#303238!important;
+}
+
+.service-card:hover,
+.service-card.active{
+    background:#1b1714!important;
+    border-color:#f97316!important;
+    box-shadow:0 0 0 1px rgba(249,115,22,.45),0 14px 28px rgba(0,0,0,.32)!important;
+}
+
+.service-name strong,
+.service-meta b,
+.price-line strong{
+    color:#f8fafc!important;
+}
+
+.service-name span,
+.service-meta span,
+.price-line small{
+    color:#9ca3af!important;
+}
+
+.service-meta div,
+.price-line,
+.service-benefits{
+    background:#0e0f11!important;
+    border-color:#292b30!important;
+}
+
+.service-benefits span{
+    background:#191a1d!important;
+    border-color:#303238!important;
+    color:#c7c9ce!important;
+}
+
+.price-line span{
+    color:#fb923c!important;
+}
+
+.summary-row{
+    border-bottom-color:#2a2c31!important;
+}
+
+.choose-service,
+.submit-btn{
+    background:linear-gradient(135deg,#fb923c,#ea580c)!important;
+    box-shadow:0 10px 24px rgba(234,88,12,.24)!important;
+}
+
+@media(max-width:520px){
+    body{background:#070708!important}
+    .gas-center-shell{background:linear-gradient(180deg,#111214,#090a0c)!important;border-color:#24262b!important}
+    .dashboard-card{display:block!important;margin-bottom:.5rem!important}
+    .dashboard-main{padding:.68rem!important}
+    .dashboard-label{margin-bottom:.35rem!important;font-size:.52rem!important}
+    .dashboard-card h3{font-size:.82rem!important}
+    .dashboard-card p{font-size:.58rem!important;margin-top:.18rem!important}
+    .dashboard-stats{padding:.5rem .68rem .68rem!important;gap:.34rem!important}
+    .dash-stat{padding:.42rem .25rem!important;border-radius:12px!important}
+    .dash-stat strong{font-size:.62rem!important}
+    .dash-stat span{font-size:.48rem!important}
+    .panel-card,.gas-flow-panel,.summary-box{border-color:#292b30!important;box-shadow:0 8px 18px rgba(0,0,0,.28)!important}
+    .input-console{background:#0b0c0e!important;border-color:#292b30!important}
+    .gas-info,.gas-error{background:#18191d!important;border-color:#303238!important;color:#d1d5db!important}
+}
+
 </style>
 
 <div class="gas-center-page">
