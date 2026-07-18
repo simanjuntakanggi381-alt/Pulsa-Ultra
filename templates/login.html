@@ -476,7 +476,7 @@ body {
                 {% endif %}
 
                 <div class="login-form-group">
-                    <label for="identitas">Nomor HP / Email</label>
+                    <label for="identitas">Username / Nomor HP / Email</label>
                     <div class="login-input-box">
                         <i class="fa-solid fa-user input-icon"></i>
                         <input
@@ -484,14 +484,14 @@ body {
                             id="identitas"
                             name="identitas"
                             class="login-input"
-                            placeholder="08123456789 atau email@anda.com"
+                            placeholder="Username, nomor HP, atau email"
                             value="{{ request.form.get('identitas', '') if request is defined else '' }}"
                             autocomplete="username"
                             required
                             autofocus
                         >
                     </div>
-                    <div class="login-help">Masukkan nomor HP aktif atau email yang terdaftar.</div>
+                    <div class="login-help">Akun panel dapat langsung masuk menggunakan username.</div>
                 </div>
 
                 <div class="login-form-group">

@@ -5,8 +5,7 @@ from config import (
     SQLALCHEMY_TRACK_MODIFICATIONS,
     NAMA_PRODUK,
     HARGA_JUAL,
-    BATAS_SALDO_INGAT,
-    AKUN_ADMIN
+    BATAS_SALDO_INGAT
 )
 from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
@@ -214,8 +213,18 @@ def index():
 # =========================================================
 # ADMIN PANEL SENJADATA V2
 # =========================================================
-ADMIN_PANEL_USERNAME = os.getenv("ADMIN_USERNAME", "anggi budino")
-ADMIN_PANEL_PASSWORD = os.getenv("ADMIN_PASSWORD", "anggi080811")
+AKUN_PANEL = {
+    "alex": {
+        "nama": "Master Alex",
+        "level": "master",
+        "password_hash": "pbkdf2:sha256:600000$1NK75eS6LfPmpBBz$cd625c01e6f9a76d4c6e1cd4b3b41e6aa8c0bceac8f59bded4bd2e92a8e36037"
+    },
+    "anggi": {
+        "nama": "Admin Anggi",
+        "level": "admin",
+        "password_hash": "pbkdf2:sha256:600000$ffakAmRDs25dioIj$6d43d9627163edae8e3743a82ee80c5275187d9022f7b417c93c5e2778203e3e"
+    }
+}
 
 
 def validasi_login_admin(username, password):
@@ -223,28 +232,20 @@ def validasi_login_admin(username, password):
     password = (password or "").strip()
     username_lower = username.lower()
 
-    # Login default
-    if username_lower == "anggi budino" and password == "anggi080811":
-        return True
+    akun = AKUN_PANEL.get(username_lower)
+    if akun and check_password_hash(akun["password_hash"], password):
+        return {"username": username_lower, **akun}
 
-    # Login dari environment variable
-    env_username = str(ADMIN_PANEL_USERNAME or "anggi budino").strip().lower()
-    env_password = str(ADMIN_PANEL_PASSWORD or "anggi080811").strip()
+    return None
 
-    if username_lower == env_username and password == env_password:
-        return True
 
-    # Login dari config.py AKUN_ADMIN
-    try:
-        config_username = str(AKUN_ADMIN.get("email", "")).strip().lower()
-        config_password = str(AKUN_ADMIN.get("password", "")).strip()
-
-        if username_lower == config_username and password == config_password:
-            return True
-    except Exception:
-        pass
-
-    return False
+def masuk_sebagai_admin(akun):
+    session.clear()
+    session["sudah_login"] = True
+    session["email"] = akun["username"]
+    session["nama"] = akun["nama"]
+    session["peran"] = "admin"
+    session["level_admin"] = akun["level"]
 
 
 def hitung_statistik_admin():
@@ -358,12 +359,9 @@ def admin_login():
             or ""
         ).strip()
 
-        if validasi_login_admin(username, password):
-            session.clear()
-            session["sudah_login"] = True
-            session["email"] = username
-            session["nama"] = "Admin"
-            session["peran"] = "admin"
+        akun_admin = validasi_login_admin(username, password)
+        if akun_admin:
+            masuk_sebagai_admin(akun_admin)
 
             flash("✅ Berhasil masuk ke panel admin.", "success")
             return redirect(url_for("admin_dashboard"))
@@ -1719,17 +1717,17 @@ def daftar():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "sudah_login" in session:
+        if user_admin():
+            return redirect(url_for("admin_dashboard"))
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
         identitas = request.form.get("identitas", "").strip().lower()
         kata_sandi = request.form.get("kata_sandi", "").strip()
 
-        if identitas == AKUN_ADMIN["email"] and kata_sandi == AKUN_ADMIN["password"]:
-            session["sudah_login"] = True
-            session["email"] = identitas
-            session["nama"] = "Admin"
-            session["peran"] = "admin"
+        akun_admin = validasi_login_admin(identitas, kata_sandi)
+        if akun_admin:
+            masuk_sebagai_admin(akun_admin)
             flash("✅ Berhasil masuk sebagai Admin.", "success")
             return redirect(url_for("admin_dashboard"))
 
