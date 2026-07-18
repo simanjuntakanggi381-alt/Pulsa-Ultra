@@ -10,7 +10,7 @@ from config import (
 from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
 from utils import format_uang
-from sqlalchemy import func, or_, text
+from sqlalchemy import func, or_, text, inspect
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
@@ -54,6 +54,12 @@ def konteks_global():
 with app.app_context():
     db.create_all()
 
+    # Migrasi ringan untuk database SQLite lama.
+    kolom_pengguna = {kolom["name"] for kolom in inspect(db.engine).get_columns("pengguna")}
+    if "saldo_retail" not in kolom_pengguna:
+        db.session.execute(text("ALTER TABLE pengguna ADD COLUMN saldo_retail INTEGER DEFAULT 0"))
+        db.session.commit()
+
     cek_anggi = Pengguna.query.filter_by(email="anggi@gmail.com").first()
 
     if not cek_anggi:
@@ -65,6 +71,19 @@ with app.app_context():
             saldo=0
         )
         db.session.add(akun_anggi)
+        db.session.commit()
+
+    akun_master = Pengguna.query.filter_by(email="alex@master.local").first()
+    if not akun_master:
+        akun_master = Pengguna(
+            nama_lengkap="Alex Master",
+            nomor_hp="080811000001",
+            email="alex@master.local",
+            kata_sandi=AKUN_PANEL["alex"]["password_hash"] if "AKUN_PANEL" in globals() else generate_password_hash("alex080811", method="pbkdf2:sha256"),
+            saldo=0,
+            saldo_retail=0
+        )
+        db.session.add(akun_master)
         db.session.commit()
 
     print("\n✅ AKUN DEMO SIAP DIGUNAKAN:")
@@ -85,7 +104,7 @@ def user_admin():
 
 
 def user_master():
-    return user_admin() and session.get("level_admin") == "master"
+    return session.get("peran") == "master"
 
 
 def ambil_pengguna_login():
@@ -262,6 +281,20 @@ def masuk_sebagai_admin(akun):
     session["level_admin"] = akun["level"]
 
 
+def masuk_sebagai_master(akun):
+    pengguna = Pengguna.query.filter_by(email="alex@master.local").first()
+    if not pengguna:
+        return False
+
+    session.clear()
+    session["sudah_login"] = True
+    session["email"] = pengguna.email
+    session["nama"] = pengguna.nama_lengkap
+    session["peran"] = "master"
+    session["level_akun"] = "master"
+    return True
+
+
 def hitung_statistik_admin():
     total_pengguna = Pengguna.query.count()
     total_produk = len(NAMA_PRODUK)
@@ -345,7 +378,7 @@ def cek_kesehatan_sistem():
 @app.route("/admin-panel")
 def admin_index():
     if user_master():
-        return redirect(url_for("master_dashboard"))
+        return redirect(url_for("dashboard"))
     if user_sedang_login() and user_admin():
         return redirect(url_for("admin_dashboard"))
 
@@ -364,22 +397,13 @@ def admin_login():
 @app.route("/master/dashboard")
 @wajib_master
 def master_dashboard():
-    return render_template(
-        "master_dashboard.html",
-        statistik=hitung_statistik_admin(),
-        cek_sistem=cek_kesehatan_sistem(),
-        transaksi_terbaru=Transaksi.query.order_by(Transaksi.waktu.desc()).limit(5).all(),
-        format_uang=format_uang
-    )
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/admin/dashboard")
 @app.route("/panel/dashboard")
 @wajib_admin
 def admin_dashboard():
-    if user_master():
-        return redirect(url_for("master_dashboard"))
-
     statistik = hitung_statistik_admin()
     cek_sistem = cek_kesehatan_sistem()
 
@@ -1722,7 +1746,7 @@ def daftar():
 def login():
     if "sudah_login" in session:
         if user_master():
-            return redirect(url_for("master_dashboard"))
+            return redirect(url_for("dashboard"))
         if user_admin():
             return redirect(url_for("admin_dashboard"))
         return redirect(url_for("dashboard"))
@@ -1733,10 +1757,13 @@ def login():
 
         akun_admin = validasi_login_admin(identitas, kata_sandi)
         if akun_admin:
-            masuk_sebagai_admin(akun_admin)
             if akun_admin["level"] == "master":
-                flash("Berhasil masuk sebagai Master.", "success")
-                return redirect(url_for("master_dashboard"))
+                if masuk_sebagai_master(akun_admin):
+                    flash("Berhasil masuk ke akun Master.", "success")
+                    return redirect(url_for("dashboard"))
+                flash("Data akun Master belum tersedia.", "danger")
+                return redirect(url_for("login"))
+            masuk_sebagai_admin(akun_admin)
             flash("Berhasil masuk sebagai Admin.", "success")
             return redirect(url_for("admin_dashboard"))
 
@@ -1788,7 +1815,54 @@ def profil():
         flash("❌ Data akun tidak ditemukan, silakan masuk ulang.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("profil.html", pengguna=pengguna, format_uang=format_uang)
+    ringkasan_master = None
+    if user_master():
+        transaksi_master = Transaksi.query.filter_by(pengguna_id=pengguna.id)
+        ringkasan_master = {
+            "total_transaksi": transaksi_master.count(),
+            "transaksi_berhasil": transaksi_master.filter_by(status="Berhasil").count(),
+            "total_mutasi": MutasiSaldo.query.filter_by(email=pengguna.email).count(),
+            "saldo_retail": int(pengguna.saldo_retail or 0)
+        }
+
+    return render_template(
+        "profil.html",
+        pengguna=pengguna,
+        is_master=user_master(),
+        ringkasan_master=ringkasan_master,
+        format_uang=format_uang
+    )
+
+
+@app.route("/master/saldo-retail", methods=["POST"])
+def master_saldo_retail():
+    if not user_sedang_login() or not user_master():
+        flash("Fitur ini khusus akun Master.", "warning")
+        return redirect(url_for("login"))
+
+    pengguna = ambil_pengguna_login()
+    nominal = request.form.get("nominal", type=int)
+
+    if not pengguna or not nominal or nominal < 10000:
+        flash("Minimal pemindahan saldo retail Rp 10.000.", "warning")
+        return redirect(url_for("profil"))
+
+    if int(pengguna.saldo or 0) < nominal:
+        flash("Saldo utama tidak cukup untuk dipindahkan ke saldo retail.", "danger")
+        return redirect(url_for("profil"))
+
+    pengguna.saldo = int(pengguna.saldo or 0) - nominal
+    pengguna.saldo_retail = int(pengguna.saldo_retail or 0) + nominal
+    db.session.add(MutasiSaldo(
+        email=pengguna.email,
+        jenis="Keluar",
+        nominal=nominal,
+        keterangan="Pemindahan saldo utama ke saldo retail"
+    ))
+    db.session.commit()
+
+    flash(f"Berhasil memindahkan {format_flash_nominal(nominal)} ke saldo retail.", "success")
+    return redirect(url_for("profil"))
 
 
 # =========================================================

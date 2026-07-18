@@ -13,6 +13,7 @@ class Pengguna(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     kata_sandi = db.Column(db.String(255), nullable=False)
     saldo = db.Column(db.Integer, default=0)
+    saldo_retail = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"<Pengguna {self.email}>"

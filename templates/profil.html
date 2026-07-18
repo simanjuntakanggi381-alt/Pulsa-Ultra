@@ -5,6 +5,7 @@
 {% set nomor_hp = pengguna.nomor_hp if pengguna is defined and pengguna.nomor_hp is defined and pengguna.nomor_hp else '-' %}
 {% set email_user = pengguna.email if pengguna is defined and pengguna.email is defined and pengguna.email else '-' %}
 {% set saldo_user = pengguna.saldo if pengguna is defined and pengguna.saldo is defined else 0 %}
+{% set saldo_retail = pengguna.saldo_retail if is_master|default(false) and pengguna.saldo_retail is defined else 0 %}
 {% set huruf_awal = nama_lengkap[:1]|upper %}
 
 <style>
@@ -1134,9 +1135,19 @@ body{
     }
 }
 
+.master-profile .profile-badge-top{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+.master-profile .profile-hero{background:radial-gradient(circle at 90% 8%,rgba(251,191,36,.28),transparent 30%),linear-gradient(135deg,#111827,#7c2d12 54%,#d97706);box-shadow:0 18px 38px rgba(180,83,9,.24)}
+.master-profile .profile-avatar{color:#fef3c7}.master-profile .profile-live i{color:#fbbf24}
+.master-retail{background:radial-gradient(circle at 90% 0,rgba(251,191,36,.25),transparent 30%),linear-gradient(135deg,#171717,#422006 58%,#92400e)}
+.master-retail-form{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.8rem}
+.master-retail-form input{min-width:0;min-height:44px;padding:0 .75rem;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;outline:none;font-weight:850}
+.master-retail-form input::placeholder{color:rgba(255,255,255,.58)}.master-retail-form button{min-height:44px;padding:0 .8rem;border:0;border-radius:14px;background:#fbbf24;color:#422006;font-weight:950;cursor:pointer}
+.master-feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}.master-feature{padding:.75rem;border-radius:18px;background:#fffbeb;border:1px solid #fde68a}.master-feature i{color:#d97706}.master-feature strong{display:block;margin-top:.38rem;color:#451a03;font-size:.82rem}.master-feature span{display:block;margin-top:.12rem;color:#92400e;font-size:.66rem;line-height:1.35;font-weight:700}
+@media(max-width:520px){.master-retail-form{grid-template-columns:1fr}.master-feature-grid{gap:.42rem}.master-feature{padding:.58rem;border-radius:14px}.master-feature strong{font-size:.68rem}.master-feature span{font-size:.54rem}}
+
 </style>
 
-<div class="profile-vault-page">
+<div class="profile-vault-page {% if is_master|default(false) %}master-profile{% endif %}">
     <div class="profile-vault-shell">
 
         <div class="profile-topbar">
@@ -1146,8 +1157,8 @@ body{
             </a>
 
             <div class="profile-badge-top">
-                <i class="fa-solid fa-user-shield"></i>
-                Profil
+                <i class="fa-solid {% if is_master|default(false) %}fa-crown{% else %}fa-user-shield{% endif %}"></i>
+                {% if is_master|default(false) %}Profil Master{% else %}Profil{% endif %}
             </div>
         </div>
 
@@ -1160,11 +1171,11 @@ body{
                 <div class="profile-hero-info">
                     <div class="profile-live">
                         <i class="fa-solid fa-circle"></i>
-                        Akun Aktif
+                        {% if is_master|default(false) %}Akun Master{% else %}Akun Aktif{% endif %}
                     </div>
 
                     <h2>{{ nama_lengkap }}</h2>
-                    <p>Cek saldo, data akun, dan akses menu penting dari halaman ini.</p>
+                    <p>{% if is_master|default(false) %}Kelola saldo utama, saldo retail, transaksi, dan fitur khusus Master.{% else %}Cek saldo, data akun, dan akses menu penting dari halaman ini.{% endif %}</p>
                 </div>
             </div>
 
@@ -1222,6 +1233,33 @@ body{
                 </button>
             </div>
         </div>
+
+        {% if is_master|default(false) %}
+        <div class="balance-vault master-retail">
+            <div class="balance-vault-main">
+                <div>
+                    <div class="balance-label">Saldo Retail Master</div>
+                    <div class="balance-value">{{ format_uang(saldo_retail) }}</div>
+                    <div class="balance-note">Saldo khusus untuk operasional dan kebutuhan transaksi retail.</div>
+                </div>
+                <div class="balance-icon"><i class="fa-solid fa-store"></i></div>
+            </div>
+            <form class="master-retail-form" method="POST" action="{{ url_for('master_saldo_retail') }}">
+                <input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal dari saldo utama" required>
+                <button type="submit"><i class="fa-solid fa-arrow-right-arrow-left"></i> Pindahkan</button>
+            </form>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head"><div><h3>Fitur Khusus Master</h3><p>Kontrol akun dan aktivitas retail dari profil.</p></div><span class="section-pill">Master</span></div>
+            <div class="master-feature-grid">
+                <div class="master-feature"><i class="fa-solid fa-store"></i><strong>Saldo Retail</strong><span>{{ format_uang(ringkasan_master.saldo_retail) }} siap dikelola.</span></div>
+                <div class="master-feature"><i class="fa-solid fa-receipt"></i><strong>Transaksi Master</strong><span>{{ ringkasan_master.total_transaksi }} transaksi tercatat.</span></div>
+                <div class="master-feature"><i class="fa-solid fa-circle-check"></i><strong>Transaksi Berhasil</strong><span>{{ ringkasan_master.transaksi_berhasil }} transaksi berhasil.</span></div>
+                <div class="master-feature"><i class="fa-solid fa-clock-rotate-left"></i><strong>Mutasi Saldo</strong><span>{{ ringkasan_master.total_mutasi }} perubahan saldo tercatat.</span></div>
+            </div>
+        </div>
+        {% endif %}
 
         <div class="profile-section">
             <div class="section-head">
