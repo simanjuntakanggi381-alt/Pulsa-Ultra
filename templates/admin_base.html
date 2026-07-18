@@ -993,7 +993,7 @@
             </div>
 
             <div>
-                <small>Admin Panel</small>
+                <small>{% if session.get("level_admin") == "master" %}Master Panel{% else %}Admin Panel{% endif %}</small>
                 <strong>SenjaData</strong>
             </div>
         </div>
@@ -1001,16 +1001,16 @@
         <div class="admin-mini">
             <span>Masuk sebagai</span>
             <strong>{{ session.get("nama", "Admin") }}</strong>
-            <div class="online-dot">Panel Aktif</div>
+            <div class="online-dot">{% if session.get("level_admin") == "master" %}Master Aktif{% else %}Panel Aktif{% endif %}</div>
         </div>
 
         <div class="side-section-title">Navigasi Utama</div>
 
         <nav class="side-menu">
-            <a class="side-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">
+            <a class="side-link {% if request.endpoint in ['admin_dashboard', 'master_dashboard'] %}active{% endif %}" href="{{ url_for('master_dashboard') if session.get('level_admin') == 'master' else url_for('admin_dashboard') }}">
                 <span class="side-left">
                     <i class="fa-solid fa-gauge-high"></i>
-                    Dashboard
+                    {% if session.get("level_admin") == "master" %}Dashboard Master{% else %}Dashboard{% endif %}
                 </span>
                 <i class="fa-solid fa-chevron-right side-arrow"></i>
             </a>
@@ -1069,7 +1069,7 @@
         </nav>
 
         <div class="side-footer">
-            <b>SenjaData Control V2</b><br>
+            <b>{% if session.get("level_admin") == "master" %}SenjaData Master Control{% else %}SenjaData Control V2{% endif %}</b><br>
             Panel modern untuk cek transaksi, pengguna, produk, harga, database, dan kesehatan sistem.
         </div>
     </aside>

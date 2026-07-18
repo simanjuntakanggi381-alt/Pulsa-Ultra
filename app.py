@@ -84,6 +84,10 @@ def user_admin():
     return session.get("peran") == "admin"
 
 
+def user_master():
+    return user_admin() and session.get("level_admin") == "master"
+
+
 def ambil_pengguna_login():
     if not user_sedang_login():
         return None
@@ -107,7 +111,17 @@ def wajib_admin(f):
     def wrapper(*args, **kwargs):
         if not user_sedang_login() or not user_admin():
             flash("⚠️ Silakan masuk sebagai admin terlebih dahulu.", "warning")
-            return redirect(url_for("admin_login"))
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+def wajib_master(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not user_sedang_login() or not user_master():
+            flash("Akses khusus akun Master.", "warning")
+            return redirect(url_for("login"))
         return f(*args, **kwargs)
     return wrapper
 
@@ -330,52 +344,42 @@ def cek_kesehatan_sistem():
 @app.route("/panel")
 @app.route("/admin-panel")
 def admin_index():
+    if user_master():
+        return redirect(url_for("master_dashboard"))
     if user_sedang_login() and user_admin():
         return redirect(url_for("admin_dashboard"))
 
-    return redirect(url_for("admin_login"))
+    return redirect(url_for("login"))
 
 
 @app.route("/admin/login", methods=["GET", "POST"])
 @app.route("/admin-login", methods=["GET", "POST"])
 @app.route("/panel/login", methods=["GET", "POST"])
 def admin_login():
-    if user_sedang_login() and user_admin():
-        return redirect(url_for("admin_dashboard"))
+    flash("Login panel sekarang melalui halaman login aplikasi.", "info")
+    return redirect(url_for("login"))
 
-    if request.method == "POST":
-        username = (
-            request.form.get("username")
-            or request.form.get("identitas")
-            or request.form.get("email")
-            or request.form.get("admin_username")
-            or ""
-        ).strip()
 
-        password = (
-            request.form.get("password")
-            or request.form.get("kata_sandi")
-            or request.form.get("admin_password")
-            or ""
-        ).strip()
-
-        akun_admin = validasi_login_admin(username, password)
-        if akun_admin:
-            masuk_sebagai_admin(akun_admin)
-
-            flash("✅ Berhasil masuk ke panel admin.", "success")
-            return redirect(url_for("admin_dashboard"))
-
-        flash("❌ Username atau password admin salah.", "danger")
-        return redirect(url_for("admin_login"))
-
-    return render_template("admin_login.html")
+@app.route("/master")
+@app.route("/master/dashboard")
+@wajib_master
+def master_dashboard():
+    return render_template(
+        "master_dashboard.html",
+        statistik=hitung_statistik_admin(),
+        cek_sistem=cek_kesehatan_sistem(),
+        transaksi_terbaru=Transaksi.query.order_by(Transaksi.waktu.desc()).limit(5).all(),
+        format_uang=format_uang
+    )
 
 
 @app.route("/admin/dashboard")
 @app.route("/panel/dashboard")
 @wajib_admin
 def admin_dashboard():
+    if user_master():
+        return redirect(url_for("master_dashboard"))
+
     statistik = hitung_statistik_admin()
     cek_sistem = cek_kesehatan_sistem()
 
@@ -558,8 +562,8 @@ def admin_cek_sistem():
 @wajib_admin
 def admin_logout():
     session.clear()
-    flash("✅ Berhasil keluar dari panel admin.", "success")
-    return redirect(url_for("admin_login"))
+    flash("Berhasil keluar dari panel. Silakan login kembali.", "success")
+    return redirect(url_for("login"))
 
 
 # =========================================================
@@ -1717,6 +1721,8 @@ def daftar():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "sudah_login" in session:
+        if user_master():
+            return redirect(url_for("master_dashboard"))
         if user_admin():
             return redirect(url_for("admin_dashboard"))
         return redirect(url_for("dashboard"))
@@ -1728,7 +1734,10 @@ def login():
         akun_admin = validasi_login_admin(identitas, kata_sandi)
         if akun_admin:
             masuk_sebagai_admin(akun_admin)
-            flash("✅ Berhasil masuk sebagai Admin.", "success")
+            if akun_admin["level"] == "master":
+                flash("Berhasil masuk sebagai Master.", "success")
+                return redirect(url_for("master_dashboard"))
+            flash("Berhasil masuk sebagai Admin.", "success")
             return redirect(url_for("admin_dashboard"))
 
         pengguna = Pengguna.query.filter(
