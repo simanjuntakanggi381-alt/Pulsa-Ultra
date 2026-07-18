@@ -1146,6 +1146,8 @@ body{
 .master-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.7rem}.master-tool{padding:.75rem;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0}.master-tool h4{color:#0f172a;font-size:.8rem}.master-tool p{margin:.15rem 0 .55rem;color:#64748b;font-size:.62rem;line-height:1.35}.master-tool form{display:grid;gap:.42rem}.master-tool input{width:100%;min-height:40px;padding:0 .65rem;border:1px solid #dbe2ea;border-radius:12px;background:#fff;outline:none;font-size:.7rem;font-weight:750}.master-tool button{min-height:40px;border:0;border-radius:12px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;font-size:.7rem;font-weight:950;cursor:pointer}.master-list{display:grid;gap:.45rem}.master-list-row{display:flex;align-items:center;justify-content:space-between;gap:.55rem;padding:.62rem;border-radius:14px;background:#f8fafc;border:1px solid #e5e7eb}.master-list-row strong{display:block;color:#111827;font-size:.7rem}.master-list-row span{display:block;margin-top:.1rem;color:#64748b;font-size:.58rem}.master-list-row b{color:#b45309;font-size:.68rem;text-align:right}.master-empty{padding:.72rem;border-radius:14px;background:#f8fafc;border:1px dashed #cbd5e1;color:#64748b;text-align:center;font-size:.68rem;font-weight:750}
 @media(max-width:520px){.master-retail-form{grid-template-columns:1fr}.master-feature-grid{gap:.42rem}.master-feature{padding:.58rem;border-radius:14px}.master-feature strong{font-size:.68rem}.master-feature span{font-size:.54rem}}
 @media(max-width:520px){.master-tool-grid{grid-template-columns:1fr}.master-tool{padding:.6rem}.master-list-row{padding:.52rem}}
+.master-hub{display:grid;grid-template-columns:repeat(2,1fr);gap:.62rem}.master-hub-btn{position:relative;overflow:hidden;min-height:112px;padding:.78rem;border:1px solid #e5e7eb;border-radius:20px;background:linear-gradient(145deg,#fff,#f8fafc);text-align:left;cursor:pointer;transition:.2s ease}.master-hub-btn:hover{transform:translateY(-2px);border-color:#fdba74;box-shadow:0 13px 25px rgba(180,83,9,.10)}.master-hub-icon{width:39px;height:39px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:var(--hub-bg,#fff7ed);color:var(--hub-color,#ea580c);font-size:.9rem}.master-hub-btn strong{display:block;margin-top:.55rem;color:#111827;font-size:.78rem}.master-hub-btn span{display:block;margin-top:.12rem;color:#64748b;font-size:.61rem;line-height:1.35}.master-hub-arrow{position:absolute;right:.72rem;top:.72rem;color:#cbd5e1;font-size:.65rem}.master-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:flex-end;justify-content:center;padding:1rem;background:rgba(2,6,23,.72);backdrop-filter:blur(8px)}.master-overlay.show{display:flex}.master-drawer{width:100%;max-width:520px;max-height:min(84vh,760px);overflow-y:auto;border-radius:28px;background:#fff;box-shadow:0 28px 80px rgba(0,0,0,.40);animation:masterUp .24s ease}.master-drawer-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.9rem;background:rgba(255,255,255,.94);border-bottom:1px solid #eef2f7;backdrop-filter:blur(14px)}.master-drawer-title{display:flex;align-items:center;gap:.65rem}.master-drawer-title i{width:38px;height:38px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fff7ed;color:#ea580c}.master-drawer-title strong{display:block;color:#111827;font-size:.86rem}.master-drawer-title span{display:block;margin-top:.1rem;color:#64748b;font-size:.6rem}.master-close{width:36px;height:36px;border:0;border-radius:13px;background:#f1f5f9;color:#475569;cursor:pointer}.master-drawer-body{padding:.9rem}.master-balance-card{padding:.9rem;border-radius:20px;background:radial-gradient(circle at 90% 0,rgba(251,191,36,.25),transparent 32%),linear-gradient(135deg,#171717,#78350f);color:#fff}.master-balance-card span{font-size:.64rem;color:rgba(255,255,255,.7)}.master-balance-card strong{display:block;margin-top:.25rem;font-size:1.38rem}.master-panel-form{display:grid;gap:.5rem;margin-top:.75rem}.master-panel-form input{width:100%;min-height:46px;padding:0 .75rem;border:1px solid #dbe2ea;border-radius:14px;background:#f8fafc;color:#111827;outline:none;font-weight:800}.master-panel-form input:focus{border-color:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.12)}.master-panel-form button{min-height:46px;border:0;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;font-weight:950;cursor:pointer}.master-panel-note{display:flex;gap:.5rem;margin-top:.65rem;padding:.65rem;border-radius:14px;background:#fffbeb;color:#92400e;font-size:.62rem;line-height:1.4;font-weight:700}.master-panel-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:.7rem}.master-panel-stat{padding:.7rem;border-radius:16px;background:#f8fafc;border:1px solid #e5e7eb}.master-panel-stat span{display:block;color:#64748b;font-size:.58rem}.master-panel-stat strong{display:block;margin-top:.18rem;color:#111827;font-size:.82rem}@keyframes masterUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:520px){.master-hub{gap:.42rem}.master-hub-btn{min-height:100px;padding:.62rem;border-radius:16px}.master-hub-btn strong{font-size:.68rem}.master-hub-btn span{font-size:.52rem}.master-overlay{padding:.35rem}.master-drawer{border-radius:22px 22px 16px 16px;max-height:88vh}}
 
 </style>
 
@@ -1237,66 +1239,29 @@ body{
         </div>
 
         {% if is_master|default(false) %}
-        <div class="balance-vault master-retail">
-            <div class="balance-vault-main">
-                <div>
-                    <div class="balance-label">Saldo Retail Master</div>
-                    <div class="balance-value">{{ format_uang(saldo_retail) }}</div>
-                    <div class="balance-note">Saldo khusus untuk operasional dan kebutuhan transaksi retail.</div>
-                </div>
-                <div class="balance-icon"><i class="fa-solid fa-store"></i></div>
-            </div>
-            <form class="master-retail-form" method="POST" action="{{ url_for('master_saldo_retail') }}">
-                <input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal top up dari saldo utama" required>
-                <button type="submit"><i class="fa-solid fa-circle-plus"></i> Top Up Retail</button>
-            </form>
-        </div>
-
         <div class="profile-section">
-            <div class="section-head"><div><h3>Fitur Khusus Master</h3><p>Kontrol akun dan aktivitas retail dari profil.</p></div><span class="section-pill">Master</span></div>
-            <div class="master-feature-grid">
-                <div class="master-feature"><i class="fa-solid fa-store"></i><strong>Saldo Retail</strong><span>{{ format_uang(ringkasan_master.saldo_retail) }} siap dikelola.</span></div>
-                <div class="master-feature"><i class="fa-solid fa-sack-dollar"></i><strong>Fee Retail</strong><span>{{ format_uang(ringkasan_master.fee_retail) }} dapat ditarik.</span></div>
-                <div class="master-feature"><i class="fa-solid fa-users-line"></i><strong>Jaringan Retail</strong><span>{{ ringkasan_master.total_jaringan }} anggota aktif tercatat.</span></div>
-                <div class="master-feature"><i class="fa-solid fa-clock-rotate-left"></i><strong>Mutasi Saldo</strong><span>{{ ringkasan_master.total_mutasi }} perubahan saldo tercatat.</span></div>
-            </div>
-
-            <div class="master-tool-grid">
-                <div class="master-tool">
-                    <h4><i class="fa-solid fa-money-bill-transfer"></i> Withdraw Fee</h4>
-                    <p>Tarik fee retail ke saldo utama akun Master.</p>
-                    <form method="POST" action="{{ url_for('master_withdraw_fee') }}">
-                        <input type="number" name="nominal" min="10000" step="1000" placeholder="Minimal Rp 10.000" required>
-                        <button type="submit">Withdraw Fee</button>
-                    </form>
-                </div>
-                <div class="master-tool">
-                    <h4><i class="fa-solid fa-user-plus"></i> Tambah Jaringan</h4>
-                    <p>Daftarkan anggota baru ke jaringan retail Master.</p>
-                    <form method="POST" action="{{ url_for('master_tambah_jaringan') }}">
-                        <input type="text" name="nama" placeholder="Nama anggota retail" required>
-                        <input type="text" name="nomor_hp" placeholder="Nomor HP anggota" required>
-                        <button type="submit">Tambah Jaringan</button>
-                    </form>
-                </div>
+            <div class="section-head"><div><h3>Master Retail Center</h3><p>Klik fitur untuk membuka detail dan kontrolnya.</p></div><span class="section-pill">6 Fitur</span></div>
+            <div class="master-hub">
+                <button type="button" class="master-hub-btn" data-master-panel="saldo"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-store"></i></span><strong>Saldo Retail</strong><span>Lihat saldo retail dan ringkasannya.</span></button>
+                <button type="button" class="master-hub-btn" data-master-panel="topup" style="--hub-bg:#ecfdf5;--hub-color:#059669"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-circle-plus"></i></span><strong>Top Up Retail</strong><span>Pindahkan saldo utama ke retail.</span></button>
+                <button type="button" class="master-hub-btn" data-master-panel="fee" style="--hub-bg:#fef3c7;--hub-color:#b45309"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-sack-dollar"></i></span><strong>Fee Retail</strong><span>Cek fee dan lakukan withdraw.</span></button>
+                <button type="button" class="master-hub-btn" data-master-panel="mutasi" style="--hub-bg:#eff6ff;--hub-color:#2563eb"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-clock-rotate-left"></i></span><strong>Mutasi Saldo</strong><span>Lihat aktivitas saldo terbaru.</span></button>
+                <button type="button" class="master-hub-btn" data-master-panel="jaringan" style="--hub-bg:#f5f3ff;--hub-color:#7c3aed"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-users-line"></i></span><strong>Jaringan Retail</strong><span>Daftar dan status semua anggota.</span></button>
+                <button type="button" class="master-hub-btn" data-master-panel="tambah" style="--hub-bg:#f0fdf4;--hub-color:#16a34a"><i class="fa-solid fa-chevron-right master-hub-arrow"></i><span class="master-hub-icon"><i class="fa-solid fa-user-plus"></i></span><strong>Tambah Jaringan</strong><span>Daftarkan anggota retail baru.</span></button>
             </div>
         </div>
 
-        <div class="profile-section">
-            <div class="section-head"><div><h3>Jaringan Retail</h3><p>Daftar anggota di bawah akun Master.</p></div><span class="section-pill">{{ ringkasan_master.total_jaringan }} Anggota</span></div>
-            <div class="master-list">
-                {% for anggota in jaringan_master %}
-                <div class="master-list-row"><div><strong>{{ anggota.nama }}</strong><span>{{ anggota.nomor_hp }}</span></div><b><i class="fa-solid fa-circle-check"></i> {{ anggota.status }}</b></div>
-                {% else %}<div class="master-empty">Belum ada anggota jaringan retail.</div>{% endfor %}
-            </div>
-        </div>
-
-        <div class="profile-section">
-            <div class="section-head"><div><h3>Mutasi Saldo Master</h3><p>Aktivitas saldo utama, retail, dan fee terbaru.</p></div><a class="section-pill" href="{{ url_for('mutasi_saldo') }}">Lihat Semua</a></div>
-            <div class="master-list">
-                {% for item in mutasi_master %}
-                <div class="master-list-row"><div><strong>{{ item.keterangan or item.jenis }}</strong><span>{{ item.waktu.strftime('%d/%m/%Y %H:%M') if item.waktu else '-' }}</span></div><b>{{ format_uang(item.nominal) }}</b></div>
-                {% else %}<div class="master-empty">Belum ada mutasi saldo Master.</div>{% endfor %}
+        <div class="master-overlay" id="masterOverlay" aria-hidden="true">
+            <div class="master-drawer" role="dialog" aria-modal="true">
+                <div class="master-drawer-head"><div class="master-drawer-title"><i id="masterPanelIcon" class="fa-solid fa-crown"></i><div><strong id="masterPanelTitle">Fitur Master</strong><span id="masterPanelSubtitle">Kelola akun retail</span></div></div><button type="button" class="master-close" id="masterClose" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+                <div class="master-drawer-body">
+                    <section class="master-panel-content" data-panel-content="saldo"><div class="master-panel-stats"><div class="master-panel-stat"><span>Saldo Utama</span><strong>{{ format_uang(saldo_user) }}</strong></div><div class="master-panel-stat"><span>Saldo Retail</span><strong>{{ format_uang(ringkasan_master.saldo_retail) }}</strong></div><div class="master-panel-stat"><span>Fee Retail</span><strong>{{ format_uang(ringkasan_master.fee_retail) }}</strong></div><div class="master-panel-stat"><span>Total Jaringan</span><strong>{{ ringkasan_master.total_jaringan }}</strong></div></div><div class="master-panel-note"><i class="fa-solid fa-shield-halved"></i><span>Saldo utama, saldo retail, dan fee disimpan terpisah agar pencatatan lebih aman dan mudah dipantau.</span></div></section>
+                    <section class="master-panel-content" data-panel-content="topup"><div class="master-balance-card"><span>Saldo Retail Saat Ini</span><strong>{{ format_uang(ringkasan_master.saldo_retail) }}</strong></div><form class="master-panel-form" method="POST" action="{{ url_for('master_saldo_retail') }}"><input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal top up, minimal Rp 10.000" required><button type="submit"><i class="fa-solid fa-circle-plus"></i> Proses Top Up Retail</button></form><div class="master-panel-note"><i class="fa-solid fa-circle-info"></i><span>Nominal akan dipindahkan dari saldo utama ke saldo retail.</span></div></section>
+                    <section class="master-panel-content" data-panel-content="fee"><div class="master-balance-card"><span>Fee Bisa Ditarik</span><strong>{{ format_uang(ringkasan_master.fee_retail) }}</strong></div><form class="master-panel-form" method="POST" action="{{ url_for('master_withdraw_fee') }}"><input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal withdraw, minimal Rp 10.000" required><button type="submit"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw ke Saldo Utama</button></form><div class="master-panel-note"><i class="fa-solid fa-wallet"></i><span>Fee yang berhasil ditarik otomatis masuk ke saldo utama Master.</span></div></section>
+                    <section class="master-panel-content" data-panel-content="mutasi"><div class="master-panel-stats"><div class="master-panel-stat"><span>Total Mutasi</span><strong>{{ ringkasan_master.total_mutasi }}</strong></div><div class="master-panel-stat"><span>Transaksi Berhasil</span><strong>{{ ringkasan_master.transaksi_berhasil }}</strong></div></div><div class="master-list">{% for item in mutasi_master %}<div class="master-list-row"><div><strong>{{ item.keterangan or item.jenis }}</strong><span>{{ item.waktu.strftime('%d/%m/%Y %H:%M') if item.waktu else '-' }} · {{ item.jenis }}</span></div><b>{{ format_uang(item.nominal) }}</b></div>{% else %}<div class="master-empty">Belum ada mutasi saldo Master.</div>{% endfor %}</div><a href="{{ url_for('mutasi_saldo') }}" class="balance-btn primary" style="margin-top:.7rem">Lihat Semua Mutasi</a></section>
+                    <section class="master-panel-content" data-panel-content="jaringan"><div class="master-panel-stats"><div class="master-panel-stat"><span>Total Anggota</span><strong>{{ ringkasan_master.total_jaringan }}</strong></div><div class="master-panel-stat"><span>Status Jaringan</span><strong>Aktif</strong></div></div><div class="master-list">{% for anggota in jaringan_master %}<div class="master-list-row"><div><strong>{{ anggota.nama }}</strong><span>{{ anggota.nomor_hp }} · Bergabung {{ anggota.dibuat_pada.strftime('%d/%m/%Y') if anggota.dibuat_pada else '-' }}</span></div><b><i class="fa-solid fa-circle-check"></i> {{ anggota.status }}</b></div>{% else %}<div class="master-empty">Belum ada anggota jaringan retail.</div>{% endfor %}</div></section>
+                    <section class="master-panel-content" data-panel-content="tambah"><form class="master-panel-form" method="POST" action="{{ url_for('master_tambah_jaringan') }}"><input type="text" name="nama" minlength="2" placeholder="Nama lengkap anggota retail" required><input type="tel" name="nomor_hp" minlength="8" placeholder="Nomor HP aktif anggota" required><button type="submit"><i class="fa-solid fa-user-plus"></i> Daftarkan Jaringan Baru</button></form><div class="master-panel-note"><i class="fa-solid fa-users"></i><span>Pastikan nama dan nomor HP benar agar data jaringan mudah dikelola.</span></div></section>
+                </div>
             </div>
         </div>
         {% endif %}
@@ -1545,6 +1510,53 @@ body{
             }
         });
     }
+
+    const masterOverlay = document.getElementById('masterOverlay');
+    const masterClose = document.getElementById('masterClose');
+    const masterTitle = document.getElementById('masterPanelTitle');
+    const masterSubtitle = document.getElementById('masterPanelSubtitle');
+    const masterIcon = document.getElementById('masterPanelIcon');
+    const panelMeta = {
+        saldo:['Saldo Retail','Ringkasan seluruh saldo Master','fa-store'],
+        topup:['Top Up Retail','Isi saldo retail dari saldo utama','fa-circle-plus'],
+        fee:['Fee Retail','Saldo fee dan proses withdraw','fa-sack-dollar'],
+        mutasi:['Mutasi Saldo','Riwayat aktivitas saldo Master','fa-clock-rotate-left'],
+        jaringan:['Jaringan Retail','Anggota yang berada di bawah Master','fa-users-line'],
+        tambah:['Tambah Jaringan','Daftarkan anggota retail baru','fa-user-plus']
+    };
+
+    function closeMasterPanel(){
+        if(!masterOverlay) return;
+        masterOverlay.classList.remove('show');
+        masterOverlay.setAttribute('aria-hidden','true');
+        document.body.style.overflow='';
+    }
+
+    document.querySelectorAll('[data-master-panel]').forEach(function(button){
+        button.addEventListener('click',function(){
+            const key=button.getAttribute('data-master-panel');
+            const meta=panelMeta[key] || panelMeta.saldo;
+            document.querySelectorAll('[data-panel-content]').forEach(function(panel){
+                panel.style.display=panel.getAttribute('data-panel-content')===key ? 'block' : 'none';
+            });
+            masterTitle.textContent=meta[0];
+            masterSubtitle.textContent=meta[1];
+            masterIcon.className='fa-solid '+meta[2];
+            masterOverlay.classList.add('show');
+            masterOverlay.setAttribute('aria-hidden','false');
+            document.body.style.overflow='hidden';
+        });
+    });
+
+    if(masterClose) masterClose.addEventListener('click',closeMasterPanel);
+    if(masterOverlay){
+        masterOverlay.addEventListener('click',function(event){
+            if(event.target===masterOverlay) closeMasterPanel();
+        });
+    }
+    document.addEventListener('keydown',function(event){
+        if(event.key==='Escape') closeMasterPanel();
+    });
 })();
 </script>
 
