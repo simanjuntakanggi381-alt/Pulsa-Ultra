@@ -14,6 +14,7 @@ class Pengguna(db.Model):
     kata_sandi = db.Column(db.String(255), nullable=False)
     saldo = db.Column(db.Integer, default=0)
     saldo_retail = db.Column(db.Integer, default=0)
+    fee_retail = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return f"<Pengguna {self.email}>"
@@ -65,6 +66,19 @@ class MutasiSaldo(db.Model):
 
     def __repr__(self):
         return f"<MutasiSaldo {self.email} - {self.jenis} - {self.nominal}>"
+
+
+class JaringanRetail(db.Model):
+    __tablename__ = "jaringan_retail"
+
+    id = db.Column(db.Integer, primary_key=True)
+    master_id = db.Column(db.Integer, db.ForeignKey("pengguna.id"), nullable=False, index=True)
+    nama = db.Column(db.String(100), nullable=False)
+    nomor_hp = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default="Aktif")
+    dibuat_pada = db.Column(db.DateTime, default=datetime.utcnow)
+
+    master = db.relationship("Pengguna", backref=db.backref("jaringan_retail", lazy=True))
 
 
 # =========================================================

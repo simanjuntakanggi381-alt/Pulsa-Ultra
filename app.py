@@ -7,7 +7,7 @@ from config import (
     HARGA_JUAL,
     BATAS_SALDO_INGAT
 )
-from models import db, Transaksi, Pengguna, MutasiSaldo, ChatSession, ChatMessage
+from models import db, Transaksi, Pengguna, MutasiSaldo, JaringanRetail, ChatSession, ChatMessage
 from transaksi import cek_saldo, proses_beli
 from utils import format_uang
 from sqlalchemy import func, or_, text, inspect
@@ -59,6 +59,9 @@ with app.app_context():
     if "saldo_retail" not in kolom_pengguna:
         db.session.execute(text("ALTER TABLE pengguna ADD COLUMN saldo_retail INTEGER DEFAULT 0"))
         db.session.commit()
+    if "fee_retail" not in kolom_pengguna:
+        db.session.execute(text("ALTER TABLE pengguna ADD COLUMN fee_retail INTEGER DEFAULT 0"))
+        db.session.commit()
 
     cek_anggi = Pengguna.query.filter_by(email="anggi@gmail.com").first()
 
@@ -81,7 +84,8 @@ with app.app_context():
             email="alex@master.local",
             kata_sandi=AKUN_PANEL["alex"]["password_hash"] if "AKUN_PANEL" in globals() else generate_password_hash("alex080811", method="pbkdf2:sha256"),
             saldo=0,
-            saldo_retail=0
+            saldo_retail=0,
+            fee_retail=0
         )
         db.session.add(akun_master)
         db.session.commit()
@@ -1822,7 +1826,9 @@ def profil():
             "total_transaksi": transaksi_master.count(),
             "transaksi_berhasil": transaksi_master.filter_by(status="Berhasil").count(),
             "total_mutasi": MutasiSaldo.query.filter_by(email=pengguna.email).count(),
-            "saldo_retail": int(pengguna.saldo_retail or 0)
+            "saldo_retail": int(pengguna.saldo_retail or 0),
+            "fee_retail": int(pengguna.fee_retail or 0),
+            "total_jaringan": JaringanRetail.query.filter_by(master_id=pengguna.id).count()
         }
 
     return render_template(
@@ -1830,6 +1836,8 @@ def profil():
         pengguna=pengguna,
         is_master=user_master(),
         ringkasan_master=ringkasan_master,
+        mutasi_master=(MutasiSaldo.query.filter_by(email=pengguna.email).order_by(MutasiSaldo.waktu.desc()).limit(5).all() if user_master() else []),
+        jaringan_master=(JaringanRetail.query.filter_by(master_id=pengguna.id).order_by(JaringanRetail.id.desc()).limit(6).all() if user_master() else []),
         format_uang=format_uang
     )
 
@@ -1862,6 +1870,48 @@ def master_saldo_retail():
     db.session.commit()
 
     flash(f"Berhasil memindahkan {format_flash_nominal(nominal)} ke saldo retail.", "success")
+    return redirect(url_for("profil"))
+
+
+@app.route("/master/withdraw-fee", methods=["POST"])
+def master_withdraw_fee():
+    if not user_sedang_login() or not user_master():
+        flash("Fitur ini khusus akun Master.", "warning")
+        return redirect(url_for("login"))
+
+    pengguna = ambil_pengguna_login()
+    nominal = request.form.get("nominal", type=int)
+    if not pengguna or not nominal or nominal < 10000:
+        flash("Minimal withdraw fee Rp 10.000.", "warning")
+        return redirect(url_for("profil"))
+    if int(pengguna.fee_retail or 0) < nominal:
+        flash("Fee retail belum cukup untuk ditarik.", "danger")
+        return redirect(url_for("profil"))
+
+    pengguna.fee_retail = int(pengguna.fee_retail or 0) - nominal
+    pengguna.saldo = int(pengguna.saldo or 0) + nominal
+    db.session.add(MutasiSaldo(email=pengguna.email, jenis="Masuk", nominal=nominal, keterangan="Withdraw fee retail ke saldo utama"))
+    db.session.commit()
+    flash(f"Withdraw fee {format_flash_nominal(nominal)} berhasil masuk ke saldo utama.", "success")
+    return redirect(url_for("profil"))
+
+
+@app.route("/master/jaringan-retail", methods=["POST"])
+def master_tambah_jaringan():
+    if not user_sedang_login() or not user_master():
+        flash("Fitur ini khusus akun Master.", "warning")
+        return redirect(url_for("login"))
+
+    pengguna = ambil_pengguna_login()
+    nama = request.form.get("nama", "").strip()
+    nomor_hp = request.form.get("nomor_hp", "").strip()
+    if not pengguna or len(nama) < 2 or len(nomor_hp) < 8:
+        flash("Lengkapi nama dan nomor HP jaringan retail.", "warning")
+        return redirect(url_for("profil"))
+
+    db.session.add(JaringanRetail(master_id=pengguna.id, nama=nama, nomor_hp=nomor_hp, status="Aktif"))
+    db.session.commit()
+    flash(f"Jaringan retail {nama} berhasil ditambahkan.", "success")
     return redirect(url_for("profil"))
 
 

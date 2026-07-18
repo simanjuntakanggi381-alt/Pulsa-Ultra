@@ -1143,7 +1143,9 @@ body{
 .master-retail-form input{min-width:0;min-height:44px;padding:0 .75rem;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;outline:none;font-weight:850}
 .master-retail-form input::placeholder{color:rgba(255,255,255,.58)}.master-retail-form button{min-height:44px;padding:0 .8rem;border:0;border-radius:14px;background:#fbbf24;color:#422006;font-weight:950;cursor:pointer}
 .master-feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem}.master-feature{padding:.75rem;border-radius:18px;background:#fffbeb;border:1px solid #fde68a}.master-feature i{color:#d97706}.master-feature strong{display:block;margin-top:.38rem;color:#451a03;font-size:.82rem}.master-feature span{display:block;margin-top:.12rem;color:#92400e;font-size:.66rem;line-height:1.35;font-weight:700}
+.master-tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.7rem}.master-tool{padding:.75rem;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0}.master-tool h4{color:#0f172a;font-size:.8rem}.master-tool p{margin:.15rem 0 .55rem;color:#64748b;font-size:.62rem;line-height:1.35}.master-tool form{display:grid;gap:.42rem}.master-tool input{width:100%;min-height:40px;padding:0 .65rem;border:1px solid #dbe2ea;border-radius:12px;background:#fff;outline:none;font-size:.7rem;font-weight:750}.master-tool button{min-height:40px;border:0;border-radius:12px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;font-size:.7rem;font-weight:950;cursor:pointer}.master-list{display:grid;gap:.45rem}.master-list-row{display:flex;align-items:center;justify-content:space-between;gap:.55rem;padding:.62rem;border-radius:14px;background:#f8fafc;border:1px solid #e5e7eb}.master-list-row strong{display:block;color:#111827;font-size:.7rem}.master-list-row span{display:block;margin-top:.1rem;color:#64748b;font-size:.58rem}.master-list-row b{color:#b45309;font-size:.68rem;text-align:right}.master-empty{padding:.72rem;border-radius:14px;background:#f8fafc;border:1px dashed #cbd5e1;color:#64748b;text-align:center;font-size:.68rem;font-weight:750}
 @media(max-width:520px){.master-retail-form{grid-template-columns:1fr}.master-feature-grid{gap:.42rem}.master-feature{padding:.58rem;border-radius:14px}.master-feature strong{font-size:.68rem}.master-feature span{font-size:.54rem}}
+@media(max-width:520px){.master-tool-grid{grid-template-columns:1fr}.master-tool{padding:.6rem}.master-list-row{padding:.52rem}}
 
 </style>
 
@@ -1245,8 +1247,8 @@ body{
                 <div class="balance-icon"><i class="fa-solid fa-store"></i></div>
             </div>
             <form class="master-retail-form" method="POST" action="{{ url_for('master_saldo_retail') }}">
-                <input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal dari saldo utama" required>
-                <button type="submit"><i class="fa-solid fa-arrow-right-arrow-left"></i> Pindahkan</button>
+                <input type="number" name="nominal" min="10000" step="1000" placeholder="Nominal top up dari saldo utama" required>
+                <button type="submit"><i class="fa-solid fa-circle-plus"></i> Top Up Retail</button>
             </form>
         </div>
 
@@ -1254,9 +1256,47 @@ body{
             <div class="section-head"><div><h3>Fitur Khusus Master</h3><p>Kontrol akun dan aktivitas retail dari profil.</p></div><span class="section-pill">Master</span></div>
             <div class="master-feature-grid">
                 <div class="master-feature"><i class="fa-solid fa-store"></i><strong>Saldo Retail</strong><span>{{ format_uang(ringkasan_master.saldo_retail) }} siap dikelola.</span></div>
-                <div class="master-feature"><i class="fa-solid fa-receipt"></i><strong>Transaksi Master</strong><span>{{ ringkasan_master.total_transaksi }} transaksi tercatat.</span></div>
-                <div class="master-feature"><i class="fa-solid fa-circle-check"></i><strong>Transaksi Berhasil</strong><span>{{ ringkasan_master.transaksi_berhasil }} transaksi berhasil.</span></div>
+                <div class="master-feature"><i class="fa-solid fa-sack-dollar"></i><strong>Fee Retail</strong><span>{{ format_uang(ringkasan_master.fee_retail) }} dapat ditarik.</span></div>
+                <div class="master-feature"><i class="fa-solid fa-users-line"></i><strong>Jaringan Retail</strong><span>{{ ringkasan_master.total_jaringan }} anggota aktif tercatat.</span></div>
                 <div class="master-feature"><i class="fa-solid fa-clock-rotate-left"></i><strong>Mutasi Saldo</strong><span>{{ ringkasan_master.total_mutasi }} perubahan saldo tercatat.</span></div>
+            </div>
+
+            <div class="master-tool-grid">
+                <div class="master-tool">
+                    <h4><i class="fa-solid fa-money-bill-transfer"></i> Withdraw Fee</h4>
+                    <p>Tarik fee retail ke saldo utama akun Master.</p>
+                    <form method="POST" action="{{ url_for('master_withdraw_fee') }}">
+                        <input type="number" name="nominal" min="10000" step="1000" placeholder="Minimal Rp 10.000" required>
+                        <button type="submit">Withdraw Fee</button>
+                    </form>
+                </div>
+                <div class="master-tool">
+                    <h4><i class="fa-solid fa-user-plus"></i> Tambah Jaringan</h4>
+                    <p>Daftarkan anggota baru ke jaringan retail Master.</p>
+                    <form method="POST" action="{{ url_for('master_tambah_jaringan') }}">
+                        <input type="text" name="nama" placeholder="Nama anggota retail" required>
+                        <input type="text" name="nomor_hp" placeholder="Nomor HP anggota" required>
+                        <button type="submit">Tambah Jaringan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head"><div><h3>Jaringan Retail</h3><p>Daftar anggota di bawah akun Master.</p></div><span class="section-pill">{{ ringkasan_master.total_jaringan }} Anggota</span></div>
+            <div class="master-list">
+                {% for anggota in jaringan_master %}
+                <div class="master-list-row"><div><strong>{{ anggota.nama }}</strong><span>{{ anggota.nomor_hp }}</span></div><b><i class="fa-solid fa-circle-check"></i> {{ anggota.status }}</b></div>
+                {% else %}<div class="master-empty">Belum ada anggota jaringan retail.</div>{% endfor %}
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <div class="section-head"><div><h3>Mutasi Saldo Master</h3><p>Aktivitas saldo utama, retail, dan fee terbaru.</p></div><a class="section-pill" href="{{ url_for('mutasi_saldo') }}">Lihat Semua</a></div>
+            <div class="master-list">
+                {% for item in mutasi_master %}
+                <div class="master-list-row"><div><strong>{{ item.keterangan or item.jenis }}</strong><span>{{ item.waktu.strftime('%d/%m/%Y %H:%M') if item.waktu else '-' }}</span></div><b>{{ format_uang(item.nominal) }}</b></div>
+                {% else %}<div class="master-empty">Belum ada mutasi saldo Master.</div>{% endfor %}
             </div>
         </div>
         {% endif %}
