@@ -2123,20 +2123,18 @@ def topup_saldo():
             flash("⚠️ Pilih metode pembayaran terlebih dahulu.", "warning")
             return redirect(url_for("topup_saldo"))
 
-        pengguna.saldo = int(pengguna.saldo or 0) + int(nominal)
-
-        mutasi = MutasiSaldo(
-            email=pengguna.email,
-            jenis="Masuk",
-            nominal=nominal,
-            keterangan=f"Top Up Saldo via {metode}"
-        )
-
-        db.session.add(mutasi)
-        db.session.commit()
-
-        flash(f"✅ Berhasil menambah saldo sebesar {format_flash_nominal(nominal)}.", "success")
-        return redirect(url_for("profil"))
+        token = uuid.uuid4().hex
+        session["checkout_pembayaran"] = {
+            "token": token,
+            "tipe": "topup",
+            "kode": "TOPUP_SALDO",
+            "tujuan": pengguna.email,
+            "endpoint": "topup_saldo",
+            "harga": int(nominal),
+            "produk": f"Top Up Saldo via {metode}",
+            "metode": metode
+        }
+        return redirect(url_for("pembayaran_barcode", token=token))
 
     return render_template("topup_saldo.html", pengguna=pengguna, format_uang=format_uang)
 
@@ -2216,7 +2214,7 @@ def proses_pembelian_umum(kode, tujuan, endpoint_redirect):
 
     token = uuid.uuid4().hex
     session["checkout_pembayaran"] = {
-        "token": token, "kode": kode, "tujuan": tujuan,
+        "token": token, "tipe": "produk", "kode": kode, "tujuan": tujuan,
         "endpoint": endpoint_redirect, "harga": int(HARGA_JUAL[kode]),
         "produk": NAMA_PRODUK[kode]
     }
@@ -2259,8 +2257,29 @@ def konfirmasi_pembayaran_barcode(token):
         flash("Sesi pembayaran tidak valid.", "danger")
         return redirect(url_for("dashboard"))
 
-    hasil = proses_beli(checkout["kode"], checkout["tujuan"], session.get("email"))
     endpoint_redirect = checkout.get("endpoint", "dashboard")
+
+    if checkout.get("tipe") == "topup":
+        pengguna = ambil_pengguna_login()
+        if not pengguna:
+            session.pop("checkout_pembayaran", None)
+            flash("Data akun tidak ditemukan. Silakan masuk ulang.", "danger")
+            return redirect(url_for("login"))
+
+        nominal = int(checkout["harga"])
+        pengguna.saldo = int(pengguna.saldo or 0) + nominal
+        db.session.add(MutasiSaldo(
+            email=pengguna.email,
+            jenis="Masuk",
+            nominal=nominal,
+            keterangan=f"Top Up Saldo via {checkout.get('metode', 'QR')}"
+        ))
+        db.session.commit()
+        session.pop("checkout_pembayaran", None)
+        flash(f"Top up {format_flash_nominal(nominal)} berhasil masuk ke saldo.", "success")
+        return redirect(url_for("profil"))
+
+    hasil = proses_beli(checkout["kode"], checkout["tujuan"], session.get("email"))
     session.pop("checkout_pembayaran", None)
     if hasil.get("status") in ["sukses", "berhasil"]:
         flash(f"Pembayaran dan transaksi berhasil. Ref/SN: {hasil.get('sn', '-')}", "success")
