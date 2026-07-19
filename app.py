@@ -16,6 +16,9 @@ from datetime import datetime, timedelta
 from functools import wraps
 import os
 import uuid
+import io
+import base64
+import qrcode
 
 
 app = Flask(__name__)
@@ -2203,13 +2206,54 @@ def proses_pembelian_umum(kode, tujuan, endpoint_redirect):
         flash("⚠️ Lengkapi semua data.", "danger")
         return redirect(url_for(endpoint_redirect))
 
-    hasil = proses_beli(kode, tujuan, session.get("email"))
+    if kode not in HARGA_JUAL or kode not in NAMA_PRODUK:
+        flash("Produk atau harga tidak ditemukan.", "danger")
+        return redirect(url_for(endpoint_redirect))
 
+    token = uuid.uuid4().hex
+    session["checkout_pembayaran"] = {
+        "token": token, "kode": kode, "tujuan": tujuan,
+        "endpoint": endpoint_redirect, "harga": int(HARGA_JUAL[kode]),
+        "produk": NAMA_PRODUK[kode]
+    }
+    return redirect(url_for("pembayaran_barcode", token=token))
+
+@app.route("/pembayaran/barcode/<token>")
+def pembayaran_barcode(token):
+    checkout = session.get("checkout_pembayaran") or {}
+    if not user_sedang_login() or checkout.get("token") != token:
+        flash("Sesi pembayaran tidak ditemukan atau sudah berakhir.", "warning")
+        return redirect(url_for("dashboard"))
+
+    isi_qr = (
+        f"SENJADATA PAYMENT\nPenerima: Anggi Simanjuntak\n"
+        f"Nominal: {checkout['harga']}\nProduk: {checkout['produk']}\n"
+        f"Tujuan: {checkout['tujuan']}\nReferensi: {token[:12].upper()}"
+    )
+    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=9, border=4)
+    qr.add_data(isi_qr)
+    qr.make(fit=True)
+    gambar = qr.make_image(fill_color="black", back_color="white")
+    buffer = io.BytesIO()
+    gambar.save(buffer, format="PNG")
+    qr_data = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+    return render_template("pembayaran_barcode.html", checkout=checkout, qr_data=qr_data, referensi=token[:12].upper())
+
+
+@app.route("/pembayaran/konfirmasi/<token>", methods=["POST"])
+def konfirmasi_pembayaran_barcode(token):
+    checkout = session.get("checkout_pembayaran") or {}
+    if not user_sedang_login() or checkout.get("token") != token:
+        flash("Sesi pembayaran tidak valid.", "danger")
+        return redirect(url_for("dashboard"))
+
+    hasil = proses_beli(checkout["kode"], checkout["tujuan"], session.get("email"))
+    endpoint_redirect = checkout.get("endpoint", "dashboard")
+    session.pop("checkout_pembayaran", None)
     if hasil.get("status") in ["sukses", "berhasil"]:
-        flash(f"✅ Berhasil! Ref/SN: {hasil.get('sn', '-')}", "success")
+        flash(f"Pembayaran dan transaksi berhasil. Ref/SN: {hasil.get('sn', '-')}", "success")
     else:
-        flash(f"❌ Gagal: {hasil.get('pesan', 'Terjadi kesalahan')}", "danger")
-
+        flash(f"Transaksi belum berhasil: {hasil.get('pesan', 'Terjadi kesalahan')}", "danger")
     return redirect(url_for(endpoint_redirect))
 
 
