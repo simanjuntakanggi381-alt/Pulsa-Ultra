@@ -18,7 +18,10 @@ import os
 import uuid
 import io
 import base64
-import qrcode
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
 
 
 app = Flask(__name__)
@@ -93,10 +96,11 @@ with app.app_context():
         db.session.add(akun_master)
         db.session.commit()
 
-    print("\n✅ AKUN DEMO SIAP DIGUNAKAN:")
-    print("📧 Email    : anggi@gmail.com")
-    print("📱 Nomor HP : 081234567890")
-    print("🔑 Sandi    : anggi123\n")
+    # Gunakan teks ASCII agar startup tidak gagal pada terminal Windows cp1252.
+    print("\nAKUN DEMO SIAP DIGUNAKAN:")
+    print("Email    : anggi@gmail.com")
+    print("Nomor HP : 081234567890")
+    print("Sandi    : anggi123\n")
 
 
 # =========================================================
@@ -2224,6 +2228,14 @@ def pembayaran_barcode(token):
     if not user_sedang_login() or checkout.get("token") != token:
         flash("Sesi pembayaran tidak ditemukan atau sudah berakhir.", "warning")
         return redirect(url_for("dashboard"))
+
+    if qrcode is None:
+        flash(
+            "Fitur barcode belum siap karena modul QR belum terpasang. "
+            "Jalankan pip install -r requirements.txt lalu restart aplikasi.",
+            "danger"
+        )
+        return redirect(url_for(checkout.get("endpoint", "dashboard")))
 
     isi_qr = (
         f"SENJADATA PAYMENT\nPenerima: Anggi Simanjuntak\n"
