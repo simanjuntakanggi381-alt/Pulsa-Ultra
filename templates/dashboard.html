@@ -1996,6 +1996,17 @@ body{
     }
 }
 
+.senja-promo-hero{overflow:hidden;margin-bottom:1rem;border:1px solid rgba(96,165,250,.28);border-radius:28px;background:linear-gradient(145deg,#050b24,#071f55);box-shadow:0 18px 42px rgba(15,23,42,.22)}
+.senja-promo-image{position:relative;aspect-ratio:2.3/1;overflow:hidden;background:#07143e}
+.senja-promo-image img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+.senja-promo-copy{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.05rem 1.05rem;color:#fff}
+.senja-promo-copy h1{margin:0;max-width:430px;font-size:1.18rem;line-height:1.2;letter-spacing:-.025em}
+.senja-promo-copy p{margin:.35rem 0 0;max-width:440px;color:#cbd5e1;font-size:.72rem;line-height:1.5}
+.senja-promo-actions{display:flex;flex:0 0 auto;gap:.45rem}
+.senja-promo-actions a{display:inline-flex;align-items:center;justify-content:center;gap:.38rem;min-height:42px;padding:.65rem .8rem;border-radius:13px;color:#07152f;background:#facc15;text-decoration:none;font-size:.68rem;font-weight:900}
+.senja-promo-actions a:last-child{color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
+@media(max-width:640px){.senja-promo-hero{border-radius:20px}.senja-promo-image{aspect-ratio:1.65/1}.senja-promo-copy{align-items:flex-start;flex-direction:column;padding:.85rem}.senja-promo-copy h1{font-size:1rem}.senja-promo-copy p{font-size:.66rem}.senja-promo-actions{width:100%}.senja-promo-actions a{flex:1;padding:.58rem .45rem}}
+
 </style>
 
 <div class="king-page">
@@ -2008,6 +2019,22 @@ body{
                 {% endfor %}
             {% endif %}
         {% endwith %}
+
+        <section class="senja-promo-hero" aria-label="Layanan digital SenjaData">
+            <div class="senja-promo-image">
+                <img src="{{ url_for('static', filename='img/banners/senjadata-dashboard-hero.png') }}" alt="SenjaData, aplikasi pulsa dan layanan digital lengkap" fetchpriority="high">
+            </div>
+            <div class="senja-promo-copy">
+                <div>
+                    <h1>Semua Kebutuhan Digital dalam Satu Aplikasi</h1>
+                    <p>Isi pulsa, beli paket data, top up e-wallet, token PLN, dan bayar tagihan dengan pilihan layanan yang lengkap, jelas, dan mudah digunakan.</p>
+                </div>
+                <div class="senja-promo-actions">
+                    <a href="{{ url_for('pulsa') }}"><i class="fa-solid fa-mobile-screen-button"></i> Isi Pulsa</a>
+                    <a href="{{ url_for('produk') }}"><i class="fa-solid fa-table-cells-large"></i> Semua Layanan</a>
+                </div>
+            </div>
+        </section>
 
         <div class="king-topbar">
             <div class="king-brand">
