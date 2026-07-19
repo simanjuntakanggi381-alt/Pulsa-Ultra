@@ -1842,6 +1842,56 @@ def profil():
     )
 
 
+@app.route("/admin/analitik-grafik")
+@wajib_admin
+def admin_analitik_grafik():
+    hari_ini = datetime.now().date()
+    default_mulai = hari_ini - timedelta(days=6)
+    try:
+        tanggal_mulai = datetime.strptime(request.args.get("mulai", ""), "%Y-%m-%d").date()
+    except (TypeError, ValueError):
+        tanggal_mulai = default_mulai
+    try:
+        tanggal_selesai = datetime.strptime(request.args.get("selesai", ""), "%Y-%m-%d").date()
+    except (TypeError, ValueError):
+        tanggal_selesai = hari_ini
+    if tanggal_mulai > tanggal_selesai:
+        tanggal_mulai, tanggal_selesai = tanggal_selesai, tanggal_mulai
+    if (tanggal_selesai - tanggal_mulai).days > 365:
+        tanggal_mulai = tanggal_selesai - timedelta(days=365)
+
+    awal = datetime.combine(tanggal_mulai, datetime.min.time())
+    akhir = datetime.combine(tanggal_selesai + timedelta(days=1), datetime.min.time())
+    daftar = Transaksi.query.filter(Transaksi.waktu >= awal, Transaksi.waktu < akhir).order_by(Transaksi.waktu.asc()).all()
+    harian = {}
+    status = {"Berhasil": 0, "Pending": 0, "Gagal": 0}
+    for item in daftar:
+        tanggal = item.waktu.strftime("%Y-%m-%d") if item.waktu else tanggal_mulai.isoformat()
+        harian.setdefault(tanggal, {"pemasukan": 0, "pengeluaran": 0, "laba": 0, "transaksi": 0})
+        status[item.status if item.status in status else "Pending"] += 1
+        harian[tanggal]["transaksi"] += 1
+        if item.status == "Berhasil":
+            harian[tanggal]["pemasukan"] += int(item.jumlah or 0)
+            harian[tanggal]["pengeluaran"] += int(item.harga_modal or 0)
+            harian[tanggal]["laba"] += int(item.laba or 0)
+
+    labels, pemasukan, pengeluaran, laba, jumlah_harian = [], [], [], [], []
+    cursor = tanggal_mulai
+    while cursor <= tanggal_selesai:
+        key = cursor.isoformat()
+        data = harian.get(key, {"pemasukan": 0, "pengeluaran": 0, "laba": 0, "transaksi": 0})
+        labels.append(cursor.strftime("%d/%m"))
+        pemasukan.append(data["pemasukan"]); pengeluaran.append(data["pengeluaran"])
+        laba.append(data["laba"]); jumlah_harian.append(data["transaksi"])
+        cursor += timedelta(days=1)
+
+    ringkasan = {
+        "pemasukan": sum(pemasukan), "pengeluaran": sum(pengeluaran), "laba": sum(laba),
+        "transaksi": len(daftar), "berhasil": status["Berhasil"], "pending": status["Pending"], "gagal": status["Gagal"]
+    }
+    return render_template("admin_analytics.html", mulai=tanggal_mulai.isoformat(), selesai=tanggal_selesai.isoformat(), labels=labels, pemasukan=pemasukan, pengeluaran=pengeluaran, laba=laba, jumlah_harian=jumlah_harian, status_data=[status["Berhasil"],status["Pending"],status["Gagal"]], ringkasan=ringkasan)
+
+
 def tampilkan_modul_admin(kunci):
     statistik = hitung_statistik_admin()
     modul = {
