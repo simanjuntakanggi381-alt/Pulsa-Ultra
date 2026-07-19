@@ -1746,6 +1746,24 @@
 
     <main class="container page-fade-in">
 
+        {% if request.endpoint in ['dashboard', None] %}
+            <section class="senja-promo-hero" aria-label="Layanan digital SenjaData">
+                <div class="senja-promo-image">
+                    <img src="{{ url_for('static', filename='img/banners/senjadata-dashboard-hero.png') }}" alt="SenjaData, aplikasi pulsa dan layanan digital lengkap" fetchpriority="high">
+                </div>
+                <div class="senja-promo-copy">
+                    <div>
+                        <h1>Semua Kebutuhan Digital dalam Satu Aplikasi</h1>
+                        <p>Isi pulsa, beli paket data, top up e-wallet, token PLN, dan bayar tagihan dengan pilihan layanan yang lengkap dan mudah digunakan.</p>
+                    </div>
+                    <div class="senja-promo-actions">
+                        <a href="{{ url_for('pulsa') }}"><i class="fa-solid fa-mobile-screen-button"></i> Isi Pulsa</a>
+                        <a href="{{ url_for('lainnya') }}"><i class="fa-solid fa-table-cells-large"></i> Semua Layanan</a>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for kategori, pesan in messages %}
