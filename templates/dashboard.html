@@ -2005,20 +2005,13 @@ body{
 .senja-promo-actions{display:flex;flex:0 0 auto;gap:.45rem}
 .senja-promo-actions a{display:inline-flex;align-items:center;justify-content:center;gap:.38rem;min-height:42px;padding:.65rem .8rem;border-radius:13px;color:#07152f;background:#facc15;text-decoration:none;font-size:.68rem;font-weight:900}
 .senja-promo-actions a:last-child{color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
-@media(max-width:640px){.senja-promo-hero{border-radius:20px}.senja-promo-image{aspect-ratio:1.65/1}.senja-promo-copy{align-items:flex-start;flex-direction:column;padding:.85rem}.senja-promo-copy h1{font-size:1rem}.senja-promo-copy p{font-size:.66rem}.senja-promo-actions{width:100%}.senja-promo-actions a{flex:1;padding:.58rem .45rem}}
+@media(max-width:640px){.senja-promo-hero{border-radius:17px;margin-bottom:.7rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-copy{align-items:flex-start;flex-direction:column;gap:.62rem;padding:.68rem .72rem .72rem}.senja-promo-copy h1{font-size:.86rem;line-height:1.25}.senja-promo-copy p{margin-top:.25rem;font-size:.58rem;line-height:1.4}.senja-promo-actions{width:100%;gap:.35rem}.senja-promo-actions a{flex:1;min-height:36px;padding:.48rem .35rem;border-radius:11px;font-size:.6rem}}
+@media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-copy p{display:none}.senja-promo-copy{padding:.6rem}.senja-promo-actions a{min-height:34px;font-size:.56rem}}
 
 </style>
 
 <div class="king-page">
     <div class="king-shell">
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for kategori, pesan in messages %}
-                    <div class="king-alert {{ kategori }}">{{ pesan }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
 
         <section class="senja-promo-hero" aria-label="Layanan digital SenjaData">
             <div class="senja-promo-image">
@@ -2031,10 +2024,18 @@ body{
                 </div>
                 <div class="senja-promo-actions">
                     <a href="{{ url_for('pulsa') }}"><i class="fa-solid fa-mobile-screen-button"></i> Isi Pulsa</a>
-                    <a href="{{ url_for('produk') }}"><i class="fa-solid fa-table-cells-large"></i> Semua Layanan</a>
+                    <a href="{{ url_for('lainnya') }}"><i class="fa-solid fa-table-cells-large"></i> Semua Layanan</a>
                 </div>
             </div>
         </section>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for kategori, pesan in messages %}
+                    <div class="king-alert {{ kategori }}">{{ pesan }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <div class="king-topbar">
             <div class="king-brand">
