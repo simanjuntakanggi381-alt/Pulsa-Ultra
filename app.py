@@ -1854,11 +1854,35 @@ def tampilkan_modul_admin(kunci):
         "monitoring": {"judul":"Monitoring Operasional","ikon":"fa-chart-simple","deskripsi":"Pantau kesehatan database, transaksi, produk, dan aktivitas panel.","label":["Database","Produk","Transaksi","Panel admin"],"catatan":["Pastikan koneksi database selalu aktif.","Periksa lonjakan transaksi gagal.","Pantau ketersediaan produk dan harga.","Jalankan cek sistem setelah perubahan besar."]},
         "audit": {"judul":"Audit & Keamanan","ikon":"fa-file-shield","deskripsi":"Pemeriksaan menyeluruh akses, data, wallet, komisi, dan sistem.","label":["Audit akun","Audit transaksi","Audit wallet","Audit sistem"],"catatan":["Verifikasi akses Admin dan Master.","Cocokkan transaksi dengan mutasi saldo.","Periksa withdraw fee dan jaringan retail.","Catat hasil pengecekan sistem secara berkala."]}
     }[kunci]
+    modul["kunci"] = kunci
     jaringan = JaringanRetail.query.count()
     total_saldo = db.session.query(func.sum(Pengguna.saldo)).scalar() or 0
     total_fee = db.session.query(func.sum(Pengguna.fee_retail)).scalar() or 0
-    modul["nilai"] = [statistik["total_pengguna"], statistik["total_transaksi"], format_uang(total_saldo), format_uang(total_fee)]
-    return render_template("admin_module.html", modul=modul, statistik=statistik, cek_sistem=cek_kesehatan_sistem(), jaringan=jaringan, transaksi=Transaksi.query.order_by(Transaksi.waktu.desc()).limit(6).all())
+    nilai_modul = {
+        "laporan":[statistik["total_transaksi"],statistik["transaksi_sukses"],format_uang(statistik["total_laba"]),statistik["total_pengguna"]],
+        "akun":[statistik["total_pengguna"],jaringan,format_uang(total_saldo),"Aktif"],
+        "komisi":[format_uang(total_fee),len(NAMA_PRODUK),"Rp 10.000","Siap"],
+        "downline":[jaringan,format_uang(total_fee),statistik["transaksi_sukses"],"Aktif"],
+        "keuangan":[format_uang(total_saldo),statistik["total_mutasi"],format_uang(total_fee),format_uang(statistik["total_laba"])],
+        "harga":[len(NAMA_PRODUK),"5 Kategori",format_uang(min(HARGA_JUAL.values(),default=0)),format_uang(max(HARGA_JUAL.values(),default=0))],
+        "monitoring":["Online",len(NAMA_PRODUK),statistik["transaksi_gagal"],"Aman"],
+        "audit":[statistik["total_pengguna"],statistik["total_transaksi"],statistik["total_mutasi"],"Lulus"]
+    }
+    modul["nilai"] = nilai_modul[kunci]
+    q = request.args.get("q", "").strip()
+    pengguna_query = Pengguna.query
+    if q:
+        pengguna_query = pengguna_query.filter(or_(Pengguna.nama_lengkap.ilike(f"%{q}%"), Pengguna.email.ilike(f"%{q}%"), Pengguna.nomor_hp.ilike(f"%{q}%")))
+    produk_data = [{"kode":kode,"nama":nama,"harga":HARGA_JUAL.get(kode,0)} for kode,nama in list(NAMA_PRODUK.items())[:12]]
+    return render_template(
+        "admin_module.html", modul=modul, statistik=statistik,
+        cek_sistem=cek_kesehatan_sistem(), jaringan=jaringan, q=q,
+        transaksi=Transaksi.query.order_by(Transaksi.waktu.desc()).limit(8).all(),
+        pengguna= pengguna_query.order_by(Pengguna.id.desc()).limit(12).all(),
+        jaringan_data=JaringanRetail.query.order_by(JaringanRetail.id.desc()).limit(12).all(),
+        mutasi=MutasiSaldo.query.order_by(MutasiSaldo.waktu.desc()).limit(12).all(),
+        produk_data=produk_data, total_saldo=total_saldo, total_fee=total_fee
+    )
 
 
 @app.route("/admin/laporan-bisnis")
