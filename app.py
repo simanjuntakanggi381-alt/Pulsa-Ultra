@@ -1846,19 +1846,16 @@ def profil():
 @wajib_admin
 def admin_analitik_grafik():
     hari_ini = datetime.now().date()
-    default_mulai = hari_ini - timedelta(days=6)
     try:
-        tanggal_mulai = datetime.strptime(request.args.get("mulai", ""), "%Y-%m-%d").date()
+        bulan_aktif = datetime.strptime(request.args.get("bulan", ""), "%Y-%m").date().replace(day=1)
     except (TypeError, ValueError):
-        tanggal_mulai = default_mulai
-    try:
-        tanggal_selesai = datetime.strptime(request.args.get("selesai", ""), "%Y-%m-%d").date()
-    except (TypeError, ValueError):
-        tanggal_selesai = hari_ini
-    if tanggal_mulai > tanggal_selesai:
-        tanggal_mulai, tanggal_selesai = tanggal_selesai, tanggal_mulai
-    if (tanggal_selesai - tanggal_mulai).days > 365:
-        tanggal_mulai = tanggal_selesai - timedelta(days=365)
+        bulan_aktif = hari_ini.replace(day=1)
+    tanggal_mulai = bulan_aktif
+    if bulan_aktif.month == 12:
+        bulan_berikutnya = bulan_aktif.replace(year=bulan_aktif.year + 1, month=1)
+    else:
+        bulan_berikutnya = bulan_aktif.replace(month=bulan_aktif.month + 1)
+    tanggal_selesai = bulan_berikutnya - timedelta(days=1)
 
     awal = datetime.combine(tanggal_mulai, datetime.min.time())
     akhir = datetime.combine(tanggal_selesai + timedelta(days=1), datetime.min.time())
@@ -1889,7 +1886,8 @@ def admin_analitik_grafik():
         "pemasukan": sum(pemasukan), "pengeluaran": sum(pengeluaran), "laba": sum(laba),
         "transaksi": len(daftar), "berhasil": status["Berhasil"], "pending": status["Pending"], "gagal": status["Gagal"]
     }
-    return render_template("admin_analytics.html", mulai=tanggal_mulai.isoformat(), selesai=tanggal_selesai.isoformat(), labels=labels, pemasukan=pemasukan, pengeluaran=pengeluaran, laba=laba, jumlah_harian=jumlah_harian, status_data=[status["Berhasil"],status["Pending"],status["Gagal"]], ringkasan=ringkasan)
+    nama_bulan_id = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][bulan_aktif.month - 1]
+    return render_template("admin_analytics.html", bulan=bulan_aktif.strftime("%Y-%m"), nama_bulan=f"{nama_bulan_id} {bulan_aktif.year}", mulai=tanggal_mulai.isoformat(), selesai=tanggal_selesai.isoformat(), labels=labels, pemasukan=pemasukan, pengeluaran=pengeluaran, laba=laba, jumlah_harian=jumlah_harian, arus_bulat=[sum(pemasukan),sum(pengeluaran)], status_data=[status["Berhasil"],status["Pending"],status["Gagal"]], ringkasan=ringkasan)
 
 
 def tampilkan_modul_admin(kunci):
