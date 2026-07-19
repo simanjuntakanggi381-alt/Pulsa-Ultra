@@ -1842,6 +1842,58 @@ def profil():
     )
 
 
+def tampilkan_modul_admin(kunci):
+    statistik = hitung_statistik_admin()
+    modul = {
+        "laporan": {"judul":"Laporan Bisnis","ikon":"fa-chart-line","deskripsi":"Ringkasan performa transaksi, laba, pengguna, dan pergerakan saldo.","label":["Omzet & laba","Transaksi sukses","Pertumbuhan pengguna","Mutasi saldo"],"catatan":["Pantau laba transaksi berhasil setiap hari.","Periksa transaksi pending sebelum tutup buku.","Cocokkan mutasi saldo dengan aktivitas pengguna.","Gunakan data ini sebagai ringkasan operasional."]},
+        "akun": {"judul":"Akun & Jaringan","ikon":"fa-users-gear","deskripsi":"Kelola struktur akun, jaringan retail, status, dan saldo pengguna.","label":["Akun aktif","Jaringan retail","Saldo pengguna","Akses akun"],"catatan":["Pastikan identitas akun dan nomor HP valid.","Pantau akun Master dan jaringan retail aktif.","Periksa saldo tidak wajar sebelum transaksi.","Tinjau akses akun secara berkala."]},
+        "komisi": {"judul":"Pengaturan Komisi","ikon":"fa-sliders","deskripsi":"Pusat konfigurasi skema fee, margin, dan aturan komisi retail.","label":["Fee retail","Margin produk","Batas withdraw","Skema komisi"],"catatan":["Tetapkan margin yang sehat untuk setiap kategori.","Gunakan minimal withdraw untuk menjaga arus kas.","Pisahkan fee retail dari saldo transaksi.","Audit perubahan komisi sebelum diterapkan."]},
+        "downline": {"judul":"Komisi Downline","ikon":"fa-sitemap","deskripsi":"Pantau sumber komisi, jaringan downline, dan distribusi pendapatan.","label":["Total jaringan","Fee tersedia","Transaksi jaringan","Status downline"],"catatan":["Komisi hanya dihitung dari transaksi berhasil.","Cek status downline sebelum distribusi fee.","Simpan riwayat withdraw untuk proses audit.","Pantau pertumbuhan jaringan setiap periode."]},
+        "keuangan": {"judul":"Keuangan & Wallet","ikon":"fa-wallet","deskripsi":"Pantau saldo member, mutasi, fee retail, laba, dan arus wallet.","label":["Saldo member","Total mutasi","Fee retail","Laba berhasil"],"catatan":["Cocokkan saldo dengan mutasi masuk dan keluar.","Tinjau withdraw fee bernilai besar.","Pisahkan dana operasional dan laba.","Periksa transaksi gagal yang memengaruhi saldo."]},
+        "harga": {"judul":"Harga & Margin","ikon":"fa-tags","deskripsi":"Analisis harga jual, rentang harga, kategori, dan margin produk.","label":["Produk aktif","Kategori","Harga terendah","Harga tertinggi"],"catatan":["Bandingkan harga jual dengan modal provider.","Perbarui produk yang sudah tidak aktif.","Jaga margin tetap konsisten per kategori.","Audit perubahan harga sebelum publikasi."]},
+        "monitoring": {"judul":"Monitoring Operasional","ikon":"fa-chart-simple","deskripsi":"Pantau kesehatan database, transaksi, produk, dan aktivitas panel.","label":["Database","Produk","Transaksi","Panel admin"],"catatan":["Pastikan koneksi database selalu aktif.","Periksa lonjakan transaksi gagal.","Pantau ketersediaan produk dan harga.","Jalankan cek sistem setelah perubahan besar."]},
+        "audit": {"judul":"Audit & Keamanan","ikon":"fa-file-shield","deskripsi":"Pemeriksaan menyeluruh akses, data, wallet, komisi, dan sistem.","label":["Audit akun","Audit transaksi","Audit wallet","Audit sistem"],"catatan":["Verifikasi akses Admin dan Master.","Cocokkan transaksi dengan mutasi saldo.","Periksa withdraw fee dan jaringan retail.","Catat hasil pengecekan sistem secara berkala."]}
+    }[kunci]
+    jaringan = JaringanRetail.query.count()
+    total_saldo = db.session.query(func.sum(Pengguna.saldo)).scalar() or 0
+    total_fee = db.session.query(func.sum(Pengguna.fee_retail)).scalar() or 0
+    modul["nilai"] = [statistik["total_pengguna"], statistik["total_transaksi"], format_uang(total_saldo), format_uang(total_fee)]
+    return render_template("admin_module.html", modul=modul, statistik=statistik, cek_sistem=cek_kesehatan_sistem(), jaringan=jaringan, transaksi=Transaksi.query.order_by(Transaksi.waktu.desc()).limit(6).all())
+
+
+@app.route("/admin/laporan-bisnis")
+@wajib_admin
+def admin_laporan_bisnis(): return tampilkan_modul_admin("laporan")
+
+@app.route("/admin/akun-jaringan")
+@wajib_admin
+def admin_akun_jaringan(): return tampilkan_modul_admin("akun")
+
+@app.route("/admin/pengaturan-komisi")
+@wajib_admin
+def admin_pengaturan_komisi(): return tampilkan_modul_admin("komisi")
+
+@app.route("/admin/komisi-downline")
+@wajib_admin
+def admin_komisi_downline(): return tampilkan_modul_admin("downline")
+
+@app.route("/admin/keuangan")
+@wajib_admin
+def admin_keuangan(): return tampilkan_modul_admin("keuangan")
+
+@app.route("/admin/harga-margin")
+@wajib_admin
+def admin_harga_margin(): return tampilkan_modul_admin("harga")
+
+@app.route("/admin/monitoring")
+@wajib_admin
+def admin_monitoring(): return tampilkan_modul_admin("monitoring")
+
+@app.route("/admin/audit")
+@wajib_admin
+def admin_audit(): return tampilkan_modul_admin("audit")
+
+
 def data_fitur_master():
     pengguna = ambil_pengguna_login()
     if not pengguna:

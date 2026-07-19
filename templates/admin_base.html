@@ -1000,6 +1000,7 @@
         .empty-state{color:#91a0b4!important;background:#101720!important;border-color:#344154!important}
         ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-track{background:#0c1119}::-webkit-scrollbar-thumb{background:#344154;border-radius:99px;border:2px solid #0c1119}::-webkit-scrollbar-thumb:hover{background:#47566c}
         @media(max-width:560px){.stat-card{min-height:118px}.panel-card{border-radius:22px}.panel-head,.panel-body{padding:14px}.hero{box-shadow:0 14px 34px rgba(0,0,0,.28)!important}}
+        .nav-group{border-bottom:1px solid rgba(148,163,184,.11);padding:4px 0 10px}.nav-group summary{list-style:none;min-height:46px;padding:0 12px;border-radius:15px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#aeb9c8;font-size:12px;font-weight:950;letter-spacing:.055em;text-transform:uppercase;cursor:pointer}.nav-group summary::-webkit-details-marker{display:none}.nav-group summary:hover{background:rgba(255,255,255,.04);color:#fff}.nav-group summary i:first-child{width:20px;color:#70d8ff}.nav-group .group-chevron{font-size:10px;transition:.2s}.nav-group[open] .group-chevron{transform:rotate(180deg)}.nav-submenu{display:grid;gap:5px;padding:4px 0 0 8px}.nav-submenu .side-link{min-height:42px;border-radius:14px;font-size:12px}.nav-submenu .side-link i{font-size:12px}.nav-group[open] summary{color:#fff}.nav-direct{margin-bottom:5px}
     </style>
 
     {% block extra_style %}{% endblock %}
@@ -1031,45 +1032,13 @@
         <div class="side-section-title">Navigasi Utama</div>
 
         <nav class="side-menu">
-            <a class="side-link {% if request.endpoint in ['admin_dashboard', 'master_dashboard'] %}active{% endif %}" href="{{ url_for('master_dashboard') if session.get('level_admin') == 'master' else url_for('admin_dashboard') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    {% if session.get("level_admin") == "master" %}Dashboard Master{% else %}Dashboard{% endif %}
-                </span>
-                <i class="fa-solid fa-chevron-right side-arrow"></i>
-            </a>
-
-            <a class="side-link {% if request.endpoint == 'admin_transaksi' %}active{% endif %}" href="{{ url_for('admin_transaksi') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-receipt"></i>
-                    Transaksi
-                </span>
-                <i class="fa-solid fa-chevron-right side-arrow"></i>
-            </a>
-
-            <a class="side-link {% if request.endpoint == 'admin_pengguna' %}active{% endif %}" href="{{ url_for('admin_pengguna') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-users"></i>
-                    Pengguna
-                </span>
-                <i class="fa-solid fa-chevron-right side-arrow"></i>
-            </a>
-
-            <a class="side-link {% if request.endpoint == 'admin_produk' %}active{% endif %}" href="{{ url_for('admin_produk') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    Produk
-                </span>
-                <i class="fa-solid fa-chevron-right side-arrow"></i>
-            </a>
-
-            <a class="side-link {% if request.endpoint == 'admin_cek_sistem' %}active{% endif %}" href="{{ url_for('admin_cek_sistem') }}">
-                <span class="side-left">
-                    <i class="fa-solid fa-shield-heart"></i>
-                    Cek Sistem
-                </span>
-                <i class="fa-solid fa-chevron-right side-arrow"></i>
-            </a>
+            <details class="nav-group" open><summary><span><i class="fa-solid fa-chart-pie"></i> Ringkasan</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}"><span class="side-left"><i class="fa-solid fa-gauge-high"></i>Dashboard</span></a><a class="side-link {% if request.endpoint=='admin_laporan_bisnis' %}active{% endif %}" href="{{ url_for('admin_laporan_bisnis') }}"><span class="side-left"><i class="fa-solid fa-chart-line"></i>Laporan Bisnis</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint in ['admin_pengguna','admin_akun_jaringan','admin_pengaturan_komisi','admin_komisi_downline'] %}open{% endif %}><summary><span><i class="fa-solid fa-user-shield"></i> Akun Admin</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_pengguna' %}active{% endif %}" href="{{ url_for('admin_pengguna') }}"><span class="side-left"><i class="fa-solid fa-users"></i>Data Pengguna</span></a><a class="side-link {% if request.endpoint=='admin_akun_jaringan' %}active{% endif %}" href="{{ url_for('admin_akun_jaringan') }}"><span class="side-left"><i class="fa-solid fa-users-gear"></i>Akun & Jaringan</span></a><a class="side-link {% if request.endpoint=='admin_pengaturan_komisi' %}active{% endif %}" href="{{ url_for('admin_pengaturan_komisi') }}"><span class="side-left"><i class="fa-solid fa-sliders"></i>Pengaturan Komisi</span></a><a class="side-link {% if request.endpoint=='admin_komisi_downline' %}active{% endif %}" href="{{ url_for('admin_komisi_downline') }}"><span class="side-left"><i class="fa-solid fa-sitemap"></i>Komisi Downline</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint=='admin_transaksi' %}open{% endif %}><summary><span><i class="fa-solid fa-receipt"></i> Transaksi</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_transaksi' %}active{% endif %}" href="{{ url_for('admin_transaksi') }}"><span class="side-left"><i class="fa-solid fa-list-check"></i>Semua Transaksi</span></a><a class="side-link" href="{{ url_for('admin_transaksi',status='Pending') }}"><span class="side-left"><i class="fa-solid fa-clock"></i>Transaksi Pending</span></a><a class="side-link" href="{{ url_for('admin_transaksi',status='Gagal') }}"><span class="side-left"><i class="fa-solid fa-circle-xmark"></i>Transaksi Gagal</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint=='admin_keuangan' %}open{% endif %}><summary><span><i class="fa-solid fa-wallet"></i> Keuangan</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_keuangan' %}active{% endif %}" href="{{ url_for('admin_keuangan') }}"><span class="side-left"><i class="fa-solid fa-wallet"></i>Wallet & Saldo</span></a><a class="side-link" href="{{ url_for('mutasi_saldo') }}"><span class="side-left"><i class="fa-solid fa-clock-rotate-left"></i>Mutasi Saldo</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint in ['admin_produk','admin_harga_margin'] %}open{% endif %}><summary><span><i class="fa-solid fa-boxes-stacked"></i> Produk & Harga</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_produk' %}active{% endif %}" href="{{ url_for('admin_produk') }}"><span class="side-left"><i class="fa-solid fa-box"></i>Daftar Produk</span></a><a class="side-link {% if request.endpoint=='admin_harga_margin' %}active{% endif %}" href="{{ url_for('admin_harga_margin') }}"><span class="side-left"><i class="fa-solid fa-tags"></i>Harga & Margin</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint in ['admin_monitoring','admin_cek_sistem'] %}open{% endif %}><summary><span><i class="fa-solid fa-chart-simple"></i> Monitoring</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_monitoring' %}active{% endif %}" href="{{ url_for('admin_monitoring') }}"><span class="side-left"><i class="fa-solid fa-display"></i>Operasional</span></a><a class="side-link {% if request.endpoint=='admin_cek_sistem' %}active{% endif %}" href="{{ url_for('admin_cek_sistem') }}"><span class="side-left"><i class="fa-solid fa-shield-heart"></i>Cek Sistem</span></a></div></details>
+            <details class="nav-group" {% if request.endpoint=='admin_audit' %}open{% endif %}><summary><span><i class="fa-solid fa-file-shield"></i> Audit</span><i class="fa-solid fa-chevron-down group-chevron"></i></summary><div class="nav-submenu"><a class="side-link {% if request.endpoint=='admin_audit' %}active{% endif %}" href="{{ url_for('admin_audit') }}"><span class="side-left"><i class="fa-solid fa-clipboard-check"></i>Audit & Keamanan</span></a></div></details>
         </nav>
 
         <div class="side-section-title">Akses Cepat</div>
