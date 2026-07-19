@@ -2281,25 +2281,29 @@ def proses_pembelian_umum(kode, tujuan, endpoint_redirect):
         flash("Produk atau harga tidak ditemukan.", "danger")
         return redirect(url_for(endpoint_redirect))
 
-    token = uuid.uuid4().hex
-    session["checkout_pembayaran"] = {
-        "token": token, "tipe": "produk", "kode": kode, "tujuan": tujuan,
-        "endpoint": endpoint_redirect, "harga": int(HARGA_JUAL[kode]),
-        "produk": NAMA_PRODUK[kode]
-    }
-    return redirect(url_for("pembayaran_barcode", token=token))
+    hasil = proses_beli(kode, tujuan, session.get("email"))
+    if hasil.get("status") in ["sukses", "berhasil"]:
+        flash(f"Transaksi berhasil. Ref/SN: {hasil.get('sn', '-')}", "success")
+    else:
+        flash(f"Transaksi belum berhasil: {hasil.get('pesan', 'Terjadi kesalahan')}", "danger")
+    return redirect(url_for(endpoint_redirect))
 
 @app.route("/pembayaran/barcode/<token>")
 def pembayaran_barcode(token):
     checkout = session.get("checkout_pembayaran") or {}
-    if not user_sedang_login() or checkout.get("token") != token:
-        flash("Sesi pembayaran tidak ditemukan atau sudah berakhir.", "warning")
-        return redirect(url_for("dashboard"))
+    if (
+        not user_sedang_login()
+        or checkout.get("token") != token
+        or checkout.get("tipe") != "topup"
+    ):
+        session.pop("checkout_pembayaran", None)
+        flash("QR hanya tersedia untuk Top Up Saldo akun.", "warning")
+        return redirect(url_for("topup_saldo"))
 
     isi_qr = (
         f"SENJADATA PAYMENT\nPenerima: Anggi Simanjuntak\n"
-        f"Nominal: {checkout['harga']}\nProduk: {checkout['produk']}\n"
-        f"Tujuan: {checkout['tujuan']}\nReferensi: {token[:12].upper()}"
+        f"Nominal: {checkout['harga']}\nLayanan: Top Up Saldo Akun\n"
+        f"Akun: {checkout['tujuan']}\nReferensi: {token[:12].upper()}"
     )
     if qrcode is not None:
         qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=9, border=4)
@@ -2320,39 +2324,35 @@ def pembayaran_barcode(token):
 @app.route("/pembayaran/konfirmasi/<token>", methods=["POST"])
 def konfirmasi_pembayaran_barcode(token):
     checkout = session.get("checkout_pembayaran") or {}
-    if not user_sedang_login() or checkout.get("token") != token:
+    if (
+        not user_sedang_login()
+        or checkout.get("token") != token
+        or checkout.get("tipe") != "topup"
+    ):
+        session.pop("checkout_pembayaran", None)
         flash("Sesi pembayaran tidak valid.", "danger")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("topup_saldo"))
 
     endpoint_redirect = checkout.get("endpoint", "dashboard")
 
-    if checkout.get("tipe") == "topup":
-        pengguna = ambil_pengguna_login()
-        if not pengguna:
-            session.pop("checkout_pembayaran", None)
-            flash("Data akun tidak ditemukan. Silakan masuk ulang.", "danger")
-            return redirect(url_for("login"))
-
-        nominal = int(checkout["harga"])
-        pengguna.saldo = int(pengguna.saldo or 0) + nominal
-        db.session.add(MutasiSaldo(
-            email=pengguna.email,
-            jenis="Masuk",
-            nominal=nominal,
-            keterangan=f"Top Up Saldo via {checkout.get('metode', 'QR')}"
-        ))
-        db.session.commit()
+    pengguna = ambil_pengguna_login()
+    if not pengguna:
         session.pop("checkout_pembayaran", None)
-        flash(f"Top up {format_flash_nominal(nominal)} berhasil masuk ke saldo.", "success")
-        return redirect(url_for("profil"))
+        flash("Data akun tidak ditemukan. Silakan masuk ulang.", "danger")
+        return redirect(url_for("login"))
 
-    hasil = proses_beli(checkout["kode"], checkout["tujuan"], session.get("email"))
+    nominal = int(checkout["harga"])
+    pengguna.saldo = int(pengguna.saldo or 0) + nominal
+    db.session.add(MutasiSaldo(
+        email=pengguna.email,
+        jenis="Masuk",
+        nominal=nominal,
+        keterangan=f"Top Up Saldo via {checkout.get('metode', 'QR')}"
+    ))
+    db.session.commit()
     session.pop("checkout_pembayaran", None)
-    if hasil.get("status") in ["sukses", "berhasil"]:
-        flash(f"Pembayaran dan transaksi berhasil. Ref/SN: {hasil.get('sn', '-')}", "success")
-    else:
-        flash(f"Transaksi belum berhasil: {hasil.get('pesan', 'Terjadi kesalahan')}", "danger")
-    return redirect(url_for(endpoint_redirect))
+    flash(f"Top up {format_flash_nominal(nominal)} berhasil masuk ke saldo.", "success")
+    return redirect(url_for("profil"))
 
 
 # =========================================================
