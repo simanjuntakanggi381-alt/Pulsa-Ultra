@@ -5,6 +5,7 @@ from config import (
     SQLALCHEMY_TRACK_MODIFICATIONS,
     NAMA_PRODUK,
     HARGA_JUAL,
+    HARGA_DASAR,
     BATAS_SALDO_INGAT
 )
 from models import db, Transaksi, Pengguna, MutasiSaldo, JaringanRetail, ChatSession, ChatMessage
@@ -15,6 +16,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
 import os
+import ast
+import re
 import uuid
 import io
 import base64
@@ -32,6 +35,71 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 
 db.init_app(app)
+
+
+def sinkronkan_katalog_dari_template():
+    """Samakan produk fallback di UI dengan katalog yang divalidasi backend."""
+    folder_template = os.path.join(app.root_path, "templates")
+    pola = re.compile(
+        r"{%\s*set\s+fallback_(produk|harga)_[A-Za-z0-9_]+\s*=\s*(\{.*?\})\s*%}",
+        re.DOTALL
+    )
+    nama_tampilan = {}
+    harga_tampilan = {}
+
+    for nama_file in os.listdir(folder_template):
+        if not nama_file.endswith(".html"):
+            continue
+        lokasi = os.path.join(folder_template, nama_file)
+        with open(lokasi, "r", encoding="utf-8") as template_file:
+            sumber = template_file.read()
+        for jenis, isi_dict in pola.findall(sumber):
+            try:
+                data = ast.literal_eval(isi_dict)
+            except (SyntaxError, ValueError):
+                continue
+            if jenis == "produk":
+                nama_tampilan.update(data)
+            else:
+                harga_tampilan.update(data)
+
+    for kode in nama_tampilan.keys() & harga_tampilan.keys():
+        harga_jual = int(harga_tampilan[kode])
+        NAMA_PRODUK.setdefault(kode, str(nama_tampilan[kode]))
+        HARGA_JUAL.setdefault(kode, harga_jual)
+        HARGA_DASAR.setdefault(kode, max(0, harga_jual - max(1000, int(harga_jual * 0.03))))
+
+    # Produk ini dibuat oleh JavaScript di halaman e-wallet ketika provider
+    # belum memiliki daftar dari backend. Daftarkan kode yang sama di server.
+    nominal_ewallet = {
+        "QRIS": (10000, 25000, 50000, 75000, 100000, 200000, 250000, 500000),
+        "MAXIM": (10000, 25000, 50000, 75000, 100000, 200000),
+        "GRAB": (10000, 25000, 50000, 75000, 100000, 200000),
+        "SAKUKU": (10000, 25000, 50000, 100000, 200000),
+        "ASTRAPAY": (10000, 25000, 50000, 100000, 200000),
+        "ISAKU": (10000, 25000, 50000, 100000, 200000),
+        "DOKU": (10000, 25000, 50000, 100000, 200000),
+    }
+    nama_ewallet = {
+        "QRIS": "QRIS", "MAXIM": "Maxim", "GRAB": "Grab",
+        "SAKUKU": "Sakuku", "ASTRAPAY": "AstraPay",
+        "ISAKU": "i.Saku", "DOKU": "DOKU"
+    }
+    jumlah_ewallet = 0
+    for wallet, daftar_nominal in nominal_ewallet.items():
+        for nominal in daftar_nominal:
+            kode = f"{wallet}_{nominal}"
+            biaya_admin = 1000 if nominal <= 30000 else (1500 if nominal <= 100000 else 2500)
+            harga_jual = nominal + biaya_admin
+            NAMA_PRODUK.setdefault(kode, f"Isi Saldo {nama_ewallet[wallet]} Rp {nominal:,}".replace(",", "."))
+            HARGA_JUAL.setdefault(kode, harga_jual)
+            HARGA_DASAR.setdefault(kode, nominal)
+            jumlah_ewallet += 1
+
+    return len(nama_tampilan.keys() & harga_tampilan.keys()) + jumlah_ewallet
+
+
+JUMLAH_PRODUK_TEMPLATE = sinkronkan_katalog_dari_template()
 
 
 # =========================================================
