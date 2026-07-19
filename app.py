@@ -18,6 +18,7 @@ import os
 import uuid
 import io
 import base64
+from urllib.parse import urlencode
 try:
     import qrcode
 except ImportError:
@@ -2227,26 +2228,24 @@ def pembayaran_barcode(token):
         flash("Sesi pembayaran tidak ditemukan atau sudah berakhir.", "warning")
         return redirect(url_for("dashboard"))
 
-    if qrcode is None:
-        flash(
-            "Fitur barcode belum siap karena modul QR belum terpasang. "
-            "Jalankan pip install -r requirements.txt lalu restart aplikasi.",
-            "danger"
-        )
-        return redirect(url_for(checkout.get("endpoint", "dashboard")))
-
     isi_qr = (
         f"SENJADATA PAYMENT\nPenerima: Anggi Simanjuntak\n"
         f"Nominal: {checkout['harga']}\nProduk: {checkout['produk']}\n"
         f"Tujuan: {checkout['tujuan']}\nReferensi: {token[:12].upper()}"
     )
-    qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=9, border=4)
-    qr.add_data(isi_qr)
-    qr.make(fit=True)
-    gambar = qr.make_image(fill_color="black", back_color="white")
-    buffer = io.BytesIO()
-    gambar.save(buffer, format="PNG")
-    qr_data = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+    if qrcode is not None:
+        qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H, box_size=9, border=4)
+        qr.add_data(isi_qr)
+        qr.make(fit=True)
+        gambar = qr.make_image(fill_color="black", back_color="white")
+        buffer = io.BytesIO()
+        gambar.save(buffer, format="PNG")
+        qr_data = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+    else:
+        # Fallback untuk hosting yang belum memasang paket qrcode. QR tetap
+        # tampil langsung di browser tanpa menghentikan alur pembayaran.
+        parameter_qr = urlencode({"size": "520x520", "data": isi_qr, "format": "png"})
+        qr_data = f"https://api.qrserver.com/v1/create-qr-code/?{parameter_qr}"
     return render_template("pembayaran_barcode.html", checkout=checkout, qr_data=qr_data, referensi=token[:12].upper())
 
 
