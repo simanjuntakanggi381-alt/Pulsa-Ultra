@@ -976,6 +976,30 @@
                 font-size:21px;
             }
         }
+        /* =====================================================
+           ADMIN DARK SYSTEM - seluruh halaman operasional
+        ===================================================== */
+        body{
+            --bg:#090d14;--card:#151b25;--text:#f3f7ff;--muted:#96a3b5;
+            --line:#2b3544;--soft:#101620;
+            --shadow:0 22px 55px rgba(0,0,0,.38);--shadow-soft:0 12px 30px rgba(0,0,0,.28);
+            background:radial-gradient(circle at 8% -8%,rgba(0,198,255,.10),transparent 27%),radial-gradient(circle at 96% 5%,rgba(124,58,237,.11),transparent 30%),linear-gradient(145deg,#080b11,#0d131d 52%,#101722)!important;
+        }
+        .topbar{background:rgba(18,24,34,.88)!important;border-color:rgba(148,163,184,.16)!important;box-shadow:0 12px 32px rgba(0,0,0,.30)!important}.page-title h1{color:#f8fafc!important}.page-title small{color:#93a4b8!important}
+        .pill-btn:not(.primary):not(.danger){background:#1b2330!important;border-color:#344154!important;color:#dbe7f5!important}
+        .hero{border:1px solid rgba(96,165,250,.17)!important;background:radial-gradient(circle at 86% 20%,rgba(0,198,255,.15),transparent 28%),radial-gradient(circle at 15% 110%,rgba(124,58,237,.17),transparent 34%),linear-gradient(135deg,#172335,#101923 55%,#182842)!important;box-shadow:0 22px 52px rgba(0,0,0,.33),inset 0 1px 0 rgba(255,255,255,.05)!important}
+        .stat-card,.panel-card{background:linear-gradient(145deg,#171e29,#121822)!important;border-color:#2b3544!important;box-shadow:0 14px 34px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.035)!important}
+        .stat-card{isolation:isolate;transition:.2s ease}.stat-card:hover{transform:translateY(-3px);border-color:#405069!important;box-shadow:0 18px 38px rgba(0,0,0,.33)!important}.stat-card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--grad);opacity:.85}.stat-card::after{opacity:.30;z-index:-1}.stat-card span{color:#96a4b7!important}.stat-card strong{color:#f8fafc!important}.stat-icon{box-shadow:0 12px 25px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.18)!important}
+        .panel-head{background:rgba(255,255,255,.018)!important;border-bottom-color:#293342!important}.panel-head h3{color:#f1f5f9!important}.panel-head p{color:#91a0b4!important}.panel-body{color:#dce5f0}
+        .search-field input,.filter-select{background:#101720!important;border-color:#303c4d!important;color:#e8eef6!important}.search-field input::placeholder{color:#718096!important}.search-field input:focus,.filter-select:focus{border-color:#38bdf8!important;box-shadow:0 0 0 4px rgba(56,189,248,.10)!important}.filter-select option{background:#151b25;color:#e8eef6}.search-field i{color:#8291a5!important}.filter-btn{box-shadow:0 10px 24px rgba(5,117,230,.20)!important}
+        .badge{background:rgba(59,130,246,.12)!important;color:#7dd3fc!important;border:1px solid rgba(96,165,250,.18)!important}.badge.green{background:rgba(16,185,129,.11)!important;color:#6ee7b7!important;border-color:rgba(52,211,153,.18)!important}.badge.orange{background:rgba(245,158,11,.11)!important;color:#fbbf24!important;border-color:rgba(251,191,36,.18)!important}.badge.red{background:rgba(239,68,68,.11)!important;color:#fca5a5!important;border-color:rgba(248,113,113,.18)!important}
+        th{color:#8391a5!important}td{color:#dce5f0!important;background:#101720!important;border-color:#263140!important}td:first-child{border-left-color:#263140!important}td:last-child{border-right-color:#263140!important}tbody tr:hover td{background:#16202c!important;border-color:#344257!important}
+        .status.ok{background:rgba(16,185,129,.12)!important;color:#6ee7b7!important}.status.wait{background:rgba(245,158,11,.12)!important;color:#fbbf24!important}.status.bad{background:rgba(239,68,68,.12)!important;color:#fca5a5!important}.status.info{background:rgba(59,130,246,.12)!important;color:#93c5fd!important}
+        .quick-card,.user-item,.health-item{background:#101720!important;border-color:#283342!important;color:#e6edf6!important}.quick-card:hover,.user-item:hover,.health-item:hover{background:#17212d!important;border-color:#3a495e!important}.quick-card strong,.user-item strong,.health-item strong{color:#edf3fa!important}.quick-card span,.user-item span,.health-item span{color:#91a0b4!important}
+        .product-code{background:#1a2635!important;color:#7dd3fc!important;border:1px solid #2c4158}.product-name,.price{color:#eef4fb!important}.product-category,.catalog-footer,.row-number{color:#8f9eb2!important}.catalog-note{background:rgba(255,255,255,.06)!important;border-color:rgba(255,255,255,.13)!important}
+        .empty-state{color:#91a0b4!important;background:#101720!important;border-color:#344154!important}
+        ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-track{background:#0c1119}::-webkit-scrollbar-thumb{background:#344154;border-radius:99px;border:2px solid #0c1119}::-webkit-scrollbar-thumb:hover{background:#47566c}
+        @media(max-width:560px){.stat-card{min-height:118px}.panel-card{border-radius:22px}.panel-head,.panel-body{padding:14px}.hero{box-shadow:0 14px 34px rgba(0,0,0,.28)!important}}
     </style>
 
     {% block extra_style %}{% endblock %}
