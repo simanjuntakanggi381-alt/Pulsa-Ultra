@@ -1748,6 +1748,11 @@
 
         {% if request.endpoint in ['dashboard', None] %}
             <section class="senja-promo-hero" aria-label="Layanan digital SenjaData">
+                <div class="senja-welcome-intro" aria-hidden="true">
+                    <span class="senja-welcome-kicker">SELAMAT DATANG DI</span>
+                    <strong class="senja-welcome-typing">SenjaData</strong>
+                    <span class="senja-welcome-line"></span>
+                </div>
                 <div class="senja-promo-image">
                     <img src="{{ url_for('static', filename='img/banners/senjadata-dashboard-hero.png') }}" alt="SenjaData, aplikasi pulsa dan layanan digital lengkap" fetchpriority="high">
                 </div>

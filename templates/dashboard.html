@@ -1997,22 +1997,37 @@ body{
 }
 
 .senja-promo-hero{position:relative;z-index:2;overflow:hidden;margin:0 0 .85rem;border:1px solid rgba(96,165,250,.28);border-radius:28px;background:linear-gradient(145deg,#050b24,#071f55);box-shadow:0 18px 42px rgba(15,23,42,.22)}
+.senja-welcome-intro{position:absolute;z-index:8;inset:0 0 auto;height:calc(100% - 76px);display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;color:#fff;background:radial-gradient(circle at 50% 45%,#1048a5 0,#071d55 38%,#03081f 78%);animation:senjaIntroReveal 4.8s ease forwards;pointer-events:none}
+.senja-welcome-intro::before,.senja-welcome-intro::after{content:"";position:absolute;border-radius:50%;background:rgba(34,211,238,.2);filter:blur(2px);animation:senjaIntroOrb 2.6s ease-in-out infinite}
+.senja-welcome-intro::before{width:90px;height:90px;left:10%;top:18%}
+.senja-welcome-intro::after{width:54px;height:54px;right:13%;bottom:18%;animation-delay:.6s}
+.senja-welcome-kicker{position:relative;z-index:1;margin-bottom:.45rem;color:#93c5fd;font-size:.7rem;font-weight:900;letter-spacing:.28em;opacity:0;animation:senjaWelcomeUp .55s ease .25s forwards}
+.senja-welcome-typing{position:relative;z-index:1;display:block;width:0;overflow:hidden;white-space:nowrap;border-right:3px solid #facc15;color:#fff;font-family:Consolas,"Courier New",monospace;font-size:2rem;line-height:1.1;letter-spacing:.02em;text-shadow:0 0 24px rgba(59,130,246,.8);animation:senjaTyping 1.65s steps(9,end) .85s forwards,senjaCaret .6s step-end .85s 4}
+.senja-welcome-line{position:relative;z-index:1;width:0;height:3px;margin-top:.7rem;border-radius:99px;background:linear-gradient(90deg,#facc15,#22d3ee);box-shadow:0 0 16px rgba(34,211,238,.8);animation:senjaWelcomeLine .65s ease 2.55s forwards}
 .senja-promo-image{position:relative;isolation:isolate;aspect-ratio:2.3/1;overflow:hidden;background:#07143e}
-.senja-promo-image img{width:100%;height:106%;display:block;object-fit:cover;object-position:center;transform:translateY(-3%);animation:senjaHeroFloatY 5.8s ease-in-out infinite;will-change:transform}
+.senja-promo-image img{width:100%;height:106%;display:block;object-fit:cover;object-position:center;opacity:0;transform:translateY(-3%);animation:senjaImageEnter .85s ease 3.75s forwards,senjaHeroFloatY 5.8s ease-in-out 4.6s infinite;will-change:transform,opacity}
 .senja-promo-image::before{content:"";position:absolute;z-index:2;inset:-35% auto -35% -32%;width:24%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transform:skewX(-18deg);animation:senjaHeroShine 6.5s ease-in-out infinite}
 .senja-promo-image::after{content:"";position:absolute;z-index:1;right:9%;top:12%;width:32%;aspect-ratio:1;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(34,211,238,.22),transparent 68%);filter:blur(5px);animation:senjaHeroGlow 3.8s ease-in-out infinite}
 @keyframes senjaHeroFloatY{0%,100%{transform:translateY(-3%) scale(1.01)}50%{transform:translateY(0) scale(1.025)}}
+@keyframes senjaIntroReveal{0%,70%{opacity:1;visibility:visible}88%,100%{opacity:0;visibility:hidden}}
+@keyframes senjaWelcomeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes senjaTyping{from{width:0}to{width:9ch}}
+@keyframes senjaCaret{0%,100%{border-color:transparent}50%{border-color:#facc15}}
+@keyframes senjaWelcomeLine{from{width:0}to{width:150px}}
+@keyframes senjaIntroOrb{0%,100%{opacity:.25;transform:translateY(-6px) scale(.9)}50%{opacity:.75;transform:translateY(7px) scale(1.12)}}
+@keyframes senjaImageEnter{from{opacity:0;filter:blur(8px);transform:translateY(4%) scale(1.06)}to{opacity:1;filter:blur(0);transform:translateY(-3%) scale(1.01)}}
 @keyframes senjaHeroShine{0%,24%{left:-32%;opacity:0}38%{opacity:1}62%{left:112%;opacity:.8}63%,100%{left:112%;opacity:0}}
 @keyframes senjaHeroGlow{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.16)}}
-.senja-promo-copy{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.05rem 1.05rem;color:#fff}
+.senja-promo-copy{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.05rem 1.05rem;color:#fff;opacity:0;transform:translateY(12px);animation:senjaCopyEnter .7s ease 4.15s forwards}
+@keyframes senjaCopyEnter{to{opacity:1;transform:translateY(0)}}
 .senja-promo-copy h1{margin:0;max-width:430px;font-size:1.18rem;line-height:1.2;letter-spacing:-.025em}
 .senja-promo-copy p{margin:.35rem 0 0;max-width:440px;color:#cbd5e1;font-size:.72rem;line-height:1.5}
 .senja-promo-actions{display:flex;flex:0 0 auto;gap:.45rem}
 .senja-promo-actions a{display:inline-flex;align-items:center;justify-content:center;gap:.38rem;min-height:42px;padding:.65rem .8rem;border-radius:13px;color:#07152f;background:#facc15;text-decoration:none;font-size:.68rem;font-weight:900}
 .senja-promo-actions a:last-child{color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
-@media(max-width:640px){.senja-promo-hero{border-radius:17px;margin:0 .08rem .55rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-copy{align-items:flex-start;flex-direction:column;gap:.62rem;padding:.68rem .72rem .72rem}.senja-promo-copy h1{font-size:.86rem;line-height:1.25}.senja-promo-copy p{margin-top:.25rem;font-size:.58rem;line-height:1.4}.senja-promo-actions{width:100%;gap:.35rem}.senja-promo-actions a{flex:1;min-height:36px;padding:.48rem .35rem;border-radius:11px;font-size:.6rem}}
+@media(max-width:640px){.senja-promo-hero{border-radius:17px;margin:0 .08rem .55rem}.senja-welcome-intro{height:calc(100% - 112px)}.senja-welcome-kicker{font-size:.52rem;letter-spacing:.2em}.senja-welcome-typing{font-size:1.35rem}.senja-welcome-line{margin-top:.5rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-copy{align-items:flex-start;flex-direction:column;gap:.62rem;padding:.68rem .72rem .72rem}.senja-promo-copy h1{font-size:.86rem;line-height:1.25}.senja-promo-copy p{margin-top:.25rem;font-size:.58rem;line-height:1.4}.senja-promo-actions{width:100%;gap:.35rem}.senja-promo-actions a{flex:1;min-height:36px;padding:.48rem .35rem;border-radius:11px;font-size:.6rem}}
 @media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-copy p{display:none}.senja-promo-copy{padding:.6rem}.senja-promo-actions a{min-height:34px;font-size:.56rem}}
-@media(prefers-reduced-motion:reduce){.senja-promo-image img,.senja-promo-image::before,.senja-promo-image::after{animation:none!important}.senja-promo-image img{transform:translateY(-3%)}}
+@media(prefers-reduced-motion:reduce){.senja-welcome-intro{display:none}.senja-promo-image img,.senja-promo-image::before,.senja-promo-image::after,.senja-promo-copy{animation:none!important;opacity:1}.senja-promo-image img{transform:translateY(-3%)}}
 
 </style>
 
