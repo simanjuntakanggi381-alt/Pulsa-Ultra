@@ -2031,6 +2031,14 @@ body{
 @media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-services a{min-height:53px;font-size:.48rem}.senja-promo-services i{width:24px;height:24px}}
 @media(prefers-reduced-motion:reduce){.senja-welcome-intro{display:none}.senja-promo-image img,.senja-promo-image::before,.senja-promo-image::after,.senja-promo-services{animation:none!important;opacity:1}.senja-promo-image img{transform:translateY(-3%)}}
 
+.senja-story{margin-top:1rem;padding:1rem;border-radius:25px;background:linear-gradient(145deg,#07152f,#102d61);color:#fff;box-shadow:0 16px 34px rgba(15,23,42,.17)}
+.senja-story-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.8rem}.senja-story-head h2{margin:0;font-size:1rem}.senja-story-head p{margin:.25rem 0 0;color:#a9bddb;font-size:.65rem;line-height:1.45}.senja-story-head i{display:grid;flex:0 0 38px;width:38px;height:38px;place-items:center;border-radius:13px;color:#07152f;background:#facc15}
+.senja-story-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}.senja-story-card{padding:.75rem;border:1px solid rgba(255,255,255,.09);border-radius:17px;background:rgba(255,255,255,.055)}.senja-story-card i{display:grid;width:30px;height:30px;margin-bottom:.55rem;place-items:center;border-radius:10px;color:#67e8f9;background:rgba(34,211,238,.1)}.senja-story-card strong{display:block;font-size:.7rem}.senja-story-card span{display:block;margin-top:.25rem;color:#a9bddb;font-size:.56rem;line-height:1.45}
+.senja-journey{margin-top:1rem;padding:1rem;border:1px solid #dbeafe;border-radius:25px;background:#fff}.senja-journey h2,.senja-safety h2,.senja-status-guide h2{margin:0;font-size:.98rem;color:#0f172a}.senja-journey>p,.senja-status-guide>p{margin:.25rem 0 .85rem;color:#64748b;font-size:.62rem;line-height:1.45}.senja-steps{display:grid;gap:.55rem}.senja-step{display:grid;grid-template-columns:34px 1fr;gap:.65rem;align-items:start;padding:.68rem;border-radius:16px;background:#f8fafc}.senja-step b{display:grid;width:34px;height:34px;place-items:center;border-radius:11px;color:#fff;background:linear-gradient(145deg,#2563eb,#06b6d4);font-size:.68rem}.senja-step strong{display:block;color:#0f172a;font-size:.68rem}.senja-step span{display:block;margin-top:.18rem;color:#64748b;font-size:.56rem;line-height:1.4}
+.senja-safety{margin-top:1rem;padding:1rem;border-radius:25px;background:linear-gradient(145deg,#ecfdf5,#f0fdfa);border:1px solid #a7f3d0}.senja-safety-list{display:grid;gap:.55rem;margin-top:.8rem}.senja-safety-item{display:flex;align-items:center;gap:.6rem;padding:.65rem;border-radius:15px;background:rgba(255,255,255,.72)}.senja-safety-item i{display:grid;flex:0 0 31px;width:31px;height:31px;place-items:center;border-radius:10px;color:#047857;background:#d1fae5}.senja-safety-item strong{display:block;color:#064e3b;font-size:.66rem}.senja-safety-item span{display:block;margin-top:.12rem;color:#4b7567;font-size:.54rem;line-height:1.35}
+.senja-status-guide{margin-top:1rem;padding:1rem;border:1px solid #e2e8f0;border-radius:25px;background:#fff}.senja-status-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45rem}.senja-status{padding:.65rem .35rem;border-radius:15px;text-align:center;background:#f8fafc}.senja-status i{display:grid;width:30px;height:30px;margin:0 auto .4rem;place-items:center;border-radius:50%;font-size:.68rem}.senja-status strong{display:block;color:#0f172a;font-size:.59rem}.senja-status span{display:block;margin-top:.2rem;color:#64748b;font-size:.48rem;line-height:1.35}
+@media(max-width:380px){.senja-story,.senja-journey,.senja-safety,.senja-status-guide{padding:.78rem;border-radius:19px}.senja-story-grid{gap:.4rem}.senja-status-row{gap:.3rem}}
+
 </style>
 
 <div class="king-page">
@@ -2375,6 +2383,52 @@ body{
                 </a>
             </div>
         </div>
+
+        <section class="senja-story">
+            <div class="senja-story-head">
+                <div>
+                    <h2>Satu Aplikasi untuk Aktivitas Harian</h2>
+                    <p>SenjaData menyatukan layanan digital penting agar lebih mudah ditemukan dan digunakan.</p>
+                </div>
+                <i class="fa-solid fa-bolt-lightning"></i>
+            </div>
+            <div class="senja-story-grid">
+                <article class="senja-story-card"><i class="fa-solid fa-mobile-screen-button"></i><strong>Komunikasi</strong><span>Pulsa dan paket telepon untuk menjaga nomor tetap aktif.</span></article>
+                <article class="senja-story-card"><i class="fa-solid fa-wifi"></i><strong>Internet</strong><span>Paket data harian hingga bulanan untuk berbagai operator.</span></article>
+                <article class="senja-story-card"><i class="fa-solid fa-house-signal"></i><strong>Kebutuhan Rumah</strong><span>Token listrik, PDAM, internet, TV, dan tagihan rutin.</span></article>
+                <article class="senja-story-card"><i class="fa-solid fa-gamepad"></i><strong>Gaya Hidup</strong><span>Game, voucher digital, tiket, dan layanan tambahan lainnya.</span></article>
+            </div>
+        </section>
+
+        <section class="senja-journey">
+            <h2>Transaksi Dibuat Lebih Terarah</h2>
+            <p>Ikuti empat langkah sederhana agar produk dan tujuan transaksi selalu sesuai.</p>
+            <div class="senja-steps">
+                <div class="senja-step"><b>1</b><div><strong>Pilih layanan</strong><span>Buka kategori yang kamu butuhkan dari menu utama atau slider.</span></div></div>
+                <div class="senja-step"><b>2</b><div><strong>Masukkan data tujuan</strong><span>Isi nomor HP, ID pelanggan, nomor meter, atau identitas layanan.</span></div></div>
+                <div class="senja-step"><b>3</b><div><strong>Periksa produk dan harga</strong><span>Cocokkan provider, nominal, masa aktif, serta total transaksi.</span></div></div>
+                <div class="senja-step"><b>4</b><div><strong>Pantau hasil transaksi</strong><span>Lihat status dan detail transaksi melalui halaman Riwayat.</span></div></div>
+            </div>
+        </section>
+
+        <section class="senja-safety">
+            <h2>Transaksi Lebih Tenang</h2>
+            <div class="senja-safety-list">
+                <div class="senja-safety-item"><i class="fa-solid fa-user-shield"></i><div><strong>Akun pribadi</strong><span>Saldo, profil, dan riwayat tersimpan pada akun yang sedang digunakan.</span></div></div>
+                <div class="senja-safety-item"><i class="fa-solid fa-magnifying-glass-check"></i><div><strong>Detail mudah diperiksa</strong><span>Nomor tujuan dan produk dapat dilihat kembali sebelum melanjutkan.</span></div></div>
+                <div class="senja-safety-item"><i class="fa-solid fa-headset"></i><div><strong>Bantuan selalu dekat</strong><span>Gunakan Live Chat atau WhatsApp apabila transaksi perlu diperiksa.</span></div></div>
+            </div>
+        </section>
+
+        <section class="senja-status-guide">
+            <h2>Kenali Status Transaksimu</h2>
+            <p>Setiap status membantu kamu memahami tahapan proses layanan.</p>
+            <div class="senja-status-row">
+                <div class="senja-status"><i class="fa-solid fa-clock" style="color:#b45309;background:#fef3c7"></i><strong>Diproses</strong><span>Permintaan sedang diteruskan.</span></div>
+                <div class="senja-status"><i class="fa-solid fa-circle-check" style="color:#047857;background:#d1fae5"></i><strong>Berhasil</strong><span>Produk sudah selesai diproses.</span></div>
+                <div class="senja-status"><i class="fa-solid fa-circle-exclamation" style="color:#b91c1c;background:#fee2e2"></i><strong>Perlu Dicek</strong><span>Hubungi bantuan bila diperlukan.</span></div>
+            </div>
+        </section>
 
         <div class="king-panel">
             <div class="king-section-head" style="margin-top:0;">
