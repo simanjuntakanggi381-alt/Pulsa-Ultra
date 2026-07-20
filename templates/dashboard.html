@@ -1997,7 +1997,7 @@ body{
 }
 
 .senja-promo-hero{position:relative;z-index:2;overflow:hidden;margin:0 0 .85rem;border:1px solid rgba(96,165,250,.28);border-radius:28px;background:linear-gradient(145deg,#050b24,#071f55);box-shadow:0 18px 42px rgba(15,23,42,.22)}
-.senja-welcome-intro{position:absolute;z-index:8;inset:0 0 auto;height:calc(100% - 76px);display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;color:#fff;background:radial-gradient(circle at 50% 45%,#1048a5 0,#071d55 38%,#03081f 78%);animation:senjaIntroReveal 4.8s ease forwards;pointer-events:none}
+.senja-welcome-intro{position:absolute;z-index:8;inset:0;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;color:#fff;background:radial-gradient(circle at 50% 45%,#1048a5 0,#071d55 38%,#03081f 78%);animation:senjaIntroReveal 4.8s ease forwards;pointer-events:none}
 .senja-welcome-intro::before,.senja-welcome-intro::after{content:"";position:absolute;border-radius:50%;background:rgba(34,211,238,.2);filter:blur(2px);animation:senjaIntroOrb 2.6s ease-in-out infinite}
 .senja-welcome-intro::before{width:90px;height:90px;left:10%;top:18%}
 .senja-welcome-intro::after{width:54px;height:54px;right:13%;bottom:18%;animation-delay:.6s}
@@ -2018,16 +2018,15 @@ body{
 @keyframes senjaImageEnter{from{opacity:0;filter:blur(8px);transform:translateY(4%) scale(1.06)}to{opacity:1;filter:blur(0);transform:translateY(-3%) scale(1.01)}}
 @keyframes senjaHeroShine{0%,24%{left:-32%;opacity:0}38%{opacity:1}62%{left:112%;opacity:.8}63%,100%{left:112%;opacity:0}}
 @keyframes senjaHeroGlow{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.16)}}
-.senja-promo-copy{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.05rem 1.05rem;color:#fff;opacity:0;transform:translateY(12px);animation:senjaCopyEnter .7s ease 4.15s forwards}
-@keyframes senjaCopyEnter{to{opacity:1;transform:translateY(0)}}
-.senja-promo-copy h1{margin:0;max-width:430px;font-size:1.18rem;line-height:1.2;letter-spacing:-.025em}
-.senja-promo-copy p{margin:.35rem 0 0;max-width:440px;color:#cbd5e1;font-size:.72rem;line-height:1.5}
-.senja-promo-actions{display:flex;flex:0 0 auto;gap:.45rem}
-.senja-promo-actions a{display:inline-flex;align-items:center;justify-content:center;gap:.38rem;min-height:42px;padding:.65rem .8rem;border-radius:13px;color:#07152f;background:#facc15;text-decoration:none;font-size:.68rem;font-weight:900}
-.senja-promo-actions a:last-child{color:#fff;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
-@media(max-width:640px){.senja-promo-hero{border-radius:17px;margin:0 .08rem .55rem}.senja-welcome-intro{height:calc(100% - 112px)}.senja-welcome-kicker{font-size:.52rem;letter-spacing:.2em}.senja-welcome-typing{font-size:1.35rem}.senja-welcome-line{margin-top:.5rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-copy{align-items:flex-start;flex-direction:column;gap:.62rem;padding:.68rem .72rem .72rem}.senja-promo-copy h1{font-size:.86rem;line-height:1.25}.senja-promo-copy p{margin-top:.25rem;font-size:.58rem;line-height:1.4}.senja-promo-actions{width:100%;gap:.35rem}.senja-promo-actions a{flex:1;min-height:36px;padding:.48rem .35rem;border-radius:11px;font-size:.6rem}}
-@media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-copy p{display:none}.senja-promo-copy{padding:.6rem}.senja-promo-actions a{min-height:34px;font-size:.56rem}}
-@media(prefers-reduced-motion:reduce){.senja-welcome-intro{display:none}.senja-promo-image img,.senja-promo-image::before,.senja-promo-image::after,.senja-promo-copy{animation:none!important;opacity:1}.senja-promo-image img{transform:translateY(-3%)}}
+.senja-promo-services{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;padding:1px;background:rgba(96,165,250,.2);border-top:1px solid rgba(96,165,250,.28);opacity:0;transform:translateY(10px);animation:senjaServicesEnter .7s ease 4.15s forwards}
+.senja-promo-services a{display:flex;min-width:0;min-height:66px;align-items:center;justify-content:center;flex-direction:column;gap:.4rem;padding:.55rem .25rem;color:#e2e8f0;background:linear-gradient(180deg,#0b2353,#071735);text-decoration:none;font-size:.62rem;font-weight:900;transition:background .2s ease,transform .2s ease}
+.senja-promo-services a:hover{z-index:1;background:linear-gradient(180deg,#12428e,#0a2455);transform:translateY(-2px)}
+.senja-promo-services i{display:grid;width:30px;height:30px;place-items:center;border-radius:10px;color:#facc15;background:rgba(255,255,255,.08);font-size:.82rem;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.senja-promo-services span{overflow:hidden;max-width:100%;text-overflow:ellipsis;white-space:nowrap}
+@keyframes senjaServicesEnter{to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.senja-promo-hero{border-radius:17px;margin:0 .08rem .55rem}.senja-welcome-kicker{font-size:.52rem;letter-spacing:.2em}.senja-welcome-typing{font-size:1.35rem}.senja-welcome-line{margin-top:.5rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-services a{min-height:57px;gap:.3rem;padding:.4rem .1rem;font-size:.52rem}.senja-promo-services i{width:26px;height:26px;border-radius:8px;font-size:.7rem}}
+@media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-services a{min-height:53px;font-size:.48rem}.senja-promo-services i{width:24px;height:24px}}
+@media(prefers-reduced-motion:reduce){.senja-welcome-intro{display:none}.senja-promo-image img,.senja-promo-image::before,.senja-promo-image::after,.senja-promo-services{animation:none!important;opacity:1}.senja-promo-image img{transform:translateY(-3%)}}
 
 </style>
 

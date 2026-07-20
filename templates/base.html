@@ -1756,16 +1756,13 @@
                 <div class="senja-promo-image">
                     <img src="{{ url_for('static', filename='img/banners/senjadata-dashboard-hero.png') }}" alt="SenjaData, aplikasi pulsa dan layanan digital lengkap" fetchpriority="high">
                 </div>
-                <div class="senja-promo-copy">
-                    <div>
-                        <h1>Semua Kebutuhan Digital dalam Satu Aplikasi</h1>
-                        <p>Isi pulsa, beli paket data, top up e-wallet, token PLN, dan bayar tagihan dengan pilihan layanan yang lengkap dan mudah digunakan.</p>
-                    </div>
-                    <div class="senja-promo-actions">
-                        <a href="{{ url_for('pulsa') }}"><i class="fa-solid fa-mobile-screen-button"></i> Isi Pulsa</a>
-                        <a href="{{ url_for('lainnya') }}"><i class="fa-solid fa-table-cells-large"></i> Semua Layanan</a>
-                    </div>
-                </div>
+                <nav class="senja-promo-services" aria-label="Menu layanan utama">
+                    <a href="{{ url_for('pulsa') }}"><i class="fa-solid fa-signal"></i><span>Pulsa</span></a>
+                    <a href="{{ url_for('data') }}"><i class="fa-solid fa-wifi"></i><span>Paket Data</span></a>
+                    <a href="{{ url_for('ewallet') }}"><i class="fa-solid fa-wallet"></i><span>E-Wallet</span></a>
+                    <a href="{{ url_for('listrik') }}"><i class="fa-solid fa-bolt"></i><span>Listrik</span></a>
+                    <a href="{{ url_for('lainnya') }}"><i class="fa-solid fa-list-check"></i><span>Lainnya</span></a>
+                </nav>
             </section>
         {% endif %}
 
@@ -1778,33 +1775,6 @@
         {% endwith %}
 
         {% if request.endpoint in ['dashboard', None] %}
-            <div class="kategori-grid">
-                <a href="{{ url_for('pulsa') }}" class="kategori-card">
-                    <div class="kategori-icon pulsa"><i class="fa-solid fa-signal"></i></div>
-                    <div class="kategori-nama">Pulsa</div>
-                </a>
-
-                <a href="{{ url_for('data') }}" class="kategori-card">
-                    <div class="kategori-icon data"><i class="fa-solid fa-wifi"></i></div>
-                    <div class="kategori-nama">Paket Data</div>
-                </a>
-
-                <a href="{{ url_for('ewallet') }}" class="kategori-card">
-                    <div class="kategori-icon ewallet"><i class="fa-solid fa-wallet"></i></div>
-                    <div class="kategori-nama">E-Wallet</div>
-                </a>
-
-                <a href="{{ url_for('listrik') }}" class="kategori-card">
-                    <div class="kategori-icon listrik"><i class="fa-solid fa-bolt"></i></div>
-                    <div class="kategori-nama">Listrik</div>
-                </a>
-
-                <a href="{{ url_for('lainnya') }}" class="kategori-card">
-                    <div class="kategori-icon lainnya"><i class="fa-solid fa-list-check"></i></div>
-                    <div class="kategori-nama">Lainnya</div>
-                </a>
-            </div>
-
             <div class="banner-slider">
                 <div class="banner-wrapper">
                     <div class="hero-banner" style="background: linear-gradient(135deg, #0066cc, #00c6ff);">
