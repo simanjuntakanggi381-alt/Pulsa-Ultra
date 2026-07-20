@@ -2023,6 +2023,9 @@ body{
 .senja-promo-services a:hover{z-index:1;background:linear-gradient(180deg,#12428e,#0a2455);transform:translateY(-2px)}
 .senja-promo-services i{display:grid;width:30px;height:30px;place-items:center;border-radius:10px;color:#facc15;background:rgba(255,255,255,.08);font-size:.82rem;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
 .senja-promo-services span{overflow:hidden;max-width:100%;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-slider-mount{width:100%;margin:0 0 .75rem}
+.dashboard-slider-mount .king-slider-wrap{margin:0;animation:senjaSliderEnter .75s ease 4.45s both}
+@keyframes senjaSliderEnter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes senjaServicesEnter{to{opacity:1;transform:translateY(0)}}
 @media(max-width:640px){.senja-promo-hero{border-radius:17px;margin:0 .08rem .55rem}.senja-welcome-kicker{font-size:.52rem;letter-spacing:.2em}.senja-welcome-typing{font-size:1.35rem}.senja-welcome-line{margin-top:.5rem}.senja-promo-image{aspect-ratio:2.15/1}.senja-promo-image img{object-position:center}.senja-promo-services a{min-height:57px;gap:.3rem;padding:.4rem .1rem;font-size:.52rem}.senja-promo-services i{width:26px;height:26px;border-radius:8px;font-size:.7rem}}
 @media(max-width:380px){.senja-promo-image{aspect-ratio:2.3/1}.senja-promo-services a{min-height:53px;font-size:.48rem}.senja-promo-services i{width:24px;height:24px}}
@@ -2040,23 +2043,6 @@ body{
                 {% endfor %}
             {% endif %}
         {% endwith %}
-
-        <div class="king-topbar">
-            <div class="king-brand">
-                <div class="king-logo">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                <div class="king-brand-text">
-                    <strong>SenjaData</strong>
-                    <span>Transaksi digital harian</span>
-                </div>
-            </div>
-
-            <a href="{{ url_for('profil') }}" class="king-profile-btn">
-                <i class="fa-solid fa-user"></i>
-                {{ nama_pengguna|default('Akun', true) }}
-            </a>
-        </div>
 
         <div class="king-slider-wrap">
             <div class="king-slider" id="kingSlider">
@@ -2254,70 +2240,6 @@ body{
                 <span>Proses cepat</span>
             </div>
         </div>
-
-        <div class="king-section-head">
-            <div>
-                <h2>Layanan Utama</h2>
-                <p>Pilih layanan paling sering digunakan untuk transaksi harian.</p>
-            </div>
-            <span class="king-pill">Favorit</span>
-        </div>
-
-        <div class="king-service-grid">
-            <a href="{{ url_for('pulsa') }}" class="king-service-card">
-                <div class="king-service-icon" style="background:#e6f2ff;color:#007ae6;">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
-                <strong>Pulsa Reguler</strong>
-                <span>Isi pulsa semua operator dengan pilihan nominal yang jelas.</span>
-                <div class="king-service-arrow" style="background:linear-gradient(135deg,#007ae6,#2563eb);">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </div>
-            </a>
-
-            <a href="{{ url_for('data') }}" class="king-service-card">
-                <div class="king-service-icon" style="background:#eef2ff;color:#4f46e5;">
-                    <i class="fa-solid fa-wifi"></i>
-                </div>
-                <strong>Paket Data</strong>
-                <span>Internet harian, mingguan, bulanan, unlimited, dan combo.</span>
-                <div class="king-service-arrow" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </div>
-            </a>
-
-            <a href="{{ url_for('ewallet') }}" class="king-service-card">
-                <div class="king-service-icon" style="background:#ecfdf5;color:#059669;">
-                    <i class="fa-solid fa-wallet"></i>
-                </div>
-                <strong>Top Up E-Wallet</strong>
-                <span>Isi saldo DANA, OVO, GoPay, ShopeePay, dan LinkAja.</span>
-                <div class="king-service-arrow" style="background:linear-gradient(135deg,#059669,#10b981);">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </div>
-            </a>
-
-            <a href="{{ url_for('listrik') }}" class="king-service-card">
-                <div class="king-service-icon" style="background:#fefce8;color:#ca8a04;">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <strong>Token Listrik</strong>
-                <span>Beli token PLN prabayar dengan proses cepat.</span>
-                <div class="king-service-arrow" style="background:linear-gradient(135deg,#f59e0b,#ca8a04);">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </div>
-            </a>
-        </div>
-
-        <a href="{{ url_for('lainnya') }}" class="king-wide-card">
-            <div>
-                <strong>Layanan Tambahan</strong>
-                <span>PDAM, BPJS, TV kabel, game, voucher, PLN pasca, angsuran, dan lainnya.</span>
-            </div>
-            <div class="king-wide-icon">
-                <i class="fa-solid fa-border-all"></i>
-            </div>
-        </a>
 
         <div class="king-panel king-mobile-hide">
             <div class="king-section-head" style="margin-top:0;">
@@ -2640,6 +2562,12 @@ body{
 
 <script>
 (function(){
+    const sliderMount=document.getElementById('dashboardSliderMount');
+    const sliderWrap=document.querySelector('.king-slider-wrap');
+    if(sliderMount && sliderWrap){
+        sliderMount.appendChild(sliderWrap);
+    }
+
     const slider=document.getElementById('kingSlider');
     if(!slider) return;
 

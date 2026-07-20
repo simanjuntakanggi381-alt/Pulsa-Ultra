@@ -1764,6 +1764,7 @@
                     <a href="{{ url_for('lainnya') }}"><i class="fa-solid fa-list-check"></i><span>Lainnya</span></a>
                 </nav>
             </section>
+            <div id="dashboardSliderMount" class="dashboard-slider-mount" aria-label="Promo layanan SenjaData"></div>
         {% endif %}
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -1834,24 +1835,6 @@
                 </div>
             </div>
 
-            <div class="layanan-card">
-                <div class="layanan-badge-wrap">
-                    <div class="layanan-icon" style="background: #ecfdf5; color: #059669;">
-                        <i class="fa-solid fa-credit-card"></i>
-                    </div>
-
-                    <span style="font-size: .86rem; font-weight: 900; color: #059669; text-transform: uppercase; letter-spacing: .04em;">
-                        Dompet Digital
-                    </span>
-                </div>
-
-                <h4>Top Up DANA, OVO, GoPay & LinkAja</h4>
-                <p>Isi saldo kapan saja dengan proses otomatis, tampilan mudah digunakan, dan transaksi lebih jelas.</p>
-
-                <a href="{{ url_for('ewallet') }}" class="btn-aksi" style="background: linear-gradient(135deg, #059669, #10b981);">
-                    Buka Layanan Sekarang
-                </a>
-            </div>
         {% endif %}
 
         {% block konten %}{% endblock %}
